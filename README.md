@@ -39,3 +39,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - add shadcn/ui
 - Create teacher page and connect to mongodb
+
+- i will create classrom (2) and user collection (5)
+- i will create page.tsx
