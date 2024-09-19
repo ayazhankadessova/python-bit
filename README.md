@@ -42,3 +42,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - i will create classrom (2) and user collection (5)
 - i will create page.tsx
+
+## Sep 19
+
+1. check what is in form
+2. select from various programmes
+3. how to select Programmes?
+
+create dummy frontend for virtual classroom 4. select 1 programme for 1 classroom and start a virtual classroom
