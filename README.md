@@ -47,9 +47,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 1. [x] check what is in form
 2. [x] select from various programmes
-3. Start Lesson
+3. [x]Start Lesson
 4. how to select Programmes?
 5. How to store Weekly courses? -> mdx ?
 6. mobile nav
+7. how to connect to socket?
 
 create dummy frontend for virtual classroom 4. select 1 programme for 1 classroom and start a virtual classroom

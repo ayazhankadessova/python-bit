@@ -7,8 +7,13 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    // "moduleResolution": "bundler",
+
+    "target": "ESNext",
+    "moduleResolution": "Node",
+
     "resolveJsonModule": true,
+
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
@@ -21,6 +26,14 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "server.js",
+    "socket.js",
+    "socket.js"
+  ],
   "exclude": ["node_modules"]
 }
