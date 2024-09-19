@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect, useCallback } from 'react'
-import { Search, Plus, Play } from 'lucide-react'
+import { Search, Plus, Play, Link } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -31,6 +31,7 @@ interface Classroom {
   curriculumId: string
   curriculumName: string
   lastTopic: string
+  inviteLink: string
   createdAt: Date
   updatedAt: Date
 }
@@ -43,18 +44,6 @@ const ClassroomPage: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [activeSession, setActiveSession] = useState<string | null>(null)
   const [socket, setSocket] = useState<any>(null)
-
-  //   const initializeSocket = useCallback(async () => {
-  //     await fetch('/api/socket')
-  //     const newSocket = io()
-  //     setSocket(newSocket)
-
-  //     return () => newSocket.disconnect()
-  //   }, [])
-
-  //   useEffect(() => {
-  //     initializeSocket()
-  //   }, [initializeSocket])
 
   useEffect(() => {
     const fetchClassrooms = async () => {
@@ -74,15 +63,6 @@ const ClassroomPage: React.FC = () => {
     fetchClassrooms()
   }, [])
 
-  //   useEffect(() => {
-  //     if (socket) {
-  //       socket.on('receive-message', (data: any) => {
-  //         console.log('Received message:', data)
-  //         // Handle the received message
-  //       })
-  //     }
-  //   }, [socket])
-
   const filteredClassrooms = classrooms.filter(
     (classroom) =>
       classroom.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -94,7 +74,10 @@ const ClassroomPage: React.FC = () => {
   }
 
   const handleCreateClassroom = async (
-    data: Omit<Classroom, '_id' | 'createdAt' | 'updatedAt' | 'lastTopic'>
+    data: Omit<
+      Classroom,
+      '_id' | 'createdAt' | 'updatedAt' | 'lastTopic' | 'inviteLink'
+    >
   ) => {
     try {
       const response = await fetch('/api/classroom', {
@@ -142,6 +125,36 @@ const ClassroomPage: React.FC = () => {
       title: 'Session ended',
       description: 'You have successfully ended the session.',
     })
+  }
+
+  const handleGenerateInviteLink = async (classroomId: string) => {
+    try {
+      const response = await fetch(`/api/classroom/${classroomId}/invite`, {
+        method: 'PUT',
+      })
+      if (!response.ok) {
+        throw new Error('Failed to generate invite link')
+      }
+      const { inviteLink } = await response.json()
+      setClassrooms(
+        classrooms.map((c) =>
+          c._id === classroomId ? { ...c, inviteLink } : c
+        )
+      )
+      toast({
+        title: 'Invite link generated',
+        description:
+          'The invite link has been created and copied to clipboard.',
+      })
+      navigator.clipboard.writeText(inviteLink)
+    } catch (error) {
+      console.error('Error generating invite link:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to generate invite link. Please try again.',
+        variant: 'destructive',
+      })
+    }
   }
 
   if (isLoading) {
@@ -201,12 +214,15 @@ const ClassroomPage: React.FC = () => {
             <CardContent>
               <p>Last topic: {classroom.lastTopic}</p>
             </CardContent>
-            <CardFooter>
-              <Button
-                className='w-full'
-                onClick={() => handleStartLesson(classroom._id)}
-              >
+            <CardFooter className='flex justify-between'>
+              <Button onClick={() => handleStartLesson(classroom._id)}>
                 <Play className='mr-2 h-4 w-4' /> Start Lesson
+              </Button>
+              <Button
+                variant='outline'
+                onClick={() => handleGenerateInviteLink(classroom._id)}
+              >
+                <Link className='mr-2 h-4 w-4' /> Invite Link
               </Button>
             </CardFooter>
           </Card>

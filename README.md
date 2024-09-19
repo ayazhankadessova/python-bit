@@ -51,6 +51,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 4. how to select Programmes?
 5. How to store Weekly courses? -> mdx ?
 6. mobile nav
-7. how to connect to socket?
+7. [x]how to connect to socket?
+8. [] how to connect teachers and students to web socket?
 
 create dummy frontend for virtual classroom 4. select 1 programme for 1 classroom and start a virtual classroom
