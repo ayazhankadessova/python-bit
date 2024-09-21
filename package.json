@@ -2,6 +2,7 @@
   "name": "python-bit",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next server.js",
     "nodemon": "nodemon server.js",

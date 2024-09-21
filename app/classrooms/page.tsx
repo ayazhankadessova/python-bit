@@ -110,17 +110,41 @@ const ClassroomPage: React.FC = () => {
   }
 
   const handleStartLesson = async (classroomId: string) => {
-    setActiveSession(classroomId)
-    if (socket) {
-      socket.emit('join-room', classroomId)
+    try {
+      const newSocket = io('http://localhost:3000')
+      setSocket(newSocket)
+
+      newSocket.on('connect', () => {
+        console.log('Connected to socket server')
+        newSocket.emit('join-room', classroomId, 'teacher-id', true)
+        setActiveSession(classroomId)
+      })
+
+      newSocket.on('connect_error', (error) => {
+        console.error('Socket connection error:', error)
+        toast({
+          title: 'Connection Error',
+          description: 'Failed to connect to the classroom. Please try again.',
+          variant: 'destructive',
+        })
+      })
+    } catch (error) {
+      console.error('Error starting lesson:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to start the lesson. Please try again.',
+        variant: 'destructive',
+      })
     }
   }
 
   const handleEndSession = async () => {
-    setActiveSession(null)
-    if (socket) {
-      socket.emit('leave-room', activeSession)
+    if (socket && activeSession) {
+      socket.emit('leave-room', activeSession, 'teacher-id')
+      socket.disconnect()
+      setSocket(null)
     }
+    setActiveSession(null)
     toast({
       title: 'Session ended',
       description: 'You have successfully ended the session.',

@@ -1,16 +1,16 @@
-const express = require('express')
-const next = require('next')
+import express from 'express'
+import next from 'next'
+import http from 'http'
+import { Server as SocketIOServer } from 'socket.io'
+
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
-const http = require('http')
-const socketIO = require('socket.io')
 
 app.prepare().then(async () => {
   const server = express()
   const httpServer = http.createServer(server)
-  const io = socketIO(httpServer)
-
+  const io = new SocketIOServer(httpServer)
   const classrooms = new Map()
 
   io.on('connection', (socket) => {
@@ -22,13 +22,11 @@ app.prepare().then(async () => {
         classrooms.set(classroomId, new Set())
       }
       classrooms.get(classroomId).add(userId)
-
       if (isTeacher) {
         socket.to(classroomId).emit('teacher-joined', userId)
       } else {
         socket.to(classroomId).emit('student-joined', userId)
       }
-
       io.to(classroomId).emit(
         'update-participants',
         Array.from(classrooms.get(classroomId))
