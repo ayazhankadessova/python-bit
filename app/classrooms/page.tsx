@@ -22,6 +22,7 @@ import {
 import { CreateClassroomForm } from './CreateClassroomForm'
 import { useToast } from '@/components/hooks/use-toast'
 import { SessionView } from '@/components/session-view'
+import { useRouter } from 'next/navigation'
 import io from 'socket.io-client'
 
 interface Classroom {
@@ -38,6 +39,7 @@ interface Classroom {
 
 const ClassroomPage: React.FC = () => {
   const { toast } = useToast()
+  const router = useRouter()
   const [classrooms, setClassrooms] = useState<Classroom[]>([])
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -111,23 +113,18 @@ const ClassroomPage: React.FC = () => {
 
   const handleStartLesson = async (classroomId: string) => {
     try {
-      const newSocket = io('http://localhost:3000')
-      setSocket(newSocket)
-
-      newSocket.on('connect', () => {
-        console.log('Connected to socket server')
-        newSocket.emit('join-room', classroomId, 'teacher-id', true)
-        setActiveSession(classroomId)
+      const response = await fetch(`/api/classroom/${classroomId}/session`, {
+        method: 'POST',
       })
 
-      newSocket.on('connect_error', (error) => {
-        console.error('Socket connection error:', error)
-        toast({
-          title: 'Connection Error',
-          description: 'Failed to connect to the classroom. Please try again.',
-          variant: 'destructive',
-        })
-      })
+      if (!response.ok) {
+        throw new Error('Failed to create session')
+      }
+
+      const { sessionId } = await response.json()
+
+      // Redirect to the classroom session
+      router.push(`/classroom/${classroomId}?session=${sessionId}`)
     } catch (error) {
       console.error('Error starting lesson:', error)
       toast({

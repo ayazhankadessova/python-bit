@@ -55,3 +55,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 8. [] how to connect teachers and students to web socket?
 
 create dummy frontend for virtual classroom 4. select 1 programme for 1 classroom and start a virtual classroom
+
+## Sep 21
+
+- both team teacher joined room?

@@ -1,14 +1,13 @@
-// pages/join/[id].tsx
 'use client'
-import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/hooks/use-toast'
 
-const JoinClassroomPage: React.FC = () => {
+const JoinClassroomPage = ({ params }: { params: { id: string } }) => {
   const router = useRouter()
-  const { id } = router.query
   const { toast } = useToast()
   const [studentName, setStudentName] = useState('')
   const [isJoining, setIsJoining] = useState(false)
@@ -16,22 +15,19 @@ const JoinClassroomPage: React.FC = () => {
   const handleJoinClassroom = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsJoining(true)
-
     try {
-      const response = await fetch(`/api/classroom/${id}/join`, {
-        method: 'POST',
+      const response = await fetch(`/api/classroom/${params.id}/invite`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ studentName }),
       })
-
       if (!response.ok) {
         throw new Error('Failed to join classroom')
       }
-
       const { sessionId } = await response.json()
-      router.push(`/classroom/${id}?session=${sessionId}`)
+      router.push(`/classroom/${params.id}?session=${sessionId}`)
     } catch (error) {
       console.error('Error joining classroom:', error)
       toast({
@@ -45,7 +41,7 @@ const JoinClassroomPage: React.FC = () => {
   }
 
   return (
-    <div className='container mx-auto p-4 max-w-md'>
+    <div className='container mx-auto mt-10 max-w-md'>
       <h1 className='text-2xl font-bold mb-4'>Join Classroom</h1>
       <form onSubmit={handleJoinClassroom}>
         <Input
@@ -56,7 +52,7 @@ const JoinClassroomPage: React.FC = () => {
           className='mb-4'
           required
         />
-        <Button type='submit' disabled={isJoining} className='w-full'>
+        <Button type='submit' disabled={isJoining}>
           {isJoining ? 'Joining...' : 'Join Classroom'}
         </Button>
       </form>
