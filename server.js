@@ -17,6 +17,7 @@ app.prepare().then(async () => {
     console.log('Client connected')
 
     socket.on('join-room', (classroomId, userId, isTeacher) => {
+      console.log('teacher joined room ')
       socket.join(classroomId)
       if (!classrooms.has(classroomId)) {
         classrooms.set(classroomId, new Set())

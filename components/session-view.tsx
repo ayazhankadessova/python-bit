@@ -1,9 +1,18 @@
+'use client'
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Socket } from 'socket.io-client'
+import { CopyIcon, CheckIcon, Share2 } from 'lucide-react'
+import { Label } from '@/components/ui/label'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { useToast } from '@/components/hooks/use-toast'
 
 interface Student {
   id: string
@@ -28,6 +37,9 @@ export function SessionView({
   const [starterCode, setStarterCode] = useState('')
   const [teacherCode, setTeacherCode] = useState('')
   const [students, setStudents] = useState<Student[]>([])
+  const [inviteLink, setInviteLink] = useState('')
+  const [isCopied, setIsCopied] = useState(false)
+  const { toast } = useToast()
 
   useEffect(() => {
     if (socket) {
@@ -91,15 +103,38 @@ export function SessionView({
     }
   }
 
-  const handleInvite = () => {
-    if (socket) {
-      socket.emit('generate-invite-link', classroomId, (link: string) => {
-        navigator.clipboard
-          .writeText(link)
-          .then(() => alert('Invite link copied to clipboard!'))
-          .catch((err) => console.error('Failed to copy: ', err))
+  const handleGenerateInviteLink = async () => {
+    try {
+      const response = await fetch(`/api/classroom/${classroomId}/invite`, {
+        method: 'PUT',
+      })
+      if (!response.ok) {
+        throw new Error('Failed to generate invite link')
+      }
+      const { inviteLink } = await response.json()
+      setInviteLink(inviteLink)
+      toast({
+        title: 'Invite link generated',
+        description: 'The invite link has been created.',
+      })
+    } catch (error) {
+      console.error('Error generating invite link:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to generate invite link. Please try again.',
+        variant: 'destructive',
       })
     }
+  }
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(inviteLink)
+    setIsCopied(true)
+    setTimeout(() => setIsCopied(false), 2000)
+    toast({
+      title: 'Link copied',
+      description: 'The invite link has been copied to clipboard.',
+    })
   }
 
   return (
@@ -135,7 +170,55 @@ export function SessionView({
       </div>
       <div className='w-2/3 p-4'>
         <div className='flex justify-between mb-4'>
-          <Button onClick={handleInvite}>Invite</Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button onClick={handleGenerateInviteLink}>
+                <Share2 className='mr-2 h-3 w-3' />
+                <span className='hidden md:block'>Invite</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align='start' className='w-[200px] md:w-[300px]'>
+              <div className='flex flex-col space-y-2 text-left sm:text-left'>
+                <h4 className='font-semibold'>Share this classroom</h4>
+                <p className='text-sm text-muted-foreground'>
+                  Use the link below to invite students
+                </p>
+              </div>
+              <div className='flex flex-nowrap mt-4 gap-2'>
+                <div className='grid flex-1 gap-2'>
+                  <Label htmlFor='link' className='sr-only'>
+                    Link
+                  </Label>
+                  <Input
+                    id='link'
+                    value={inviteLink}
+                    readOnly
+                    className='h-9'
+                    type='url'
+                  />
+                </div>
+                <Button
+                  type='button'
+                  size='sm'
+                  className='px-3 inline-flex items-center justify-center'
+                  variant='secondary'
+                  onClick={handleCopy}
+                >
+                  {isCopied ? (
+                    <>
+                      <CheckIcon className='h-4 w-4 mr-2' />
+                      <span className='hidden md:block'> Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon className='h-4 w-4 mr-2' />
+                      <span className='hidden md:block'>Copy Link</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
           <Button onClick={onEndSession} variant='destructive'>
             End Session
           </Button>
