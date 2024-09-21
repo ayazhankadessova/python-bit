@@ -27,7 +27,10 @@ const JoinClassroomPage = ({ params }: { params: { id: string } }) => {
         throw new Error('Failed to join classroom')
       }
       const { sessionId } = await response.json()
-      router.push(`/classroom/${params.id}?session=${sessionId}`)
+      // Here, you can pass the role (e.g., 'student')
+      router.push(
+        `/classroom/${params.id}?session=${sessionId}&role=student&id=${studentName}`
+      )
     } catch (error) {
       console.error('Error joining classroom:', error)
       toast({

@@ -124,7 +124,7 @@ const ClassroomPage: React.FC = () => {
       const { sessionId } = await response.json()
 
       // Redirect to the classroom session
-      router.push(`/classroom/${classroomId}?session=${sessionId}`)
+      router.push(`/classroom/${classroomId}?session=${sessionId}&role=teacher`)
     } catch (error) {
       console.error('Error starting lesson:', error)
       toast({
@@ -180,18 +180,6 @@ const ClassroomPage: React.FC = () => {
 
   if (isLoading) {
     return <div>Loading classrooms...</div>
-  }
-
-  if (activeSession) {
-    const classroom = classrooms.find((c) => c._id === activeSession)
-    return (
-      <SessionView
-        teacherName='Ayazhan'
-        classroomId={activeSession}
-        onEndSession={handleEndSession}
-        socket={socket}
-      />
-    )
   }
 
   return (

@@ -1,16 +1,20 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { SessionView } from '@/components/session-view'
-import io from 'socket.io-client'
+import io, { Socket } from 'socket.io-client'
 
-export default function ClassroomPage({ params }: { params: { id: string } }) {
+interface ClassroomPageProps {
+  params: { id: string }
+}
+
+const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [socket, setSocket] = useState<any>(null)
-
+  const [socket, setSocket] = useState<Socket | null>(null)
   const sessionId = searchParams.get('session')
+  const role = searchParams.get('role')
+  const studentID = role === 'student' ? searchParams.get('id') : null
   const classroomId = params.id
 
   useEffect(() => {
@@ -24,22 +28,34 @@ export default function ClassroomPage({ params }: { params: { id: string } }) {
 
     newSocket.on('connect', () => {
       console.log('Connected to socket server')
-      newSocket.emit('join-room', classroomId, 'teacher-id', true)
+      if (role === 'teacher') {
+        newSocket.emit('join-room', classroomId, 'teacher-id', true)
+      } else if (role === 'student') {
+        newSocket.emit('join-room', classroomId, studentID, false)
+      }
     })
 
     newSocket.on('connect_error', (error) => {
       console.error('Socket connection error:', error)
-      // Handle connection error (e.g., show a toast message)
+    })
+
+    newSocket.on('session-ended', () => {
+      console.log('Session ended by teacher')
+      router.push('/classrooms')
     })
 
     return () => {
       newSocket.disconnect()
     }
-  }, [classroomId, sessionId, router])
+  }, [classroomId, sessionId, router, role, studentID])
 
   const handleEndSession = () => {
     if (socket) {
-      socket.emit('leave-room', classroomId, 'teacher-id')
+      if (role === 'teacher') {
+        socket.emit('end-session', classroomId)
+      } else {
+        socket.emit('leave-room', classroomId, studentID)
+      }
       socket.disconnect()
     }
     router.push('/classrooms')
@@ -51,10 +67,13 @@ export default function ClassroomPage({ params }: { params: { id: string } }) {
 
   return (
     <SessionView
-      teacherName='Teacher Name' // You might want to fetch this from an API or context
+      teacherName={role === 'student' ? 'Student' : 'Teacher'}
       classroomId={classroomId}
       onEndSession={handleEndSession}
       socket={socket}
+      role={role === 'student' ? 'student' : 'teacher'}
     />
   )
 }
+
+export default ClassroomPage

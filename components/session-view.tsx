@@ -16,9 +16,7 @@ import { useToast } from '@/components/hooks/use-toast'
 
 interface Student {
   id: string
-  name: string
-  code: string
-  status: 'on-track' | 'behind'
+  code?: string
 }
 
 interface SessionViewProps {
@@ -26,6 +24,7 @@ interface SessionViewProps {
   classroomId: string
   onEndSession: () => void
   socket: Socket | null
+  role: 'teacher' | 'student'
 }
 
 export function SessionView({
@@ -33,73 +32,68 @@ export function SessionView({
   classroomId,
   onEndSession,
   socket,
+  role,
 }: SessionViewProps) {
+  const { toast } = useToast()
   const [starterCode, setStarterCode] = useState('')
   const [teacherCode, setTeacherCode] = useState('')
   const [students, setStudents] = useState<Student[]>([])
   const [inviteLink, setInviteLink] = useState('')
   const [isCopied, setIsCopied] = useState(false)
-  const { toast } = useToast()
 
   useEffect(() => {
     if (socket) {
-      // Set up WebSocket listeners
-      socket.on('student-joined', (student: Student) => {
-        setStudents((prev) => [...prev, student])
-      })
-
-      socket.on('student-left', (studentId: string) => {
-        setStudents((prev) => prev.filter((s) => s.id !== studentId))
-      })
-
       socket.on(
-        'student-code-update',
-        ({ studentId, code }: { studentId: string; code: string }) => {
-          setStudents((prev) =>
-            prev.map((s) => (s.id === studentId ? { ...s, code } : s))
-          )
-        }
-      )
-
-      socket.on(
-        'student-status-update',
-        ({
-          studentId,
-          status,
-        }: {
-          studentId: string
-          status: 'on-track' | 'behind'
-        }) => {
-          setStudents((prev) =>
-            prev.map((s) => (s.id === studentId ? { ...s, status } : s))
-          )
-        }
-      )
-
-      // Fetch initial session data
-      socket.emit(
-        'get-session-data',
-        classroomId,
+        'session-data',
         (data: { starterCode: string; students: Student[] }) => {
           setStarterCode(data.starterCode)
           setStudents(data.students)
+          if (role === 'student') {
+            setTeacherCode(data.starterCode)
+          }
         }
       )
+
+      // socket.on(
+      //   'get-session-data',
+      //   (data: { starterCode: string; students: Student[] }) => {
+      //     console.log('student wants to get init data')
+      //     setStarterCode(data.starterCode)
+      //     setStudents(data.students)
+      //   }
+      // )
+
+      socket.on(
+        'starter-code-updated',
+        (data: { starterCode: string; students: Student[] }) => {
+          setStarterCode(data.starterCode)
+          setStudents(data.students)
+          if (role === 'student') {
+            setTeacherCode(data.starterCode)
+          }
+          toast({
+            title: 'Starter Code Updated',
+            description: 'The teacher has updated the starter code.',
+          })
+        }
+      )
+
+      // Request initial data
+      socket.emit('get-session-data', classroomId)
     }
 
     return () => {
       if (socket) {
-        socket.off('student-joined')
-        socket.off('student-left')
-        socket.off('student-code-update')
-        socket.off('student-status-update')
+        socket.off('update-participants')
+        socket.off('get-session-data')
+        socket.off('starter-code-updated')
       }
     }
-  }, [socket, classroomId])
+  }, [socket, classroomId, role, toast])
 
   const handleSendCode = () => {
     if (socket) {
-      socket.emit('send-teacher-code', { classroomId, code: teacherCode })
+      socket.emit('update-starter-code', classroomId, teacherCode)
     }
   }
 
@@ -140,96 +134,71 @@ export function SessionView({
   return (
     <div className='flex h-screen'>
       <div className='w-1/3 p-4 border-r'>
-        <h2 className='text-2xl font-bold mb-4'>{teacherName}'s Classroom</h2>
-        <Textarea
-          value={starterCode}
-          onChange={(e) => setStarterCode(e.target.value)}
-          placeholder='Starter code'
-          className='mb-4'
-        />
+        <h2 className='text-2xl font-bold mb-4'>
+          {role === 'teacher' ? `${teacherName}'s Classroom` : 'Classroom'}
+        </h2>
+        {role === 'teacher' && (
+          <Textarea
+            value={starterCode}
+            onChange={(e) => setStarterCode(e.target.value)}
+            placeholder='Starter code'
+            className='mb-4'
+          />
+        )}
         <h3 className='text-xl font-semibold mb-2'>Students</h3>
         {students.map((student) => (
           <Card key={student.id} className='mb-2'>
             <CardHeader>
               <CardTitle className='flex items-center'>
-                {student.name}
-                <span
-                  className={`ml-2 w-3 h-3 rounded-full ${
-                    student.status === 'on-track'
-                      ? 'bg-green-500'
-                      : 'bg-orange-500'
-                  }`}
-                />
+                {student.id}
+                <span className='ml-2 w-3 h-3 rounded-full bg-green-500' />
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <pre className='text-sm'>{student.code}</pre>
-            </CardContent>
+            {role === 'teacher' && student.code && (
+              <CardContent>
+                <pre className='text-sm'>{student.code}</pre>
+              </CardContent>
+            )}
           </Card>
         ))}
       </div>
       <div className='w-2/3 p-4'>
-        <div className='flex justify-between mb-4'>
-          <Popover>
-            <PopoverTrigger asChild>
+        {role == 'teacher' && (
+          <>
+            <div className='flex justify-between mb-4'>
               <Button onClick={handleGenerateInviteLink}>
-                <Share2 className='mr-2 h-3 w-3' />
-                <span className='hidden md:block'>Invite</span>
+                Generate Invite Link
               </Button>
-            </PopoverTrigger>
-            <PopoverContent align='start' className='w-[200px] md:w-[300px]'>
-              <div className='flex flex-col space-y-2 text-left sm:text-left'>
-                <h4 className='font-semibold'>Share this classroom</h4>
-                <p className='text-sm text-muted-foreground'>
-                  Use the link below to invite students
-                </p>
-              </div>
-              <div className='flex flex-nowrap mt-4 gap-2'>
-                <div className='grid flex-1 gap-2'>
-                  <Label htmlFor='link' className='sr-only'>
-                    Link
-                  </Label>
-                  <Input
-                    id='link'
-                    value={inviteLink}
-                    readOnly
-                    className='h-9'
-                    type='url'
-                  />
-                </div>
-                <Button
-                  type='button'
-                  size='sm'
-                  className='px-3 inline-flex items-center justify-center'
-                  variant='secondary'
-                  onClick={handleCopy}
-                >
-                  {isCopied ? (
-                    <>
-                      <CheckIcon className='h-4 w-4 mr-2' />
-                      <span className='hidden md:block'> Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <CopyIcon className='h-4 w-4 mr-2' />
-                      <span className='hidden md:block'>Copy Link</span>
-                    </>
-                  )}
+              <Button onClick={onEndSession} variant='destructive'>
+                End Session
+              </Button>
+            </div>
+            {inviteLink && (
+              <div className='mb-4'>
+                <Input value={inviteLink} readOnly />
+                <Button onClick={handleCopy}>
+                  {isCopied ? 'Copied!' : 'Copy Invite Link'}
                 </Button>
               </div>
-            </PopoverContent>
-          </Popover>
-          <Button onClick={onEndSession} variant='destructive'>
-            End Session
-          </Button>
-        </div>
+            )}
+          </>
+        )}
         <Textarea
           value={teacherCode}
           onChange={(e) => setTeacherCode(e.target.value)}
-          placeholder='Write your Python code here'
+          placeholder={
+            role === 'teacher'
+              ? 'Write your Python code here'
+              : 'Write your solution here'
+          }
           className='h-1/2 mb-4'
         />
-        <Button onClick={handleSendCode}>Send Code</Button>
+
+        {role == 'teacher' ? (
+          <Button onClick={handleSendCode}>Send Code to Students</Button>
+        ) : (
+          <Button>Submit Code</Button>
+        )}
       </div>
     </div>
   )

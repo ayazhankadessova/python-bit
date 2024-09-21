@@ -58,4 +58,15 @@ create dummy frontend for virtual classroom 4. select 1 programme for 1 classroo
 
 ## Sep 21
 
-- both team teacher joined room?
+- [x]both team teacher joined room?
+- [x]check how roles are alloc so that links work correct
+- [x] Send code to students
+- [] Fix Generate invite link to be popover
+- Why when student joins they cannot see the starter code ?
+- Send students new code to teacher
+- make it possible for teacher to see every students code
+
+## Sep 22
+
+- make users collection and add 2 teachers and 2 students there
+- pass the whole student body
