@@ -148,36 +148,6 @@ const ClassroomPage: React.FC = () => {
     })
   }
 
-  const handleGenerateInviteLink = async (classroomId: string) => {
-    try {
-      const response = await fetch(`/api/classroom/${classroomId}/invite`, {
-        method: 'PUT',
-      })
-      if (!response.ok) {
-        throw new Error('Failed to generate invite link')
-      }
-      const { inviteLink } = await response.json()
-      setClassrooms(
-        classrooms.map((c) =>
-          c._id === classroomId ? { ...c, inviteLink } : c
-        )
-      )
-      toast({
-        title: 'Invite link generated',
-        description:
-          'The invite link has been created and copied to clipboard.',
-      })
-      navigator.clipboard.writeText(inviteLink)
-    } catch (error) {
-      console.error('Error generating invite link:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to generate invite link. Please try again.',
-        variant: 'destructive',
-      })
-    }
-  }
-
   if (isLoading) {
     return <div>Loading classrooms...</div>
   }
@@ -226,12 +196,6 @@ const ClassroomPage: React.FC = () => {
             <CardFooter className='flex justify-between'>
               <Button onClick={() => handleStartLesson(classroom._id)}>
                 <Play className='mr-2 h-4 w-4' /> Start Lesson
-              </Button>
-              <Button
-                variant='outline'
-                onClick={() => handleGenerateInviteLink(classroom._id)}
-              >
-                <Link className='mr-2 h-4 w-4' /> Invite Link
               </Button>
             </CardFooter>
           </Card>

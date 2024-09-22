@@ -12,7 +12,7 @@ app.prepare().then(async () => {
   const httpServer = http.createServer(server)
   const io = new SocketIOServer(httpServer)
 
-  // Store classroom data with more details
+  // Store classroom data
   const classrooms = new Map()
 
   io.on('connection', (socket) => {
@@ -34,23 +34,18 @@ app.prepare().then(async () => {
       if (isTeacher) {
         classroom.teacher = userId
         socket.to(classroomId).emit('teacher-joined', userId)
-        console.log('teacher joined room ', classroomId)
       } else {
         classroom.students.set(userId, {
           id: userId,
           code: classroom.starterCode,
         })
-        socket.to(classroomId).emit('student-joined', userId)
-        console.log('student joined room ', classroomId)
       }
 
-      // Send updated participant list to all clients in the room
       io.to(classroomId).emit('update-participants', {
         teacher: classroom.teacher,
         students: Array.from(classroom.students.values()),
       })
 
-      // Send initial data to the newly joined user
       socket.emit('session-data', {
         starterCode: classroom.starterCode,
         students: Array.from(classroom.students.values()),
@@ -58,77 +53,30 @@ app.prepare().then(async () => {
     })
 
     socket.on('leave-room', (classroomId, userId) => {
-      socket.leave(classroomId)
-      if (classrooms.has(classroomId)) {
-        const classroom = classrooms.get(classroomId)
-        if (classroom.teacher === userId) {
-          classroom.teacher = null
-        } else {
-          classroom.students.delete(userId)
-        }
-
-        if (classroom.students.size === 0 && !classroom.teacher) {
-          classrooms.delete(classroomId)
-        } else {
-          io.to(classroomId).emit('participant-left', userId)
-          io.to(classroomId).emit('update-participants', {
-            teacher: classroom.teacher,
-            students: Array.from(classroom.students.values()),
-          })
-        }
-      }
+      handleLeaveRoom(socket, classroomId, userId)
     })
 
-    // New event for ending the session
     socket.on('end-session', (classroomId) => {
       if (classrooms.has(classroomId)) {
-        // Remove all information for the session
-        classrooms.delete(classroomId)
-
-        // Notify all clients in the room that the session has ended
+        const classroom = classrooms.get(classroomId)
         io.to(classroomId).emit('session-ended')
 
         // Disconnect all clients from the room
-        const sockets = io.sockets.adapter.rooms.get(classroomId)
-        if (sockets) {
-          for (const socketId of sockets) {
-            io.sockets.sockets.get(socketId).leave(classroomId)
-          }
-        }
+        io.in(classroomId).disconnectSockets(true)
 
-        console.log(`Session ended for classroom ${classroomId}`)
-      }
-    })
-
-    // New event listener for get-session-data
-    // Updated get-session-data event listener
-    socket.on('get-session-data', (classroomId) => {
-      if (classrooms.has(classroomId)) {
-        const classroom = classrooms.get(classroomId)
-        socket.emit('session-data', {
-          starterCode: classroom.starterCode,
-          students: Array.from(classroom.students.values()),
-        })
-      } else {
-        socket.emit('session-data', {
-          starterCode: '',
-          students: [],
-        })
+        // Remove the classroom data
+        classrooms.delete(classroomId)
       }
     })
 
     socket.on('update-starter-code', (classroomId, code) => {
       if (classrooms.has(classroomId)) {
-        console.log('Starter code updated')
         const classroom = classrooms.get(classroomId)
         classroom.starterCode = code
-
-        // Update starter code for all students
         classroom.students.forEach((student) => {
           student.code = code
         })
 
-        // Broadcast the updated starter code to all clients in the room
         io.to(classroomId).emit('starter-code-updated', {
           starterCode: code,
           students: Array.from(classroom.students.values()),
@@ -136,29 +84,49 @@ app.prepare().then(async () => {
       }
     })
 
-    socket.on('disconnect', () => {
-      console.log('Client disconnected')
-      // Handle disconnection and remove user from all classrooms they were in
-      classrooms.forEach((classroom, classroomId) => {
-        if (classroom.teacher === socket.id) {
-          classroom.teacher = null
-          io.to(classroomId).emit('teacher-left')
-        } else if (classroom.students.has(socket.id)) {
-          classroom.students.delete(socket.id)
-          io.to(classroomId).emit('participant-left', socket.id)
-        }
-
-        if (classroom.students.size === 0 && !classroom.teacher) {
-          classrooms.delete(classroomId)
-        } else {
-          io.to(classroomId).emit('update-participants', {
-            teacher: classroom.teacher,
-            students: Array.from(classroom.students.values()),
+    socket.on('submit-code', (classroomId, userId, code) => {
+      if (classrooms.has(classroomId)) {
+        const classroom = classrooms.get(classroomId)
+        const student = classroom.students.get(userId)
+        if (student) {
+          student.code = code
+          io.to(classroomId).emit('student-code-updated', {
+            studentId: userId,
+            code: code,
           })
         }
+      }
+    })
+
+    socket.on('disconnect', () => {
+      console.log('Client disconnected')
+      classrooms.forEach((classroom, classroomId) => {
+        handleLeaveRoom(socket, classroomId, socket.id)
       })
     })
   })
+
+  function handleLeaveRoom(socket, classroomId, userId) {
+    socket.leave(classroomId)
+    if (classrooms.has(classroomId)) {
+      const classroom = classrooms.get(classroomId)
+      if (classroom.teacher === userId) {
+        classroom.teacher = null
+      } else {
+        classroom.students.delete(userId)
+      }
+
+      if (classroom.students.size === 0 && !classroom.teacher) {
+        classrooms.delete(classroomId)
+      } else {
+        io.to(classroomId).emit('participant-left', userId)
+        io.to(classroomId).emit('update-participants', {
+          teacher: classroom.teacher,
+          students: Array.from(classroom.students.values()),
+        })
+      }
+    }
+  }
 
   server.all('*', (req, res) => {
     return handle(req, res)
