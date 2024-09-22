@@ -67,6 +67,15 @@ create dummy frontend for virtual classroom 4. select 1 programme for 1 classroo
 
 ## Sep 22
 
+Common:
+
+- [x] add interfaces
+- [ ] what to do with student interface ?
+
+Backend:
+
+- [ ] Create new teacher
+- [ ] create new student
 - make users collection and add 2 teachers and 2 students there
 - pass the whole student body
 - [ ] add leave room functionality

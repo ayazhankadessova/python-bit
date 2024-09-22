@@ -1,17 +1,7 @@
 import { NextResponse } from 'next/server'
 import clientPromise from '../../../lib/mongodb'
+import { Classroom } from '@/models/types'
 import { ObjectId } from 'mongodb'
-
-interface Classroom {
-  _id: string
-  name: string
-  teacherId: string
-  curriculumId: string
-  curriculumName: string
-  lastTopic: string
-  createdAt: Date
-  updatedAt: Date
-}
 
 // POST: Create a new classroom
 export async function POST(request: Request) {

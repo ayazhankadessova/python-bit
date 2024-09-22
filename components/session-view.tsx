@@ -8,11 +8,7 @@ import { Socket } from 'socket.io-client'
 import { CopyIcon, CheckIcon } from 'lucide-react'
 import { ShareLink } from '@/components/share-link'
 import { useToast } from '@/components/hooks/use-toast'
-
-interface Student {
-  id: string
-  code?: string
-}
+import { User } from '@/models/types'
 
 interface SessionViewProps {
   teacherName: string
@@ -32,16 +28,14 @@ export function SessionView({
   const { toast } = useToast()
   const [starterCode, setStarterCode] = useState('')
   const [studentCode, setStudentCode] = useState('')
-  const [students, setStudents] = useState<Student[]>([])
-  // const [inviteLink, setInviteLink] = useState('')
-  const [isCopied, setIsCopied] = useState(false)
+  const [students, setStudents] = useState<User[]>([])
   const inviteLink = `${process.env.NEXT_PUBLIC_BASE_URL}/join/${classroomId}`
 
   useEffect(() => {
     if (socket) {
       socket.on(
         'session-data',
-        (data: { starterCode: string; students: Student[] }) => {
+        (data: { starterCode: string; students: User[] }) => {
           setStarterCode(data.starterCode)
           setStudents(data.students)
           if (role === 'student') {
@@ -52,14 +46,14 @@ export function SessionView({
 
       socket.on(
         'update-participants',
-        (updatedParticipants: { students: Student[] }) => {
+        (updatedParticipants: { students: User[] }) => {
           setStudents(updatedParticipants.students)
         }
       )
 
       socket.on(
         'starter-code-updated',
-        (data: { starterCode: string; students: Student[] }) => {
+        (data: { starterCode: string; students: User[] }) => {
           setStarterCode(data.starterCode)
           setStudents(data.students)
           if (role === 'student') {
@@ -120,16 +114,6 @@ export function SessionView({
     if (socket && role === 'student') {
       socket.emit('submit-code', classroomId, socket.id, studentCode)
     }
-  }
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(inviteLink)
-    setIsCopied(true)
-    setTimeout(() => setIsCopied(false), 2000)
-    toast({
-      title: 'Link copied',
-      description: 'The invite link has been copied to clipboard.',
-    })
   }
 
   return (

@@ -24,18 +24,7 @@ import { useToast } from '@/components/hooks/use-toast'
 import { SessionView } from '@/components/session-view'
 import { useRouter } from 'next/navigation'
 import io from 'socket.io-client'
-
-interface Classroom {
-  _id: string
-  name: string
-  teacherId: string
-  curriculumId: string
-  curriculumName: string
-  lastTopic: string
-  inviteLink: string
-  createdAt: Date
-  updatedAt: Date
-}
+import { Classroom } from '@/models/types'
 
 const ClassroomPage: React.FC = () => {
   const { toast } = useToast()
