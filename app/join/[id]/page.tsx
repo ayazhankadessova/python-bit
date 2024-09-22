@@ -9,24 +9,26 @@ import { useToast } from '@/components/hooks/use-toast'
 const JoinClassroomPage = ({ params }: { params: { id: string } }) => {
   const router = useRouter()
   const { toast } = useToast()
-  const [studentName, setStudentName] = useState('')
+  const [studentId, setStudentId] = useState('')
+  const [username, setUsername] = useState('')
   const [isJoining, setIsJoining] = useState(false)
 
   const handleJoinClassroom = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsJoining(true)
     try {
-      const response = await fetch(`/api/classroom/${params.id}/invite`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ studentName }),
-      })
-      if (!response.ok) {
-        throw new Error('Failed to join classroom')
-      }
-      router.push(`/classroom/${params.id}?role=student&id=${studentName}`)
+      // const response = await fetch(`/api/classroom/${params.id}/invite`, {
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // })
+      // if (!response.ok) {
+      //   throw new Error('Failed to join classroom')
+      // }
+      router.push(
+        `/classroom/${params.id}?role=student&id=${studentId}&username=${username}`
+      )
     } catch (error) {
       console.error('Error joining classroom:', error)
       toast({
@@ -45,9 +47,9 @@ const JoinClassroomPage = ({ params }: { params: { id: string } }) => {
       <form onSubmit={handleJoinClassroom}>
         <Input
           type='text'
-          placeholder='Enter your name'
-          value={studentName}
-          onChange={(e) => setStudentName(e.target.value)}
+          placeholder='Enter your username'
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           className='mb-4'
           required
         />

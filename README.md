@@ -70,15 +70,26 @@ create dummy frontend for virtual classroom 4. select 1 programme for 1 classroo
 Common:
 
 - [x] add interfaces
-- [ ] what to do with student interface ?
+- [x] what to do with student interface ?
 
 Backend:
 
-- [ ] Create new teacher
-- [ ] create new student
-- make users collection and add 2 teachers and 2 students there
-- pass the whole student body
+- [x] Create new teacher
+- [x] create new student
+- [x]make users collection and add 2 teachers and 2 students there
+
 - [ ] add leave room functionality
+- [ ]make it possible for teacher to see every students code via card
+
 - [ ] show toast when end session
 - Send students new code to teacher
-- make it possible for teacher to see every students code
+
+- fix :
+- dont add someone whos is not id db
+
+## Scalability questions
+
+- when will i add students to a classroom? (beginning when creating or with put)
+- page for every classroom w basic info
+- dont hardcode studentID
+- pass the whole student body

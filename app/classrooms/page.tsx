@@ -33,8 +33,6 @@ const ClassroomPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
-  const [activeSession, setActiveSession] = useState<string | null>(null)
-  const [socket, setSocket] = useState<any>(null)
 
   useEffect(() => {
     const fetchClassrooms = async () => {
@@ -110,10 +108,12 @@ const ClassroomPage: React.FC = () => {
         throw new Error('Failed to create session')
       }
 
-      const { sessionId } = await response.json()
+      // const { sessionId } = await response.json()
 
       // Redirect to the classroom session
-      router.push(`/classroom/${classroomId}?session=${sessionId}&role=teacher`)
+      router.push(
+        `/classroom/${classroomId}?&role=teacher&username=gulmirabairkenova`
+      )
     } catch (error) {
       console.error('Error starting lesson:', error)
       toast({
@@ -122,19 +122,6 @@ const ClassroomPage: React.FC = () => {
         variant: 'destructive',
       })
     }
-  }
-
-  const handleEndSession = async () => {
-    if (socket && activeSession) {
-      socket.emit('leave-room', activeSession, 'teacher-id')
-      socket.disconnect()
-      setSocket(null)
-    }
-    setActiveSession(null)
-    toast({
-      title: 'Session ended',
-      description: 'You have successfully ended the session.',
-    })
   }
 
   if (isLoading) {

@@ -2,28 +2,28 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Socket } from 'socket.io-client'
-import { CopyIcon, CheckIcon } from 'lucide-react'
 import { ShareLink } from '@/components/share-link'
 import { useToast } from '@/components/hooks/use-toast'
 import { User } from '@/models/types'
 
 interface SessionViewProps {
-  teacherName: string
+  userName: string
   classroomId: string
   onEndSession: () => void
   socket: Socket | null
   role: 'teacher' | 'student'
+  username: string
 }
 
 export function SessionView({
-  teacherName,
+  userName,
   classroomId,
   onEndSession,
   socket,
   role,
+  username,
 }: SessionViewProps) {
   const { toast } = useToast()
   const [starterCode, setStarterCode] = useState('')
@@ -68,10 +68,10 @@ export function SessionView({
 
       socket.on(
         'student-code-updated',
-        (data: { studentId: string; code: string }) => {
+        (data: { username: string; code: string }) => {
           setStudents((prevStudents) =>
             prevStudents.map((student) =>
-              student.id === data.studentId
+              student.username === data.username
                 ? { ...student, code: data.code }
                 : student
             )
@@ -79,9 +79,9 @@ export function SessionView({
         }
       )
 
-      socket.on('participant-left', (userId: string) => {
+      socket.on('participant-left', (leftUsername: string) => {
         setStudents((prevStudents) =>
-          prevStudents.filter((student) => student.id !== userId)
+          prevStudents.filter((student) => student.username !== leftUsername)
         )
       })
 
@@ -112,7 +112,7 @@ export function SessionView({
 
   const handleSubmitCode = () => {
     if (socket && role === 'student') {
-      socket.emit('submit-code', classroomId, socket.id, studentCode)
+      socket.emit('submit-code', classroomId, username, studentCode)
     }
   }
 
@@ -120,14 +120,16 @@ export function SessionView({
     <div className='flex h-screen'>
       <div className='w-1/3 p-4 border-r'>
         <h2 className='text-2xl font-bold mb-4'>
-          {role === 'teacher' ? `${teacherName}'s Classroom` : 'Classroom'}
+          {role === 'teacher'
+            ? `${userName}'s Classroom`
+            : `${userName}'s Workspace`}
         </h2>
         <h3 className='text-xl font-semibold mb-2'>Students</h3>
         {students.map((student) => (
-          <Card key={student.id} className='mb-2'>
+          <Card key={student.username} className='mb-2'>
             <CardHeader>
               <CardTitle className='flex items-center'>
-                {student.id}
+                {student.username}
                 <span className='ml-2 w-3 h-3 rounded-full bg-green-500' />
               </CardTitle>
             </CardHeader>

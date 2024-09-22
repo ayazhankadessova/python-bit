@@ -18,7 +18,7 @@ app.prepare().then(async () => {
   io.on('connection', (socket) => {
     console.log('Client connected')
 
-    socket.on('join-room', (classroomId, userId, isTeacher) => {
+    socket.on('join-room', (classroomId, username, isTeacher) => {
       socket.join(classroomId)
 
       if (!classrooms.has(classroomId)) {
@@ -32,11 +32,11 @@ app.prepare().then(async () => {
       const classroom = classrooms.get(classroomId)
 
       if (isTeacher) {
-        classroom.teacher = userId
-        socket.to(classroomId).emit('teacher-joined', userId)
+        classroom.teacher = username
+        socket.to(classroomId).emit('teacher-joined', username)
       } else {
-        classroom.students.set(userId, {
-          id: userId,
+        classroom.students.set(username, {
+          username: username,
           code: classroom.starterCode,
         })
       }
@@ -52,8 +52,8 @@ app.prepare().then(async () => {
       })
     })
 
-    socket.on('leave-room', (classroomId, userId) => {
-      handleLeaveRoom(socket, classroomId, userId)
+    socket.on('leave-room', (classroomId, username) => {
+      handleLeaveRoom(socket, classroomId, username)
     })
 
     socket.on('end-session', (classroomId) => {
@@ -84,14 +84,14 @@ app.prepare().then(async () => {
       }
     })
 
-    socket.on('submit-code', (classroomId, userId, code) => {
+    socket.on('submit-code', (classroomId, username, code) => {
       if (classrooms.has(classroomId)) {
         const classroom = classrooms.get(classroomId)
-        const student = classroom.students.get(userId)
+        const student = classroom.students.get(username)
         if (student) {
           student.code = code
           io.to(classroomId).emit('student-code-updated', {
-            studentId: userId,
+            username: username,
             code: code,
           })
         }
@@ -101,25 +101,25 @@ app.prepare().then(async () => {
     socket.on('disconnect', () => {
       console.log('Client disconnected')
       classrooms.forEach((classroom, classroomId) => {
-        handleLeaveRoom(socket, classroomId, socket.id)
+        handleLeaveRoom(socket, classroomId, socket.username)
       })
     })
   })
 
-  function handleLeaveRoom(socket, classroomId, userId) {
+  function handleLeaveRoom(socket, classroomId, username) {
     socket.leave(classroomId)
     if (classrooms.has(classroomId)) {
       const classroom = classrooms.get(classroomId)
-      if (classroom.teacher === userId) {
+      if (classroom.teacher === username) {
         classroom.teacher = null
       } else {
-        classroom.students.delete(userId)
+        classroom.students.delete(username)
       }
 
       if (classroom.students.size === 0 && !classroom.teacher) {
         classrooms.delete(classroomId)
       } else {
-        io.to(classroomId).emit('participant-left', userId)
+        io.to(classroomId).emit('participant-left', username)
         io.to(classroomId).emit('update-participants', {
           teacher: classroom.teacher,
           students: Array.from(classroom.students.values()),

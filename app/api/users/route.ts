@@ -46,23 +46,47 @@ export async function POST(request: Request) {
 }
 
 // GET: Retrieve all users
-export async function GET() {
-  try {
-    const client = await clientPromise
-    const db = client.db('pythonbit')
+// export async function GET() {
+//   try {
+//     const client = await clientPromise
+//     const db = client.db('pythonbit')
 
-    const users = await db.collection('users').find().toArray()
+//     const users = await db.collection('users').find().toArray()
 
-    return NextResponse.json(users)
-  } catch (e) {
-    console.error(e)
-    return NextResponse.json(
-      { message: 'Error retrieving users' },
-      { status: 500 }
-    )
-  }
-}
+//     return NextResponse.json(users)
+//   } catch (e) {
+//     console.error(e)
+//     return NextResponse.json(
+//       { message: 'Error retrieving users' },
+//       { status: 500 }
+//     )
+//   }
+// }
 
+// export async function GET(
+//   request: Request,
+//   { params }: { params: { id: string } }
+// ) {
+//   try {
+//     const client = await clientPromise
+//     const db = client.db('pythonbit')
+//     const userId = params.id
+
+//     const user = await db.collection('users').findOne({ id: userId })
+
+//     if (!user) {
+//       return NextResponse.json({ message: 'User not found' }, { status: 404 })
+//     }
+
+//     return NextResponse.json(user)
+//   } catch (e) {
+//     console.error(e)
+//     return NextResponse.json(
+//       { message: 'Error retrieving user' },
+//       { status: 500 }
+//     )
+//   }
+// }
 // PUT: Update a user
 export async function PUT(request: Request) {
   try {

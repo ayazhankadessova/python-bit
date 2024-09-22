@@ -19,7 +19,7 @@ export interface Classroom {
   lastTopic: string
   createdAt: Date
   updatedAt: Date
-  students: string[] // Array of ObjectId references, use string for simplicity
+  students?: string[] // Array of ObjectId references, use string for simplicity
 }
 
 interface Week {
