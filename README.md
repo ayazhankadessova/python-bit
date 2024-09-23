@@ -76,13 +76,15 @@ Backend:
 
 - [x] Create new teacher
 - [x] create new student
-- [x]make users collection and add 2 teachers and 2 students there
+- [x] make users collection and add 2 teachers and 2 students there
 
-- [ ] add leave room functionality
-- [ ]make it possible for teacher to see every students code via card
+## Sep 23
 
-- [ ] show toast when end session
-- Send students new code to teacher
+- [x] add leave room functionality
+- [x] make it possible for teacher to see every students code via card
+- [x] send code to specific student
+- [ ] add submit code button
+- [ ] show toast when end session , why toasts not working ?
 
 - fix :
 - dont add someone whos is not id db

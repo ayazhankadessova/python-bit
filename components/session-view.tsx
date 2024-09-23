@@ -1,4 +1,3 @@
-'use client'
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
@@ -7,18 +6,17 @@ import { Socket } from 'socket.io-client'
 import { ShareLink } from '@/components/share-link'
 import { useToast } from '@/components/hooks/use-toast'
 import { User } from '@/models/types'
+import { CircleHelp } from 'lucide-react'
 
 interface SessionViewProps {
-  userName: string
   classroomId: string
   onEndSession: () => void
   socket: Socket | null
   role: 'teacher' | 'student'
-  username: string
+  username: string | null
 }
 
 export function SessionView({
-  userName,
   classroomId,
   onEndSession,
   socket,
@@ -29,6 +27,7 @@ export function SessionView({
   const [starterCode, setStarterCode] = useState('')
   const [studentCode, setStudentCode] = useState('')
   const [students, setStudents] = useState<User[]>([])
+  const [selectedStudent, setSelectedStudent] = useState<User | null>(null)
   const inviteLink = `${process.env.NEXT_PUBLIC_BASE_URL}/join/${classroomId}`
 
   useEffect(() => {
@@ -76,6 +75,12 @@ export function SessionView({
                 : student
             )
           )
+          if (selectedStudent && selectedStudent.username === data.username) {
+            setStudentCode(data.code)
+          }
+          if (role === 'student' && username === data.username) {
+            setStudentCode(data.code)
+          }
         }
       )
 
@@ -83,6 +88,9 @@ export function SessionView({
         setStudents((prevStudents) =>
           prevStudents.filter((student) => student.username !== leftUsername)
         )
+        if (selectedStudent && selectedStudent.username === leftUsername) {
+          setSelectedStudent(null)
+        }
       })
 
       socket.on('session-ended', () => {
@@ -102,17 +110,37 @@ export function SessionView({
         socket.off('session-ended')
       }
     }
-  }, [socket, role, toast, onEndSession])
+  }, [socket, role, toast, onEndSession, selectedStudent, username])
 
   const handleSendCode = () => {
     if (socket) {
-      socket.emit('update-starter-code', classroomId, starterCode)
+      if (selectedStudent) {
+        socket.emit(
+          'update-code',
+          classroomId,
+          selectedStudent.username,
+          studentCode
+        )
+      } else {
+        socket.emit('update-starter-code', classroomId, starterCode)
+        toast({
+          title: 'Code Sent',
+          description: 'Code sent to all students.',
+        })
+      }
     }
   }
 
-  const handleSubmitCode = () => {
+  const handleUpdateCode = () => {
     if (socket && role === 'student') {
-      socket.emit('submit-code', classroomId, username, studentCode)
+      socket.emit('update-code', classroomId, username, studentCode)
+    }
+  }
+
+  const handleStudentSelect = (student: User | null) => {
+    setSelectedStudent(student)
+    if (student) {
+      setStudentCode(student.code || '')
     }
   }
 
@@ -121,12 +149,35 @@ export function SessionView({
       <div className='w-1/3 p-4 border-r'>
         <h2 className='text-2xl font-bold mb-4'>
           {role === 'teacher'
-            ? `${userName}'s Classroom`
-            : `${userName}'s Workspace`}
+            ? `${username}'s Classroom`
+            : `${username}'s Workspace`}
         </h2>
+        {role === 'teacher' && (
+          <Card
+            className={`mb-4 cursor-pointer ${
+              !selectedStudent ? 'border-blue-500' : ''
+            }`}
+            onClick={() => handleStudentSelect(null)}
+          >
+            <CardHeader>
+              <CardTitle className='flex items-center'>
+                {username} (Teacher)
+                <span className='ml-2 w-3 h-3 rounded-full bg-purple-500' />
+              </CardTitle>
+            </CardHeader>
+          </Card>
+        )}
         <h3 className='text-xl font-semibold mb-2'>Students</h3>
         {students.map((student) => (
-          <Card key={student.username} className='mb-2'>
+          <Card
+            key={student.username}
+            className={`mb-2 cursor-pointer ${
+              selectedStudent?.username === student.username
+                ? 'border-blue-500'
+                : ''
+            }`}
+            onClick={() => role === 'teacher' && handleStudentSelect(student)}
+          >
             <CardHeader>
               <CardTitle className='flex items-center'>
                 {student.username}
@@ -151,23 +202,40 @@ export function SessionView({
               </Button>
             </div>
             <Textarea
-              value={starterCode}
-              onChange={(e) => setStarterCode(e.target.value)}
+              value={selectedStudent ? studentCode : starterCode}
+              onChange={(e) =>
+                selectedStudent
+                  ? setStudentCode(e.target.value)
+                  : setStarterCode(e.target.value)
+              }
               placeholder='Write your Python code here'
               className='h-1/2 mb-4'
             />
-            <Button onClick={handleSendCode}>Send Code to Students</Button>
+            <Button onClick={handleSendCode}>
+              {selectedStudent
+                ? `Send Code to ${selectedStudent.username}`
+                : 'Send Code to All Students'}
+            </Button>
           </>
         )}
         {role === 'student' && (
           <>
+            <div className='flex justify-end gap-2 mb-4'>
+              <Button className='bg-zinc-950'>
+                Ask for Help
+                <CircleHelp className='ml-3' />
+              </Button>
+              <Button onClick={onEndSession} variant='destructive'>
+                Leave Room
+              </Button>
+            </div>
             <Textarea
               value={studentCode}
               onChange={(e) => setStudentCode(e.target.value)}
               placeholder='Write your solution here'
               className='h-1/2 mb-4'
             />
-            <Button onClick={handleSubmitCode}>Submit Code</Button>
+            <Button onClick={handleUpdateCode}>Update Code</Button>
           </>
         )}
       </div>

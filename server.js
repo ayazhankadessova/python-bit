@@ -60,10 +60,8 @@ app.prepare().then(async () => {
       if (classrooms.has(classroomId)) {
         const classroom = classrooms.get(classroomId)
         io.to(classroomId).emit('session-ended')
-
         // Disconnect all clients from the room
         io.in(classroomId).disconnectSockets(true)
-
         // Remove the classroom data
         classrooms.delete(classroomId)
       }
@@ -76,7 +74,6 @@ app.prepare().then(async () => {
         classroom.students.forEach((student) => {
           student.code = code
         })
-
         io.to(classroomId).emit('starter-code-updated', {
           starterCode: code,
           students: Array.from(classroom.students.values()),
@@ -84,7 +81,7 @@ app.prepare().then(async () => {
       }
     })
 
-    socket.on('submit-code', (classroomId, username, code) => {
+    socket.on('update-code', (classroomId, username, code) => {
       if (classrooms.has(classroomId)) {
         const classroom = classrooms.get(classroomId)
         const student = classroom.students.get(username)
@@ -115,7 +112,6 @@ app.prepare().then(async () => {
       } else {
         classroom.students.delete(username)
       }
-
       if (classroom.students.size === 0 && !classroom.teacher) {
         classrooms.delete(classroomId)
       } else {

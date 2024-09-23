@@ -99,12 +99,11 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
 
   return (
     <SessionView
-      userName={username}
+      username={username}
       classroomId={classroomId}
       onEndSession={handleEndSession}
       socket={socket}
       role={role === 'student' ? 'student' : 'teacher'}
-      username={username}
     />
   )
 }
