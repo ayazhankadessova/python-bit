@@ -85,6 +85,9 @@ Backend:
 - [x] send code to specific student
 - [ ] add submit code button
 - [ ] show toast when end session , why toasts not working ?
+- [ ] how to show teaching content?
+
+- work on showing full programmes
 
 - fix :
 - dont add someone whos is not id db

@@ -5,6 +5,7 @@ import { SessionView } from '@/components/session-view'
 import io, { Socket } from 'socket.io-client'
 import { User } from '@/models/types'
 
+
 interface ClassroomPageProps {
   params: {
     id: string
