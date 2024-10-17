@@ -98,3 +98,8 @@ Backend:
 - page for every classroom w basic info
 - dont hardcode studentID
 - pass the whole student body
+
+### DO:
+
+1. be able to connect to MicroBit
+2. syntax checking
