@@ -8,7 +8,7 @@ export interface User {
   createdAt: Date
   updatedAt: Date
   code?: string // Optional property
-  completedTasks?: string[] // Optional property for completed tasks
+  completedTasks?: number[] // Optional property for completed tasks
 }
 
 export interface Classroom {

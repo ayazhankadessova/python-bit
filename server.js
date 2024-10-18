@@ -61,6 +61,10 @@ app.prepare().then(async () => {
     })
 
     socket.on('execute-code', async ({ id, code, classroomId, username }) => {
+      console.log(
+        `Executing code for ${username} in classroom ${classroomId}:`,
+        code
+      )
       try {
         // Kill any existing process for this user
         if (runningProcesses.has(username)) {
@@ -88,6 +92,7 @@ app.prepare().then(async () => {
             python.kill()
             return
           }
+          console.log(`Output for ${username}:`, data.toString())
           io.to(classroomId).emit('execution-output', {
             id,
             output: data.toString(),
@@ -96,6 +101,7 @@ app.prepare().then(async () => {
 
         python.stderr.on('data', (data) => {
           error += data.toString()
+          console.error(`Error for ${username}:`, data.toString())
           io.to(classroomId).emit('execution-error', {
             id,
             error: data.toString(),
@@ -104,6 +110,7 @@ app.prepare().then(async () => {
 
         python.on('close', (code) => {
           runningProcesses.delete(username)
+          console.log(`Execution complete for ${username}. Exit code:`, code)
           io.to(classroomId).emit('execution-complete', {
             id,
             exitCode: code,
@@ -115,6 +122,7 @@ app.prepare().then(async () => {
         // Handle timeout
         python.on('error', (error) => {
           runningProcesses.delete(username)
+          console.error(`Execution error for ${username}:`, error.message)
           io.to(classroomId).emit('execution-error', {
             id,
             error: error.message,
@@ -122,10 +130,31 @@ app.prepare().then(async () => {
         })
       } catch (error) {
         runningProcesses.delete(username)
+        console.error(`Catch block error for ${username}:`, error.message)
         io.to(classroomId).emit('execution-error', {
           id,
           error: error.message,
         })
+      }
+    })
+
+    socket.on('update-code', (classroomId, username, code, completedTasks) => {
+      console.log(
+        `Updating code for ${username} in classroom ${classroomId}. Completed tasks:`,
+        completedTasks
+      )
+      if (classrooms.has(classroomId)) {
+        const classroom = classrooms.get(classroomId)
+        const student = classroom.students.get(username)
+        if (student) {
+          student.code = code
+          student.completedTasks = completedTasks
+          io.to(classroomId).emit('student-code-updated', {
+            username: username,
+            code: code,
+            completedTasks: completedTasks,
+          })
+        }
       }
     })
 
@@ -163,19 +192,19 @@ app.prepare().then(async () => {
       }
     })
 
-    socket.on('update-code', (classroomId, username, code) => {
-      if (classrooms.has(classroomId)) {
-        const classroom = classrooms.get(classroomId)
-        const student = classroom.students.get(username)
-        if (student) {
-          student.code = code
-          io.to(classroomId).emit('student-code-updated', {
-            username: username,
-            code: code,
-          })
-        }
-      }
-    })
+    // socket.on('update-code', (classroomId, username, code) => {
+    //   if (classrooms.has(classroomId)) {
+    //     const classroom = classrooms.get(classroomId)
+    //     const student = classroom.students.get(username)
+    //     if (student) {
+    //       student.code = code
+    //       io.to(classroomId).emit('student-code-updated', {
+    //         username: username,
+    //         code: code,
+    //       })
+    //     }
+    //   }
+    // })
 
     socket.on('disconnect', () => {
       console.log('Client disconnected')

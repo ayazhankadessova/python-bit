@@ -99,10 +99,13 @@ Backend:
 - dont hardcode studentID
 - pass the whole student body
 
-### DO:
+### 18 October:
 
-1. be able to connect to MicroBit
-2. syntax checking
-3. Run python code
+1. syntax checking
+2. Run python code
+3. [ ] Progress to new tasks
 4. [ ] Add not found page
 5. [ ] Integrate AI to give them feedback on their code
+6. [ ] Go back in their code
+
+7. be able to connect to MicroBit
