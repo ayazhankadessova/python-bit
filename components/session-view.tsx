@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
+import CodeExecutor from '@/components/codeExecutor'
 import { Socket } from 'socket.io-client'
 import { ShareLink } from '@/components/share-link'
 import { useToast } from '@/components/hooks/use-toast'
@@ -13,7 +14,7 @@ interface SessionViewProps {
   onEndSession: () => void
   socket: Socket | null
   role: 'teacher' | 'student'
-  username: string | null
+  username: string
 }
 
 export function SessionView({
@@ -201,17 +202,17 @@ export function SessionView({
                 End Session
               </Button>
             </div>
-            <Textarea
-              value={selectedStudent ? studentCode : starterCode}
-              onChange={(e) =>
-                selectedStudent
-                  ? setStudentCode(e.target.value)
-                  : setStarterCode(e.target.value)
+            <CodeExecutor
+              code={selectedStudent ? studentCode : starterCode}
+              onChange={(code) =>
+                selectedStudent ? setStudentCode(code) : setStarterCode(code)
               }
-              placeholder='Write your Python code here'
-              className='h-1/2 mb-4'
+              socket={socket}
+              classroomId={classroomId}
+              username={username}
+              role={role}
             />
-            <Button onClick={handleSendCode}>
+            <Button onClick={handleSendCode} className='mt-4'>
               {selectedStudent
                 ? `Send Code to ${selectedStudent.username}`
                 : 'Send Code to All Students'}

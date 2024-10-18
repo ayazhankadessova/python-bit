@@ -2,6 +2,8 @@ import express from 'express'
 import next from 'next'
 import http from 'http'
 import { Server as SocketIOServer } from 'socket.io'
+import { spawn } from 'node:child_process'
+import fs from 'node:fs'
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
@@ -54,6 +56,77 @@ app.prepare().then(async () => {
 
     socket.on('leave-room', (classroomId, username) => {
       handleLeaveRoom(socket, classroomId, username)
+    })
+
+    socket.on('execute-code', async ({ id, code, classroomId, username }) => {
+      try {
+        // Create a temporary file to execute the code
+        const timestamp = Date.now()
+        const fileName = `temp_${timestamp}_${id}.py`
+        const filePath = `/tmp/${fileName}` // Use appropriate path for your system
+
+        // Write code to temporary file
+        await fs.promises.writeFile(filePath, code)
+
+        // Execute the Python file
+        const python = spawn('python3', [filePath], {
+          timeout: 10000, // 10 second timeout
+        })
+
+        let outputData = ''
+        let errorData = ''
+
+        python.stdout.on('data', (data) => {
+          outputData += data.toString()
+          io.to(classroomId).emit('execution-output', {
+            id,
+            output: data.toString(),
+          })
+        })
+
+        python.stderr.on('data', (data) => {
+          errorData += data.toString()
+          io.to(classroomId).emit('execution-error', {
+            id,
+            error: data.toString(),
+          })
+        })
+
+        python.on('close', async (code) => {
+          // Clean up the temporary file
+          try {
+            await fs.promises.unlink(filePath)
+          } catch (err) {
+            console.error('Error cleaning up temp file:', err)
+          }
+
+          io.to(classroomId).emit('execution-complete', {
+            id,
+            exitCode: code,
+            output: outputData,
+            error: errorData,
+          })
+        })
+
+        // Handle timeout
+        python.on('error', (error) => {
+          io.to(classroomId).emit('execution-error', {
+            id,
+            error: error.message,
+          })
+        })
+      } catch (error) {
+        io.to(classroomId).emit('execution-error', {
+          id,
+          error: error.message,
+        })
+      }
+    })
+
+    // Add this handler for stopping execution
+    socket.on('stop-execution', ({ id, classroomId, username }) => {
+      // Find and kill the corresponding Python process
+      // You'll need to maintain a map of running processes
     })
 
     socket.on('end-session', (classroomId) => {
