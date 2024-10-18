@@ -4,9 +4,9 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import CodeExecutor from '@/components/codeExecutor'
 import { Socket } from 'socket.io-client'
 import { ShareLink } from '@/components/share-link'
-import { useToast } from '@/components/hooks/use-toast'
+import { useToast } from '@/hooks/use-toast'
 import { User } from '@/models/types'
-import { BookOpen, CheckCircle2, MessageSquareMore } from 'lucide-react'
+import { BookOpen, CheckCircle2, MessageSquareMore, Play } from 'lucide-react'
 
 interface Task {
   id: number
@@ -42,65 +42,25 @@ export function SessionView({
   const inviteLink = `${process.env.NEXT_PUBLIC_BASE_URL}/join/${classroomId}`
   const [completedTasks, setCompletedTasks] = useState<number[]>([])
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0)
-
-  const [tasks] = useState<Task[]>([
-    {
-      id: 1,
-      title: 'Draw a Square',
-      description:
-        "Write a program using loops to draw a 5x5 square using '*' characters.",
-      starterCode:
-        '# Use nested loops to create a square\n# Example output:\n# *****\n# *****\n# *****\n# *****\n# *****\n\ndef draw_square():\n    # Your code here\n    pass\n\ndraw_square()',
-      testCases: [
-        {
-          input: '',
-          expectedOutput: '*****\n*****\n*****\n*****\n*****',
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: 'Draw a Square',
-      description:
-        "Write a program using loops to draw a 5x5 square using '*' characters.",
-      starterCode:
-        '# Use nested loops to create a square\n# Example output:\n# *****\n# *****\n# *****\n# *****\n# *****\n\ndef draw_square():\n    # Your code here\n    pass\n\ndraw_square()',
-      testCases: [
-        {
-          input: '',
-          expectedOutput: '*****\n*****\n*****\n*****',
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: 'Draw a Square',
-      description:
-        "Write a program using loops to draw a 5x5 square using '*' characters.",
-      starterCode:
-        '# Use nested loops to create a square\n# Example output:\n# *****\n# *****\n# *****\n# *****\n# *****\n\ndef draw_square():\n    # Your code here\n    pass\n\ndraw_square()',
-      testCases: [
-        {
-          input: '',
-          expectedOutput: '*****\n*****\n*****\n****',
-        },
-      ],
-    },
-    // ... other tasks remain the same
-  ])
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [starter, setStarter] = useState(false)
 
   useEffect(() => {
     if (!socket) return
 
     socket.on(
       'session-data',
-      (data: { starterCode: string; students: User[] }) => {
+      (data: { starterCode: string; students: User[]; tasks: Task[] }) => {
         console.log('Received session data:', data)
         setStarterCode(data.starterCode)
         setStudents(data.students)
+        setTasks(data.tasks)
         if (role === 'student') {
           setStudentCode(data.starterCode)
         }
+        setIsLoading(false)
+        console.log('Session data processed, isLoading set to false')
       }
     )
 
@@ -166,24 +126,42 @@ export function SessionView({
 
     socket.on(
       'execution-complete',
-      (data: { output: string; error: string | null; id: string }) => {
+      (data: {
+        output: string
+        error: string | null
+        id: string
+        exitCode: number
+      }) => {
         console.log('Execution complete:', data)
-        const currentTask = tasks[currentTaskIndex]
-
-        if (role === 'student' && !data.error) {
-          const passed = currentTask.testCases.every((testCase) => {
-            console.log(
-              'Comparing:',
-              data.output.trim(),
-              'with',
-              testCase.expectedOutput.trim()
-            )
-            return data.output.trim() === testCase.expectedOutput.trim()
+        if (data.error || data.exitCode !== 0) {
+          toast({
+            title: 'Execution Error',
+            description:
+              data.error || 'An error occurred during code execution.',
+            variant: 'destructive',
           })
-          console.log('Task passed:', passed)
+        } else {
+          toast({
+            title: 'Code Executed',
+            description: 'Your code has been executed successfully.',
+          })
+        }
+      }
+    )
 
-          if (passed) {
-            const newCompletedTasks = [...completedTasks, currentTask.id]
+    socket.on(
+      'submission-result',
+      (data: {
+        username: string
+        taskId: number
+        passed: boolean
+        output: string
+        error: string | null
+      }) => {
+        console.log('Submission result:', data)
+        if (role === 'student' && data.username === username) {
+          if (data.passed) {
+            const newCompletedTasks = [...completedTasks, data.taskId]
             setCompletedTasks(newCompletedTasks)
 
             if (currentTaskIndex < tasks.length - 1) {
@@ -220,6 +198,13 @@ export function SessionView({
       }
     })
 
+    console.log('Emitting join-room event')
+
+    if (!starter) {
+      socket.emit('join-room', classroomId, username, role === 'teacher')
+      setStarter(true)
+    }
+
     socket.on('session-ended', () => {
       toast({
         title: 'Session Ended',
@@ -233,6 +218,7 @@ export function SessionView({
       socket.off('update-participants')
       socket.off('student-code-updated')
       socket.off('execution-complete')
+      socket.off('submission-result')
     }
   }, [
     socket,
@@ -245,6 +231,18 @@ export function SessionView({
     tasks,
     completedTasks,
   ])
+
+  const handleRunCode = () => {
+    console.log('Running code:', studentCode)
+    if (socket && role === 'student') {
+      socket.emit('run-code', {
+        id: Date.now().toString(),
+        code: studentCode,
+        classroomId,
+        username,
+      })
+    }
+  }
 
   const handleSendCode = () => {
     if (socket) {
@@ -269,25 +267,13 @@ export function SessionView({
   const handleSubmitCode = () => {
     console.log('Submitting code:', studentCode)
     if (socket && role === 'student') {
-      socket.emit('execute-code', {
+      socket.emit('submit-code', {
         id: Date.now().toString(),
         code: studentCode,
         classroomId,
         username,
+        taskId: tasks[currentTaskIndex].id,
       })
-    }
-  }
-
-  const handleUpdateCode = () => {
-    console.log('I am here')
-    if (socket && role === 'student') {
-      socket.emit(
-        'update-code',
-        classroomId,
-        username,
-        studentCode,
-        completedTasks
-      )
     }
   }
 
@@ -298,101 +284,139 @@ export function SessionView({
     }
   }
 
-  const renderTeacherView = () => (
-    <div className='w-2/3 p-4'>
-      <div className='flex justify-between mb-4'>
-        <ShareLink fullLink={inviteLink} />
-        <Button onClick={onEndSession} variant='destructive'>
-          End Session
-        </Button>
-      </div>
+  const renderTeacherView = () => {
+    if (isLoading) {
+      return (
+        <div className='w-2/3 p-4'>
+          <Card className='mb-4'>
+            <CardContent>
+              <p>Loading session data...</p>
+            </CardContent>
+          </Card>
+        </div>
+      )
+    }
 
-      <Card className='mb-4'>
-        <CardHeader>
-          <CardTitle>Class Progress</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className='space-y-2'>
-            {tasks.map((task) => (
-              <div key={task.id} className='flex items-center justify-between'>
-                <span>{task.title}</span>
-                <span>
-                  {
-                    students.filter(
-                      (s) => s.completedTasks?.includes(task.id) || []
-                    ).length
-                  }
-                  /{students.length} completed
-                </span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <CodeExecutor
-        code={selectedStudent ? studentCode : starterCode}
-        onChange={selectedStudent ? setStudentCode : setStarterCode}
-        socket={socket}
-        classroomId={classroomId}
-        username={username}
-        role={role}
-      />
-
-      <Button onClick={handleSendCode} className='mt-4'>
-        {selectedStudent
-          ? `Send Code to ${selectedStudent.username}`
-          : 'Send Code to All Students'}
-      </Button>
-    </div>
-  )
-
-  const renderStudentView = () => (
-    <div className='w-2/3 p-4'>
-      <div className='flex justify-between mb-4'>
-        <div className='flex gap-2'>
-          <Button variant='outline'>
-            <BookOpen className='mr-2 h-4 w-4' />
-            Reference Guide
-          </Button>
-          <Button className='bg-zinc-950'>
-            <MessageSquareMore className='mr-2 h-4 w-4' />
-            Ask AI Help
+    return (
+      <div className='w-2/3 p-4'>
+        <div className='flex justify-between mb-4'>
+          <ShareLink fullLink={inviteLink} />
+          <Button onClick={onEndSession} variant='destructive'>
+            End Session
           </Button>
         </div>
-        <Button onClick={onEndSession} variant='destructive'>
-          Leave Room
+
+        <Card className='mb-4'>
+          <CardHeader>
+            <CardTitle>Class Progress</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className='space-y-2'>
+              {tasks.map((task) => (
+                <div
+                  key={task.id}
+                  className='flex items-center justify-between'
+                >
+                  <span>{task.title}</span>
+                  <span>
+                    {
+                      students.filter(
+                        (s) => s.completedTasks?.includes(task.id) || []
+                      ).length
+                    }
+                    /{students.length} completed
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <CodeExecutor
+          code={selectedStudent ? studentCode : starterCode}
+          onChange={selectedStudent ? setStudentCode : setStarterCode}
+          socket={socket}
+          classroomId={classroomId}
+          username={username}
+          role={role}
+        />
+
+        <Button onClick={handleSendCode} className='mt-4'>
+          {selectedStudent
+            ? `Send Code to ${selectedStudent.username}`
+            : 'Send Code to All Students'}
         </Button>
       </div>
+    )
+  }
 
-      <Card className='mb-4'>
-        <CardHeader>
-          <CardTitle className='flex items-center justify-between'>
-            {tasks[currentTaskIndex].title}
-            <span className='text-sm font-normal'>
-              Task {currentTaskIndex + 1}/{tasks.length}
-            </span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className='mb-4'>{tasks[currentTaskIndex].description}</p>
-          <CodeExecutor
-            code={studentCode}
-            onChange={setStudentCode}
-            socket={socket}
-            classroomId={classroomId}
-            username={username}
-            role={role}
-          />
-
-          <Button onClick={handleUpdateCode} className='mt-4'>
-            Submit Code
-            <CheckCircle2 className='ml-2 h-4 w-4' />
+  const renderStudentView = () => {
+    if (isLoading) {
+      return (
+        <div className='w-2/3 p-4'>
+          <Card className='mb-4'>
+            <CardContent>
+              <p>Loading session data...</p>
+            </CardContent>
+          </Card>
+        </div>
+      )
+    }
+    return (
+      <div className='w-2/3 p-4'>
+        <div className='flex justify-between mb-4'>
+          <div className='flex gap-2'>
+            <Button variant='outline'>
+              <BookOpen className='mr-2 h-4 w-4' />
+              Reference Guide
+            </Button>
+            <Button className='bg-zinc-950'>
+              <MessageSquareMore className='mr-2 h-4 w-4' />
+              Ask AI Help
+            </Button>
+          </div>
+          <Button onClick={onEndSession} variant='destructive'>
+            Leave Room
           </Button>
-        </CardContent>
-      </Card>
-    </div>
-  )
+        </div>
+
+        <Card className='mb-4'>
+          <CardHeader>
+            <CardTitle className='flex items-center justify-between'>
+              {tasks[currentTaskIndex].title}
+              <span className='text-sm font-normal'>
+                Task {currentTaskIndex + 1}/{tasks.length}
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='mb-4'>{tasks[currentTaskIndex].description}</p>
+            <CodeExecutor
+              code={studentCode}
+              onChange={setStudentCode}
+              socket={socket}
+              classroomId={classroomId}
+              username={username}
+              role={role}
+            />
+
+            <div className='flex gap-2 mt-4'>
+              <Button onClick={handleRunCode}>
+                Run Code
+                <Play className='ml-2 h-4 w-4' />
+              </Button>
+              <Button onClick={handleSubmitCode}>
+                Submit Code
+                <CheckCircle2 className='ml-2 h-4 w-4' />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  console.log('Rendering SessionView, isLoading:', isLoading)
 
   return (
     <div className='flex h-screen'>
@@ -403,7 +427,13 @@ export function SessionView({
             : `${username}'s Progress`}
         </h2>
 
-        {role === 'student' ? (
+        {isLoading ? (
+          <Card className='mb-4'>
+            <CardContent>
+              <p>Loading session data...</p>
+            </CardContent>
+          </Card>
+        ) : role === 'student' ? (
           <Card className='mb-4'>
             <CardHeader>
               <CardTitle>Your Progress</CardTitle>

@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { SiteHeader } from '@/components/site-header'
 // import { BlogFooter } from '@/components/footer'
 import { Providers } from '@/components/providers'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-mono' })
 
@@ -31,6 +32,7 @@ export default function RootLayout({
             <SiteHeader />
             <main className='flex-1'>{children}</main>
             {/* <BlogFooter /> */}
+            <Toaster />
           </div>
         </Providers>
       </body>
