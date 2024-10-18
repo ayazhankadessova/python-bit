@@ -102,10 +102,19 @@ Backend:
 ### 18 October:
 
 1. syntax checking
-2. Run python code
-3. [ ] Progress to new tasks
+2. [x] Run python code
+3. [x] Progress to new tasks
 4. [ ] Add not found page
-5. [ ] Integrate AI to give them feedback on their code
-6. [ ] Go back in their code
+5. [x] Remove duplicate session data checking
 
-7. be able to connect to MicroBit
+6. be able to connect to MicroBit
+
+## 19 October
+
+6. [ ] no point of run code ?
+
+1. [ ] how many runs needed?
+1. [ ] Check for many classrooms
+1. [ ] Integrate AI to give them feedback on their code
+1. [ ] Go back in their code
+1. [ ] understand how tasts are completed

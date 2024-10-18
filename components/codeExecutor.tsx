@@ -124,7 +124,7 @@ const PythonCodeEditor = ({
         <div className='flex gap-2'>
           <Button
             onClick={handleRunCode}
-            disabled={isRunning || !code.trim()}
+            // disabled={isRunning || !code.trim()}
             className='w-24'
           >
             {isRunning ? (

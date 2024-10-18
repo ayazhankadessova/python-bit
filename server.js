@@ -44,7 +44,43 @@ app.prepare().then(async () => {
                 },
               ],
             },
-            // Add more tasks here
+            {
+              id: 2,
+              title: 'Print Number Pyramid',
+              description:
+                'Write a program that uses nested loops to print a number pyramid. The pyramid should have 5 rows, and each row should contain numbers from 1 up to the row number.',
+              testCases: [
+                {
+                  input: '',
+                  expectedOutput: '1\n1 2\n1 2 3\n1 2 3 4\n1 2 3 4 5',
+                },
+              ],
+            },
+            {
+              id: 3,
+              title: 'Fibonacci Sequence',
+              description:
+                'Write a program that uses a loop to generate the first 10 numbers of the Fibonacci sequence. The sequence starts with 0 and 1, and each subsequent number is the sum of the two preceding ones.',
+              testCases: [
+                {
+                  input: '',
+                  expectedOutput: '0 1 1 2 3 5 8 13 21 34',
+                },
+              ],
+            },
+            {
+              id: 4,
+              title: 'Multiplication Table',
+              description:
+                'Create a program that uses nested loops to print a multiplication table for numbers 1 through 5. Each number should be padded with spaces to ensure alignment.',
+              testCases: [
+                {
+                  input: '',
+                  expectedOutput:
+                    '  1  2  3  4  5\n  2  4  6  8 10\n  3  6  9 12 15\n  4  8 12 16 20\n  5 10 15 20 25',
+                },
+              ],
+            },
           ],
         })
       }
@@ -84,29 +120,6 @@ app.prepare().then(async () => {
         `Session data sent to ${username} in classroom ${classroomId}`
       )
     })
-
-    //   const classroom = classrooms.get(classroomId)
-
-    //   if (isTeacher) {
-    //     classroom.teacher = username
-    //     socket.to(classroomId).emit('teacher-joined', username)
-    //   } else {
-    //     classroom.students.set(username, {
-    //       username: username,
-    //       code: classroom.starterCode,
-    //     })
-    //   }
-
-    //   io.to(classroomId).emit('update-participants', {
-    //     teacher: classroom.teacher,
-    //     students: Array.from(classroom.students.values()),
-    //   })
-
-    //   socket.emit('session-data', {
-    //     starterCode: classroom.starterCode,
-    //     students: Array.from(classroom.students.values()),
-    //   })
-    // })
 
     socket.on('leave-room', (classroomId, username) => {
       handleLeaveRoom(socket, classroomId, username)
@@ -269,20 +282,6 @@ app.prepare().then(async () => {
         })
       }
     })
-
-    // socket.on('update-code', (classroomId, username, code) => {
-    //   if (classrooms.has(classroomId)) {
-    //     const classroom = classrooms.get(classroomId)
-    //     const student = classroom.students.get(username)
-    //     if (student) {
-    //       student.code = code
-    //       io.to(classroomId).emit('student-code-updated', {
-    //         username: username,
-    //         code: code,
-    //       })
-    //     }
-    //   }
-    // })
 
     socket.on('disconnect', () => {
       console.log('Client disconnected')
