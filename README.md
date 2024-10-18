@@ -103,3 +103,6 @@ Backend:
 
 1. be able to connect to MicroBit
 2. syntax checking
+3. Run python code
+4. [ ] Add not found page
+5. [ ] Integrate AI to give them feedback on their code

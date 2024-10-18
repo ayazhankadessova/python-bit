@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
 import { Loader2, Play, StopCircle } from 'lucide-react'
+import Editor from '@monaco-editor/react'
 
-interface CodeExecutorProps {
+interface CodeEditorProps {
   code: string
   onChange: (code: string) => void
   socket: any
@@ -13,18 +13,37 @@ interface CodeExecutorProps {
   role: 'teacher' | 'student'
 }
 
-const CodeExecutor = ({
+const PythonCodeEditor = ({
   code,
   onChange,
   socket,
   classroomId,
   username,
   role,
-}: CodeExecutorProps) => {
+}: CodeEditorProps) => {
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
   const [isRunning, setIsRunning] = useState(false)
   const [execId, setExecId] = useState('')
+
+  // Monaco editor options
+  const editorOptions = {
+    minimap: { enabled: false },
+    fontSize: 14,
+    lineNumbers: 'on',
+    roundedSelection: false,
+    scrollBeyondLastLine: false,
+    automaticLayout: true,
+    wordWrap: 'on' as const,
+    suggestOnTriggerCharacters: true,
+    tabSize: 4,
+    rulers: [80],
+    quickSuggestions: {
+      other: true,
+      comments: true,
+      strings: true,
+    },
+  }
 
   useEffect(() => {
     if (!socket) return
@@ -55,7 +74,7 @@ const CodeExecutor = ({
     }
   }, [socket, execId])
 
-  const handleRunCode = useCallback(() => {
+  const handleRunCode = () => {
     setIsRunning(true)
     setOutput('')
     setError('')
@@ -68,9 +87,9 @@ const CodeExecutor = ({
       classroomId,
       username,
     })
-  }, [code, socket, classroomId, username])
+  }
 
-  const handleStopExecution = useCallback(() => {
+  const handleStopExecution = () => {
     if (execId) {
       socket.emit('stop-execution', {
         id: execId,
@@ -79,17 +98,29 @@ const CodeExecutor = ({
       })
       setIsRunning(false)
     }
-  }, [execId, socket, classroomId, username])
+  }
+
+  function handleEditorDidMount(editor: any) {
+    // Enable Python syntax highlighting and suggestions
+    editor.updateOptions({
+      ...editorOptions,
+    })
+  }
 
   return (
     <div className='flex flex-col gap-4'>
-      <div className='flex flex-col gap-2'>
-        <Textarea
-          value={code}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder='Write your Python code here...'
-          className='font-mono min-h-[200px]'
-        />
+      <Card className='p-4'>
+        <div className='h-[400px] mb-4'>
+          <Editor
+            height='100%'
+            defaultLanguage='python'
+            value={code}
+            onChange={(value) => onChange(value || '')}
+            theme='vs-dark'
+            options={editorOptions}
+            onMount={handleEditorDidMount}
+          />
+        </div>
         <div className='flex gap-2'>
           <Button
             onClick={handleRunCode}
@@ -114,7 +145,7 @@ const CodeExecutor = ({
             </Button>
           )}
         </div>
-      </div>
+      </Card>
 
       <Card className='p-4'>
         <h3 className='font-semibold mb-2'>Output</h3>
@@ -135,4 +166,4 @@ const CodeExecutor = ({
   )
 }
 
-export default CodeExecutor
+export default PythonCodeEditor

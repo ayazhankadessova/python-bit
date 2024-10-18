@@ -7,7 +7,25 @@ import { Socket } from 'socket.io-client'
 import { ShareLink } from '@/components/share-link'
 import { useToast } from '@/components/hooks/use-toast'
 import { User } from '@/models/types'
-import { CircleHelp } from 'lucide-react'
+import {
+  CircleHelp,
+  BookOpen,
+  CheckCircle2,
+  MessageSquareMore,
+} from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+
+// Define the task type
+interface Task {
+  id: number
+  title: string
+  description: string
+  starterCode: string
+  testCases: Array<{
+    input: string
+    expectedOutput: string
+  }>
+}
 
 interface SessionViewProps {
   classroomId: string
@@ -28,8 +46,100 @@ export function SessionView({
   const [starterCode, setStarterCode] = useState('')
   const [studentCode, setStudentCode] = useState('')
   const [students, setStudents] = useState<User[]>([])
+  const [codeError, setCodeError] = useState<string | null>(null)
   const [selectedStudent, setSelectedStudent] = useState<User | null>(null)
   const inviteLink = `${process.env.NEXT_PUBLIC_BASE_URL}/join/${classroomId}`
+
+  // New state for tasks
+  const [currentTaskIndex, setCurrentTaskIndex] = useState(0)
+  const [tasks] = useState<Task[]>([
+    {
+      id: 1,
+      title: 'Draw a Square',
+      description:
+        "Write a program using loops to draw a 5x5 square using '*' characters.",
+      starterCode:
+        '# Use nested loops to create a square\n# Example output:\n# *****\n# *****\n# *****\n# *****\n# *****\n\ndef draw_square():\n    # Your code here\n    pass\n\ndraw_square()',
+      testCases: [
+        {
+          input: '',
+          expectedOutput: '*****\n*****\n*****\n*****\n*****',
+        },
+      ],
+    },
+    {
+      id: 2,
+      title: 'Number Pattern',
+      description:
+        'Create a number pattern using nested loops (1 to 5 in each row, 5 rows).',
+      starterCode:
+        '# Create a pattern like:\n# 1 2 3 4 5\n# 1 2 3 4 5\n# 1 2 3 4 5\n# 1 2 3 4 5\n# 1 2 3 4 5\n\ndef create_pattern():\n    # Your code here\n    pass\n\ncreate_pattern()',
+      testCases: [
+        {
+          input: '',
+          expectedOutput:
+            '1 2 3 4 5\n1 2 3 4 5\n1 2 3 4 5\n1 2 3 4 5\n1 2 3 4 5',
+        },
+      ],
+    },
+    {
+      id: 3,
+      title: 'Multiplication Table',
+      description:
+        'Create a multiplication table for numbers 1-5 using nested loops.',
+      starterCode:
+        '# Create a 5x5 multiplication table\n# Example:\n# 1  2  3  4  5\n# 2  4  6  8  10\n# 3  6  9  12 15\n# 4  8  12 16 20\n# 5  10 15 20 25\n\ndef create_multiplication_table():\n    # Your code here\n    pass\n\ncreate_multiplication_table()',
+      testCases: [
+        {
+          input: '',
+          expectedOutput:
+            '1 2 3 4 5\n2 4 6 8 10\n3 6 9 12 15\n4 8 12 16 20\n5 10 15 20 25',
+        },
+      ],
+    },
+  ])
+
+  const validateCode = (code: string) => {
+    // Basic syntax validation
+    try {
+      const quotes = code.match(/["']/g) || []
+      if (quotes.length % 2 !== 0) {
+        setCodeError('Mismatched quotes in your code')
+        return false
+      }
+
+      const brackets = code.match(/[\(\)\[\]\{\}]/g) || []
+      const stack = []
+      const bracketPairs: { [key: string]: string } = {
+        '(': ')',
+        '[': ']',
+        '{': '}',
+      }
+
+      for (const bracket of brackets) {
+        if (['(', '[', '{'].includes(bracket)) {
+          stack.push(bracket)
+        } else {
+          const lastOpen = stack.pop()
+          if (!lastOpen || bracketPairs[lastOpen] !== bracket) {
+            setCodeError('Mismatched brackets in your code')
+            return false
+          }
+        }
+      }
+
+      if (stack.length > 0) {
+        setCodeError('Unclosed brackets in your code')
+        return false
+      }
+
+      setCodeError(null)
+      return true
+    } catch (error) {
+      setCodeError(error.message)
+      return false
+    }
+  }
 
   useEffect(() => {
     if (socket) {
@@ -102,6 +212,23 @@ export function SessionView({
         onEndSession()
       })
 
+      socket.on('execution-complete', ({ output, error }) => {
+        if (role === 'student') {
+          const currentTask = tasks[currentTaskIndex]
+          const passed = currentTask.testCases.every(
+            (testCase) => output.trim() === testCase.expectedOutput.trim()
+          )
+
+          if (passed && currentTaskIndex < tasks.length - 1) {
+            toast({
+              title: 'Task Completed!',
+              description: 'Moving to next task...',
+            })
+            setCurrentTaskIndex((prev) => prev + 1)
+          }
+        }
+      })
+
       return () => {
         socket.off('session-data')
         socket.off('update-participants')
@@ -109,9 +236,19 @@ export function SessionView({
         socket.off('student-code-updated')
         socket.off('participant-left')
         socket.off('session-ended')
+        socket.off('execution-complete')
       }
     }
-  }, [socket, role, toast, onEndSession, selectedStudent, username])
+  }, [
+    socket,
+    role,
+    toast,
+    onEndSession,
+    selectedStudent,
+    username,
+    currentTaskIndex,
+    tasks,
+  ])
 
   const handleSendCode = () => {
     if (socket) {
@@ -145,101 +282,191 @@ export function SessionView({
     }
   }
 
+  const renderTeacherView = () => (
+    <div className='w-2/3 p-4'>
+      <div className='flex justify-between mb-4'>
+        <ShareLink fullLink={inviteLink} />
+        <Button onClick={onEndSession} variant='destructive'>
+          End Session
+        </Button>
+      </div>
+
+      <Card className='mb-4'>
+        <CardHeader>
+          <CardTitle>Current Lesson Progress</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className='space-y-2'>
+            {tasks.map((task, index) => (
+              <div key={task.id} className='flex items-center justify-between'>
+                <span>{task.title}</span>
+                <span>
+                  {
+                    students.filter((s) => s.completedTasks?.includes(task.id))
+                      .length
+                  }
+                  /{students.length} completed
+                </span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <CodeExecutor
+        code={selectedStudent ? studentCode : starterCode}
+        onChange={(code) => {
+          if (selectedStudent) {
+            setStudentCode(code)
+          } else {
+            setStarterCode(code)
+          }
+          validateCode(code)
+        }}
+        socket={socket}
+        classroomId={classroomId}
+        username={username}
+        role={role}
+      />
+
+      {codeError && (
+        <Alert variant='destructive' className='mt-4'>
+          <AlertDescription>{codeError}</AlertDescription>
+        </Alert>
+      )}
+
+      <Button onClick={handleSendCode} className='mt-4'>
+        {selectedStudent
+          ? `Send Code to ${selectedStudent.username}`
+          : 'Send Code to All Students'}
+      </Button>
+    </div>
+  )
+
+  const renderStudentView = () => (
+    <div className='w-2/3 p-4'>
+      <div className='flex justify-between mb-4'>
+        <div className='flex gap-2'>
+          <Button variant='outline'>
+            <BookOpen className='mr-2 h-4 w-4' />
+            Reference Guide
+          </Button>
+          <Button className='bg-zinc-950'>
+            <MessageSquareMore className='mr-2 h-4 w-4' />
+            Ask AI Help
+          </Button>
+        </div>
+        <Button onClick={onEndSession} variant='destructive'>
+          Leave Room
+        </Button>
+      </div>
+
+      <Card className='mb-4'>
+        <CardHeader>
+          <CardTitle className='flex items-center justify-between'>
+            {tasks[currentTaskIndex].title}
+            <span className='text-sm font-normal'>
+              Task {currentTaskIndex + 1}/{tasks.length}
+            </span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className='mb-4'>{tasks[currentTaskIndex].description}</p>
+          <CodeExecutor
+            code={studentCode}
+            onChange={(code) => {
+              setStudentCode(code)
+              validateCode(code)
+            }}
+            socket={socket}
+            classroomId={classroomId}
+            username={username}
+            role={role}
+          />
+
+          {codeError && (
+            <Alert variant='destructive' className='mt-4'>
+              <AlertDescription>{codeError}</AlertDescription>
+            </Alert>
+          )}
+
+          <Button onClick={handleUpdateCode} className='mt-4'>
+            Run Code
+            <CheckCircle2 className='ml-2 h-4 w-4' />
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
   return (
     <div className='flex h-screen'>
       <div className='w-1/3 p-4 border-r'>
         <h2 className='text-2xl font-bold mb-4'>
           {role === 'teacher'
             ? `${username}'s Classroom`
-            : `${username}'s Workspace`}
+            : `${username}'s Progress`}
         </h2>
-        {role === 'teacher' && (
-          <Card
-            className={`mb-4 cursor-pointer ${
-              !selectedStudent ? 'border-blue-500' : ''
-            }`}
-            onClick={() => handleStudentSelect(null)}
-          >
+
+        {role === 'student' ? (
+          <Card className='mb-4'>
             <CardHeader>
-              <CardTitle className='flex items-center'>
-                {username} (Teacher)
-                <span className='ml-2 w-3 h-3 rounded-full bg-purple-500' />
-              </CardTitle>
+              <CardTitle>Your Progress</CardTitle>
             </CardHeader>
+            <CardContent>
+              <div className='space-y-2'>
+                {tasks.map((task, index) => (
+                  <div key={task.id} className='flex items-center'>
+                    <div
+                      className={`w-6 h-6 rounded-full mr-2 flex items-center justify-center ${
+                        index < currentTaskIndex
+                          ? 'bg-green-500'
+                          : index === currentTaskIndex
+                          ? 'bg-blue-500'
+                          : 'bg-gray-200'
+                      }`}
+                    >
+                      {index < currentTaskIndex && (
+                        <CheckCircle2 className='h-4 w-4 text-white' />
+                      )}
+                    </div>
+                    <span>{task.title}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
           </Card>
-        )}
-        <h3 className='text-xl font-semibold mb-2'>Students</h3>
-        {students.map((student) => (
-          <Card
-            key={student.username}
-            className={`mb-2 cursor-pointer ${
-              selectedStudent?.username === student.username
-                ? 'border-blue-500'
-                : ''
-            }`}
-            onClick={() => role === 'teacher' && handleStudentSelect(student)}
-          >
-            <CardHeader>
-              <CardTitle className='flex items-center'>
-                {student.username}
-                <span className='ml-2 w-3 h-3 rounded-full bg-green-500' />
-              </CardTitle>
-            </CardHeader>
-            {role === 'teacher' && student.code && (
-              <CardContent>
-                <pre className='text-sm'>{student.code}</pre>
-              </CardContent>
-            )}
-          </Card>
-        ))}
-      </div>
-      <div className='w-2/3 p-4'>
-        {role === 'teacher' && (
+        ) : (
+          // Teacher's student list view remains the same
           <>
-            <div className='flex justify-between mb-4'>
-              <ShareLink fullLink={inviteLink} />
-              <Button onClick={onEndSession} variant='destructive'>
-                End Session
-              </Button>
-            </div>
-            <CodeExecutor
-              code={selectedStudent ? studentCode : starterCode}
-              onChange={(code) =>
-                selectedStudent ? setStudentCode(code) : setStarterCode(code)
-              }
-              socket={socket}
-              classroomId={classroomId}
-              username={username}
-              role={role}
-            />
-            <Button onClick={handleSendCode} className='mt-4'>
-              {selectedStudent
-                ? `Send Code to ${selectedStudent.username}`
-                : 'Send Code to All Students'}
-            </Button>
-          </>
-        )}
-        {role === 'student' && (
-          <>
-            <div className='flex justify-end gap-2 mb-4'>
-              <Button className='bg-zinc-950'>
-                Ask for Help
-                <CircleHelp className='ml-3' />
-              </Button>
-              <Button onClick={onEndSession} variant='destructive'>
-                Leave Room
-              </Button>
-            </div>
-            <Textarea
-              value={studentCode}
-              onChange={(e) => setStudentCode(e.target.value)}
-              placeholder='Write your solution here'
-              className='h-1/2 mb-4'
-            />
-            <Button onClick={handleUpdateCode}>Update Code</Button>
+            {students.map((student) => (
+              <Card
+                key={student.username}
+                className={`mb-2 cursor-pointer ${
+                  selectedStudent?.username === student.username
+                    ? 'border-blue-500'
+                    : ''
+                }`}
+                onClick={() => handleStudentSelect(student)}
+              >
+                <CardHeader>
+                  <CardTitle className='flex items-center justify-between'>
+                    {student.username}
+                    <span className='text-sm font-normal'>
+                      Task {(student.completedTasks?.length || 0) + 1}/
+                      {tasks.length}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            ))}
           </>
         )}
       </div>
+
+      {role === 'teacher' ? renderTeacherView() : renderStudentView()}
     </div>
   )
 }
+
+export default SessionView

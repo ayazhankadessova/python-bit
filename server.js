@@ -8,6 +8,8 @@ import fs from 'node:fs'
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
+// Keep track of running processes
+const runningProcesses = new Map()
 
 app.prepare().then(async () => {
   const server = express()
@@ -60,24 +62,32 @@ app.prepare().then(async () => {
 
     socket.on('execute-code', async ({ id, code, classroomId, username }) => {
       try {
-        // Create a temporary file to execute the code
-        const timestamp = Date.now()
-        const fileName = `temp_${timestamp}_${id}.py`
-        const filePath = `/tmp/${fileName}` // Use appropriate path for your system
+        // Kill any existing process for this user
+        if (runningProcesses.has(username)) {
+          runningProcesses.get(username).kill()
+        }
 
-        // Write code to temporary file
-        await fs.promises.writeFile(filePath, code)
-
-        // Execute the Python file
-        const python = spawn('python3', [filePath], {
+        const python = spawn('python3', ['-c', code], {
           timeout: 10000, // 10 second timeout
+          env: {
+            ...process.env,
+            PYTHONPATH: '/usr/local/lib/python3.9/site-packages', // Adjust path as needed
+          },
         })
 
-        let outputData = ''
-        let errorData = ''
+        // Store the process
+        runningProcesses.set(username, python)
+
+        let output = ''
+        let error = ''
 
         python.stdout.on('data', (data) => {
-          outputData += data.toString()
+          output += data.toString()
+          if (output.length > 100000) {
+            // Limit output size
+            python.kill()
+            return
+          }
           io.to(classroomId).emit('execution-output', {
             id,
             output: data.toString(),
@@ -85,37 +95,33 @@ app.prepare().then(async () => {
         })
 
         python.stderr.on('data', (data) => {
-          errorData += data.toString()
+          error += data.toString()
           io.to(classroomId).emit('execution-error', {
             id,
             error: data.toString(),
           })
         })
 
-        python.on('close', async (code) => {
-          // Clean up the temporary file
-          try {
-            await fs.promises.unlink(filePath)
-          } catch (err) {
-            console.error('Error cleaning up temp file:', err)
-          }
-
+        python.on('close', (code) => {
+          runningProcesses.delete(username)
           io.to(classroomId).emit('execution-complete', {
             id,
             exitCode: code,
-            output: outputData,
-            error: errorData,
+            output,
+            error,
           })
         })
 
         // Handle timeout
         python.on('error', (error) => {
+          runningProcesses.delete(username)
           io.to(classroomId).emit('execution-error', {
             id,
             error: error.message,
           })
         })
       } catch (error) {
+        runningProcesses.delete(username)
         io.to(classroomId).emit('execution-error', {
           id,
           error: error.message,
@@ -123,10 +129,13 @@ app.prepare().then(async () => {
       }
     })
 
-    // Add this handler for stopping execution
     socket.on('stop-execution', ({ id, classroomId, username }) => {
-      // Find and kill the corresponding Python process
-      // You'll need to maintain a map of running processes
+      const process = runningProcesses.get(username)
+      if (process) {
+        process.kill()
+        runningProcesses.delete(username)
+        io.to(classroomId).emit('execution-complete', { id })
+      }
     })
 
     socket.on('end-session', (classroomId) => {
