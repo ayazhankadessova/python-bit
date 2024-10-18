@@ -5,7 +5,6 @@ import { SessionView } from '@/components/session-view'
 import io, { Socket } from 'socket.io-client'
 import { User } from '@/models/types'
 
-
 interface ClassroomPageProps {
   params: {
     id: string
@@ -56,11 +55,11 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
 
     newSocket.on('connect', () => {
       console.log('Connected to socket server')
-      if (role === 'teacher') {
-        newSocket.emit('join-room', classroomId, username, true)
-      } else if (role === 'student') {
-        newSocket.emit('join-room', classroomId, username, false)
-      }
+      // if (role === 'teacher') {
+      //   newSocket.emit('join-room', classroomId, username, true)
+      // } else if (role === 'student') {
+      //   newSocket.emit('join-room', classroomId, username, false)
+      // }
     })
 
     newSocket.on('connect_error', (error) => {
@@ -68,10 +67,10 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
       setError('Failed to connect to the classroom. Please try again.')
     })
 
-    newSocket.on('session-ended', () => {
-      console.log('Session ended by teacher')
-      router.push('/classrooms')
-    })
+    // newSocket.on('session-ended', () => {
+    //   console.log('Session ended by teacher')
+    //   router.push('/classrooms')
+    // })
 
     return () => {
       newSocket.disconnect()

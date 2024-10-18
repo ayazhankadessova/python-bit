@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import CodeExecutor from '@/components/codeExecutor'
@@ -44,7 +44,7 @@ export function SessionView({
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0)
   const [tasks, setTasks] = useState<Task[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [starter, setStarter] = useState(false)
+  const joinedRoom = useRef(false)
 
   useEffect(() => {
     if (!socket) return
@@ -63,6 +63,12 @@ export function SessionView({
         console.log('Session data processed, isLoading set to false')
       }
     )
+
+    if (!joinedRoom.current) {
+      console.log('Emitting join-room event')
+      socket.emit('join-room', classroomId, username, role === 'teacher')
+      joinedRoom.current = true
+    }
 
     socket.on(
       'update-participants',
@@ -198,13 +204,6 @@ export function SessionView({
       }
     })
 
-    console.log('Emitting join-room event')
-
-    if (!starter) {
-      socket.emit('join-room', classroomId, username, role === 'teacher')
-      setStarter(true)
-    }
-
     socket.on('session-ended', () => {
       toast({
         title: 'Session Ended',
@@ -230,6 +229,7 @@ export function SessionView({
     currentTaskIndex,
     tasks,
     completedTasks,
+    classroomId,
   ])
 
   const handleRunCode = () => {
