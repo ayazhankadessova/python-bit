@@ -119,18 +119,23 @@ Backend:
 1. [ ] Go back in their code
 1. [ ] understand how tasts are completed
 
+- [x] Failed to start the week. Please try again.
+- [x] Ok, I can shoose week, see the tasks, but students who join the classroom cannot see the tasks.
+
 [x] assignment ids 67139a85da456cc1e6881a18 67139ba3da456cc1e6881a19
 [x] created curricula
 
 - [x] stuck at load sesion data
-- [ ] Change the background of the toast
-- [ ] Failed to start the week. Please try again.
-- [ ] Ok, I can shoose week, see the tasks, but students who join the classroom cannot see the tasks.
-- [ ] Teacher chooses week, tasks are set. Then, she sends an invite link and I want students to always be able to the tasks, etc. Right now, when student joins classroom, they cannot see the tasks. Check my session-view and server code
 
 Oct 20
 
 - [ ] Remove "Run Code"
+- [ ] Change the background of the toast
+- [ ] How can teacher see the progress -> api send smth to session-view and session view emits smth to socket
+
+What to ask?
+
+- [ ] Do i need to save submissions?
 
 Consider implementing a caching mechanism for the classroom and curriculum data to reduce unnecessary API calls.
 If possible, combine the classroom and curriculum data into a single API call to reduce the number of requests.
