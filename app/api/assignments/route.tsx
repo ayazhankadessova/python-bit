@@ -1,50 +1,46 @@
 import { NextResponse } from 'next/server'
 import clientPromise from '../../../lib/mongodb'
-import { Classroom } from '@/models/types'
 import { ObjectId } from 'mongodb'
 
-// POST: Create a new classroom
+// POST: Create a new assignment
 export async function POST(request: Request) {
   try {
     const client = await clientPromise
     const db = client.db('pythonbit')
-    const { name, teacherId, curriculumId, curriculumName } =
-      await request.json()
+    const { name, topic, tasks } = await request.json()
 
-    if (!name || !teacherId || !curriculumId || !curriculumName) {
+    if (!name || !topic || !tasks || tasks.length === 0) {
       return NextResponse.json(
         { message: 'Missing required fields' },
         { status: 400 }
       )
     }
 
-    const newClassroom: Omit<Classroom, '_id'> = {
+    const newAssignment = {
       name,
-      teacherId,
-      curriculumId,
-      curriculumName,
-      lastTaughtWeek: 0,
+      topic,
+      tasks,
       createdAt: new Date(),
       updatedAt: new Date(),
     }
 
-    const result = await db.collection('classrooms').insertOne(newClassroom)
-    const createdClassroom: Classroom = {
-      ...newClassroom,
+    const result = await db.collection('assignments').insertOne(newAssignment)
+    const createdAssignment = {
+      ...newAssignment,
       _id: result.insertedId.toString(),
     }
 
-    return NextResponse.json(createdClassroom, { status: 201 })
+    return NextResponse.json(createdAssignment, { status: 201 })
   } catch (e) {
     console.error(e)
     return NextResponse.json(
-      { message: 'Error creating classroom' },
+      { message: 'Error creating assignment' },
       { status: 500 }
     )
   }
 }
 
-// GET: Retrieve classrooms
+// GET: Retrieve assignments
 export async function GET(request: Request) {
   try {
     const client = await clientPromise
@@ -53,68 +49,68 @@ export async function GET(request: Request) {
     const id = searchParams.get('id')
 
     if (id) {
-      const classroom = await db
-        .collection('classrooms')
+      const assignment = await db
+        .collection('assignments')
         .findOne({ _id: new ObjectId(id) })
-      if (!classroom) {
+      if (!assignment) {
         return NextResponse.json(
-          { message: 'Classroom not found' },
+          { message: 'Assignment not found' },
           { status: 404 }
         )
       }
-      return NextResponse.json(classroom)
+      return NextResponse.json(assignment)
     }
 
-    const classrooms = await db.collection('classrooms').find().toArray()
-    return NextResponse.json(classrooms)
+    const assignments = await db.collection('assignments').find().toArray()
+    return NextResponse.json(assignments)
   } catch (e) {
     console.error(e)
     return NextResponse.json(
-      { message: 'Error retrieving classrooms' },
+      { message: 'Error retrieving assignments' },
       { status: 500 }
     )
   }
 }
 
-// PUT: Update a classroom
+// PUT: Update an assignment (e.g., provide feedback and score)
 export async function PUT(request: Request) {
   try {
     const client = await clientPromise
     const db = client.db('pythonbit')
-    const { _id, ...updateData } = await request.json()
+    const { _id, feedback, score } = await request.json()
 
     if (!_id) {
       return NextResponse.json(
-        { message: 'Missing classroom ID' },
+        { message: 'Missing assignment ID' },
         { status: 400 }
       )
     }
 
     const result = await db
-      .collection('classrooms')
+      .collection('assignments')
       .updateOne(
         { _id: new ObjectId(_id) },
-        { $set: { ...updateData, updatedAt: new Date() } }
+        { $set: { feedback, score, updatedAt: new Date() } }
       )
 
     if (result.matchedCount === 0) {
       return NextResponse.json(
-        { message: 'Classroom not found' },
+        { message: 'Assignment not found' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json({ message: 'Classroom updated successfully' })
+    return NextResponse.json({ message: 'Assignment updated successfully' })
   } catch (e) {
     console.error(e)
     return NextResponse.json(
-      { message: 'Error updating classroom' },
+      { message: 'Error updating assignment' },
       { status: 500 }
     )
   }
 }
 
-// DELETE: Delete a classroom
+// DELETE: Delete an assignment
 export async function DELETE(request: Request) {
   try {
     const client = await clientPromise
@@ -124,27 +120,27 @@ export async function DELETE(request: Request) {
 
     if (!id) {
       return NextResponse.json(
-        { message: 'Missing classroom ID' },
+        { message: 'Missing assignment ID' },
         { status: 400 }
       )
     }
 
     const result = await db
-      .collection('classrooms')
+      .collection('assignments')
       .deleteOne({ _id: new ObjectId(id) })
 
     if (result.deletedCount === 0) {
       return NextResponse.json(
-        { message: 'Classroom not found' },
+        { message: 'Assignment not found' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json({ message: 'Classroom deleted successfully' })
+    return NextResponse.json({ message: 'Assignment deleted successfully' })
   } catch (e) {
     console.error(e)
     return NextResponse.json(
-      { message: 'Error deleting classroom' },
+      { message: 'Error deleting assignment' },
       { status: 500 }
     )
   }

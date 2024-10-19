@@ -7,8 +7,8 @@ export interface User {
   role: string
   createdAt: Date
   updatedAt: Date
-  code?: string // Optional property
-  completedTasks?: number[] // Optional property for completed tasks
+  code?: string
+  completedTasks?: number[] // Changed back to number[]
 }
 
 export interface Classroom {
@@ -17,28 +17,35 @@ export interface Classroom {
   teacherId: string
   curriculumId: string
   curriculumName: string
-  lastTopic: string
+  lastTaughtWeek: number
   createdAt: Date
   updatedAt: Date
-  students?: string[] // Array of ObjectId references, use string for simplicity
+  students?: string[]
 }
 
 interface Week {
-  _id: string
   weekNumber: number
   topic: string
-  assignment: string
-  project: string
+  assignmentId: string // This will be an ObjectId, but we'll use string for simplicity
 }
 
-export interface Curricula {
+export interface Curriculum {
   _id: string
   name: string
   description: string
-  length: number
   weeks: Week[]
   createdAt: Date
   updatedAt: Date
+}
+
+export interface Task {
+  id: number
+  title: string
+  description: string
+  testCases: Array<{
+    input: string
+    expectedOutput: string
+  }>
 }
 
 export interface Assignment {
@@ -46,7 +53,8 @@ export interface Assignment {
   classroomId: string
   studentId: string
   weekNumber: number
-  code: string // Changed to lowercase 'string'
+  code: string
   feedback: string
   score: number
+  tasks: Task[]
 }

@@ -52,7 +52,7 @@ export function CreateClassroomForm({ onSubmit }: CreateClassroomFormProps) {
   })
 
   useEffect(() => {
-    fetch('/api/curricula')
+    fetch('/api/curriculum')
       .then((response) => response.json())
       .then((data: Curriculum[]) => setCurricula(data))
       .catch((error) => console.error('Error fetching curricula:', error))
