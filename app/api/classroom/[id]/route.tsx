@@ -1,5 +1,4 @@
 // File: /app/api/classroom/[id]/route.ts
-
 import { NextResponse } from 'next/server'
 import clientPromise from '@/lib/mongodb'
 import { ObjectId } from 'mongodb'
@@ -9,13 +8,12 @@ function isValidObjectId(id: string): boolean {
   return ObjectId.isValid(id)
 }
 
-// GET: Retrieve a specific classroom
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   const id = params.id
-  if (!isValidObjectId(id)) {
+  if (!ObjectId.isValid(id)) {
     return NextResponse.json(
       { message: 'Invalid classroom ID' },
       { status: 400 }
@@ -29,20 +27,60 @@ export async function GET(
     const classroom = await db
       .collection('classrooms')
       .findOne({ _id: new ObjectId(id) })
+
     if (!classroom) {
       return NextResponse.json(
         { message: 'Classroom not found' },
         { status: 404 }
       )
     }
+
+    // Since the classroom structure doesn't have studentProgress,
+    // we'll just return the classroom as is
     return NextResponse.json(classroom)
   } catch (error) {
+    console.error('Error fetching classroom:', error)
     return NextResponse.json(
-      { message: 'Error retrieving classroom', error },
+      { message: 'Internal server error' },
       { status: 500 }
     )
   }
 }
+
+// // GET: Retrieve a specific classroom
+// export async function GET(
+//   request: Request,
+//   { params }: { params: { id: string } }
+// ) {
+//   const id = params.id
+//   if (!isValidObjectId(id)) {
+//     return NextResponse.json(
+//       { message: 'Invalid classroom ID' },
+//       { status: 400 }
+//     )
+//   }
+
+//   const client = await clientPromise
+//   const db = client.db('pythonbit')
+
+//   try {
+//     const classroom = await db
+//       .collection('classrooms')
+//       .findOne({ _id: new ObjectId(id) })
+//     if (!classroom) {
+//       return NextResponse.json(
+//         { message: 'Classroom not found' },
+//         { status: 404 }
+//       )
+//     }
+//     return NextResponse.json(classroom)
+//   } catch (error) {
+//     return NextResponse.json(
+//       { message: 'Error retrieving classroom', error },
+//       { status: 500 }
+//     )
+//   }
+// }
 
 // PUT: Update a specific classroom
 export async function PUT(

@@ -5,7 +5,14 @@ import CodeExecutor from '@/components/codeExecutor'
 import { Socket } from 'socket.io-client'
 import { ShareLink } from '@/components/share-link'
 import { useToast } from '@/hooks/use-toast'
-import { User, Task, Classroom, Curriculum } from '@/models/types'
+import {
+  User,
+  Task,
+  Classroom,
+  Curriculum,
+  Assignment,
+  WeeklyProgress,
+} from '@/models/types'
 import { BookOpen, CheckCircle2, MessageSquareMore, Play } from 'lucide-react'
 import {
   Dialog,
@@ -58,6 +65,9 @@ export function SessionView({
     passed: boolean
     expectedOutput: string
   } | null>(null)
+  const [weeklyProgress, setWeeklyProgress] = useState<WeeklyProgress | null>(
+    null
+  )
 
   const fetchTasks = useCallback(
     async (weekNumber: number, curriculumData: Curriculum) => {
@@ -90,57 +100,208 @@ export function SessionView({
     [toast]
   )
 
-  useEffect(() => {
-    let isMounted = true
-    const fetchClassroomData = async () => {
-      if (!isMounted) return
+  const fetchClassroomData = useCallback(async () => {
+    try {
       setIsLoading(true)
-      try {
-        const classroomResponse = await fetch(`/api/classroom/${classroomId}`)
-        if (!classroomResponse.ok) {
-          throw new Error('Failed to fetch classroom data')
-        }
-        const classroomData: Classroom = await classroomResponse.json()
-        if (!isMounted) return
-        setClassroom(classroomData)
 
-        const curriculumResponse = await fetch(
-          `/api/curriculum/${classroomData.curriculumId}`
+      // Fetch classroom data
+      const classroomResponse = await fetch(`/api/classroom/${classroomId}`)
+      if (!classroomResponse.ok) {
+        throw new Error('Failed to fetch classroom data')
+      }
+      const classroomData: Classroom = await classroomResponse.json()
+      setClassroom(classroomData)
+
+      // Fetch curriculum data
+      const curriculumResponse = await fetch(
+        `/api/curriculum/${classroomData.curriculumId}`
+      )
+      if (!curriculumResponse.ok) {
+        throw new Error('Failed to fetch curriculum data')
+      }
+      const curriculumData: Curriculum = await curriculumResponse.json()
+      setCurriculum(curriculumData)
+      setTotalWeeks(curriculumData.weeks.length)
+
+      if (classroomData.lastTaughtWeek > 0) {
+        // Fetch weekly progress
+        const progressResponse = await fetch(
+          `/api/weekly-progress?classroomId=${classroomId}&weekNumber=${classroomData.lastTaughtWeek}`
         )
-        if (!curriculumResponse.ok) {
-          throw new Error('Failed to fetch curriculum data')
+        if (!progressResponse.ok) {
+          throw new Error('Failed to fetch weekly progress')
         }
-        const curriculumData: Curriculum = await curriculumResponse.json()
-        if (!isMounted) return
-        setCurriculum(curriculumData)
-        setTotalWeeks(curriculumData.weeks.length)
+        const progressData: WeeklyProgress = await progressResponse.json()
+        setWeeklyProgress(progressData)
 
-        // Fetch tasks for the current week
-        if (classroomData.lastTaughtWeek) {
-          await fetchTasks(classroomData.lastTaughtWeek, curriculumData)
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error)
-        if (isMounted) {
-          toast({
-            title: 'Error',
-            description: 'Failed to fetch classroom or curriculum data',
-            variant: 'destructive',
-          })
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false)
+        // Fetch assignment data
+        const weekData = curriculumData.weeks.find(
+          (week) => week.weekNumber === classroomData.lastTaughtWeek
+        )
+        if (weekData) {
+          const assignmentResponse = await fetch(
+            `/api/assignments/${weekData.assignmentId}`
+          )
+          if (!assignmentResponse.ok) {
+            throw new Error('Failed to fetch assignment data')
+          }
+          const assignmentData: Assignment = await assignmentResponse.json()
+          setTasks(assignmentData.tasks)
+
+          // Handle student-specific data
+          if (role === 'student') {
+            const completedTasks = progressData.tasks
+              .filter((task) =>
+                task.completedBy.some(
+                  (completion) => completion.username === username
+                )
+              )
+              .map((task) => task.taskId)
+            setCompletedTasks(completedTasks)
+
+            // Set the code for the current task if it exists
+            const currentTask = progressData.tasks.find(
+              (task) =>
+                task.taskId === assignmentData.tasks[currentTaskIndex]?.id
+            )
+            const userCompletion = currentTask?.completedBy.find(
+              (completion) => completion.username === username
+            )
+            if (userCompletion) {
+              setStudentCode(userCompletion.code)
+            }
+          }
         }
       }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch classroom or curriculum data',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsLoading(false)
     }
+  }, [classroomId, role, username, toast, currentTaskIndex])
 
+  useEffect(() => {
     fetchClassroomData()
+  }, [fetchClassroomData])
 
-    return () => {
-      isMounted = false
-    }
-  }, [classroomId, fetchTasks, toast])
+  // const fetchTasks = useCallback(
+  //   async (weekNumber: number, curriculumData: Curriculum) => {
+  //     const weekData = curriculumData.weeks.find(
+  //       (week) => week.weekNumber === weekNumber
+  //     )
+  //     if (!weekData) {
+  //       console.error('Week data not found')
+  //       return
+  //     }
+
+  //     try {
+  //       const tasksResponse = await fetch(
+  //         `/api/assignments/${weekData.assignmentId}`
+  //       )
+  //       if (!tasksResponse.ok) {
+  //         throw new Error('Failed to fetch week tasks')
+  //       }
+  //       const weekTasks = await tasksResponse.json()
+  //       setTasks(weekTasks.tasks || [])
+  //     } catch (error) {
+  //       console.error('Error fetching tasks:', error)
+  //       toast({
+  //         title: 'Error',
+  //         description: 'Failed to fetch tasks',
+  //         variant: 'destructive',
+  //       })
+  //     }
+  //   },
+  //   [toast]
+  // )
+
+  // const fetchClassroomData = useCallback(async () => {
+  //   try {
+  //     setIsLoading(true)
+
+  //     // Fetch classroom data
+  //     const classroomResponse = await fetch(`/api/classroom/${classroomId}`)
+  //     if (!classroomResponse.ok) {
+  //       throw new Error('Failed to fetch classroom data')
+  //     }
+  //     const classroomData: Classroom = await classroomResponse.json()
+  //     setClassroom(classroomData)
+
+  //     // Fetch curriculum data
+  //     const curriculumResponse = await fetch(
+  //       `/api/curriculum/${classroomData.curriculumId}`
+  //     )
+  //     if (!curriculumResponse.ok) {
+  //       throw new Error('Failed to fetch curriculum data')
+  //     }
+  //     const curriculumData: Curriculum = await curriculumResponse.json()
+  //     setCurriculum(curriculumData)
+  //     setTotalWeeks(curriculumData.weeks.length)
+
+  //     if (classroomData.lastTaughtWeek > 0) {
+  //       // Fetch weekly progress
+  //       const progressResponse = await fetch(
+  //         `/api/weekly-progress?classroomId=${classroomId}&weekNumber=${classroomData.lastTaughtWeek}`
+  //       )
+  //       if (!progressResponse.ok) {
+  //         throw new Error('Failed to fetch weekly progress')
+  //       }
+  //       const progressData: WeeklyProgress = await progressResponse.json()
+  //       setWeeklyProgress(progressData)
+
+  //       // Handle student-specific data
+  //       if (role === 'student') {
+  //         const completedTasks = progressData.tasks
+  //           .filter((task) =>
+  //             task.completedBy.some(
+  //               (completion) => completion.username === username
+  //             )
+  //           )
+  //           .map((task) => task.taskId)
+  //         setCompletedTasks(completedTasks)
+
+  //         // Set the code for the current task if it exists
+  //         const currentTask = progressData.tasks.find(
+  //           (task) => task.taskId === tasks[currentTaskIndex]?.id
+  //         )
+  //         const userCompletion = currentTask?.completedBy.find(
+  //           (completion) => completion.username === username
+  //         )
+  //         if (userCompletion) {
+  //           setStudentCode(userCompletion.code)
+  //         }
+  //       }
+
+  //       // Fetch assignment data
+  //       const assignmentResponse = await fetch(
+  //         `/api/assignments/${progressData.assignmentId}`
+  //       )
+  //       if (!assignmentResponse.ok) {
+  //         throw new Error('Failed to fetch assignment data')
+  //       }
+  //       const assignmentData: Assignment = await assignmentResponse.json()
+  //       setTasks(assignmentData.tasks)
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //     toast({
+  //       title: 'Error',
+  //       description: 'Failed to fetch classroom or curriculum data',
+  //       variant: 'destructive',
+  //     })
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }, [classroomId, role, username, toast, currentTaskIndex, tasks])
+
+  // useEffect(() => {
+  //   fetchClassroomData()
+  // }, [fetchClassroomData])
 
   const handleStartWeek = async () => {
     if (selectedWeek === null || !classroom || !curriculum) return
@@ -166,6 +327,7 @@ export function SessionView({
       toast({
         title: 'Week Started',
         description: `Week ${selectedWeek} has been started. You can now invite students.`,
+        variant: 'light',
       })
     } catch (error) {
       console.error('Error starting week:', error)
@@ -192,23 +354,6 @@ export function SessionView({
         setStudents(data.students)
       }
     )
-
-    // socket.on(
-    //   'student-progress-updated',
-    //   (data: { username: string; completedTasks: string[] }) => {
-    //     if (role === 'teacher') {
-    //       setStudents((prevStudents) =>
-    //         prevStudents.map((student) =>
-    //           student.username === data.username
-    //             ? { ...student, completedTasks: data.completedTasks }
-    //             : student
-    //         )
-    //       )
-    //     } else if (role === 'student' && username === data.username) {
-    //       setCompletedTasks(data.completedTasks)
-    //     }
-    //   }
-    // )
 
     socket.on(
       'student-code-updated',
@@ -254,6 +399,7 @@ export function SessionView({
           toast({
             title: 'Code Executed',
             description: 'Your code has been executed successfully.',
+            variant: 'light',
           })
         }
       }
@@ -272,6 +418,7 @@ export function SessionView({
       toast({
         title: 'Session Ended',
         description: 'The teacher has ended the session.',
+        variant: 'light',
       })
       onEndSession()
     })
@@ -313,8 +460,8 @@ export function SessionView({
           'update-code',
           classroomId,
           selectedStudent.username,
-          studentCode,
-          selectedStudent.completedTasks
+          studentCode
+          // selectedStudent.completedTasks
         )
       } else {
         // Update starter code for all students
@@ -322,24 +469,24 @@ export function SessionView({
         toast({
           title: 'Code Sent',
           description: 'Code sent to all students.',
+          variant: 'light',
         })
       }
     }
   }
 
   const handleSubmitCode = async () => {
-    if (role === 'student' && tasks.length > 0) {
+    if (role === 'student' && tasks.length > 0 && classroom) {
       try {
         const response = await fetch('/api/submit-code', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             code: studentCode,
             classroomId,
             username,
             taskId: tasks[currentTaskIndex].id,
+            weekNumber: classroom.lastTaughtWeek,
           }),
         })
 
@@ -354,10 +501,24 @@ export function SessionView({
           toast({
             title: 'Task Completed',
             description: 'Your code passed all test cases!',
+            variant: 'success',
           })
+          setCompletedTasks((prev) => [...prev, tasks[currentTaskIndex].id])
           if (currentTaskIndex < tasks.length - 1) {
             setCurrentTaskIndex(currentTaskIndex + 1)
           }
+          // Update weekly progress
+          // await fetch('/api/weekly-progress', {
+          //   method: 'PUT',
+          //   headers: { 'Content-Type': 'application/json' },
+          //   body: JSON.stringify({
+          //     classroomId,
+          //     weekNumber: classroom.lastTaughtWeek,
+          //     userId: username,
+          //     completedTasks: [...completedTasks, tasks[currentTaskIndex].id],
+          //     code: studentCode,
+          //   }),
+          // })
         } else {
           toast({
             title: 'Task Not Completed',
@@ -376,12 +537,12 @@ export function SessionView({
     }
   }
 
-  const handleStudentSelect = (student: User | null) => {
-    setSelectedStudent(student)
-    if (student) {
-      setStudentCode(student.code || '')
-    }
-  }
+  // const handleStudentSelect = (student: User | null) => {
+  //   setSelectedStudent(student)
+  //   if (student) {
+  //     setStudentCode(student?.code || '')
+  //   }
+  // }
 
   const handleWeekSelect = (week: string) => {
     setSelectedWeek(parseInt(week))
@@ -445,22 +606,23 @@ export function SessionView({
           </CardHeader>
           <CardContent>
             <div className='space-y-2'>
-              {tasks.map((task) => (
-                <div
-                  key={task.id}
-                  className='flex items-center justify-between'
-                >
-                  <span>{task.title}</span>
-                  <span>
-                    {
-                      students.filter((s) =>
-                        s.completedTasks?.includes(task.id)
-                      ).length
-                    }
-                    /{students.length} completed
-                  </span>
-                </div>
-              ))}
+              {tasks.map((task) => {
+                const taskProgress = weeklyProgress?.tasks?.find(
+                  (t) => t.taskId === task.id
+                )
+                return (
+                  <div
+                    key={task.id}
+                    className='flex items-center justify-between'
+                  >
+                    <span>{task.title}</span>
+                    <span>
+                      {taskProgress?.completedBy.length || 0}/
+                      {classroom?.students?.length || 0} completed
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           </CardContent>
         </Card>
@@ -603,13 +765,13 @@ export function SessionView({
                     ? 'border-blue-500'
                     : ''
                 }`}
-                onClick={() => handleStudentSelect(student)}
+                // onClick={() => handleStudentSelect(student)}
               >
                 <CardHeader>
                   <CardTitle className='flex items-center justify-between'>
                     {student.username}
                     <span className='text-sm font-normal'>
-                      {student.completedTasks?.length || 0}/{tasks.length}{' '}
+                      {/* {student.completedTasks?.length || 0}/{tasks.length}{' '} */}
                       completed
                     </span>
                   </CardTitle>

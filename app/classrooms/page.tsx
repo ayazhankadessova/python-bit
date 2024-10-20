@@ -21,11 +21,8 @@ import {
 } from '@/components/ui/dialog'
 import { CreateClassroomForm } from './CreateClassroomForm'
 import { useToast } from '@/components/hooks/use-toast'
-import { SessionView } from '@/components/session-view'
 import { useRouter } from 'next/navigation'
-import io from 'socket.io-client'
 import { Classroom } from '@/models/types'
-
 
 const ClassroomPage: React.FC = () => {
   const { toast } = useToast()
@@ -63,19 +60,25 @@ const ClassroomPage: React.FC = () => {
     setSearchTerm(event.target.value)
   }
 
-  const handleCreateClassroom = async (
-    data: Omit<
-      Classroom,
-      '_id' | 'createdAt' | 'updatedAt' | 'lastTopic' | 'inviteLink'
-    >
-  ) => {
+  const handleCreateClassroom = async (data: {
+    name: string
+    students: string[]
+    teacherId: string
+    curriculumId: string
+    curriculumName: string
+  }) => {
     try {
+      const classroomData = {
+        ...data,
+        lastTaughtWeek: 0, // Provide a default value
+      }
+
       const response = await fetch('/api/classroom', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(classroomData),
       })
 
       if (!response.ok) {

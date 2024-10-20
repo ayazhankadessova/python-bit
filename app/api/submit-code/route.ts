@@ -1,114 +1,88 @@
-// File: app/api/submit-code/route.ts
-
 import { NextResponse } from 'next/server'
-import { MongoClient, ObjectId } from 'mongodb'
-import { spawn } from 'child_process'
-
-const uri = process.env.MONGODB_URI
-const client = new MongoClient(uri!)
+import clientPromise from '@/lib/mongodb'
+import { ObjectId } from 'mongodb'
+import { executeAndTestCode } from '@/lib/codeExecution'
 
 export async function POST(request: Request) {
-  const body = await request.json()
-  const { code, classroomId, username, taskId } = body
-
-  if (!code || !classroomId || !username || !taskId) {
-    return NextResponse.json(
-      { message: 'Missing required fields' },
-      { status: 400 }
-    )
-  }
-
   try {
-    await client.connect()
-    const db = client.db('pythonbit')
+    const body = await request.json()
+    const { code, classroomId, username, taskId, weekNumber } = body
+
+    if (!code || !classroomId || !username || !taskId || !weekNumber) {
+      return NextResponse.json(
+        { message: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
 
     const result = await executeAndTestCode(code, taskId)
-    await updateStudentProgress(
-      db,
-      classroomId,
-      username,
-      taskId,
-      result.passed
-    )
+
+    const client = await clientPromise
+    const db = client.db('pythonbit')
+
+    if (result.passed) {
+      // First, check if the weeklyProgress document exists
+      const weeklyProgress = await db.collection('weeklyProgress').findOne({
+        classroomId: new ObjectId(classroomId),
+        weekNumber: parseInt(weekNumber),
+      })
+
+      if (!weeklyProgress) {
+        // If the weeklyProgress document doesn't exist, create it
+        await db.collection('weeklyProgress').insertOne({
+          classroomId: new ObjectId(classroomId),
+          weekNumber: parseInt(weekNumber),
+          tasks: [{ taskId: parseInt(taskId), completedBy: [] }],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+      } else {
+        // If the weeklyProgress document exists, check if the task exists
+        const taskExists = weeklyProgress.tasks.some(
+          (task) => task.taskId === parseInt(taskId)
+        )
+
+        if (!taskExists) {
+          // If the task doesn't exist, add it to the tasks array
+          await db.collection('weeklyProgress').updateOne(
+            {
+              classroomId: new ObjectId(classroomId),
+              weekNumber: parseInt(weekNumber),
+            },
+            {
+              $push: { tasks: { taskId: parseInt(taskId), completedBy: [] } },
+              $set: { updatedAt: new Date() },
+            }
+          )
+        }
+      }
+
+      // Now update the task with the student's completion
+      await db.collection('weeklyProgress').updateOne(
+        {
+          classroomId: new ObjectId(classroomId),
+          weekNumber: parseInt(weekNumber),
+          'tasks.taskId': parseInt(taskId),
+        },
+        {
+          $addToSet: {
+            'tasks.$.completedBy': {
+              username,
+              code,
+              completedAt: new Date(),
+            },
+          },
+          $set: { updatedAt: new Date() },
+        }
+      )
+    }
 
     return NextResponse.json(result)
   } catch (error) {
     console.error('Error in code submission:', error)
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { message: 'Internal server error', error: error.message },
       { status: 500 }
     )
-  } finally {
-    await client.close()
-  }
-}
-
-async function executeAndTestCode(code: string, taskId: string) {
-  return new Promise<{
-    passed: boolean
-    output: string
-    expectedOutput: string
-  }>((resolve, reject) => {
-    const python = spawn('python3', ['-c', code])
-    let output = ''
-    let error = ''
-
-    python.stdout.on('data', (data) => {
-      output += data.toString()
-    })
-
-    python.stderr.on('data', (data) => {
-      error += data.toString()
-    })
-
-    python.on('close', async (exitCode) => {
-      if (exitCode !== 0) {
-        resolve({ passed: false, output: error, expectedOutput: '' })
-        return
-      }
-
-      const testResult = await checkTestCases(taskId, output.trim())
-      resolve({
-        passed: testResult.passed,
-        output: output.trim(),
-        expectedOutput: testResult.expectedOutput,
-      })
-    })
-  })
-}
-
-async function checkTestCases(taskId: string, output: string) {
-  const db = client.db('pythonbit')
-  const assignment = await db
-    .collection('assignments')
-    .findOne({ 'tasks.id': parseInt(taskId) }, { projection: { 'tasks.$': 1 } })
-
-  if (!assignment || !assignment.tasks || assignment.tasks.length === 0) {
-    throw new Error('Task not found')
-  }
-
-  const task = assignment.tasks[0]
-  const testCase = task.testCases[0] // Assuming one test case per task for simplicity
-
-  return {
-    passed: output === testCase.expectedOutput,
-    expectedOutput: testCase.expectedOutput,
-  }
-}
-
-async function updateStudentProgress(
-  db: any,
-  classroomId: string,
-  username: string,
-  taskId: string,
-  passed: boolean
-) {
-  if (passed) {
-    await db
-      .collection('classrooms')
-      .updateOne(
-        { _id: new ObjectId(classroomId), 'students.username': username },
-        { $addToSet: { 'students.$.completedTasks': taskId } }
-      )
   }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
@@ -22,9 +22,16 @@ import {
 
 const formSchema = z.object({
   name: z.string().min(1, 'Classroom name is required'),
-  teacherId: z.string().min(1, 'Teacher ID is required'),
-  curriculumId: z.string().min(1, 'Curriculum selection is required'),
+  teacherId: z
+    .string()
+    .min(24, 'Teacher ID must be 24 characters')
+    .max(24, 'Teacher ID must be 24 characters'),
+  curriculumId: z
+    .string()
+    .min(24, 'Curriculum ID must be 24 characters')
+    .max(24, 'Curriculum ID must be 24 characters'),
   curriculumName: z.string().min(1, 'Curriculum name is required'),
+  students: z.array(z.string()).min(1, 'At least one student must be selected'),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -34,12 +41,22 @@ interface Curriculum {
   name: string
 }
 
+interface User {
+  _id: string
+  id: string
+  username: string
+  email: string
+  role: string
+}
+
 interface CreateClassroomFormProps {
   onSubmit: (data: FormData) => void
 }
 
 export function CreateClassroomForm({ onSubmit }: CreateClassroomFormProps) {
   const [curricula, setCurricula] = useState<Curriculum[]>([])
+  const [students, setStudents] = useState<User[]>([])
+  const [selectedStudents, setSelectedStudents] = useState<string[]>([])
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -48,6 +65,7 @@ export function CreateClassroomForm({ onSubmit }: CreateClassroomFormProps) {
       teacherId: '',
       curriculumId: '',
       curriculumName: '',
+      students: [],
     },
   })
 
@@ -56,10 +74,27 @@ export function CreateClassroomForm({ onSubmit }: CreateClassroomFormProps) {
       .then((response) => response.json())
       .then((data: Curriculum[]) => setCurricula(data))
       .catch((error) => console.error('Error fetching curricula:', error))
+
+    fetch('/api/users')
+      .then((response) => response.json())
+      .then((data: User[]) =>
+        setStudents(data.filter((user) => user.role === 'student'))
+      )
+      .catch((error) => console.error('Error fetching users:', error))
   }, [])
 
   const handleSubmit = (data: FormData) => {
-    onSubmit(data)
+    onSubmit({ ...data, students: selectedStudents })
+  }
+
+  const handleStudentSelect = (username: string) => {
+    setSelectedStudents((prev) => {
+      const newSelection = prev.includes(username)
+        ? prev.filter((s) => s !== username)
+        : [...prev, username]
+      form.setValue('students', newSelection)
+      return newSelection
+    })
   }
 
   return (
@@ -88,7 +123,7 @@ export function CreateClassroomForm({ onSubmit }: CreateClassroomFormProps) {
             <FormItem>
               <FormLabel>Teacher ID</FormLabel>
               <FormControl>
-                <Input placeholder='teacher123' {...field} />
+                <Input placeholder='24-character Teacher ID' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -125,6 +160,34 @@ export function CreateClassroomForm({ onSubmit }: CreateClassroomFormProps) {
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='students'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Students</FormLabel>
+              <FormControl>
+                <div className='flex flex-wrap gap-2'>
+                  {students.map((student) => (
+                    <Button
+                      key={student._id}
+                      type='button'
+                      variant={
+                        selectedStudents.includes(student.username)
+                          ? 'default'
+                          : 'outline'
+                      }
+                      onClick={() => handleStudentSelect(student.username)}
+                    >
+                      {student.username}
+                    </Button>
+                  ))}
+                </div>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

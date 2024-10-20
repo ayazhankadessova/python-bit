@@ -129,9 +129,14 @@ Backend:
 
 Oct 20
 
+- [x] Change the background of the toast
+- [x] How can teacher see the progress -> api send smth to session-view and session view emits smth to socket
+- [ ] Created weekly progress table
+
+Oct 21
+
 - [ ] Remove "Run Code"
-- [ ] Change the background of the toast
-- [ ] How can teacher see the progress -> api send smth to session-view and session view emits smth to socket
+- [ ] Add refresh button and use weekly updates ! what can i use it for?
 
 What to ask?
 
@@ -141,3 +146,10 @@ Consider implementing a caching mechanism for the classroom and curriculum data 
 If possible, combine the classroom and curriculum data into a single API call to reduce the number of requests.
 Implement error boundaries to handle errors more gracefully at a higher level in your component tree.
 Use a library like React Query or SWR for better management of asynchronous state and caching.
+
+refresh shows progress
+
+[x] checkout all the types
+[ ] check out weekly progress
+[ ] assoc week with weekly report
+[]

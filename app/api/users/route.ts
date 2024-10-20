@@ -46,22 +46,22 @@ export async function POST(request: Request) {
 }
 
 // GET: Retrieve all users
-// export async function GET() {
-//   try {
-//     const client = await clientPromise
-//     const db = client.db('pythonbit')
+export async function GET() {
+  try {
+    const client = await clientPromise
+    const db = client.db('pythonbit')
 
-//     const users = await db.collection('users').find().toArray()
+    const users = await db.collection('users').find().toArray()
 
-//     return NextResponse.json(users)
-//   } catch (e) {
-//     console.error(e)
-//     return NextResponse.json(
-//       { message: 'Error retrieving users' },
-//       { status: 500 }
-//     )
-//   }
-// }
+    return NextResponse.json(users)
+  } catch (e) {
+    console.error(e)
+    return NextResponse.json(
+      { message: 'Error retrieving users' },
+      { status: 500 }
+    )
+  }
+}
 
 // export async function GET(
 //   request: Request,
