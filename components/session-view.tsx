@@ -441,18 +441,6 @@ export function SessionView({
     classroomId,
   ])
 
-  const handleRunCode = () => {
-    console.log('Running code:', studentCode)
-    if (socket && role === 'student') {
-      socket.emit('run-code', {
-        id: Date.now().toString(),
-        code: studentCode,
-        classroomId,
-        username,
-      })
-    }
-  }
-
   const handleSendCode = () => {
     if (socket) {
       if (selectedStudent) {
@@ -696,11 +684,7 @@ export function SessionView({
               role={role}
             />
 
-            <div className='flex gap-2 mt-4'>
-              <Button onClick={handleRunCode}>
-                Run Code
-                <Play className='ml-2 h-4 w-4' />
-              </Button>
+            <div className='flex mt-4'>
               <Button onClick={handleSubmitCode}>
                 Submit Code
                 <CheckCircle2 className='ml-2 h-4 w-4' />
