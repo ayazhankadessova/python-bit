@@ -16,7 +16,6 @@ export async function POST(request: Request) {
     }
 
     const result = await executeAndTestCode(code, taskId)
-
     const client = await clientPromise
     const db = client.db('pythonbit')
 
@@ -32,7 +31,7 @@ export async function POST(request: Request) {
         await db.collection('weeklyProgress').insertOne({
           classroomId: new ObjectId(classroomId),
           weekNumber: parseInt(weekNumber),
-          tasks: [{ taskId: parseInt(taskId), completedBy: [] }],
+          tasks: [{ taskId: parseInt(taskId), completedBy: [username] }],
           createdAt: new Date(),
           updatedAt: new Date(),
         })
@@ -50,31 +49,27 @@ export async function POST(request: Request) {
               weekNumber: parseInt(weekNumber),
             },
             {
-              $push: { tasks: { taskId: parseInt(taskId), completedBy: [] } },
+              $push: {
+                tasks: { taskId: parseInt(taskId), completedBy: [username] },
+              },
+              $set: { updatedAt: new Date() },
+            }
+          )
+        } else {
+          // If the task exists, update the completedBy array
+          await db.collection('weeklyProgress').updateOne(
+            {
+              classroomId: new ObjectId(classroomId),
+              weekNumber: parseInt(weekNumber),
+              'tasks.taskId': parseInt(taskId),
+            },
+            {
+              $addToSet: { 'tasks.$.completedBy': username },
               $set: { updatedAt: new Date() },
             }
           )
         }
       }
-
-      // Now update the task with the student's completion
-      await db.collection('weeklyProgress').updateOne(
-        {
-          classroomId: new ObjectId(classroomId),
-          weekNumber: parseInt(weekNumber),
-          'tasks.taskId': parseInt(taskId),
-        },
-        {
-          $addToSet: {
-            'tasks.$.completedBy': {
-              username,
-              code,
-              completedAt: new Date(),
-            },
-          },
-          $set: { updatedAt: new Date() },
-        }
-      )
     }
 
     return NextResponse.json(result)

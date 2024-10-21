@@ -93,7 +93,7 @@ export interface WeeklyProgress {
 
 export interface TaskProgress {
   taskId: number
-  completedBy: StudentCompletion[]
+  completedBy: string[]
 }
 
 export interface StudentCompletion {
@@ -148,4 +148,11 @@ export interface Task {
     input: string
     expectedOutput: string
   }>
+}
+
+export interface LessonProgressCardProps {
+  classroomId: string
+  weekNumber: number | null
+  tasks: Task[]
+  classroom: Classroom | null
 }
