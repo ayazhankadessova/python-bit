@@ -44,7 +44,6 @@ app.prepare().then(async () => {
         classroom.students.set(username, {
           username: username,
           code: '',
-          completedTasks: [],
         })
         console.log(`Student ${username} joined classroom ${classroomId}`)
       }
@@ -67,22 +66,17 @@ app.prepare().then(async () => {
       executeCode(id, code, classroomId, username, socket, false)
     })
 
-    socket.on('update-code', (classroomId, username, code, completedTasks) => {
-      console.log(
-        `Updating code for ${username} in classroom ${classroomId}. Completed tasks:`,
-        completedTasks
-      )
+    socket.on('update-code', (classroomId, username, code) => {
+      console.log(`Updating code for ${username} in classroom ${classroomId}.`)
       if (classrooms.has(classroomId)) {
         const classroom = classrooms.get(classroomId)
         const student = classroom.students.get(username)
         if (student) {
           student.code = code
-          student.completedTasks = completedTasks
           console.log(`Updated student data for ${username}:`, student)
           io.to(classroomId).emit('student-code-updated', {
             username: username,
             code: code,
-            completedTasks: completedTasks,
           })
         } else {
           console.log(
@@ -94,24 +88,42 @@ app.prepare().then(async () => {
       }
     })
 
-    socket.on('run-code', async ({ id, code, classroomId, username }) => {
-      console.log(
-        `Running code for ${username} in classroom ${classroomId}:`,
-        code
-      )
-      executeCode(id, code, classroomId, username, socket, false)
+    // New event for sending code to all students
+    socket.on('send-code-to-all', (classroomId, code) => {
+      if (classrooms.has(classroomId)) {
+        const classroom = classrooms.get(classroomId)
+        classroom.students.forEach((student, username) => {
+          student.code = code
+          io.to(classroomId).emit('student-code-updated', {
+            username: username,
+            code: code,
+          })
+        })
+        console.log(`Code sent to all students in classroom ${classroomId}`)
+      } else {
+        console.log(`Classroom ${classroomId} not found`)
+      }
     })
 
-    socket.on(
-      'submit-code',
-      async ({ id, code, classroomId, username, taskId }) => {
-        console.log(
-          `Submitting code for ${username} in classroom ${classroomId}:`,
-          code
-        )
-        executeCode(id, code, classroomId, username, socket, true, taskId)
+    // New event for getting a specific student's code
+    socket.on('get-student-code', (classroomId, username) => {
+      if (classrooms.has(classroomId)) {
+        const classroom = classrooms.get(classroomId)
+        const student = classroom.students.get(username)
+        if (student) {
+          socket.emit('student-code', {
+            username: username,
+            code: student.code,
+          })
+        } else {
+          console.log(
+            `Student ${username} not found in classroom ${classroomId}`
+          )
+        }
+      } else {
+        console.log(`Classroom ${classroomId} not found`)
       }
-    )
+    })
 
     socket.on('stop-execution', ({ id, classroomId, username }) => {
       const process = runningProcesses.get(username)
