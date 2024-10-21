@@ -140,17 +140,22 @@ Oct 21
 - [x] Current Progress Report should be based on selectedWeek, not based on last Taught week
 - [x] Why ayazhankadessova has completed?
 - [ ] User API to reun code
-- [] 2/0 completed ?
-- [] Send code to all students
+- [x] 2/0 completed ?
+- [x] Send code to all students
+- [ ] When i press on selected student again, remove selected student (back to normal)
+- [ ] Run code via api, not socket connection
 - [ ] be able to check every students' current code
 - [ ] be able to send code to specific student
-- [ ] How many tasks did student complete for this week?
-- [ ] Remove completed tasks from server.js
+- [x] How many tasks did student complete for this week?
+- [x] Remove completed tasks from server.js
+- [x] In weekly progress, we just need to know who completed. (alr completed, no need to add them again!)
+- [ ] In curricula, we will save actual submission -> submissions table.
 - [ ] Integrate AI
 
 What to ask?
 
 - [ ] Do i need to save submissions?
+- [ ] Do we need starter code?
 
 Consider implementing a caching mechanism for the classroom and curriculum data to reduce unnecessary API calls.
 If possible, combine the classroom and curriculum data into a single API call to reduce the number of requests.

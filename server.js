@@ -67,13 +67,16 @@ app.prepare().then(async () => {
     })
 
     socket.on('update-code', (classroomId, username, code) => {
-      console.log(`Updating code for ${username} in classroom ${classroomId}.`)
+      console.log(`Updating code for ${username} in classroom ${classroomId}`)
       if (classrooms.has(classroomId)) {
         const classroom = classrooms.get(classroomId)
         const student = classroom.students.get(username)
         if (student) {
           student.code = code
           console.log(`Updated student data for ${username}:`, student)
+          console.log(
+            `Emitting student-code-updated event to room ${classroomId}`
+          )
           io.to(classroomId).emit('student-code-updated', {
             username: username,
             code: code,
@@ -90,10 +93,14 @@ app.prepare().then(async () => {
 
     // New event for sending code to all students
     socket.on('send-code-to-all', (classroomId, code) => {
+      console.log(`Sending code to all students in classroom ${classroomId}`)
       if (classrooms.has(classroomId)) {
         const classroom = classrooms.get(classroomId)
         classroom.students.forEach((student, username) => {
           student.code = code
+          console.log(
+            `Emitting student-code-updated event for ${username} to room ${classroomId}`
+          )
           io.to(classroomId).emit('student-code-updated', {
             username: username,
             code: code,
@@ -107,10 +114,14 @@ app.prepare().then(async () => {
 
     // New event for getting a specific student's code
     socket.on('get-student-code', (classroomId, username) => {
+      console.log(
+        `Getting code for student ${username} in classroom ${classroomId}`
+      )
       if (classrooms.has(classroomId)) {
         const classroom = classrooms.get(classroomId)
         const student = classroom.students.get(username)
         if (student) {
+          console.log(`Sending code for student ${username}:`, student.code)
           socket.emit('student-code', {
             username: username,
             code: student.code,

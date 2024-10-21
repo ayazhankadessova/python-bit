@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Loader2, Play, StopCircle } from 'lucide-react'
+import { Loader2, Play, StopCircle, Save } from 'lucide-react'
 import Editor from '@monaco-editor/react'
 
 interface CodeEditorProps {
@@ -43,6 +43,13 @@ const PythonCodeEditor = ({
       comments: true,
       strings: true,
     },
+  }
+
+  const handleSaveCode = () => {
+    console.log('Saving code for', username, 'in classroom', classroomId)
+    if (socket && role === 'student') {
+      socket.emit('update-code', classroomId, username, code)
+    }
   }
 
   useEffect(() => {
@@ -142,6 +149,12 @@ const PythonCodeEditor = ({
             >
               <StopCircle className='w-4 h-4 mr-2' />
               Stop
+            </Button>
+          )}
+          {role === 'student' && (
+            <Button onClick={handleSaveCode} className='w-24'>
+              <Save className='w-4 h-4 mr-2' />
+              Save
             </Button>
           )}
         </div>

@@ -64,6 +64,7 @@ export function SessionView({
   const [weeklyProgress, setWeeklyProgress] = useState<WeeklyProgress | null>(
     null
   )
+  const [teacherCode, setTeacherCode] = useState('')
 
   const fetchTasks = useCallback(
     async (weekNumber: number, curriculumData: Curriculum) => {
@@ -200,12 +201,6 @@ export function SessionView({
       const updatedClassroom = await updateResponse.json()
       setClassroom(updatedClassroom)
 
-      toast({
-        title: 'Error',
-        description: 'updatedClassroom',
-        variant: 'destructive',
-      })
-
       await fetchTasks(selectedWeek, curriculum)
       setCurrentTaskIndex(0)
 
@@ -242,29 +237,29 @@ export function SessionView({
     )
 
     socket.on('student-code', (data: { username: string; code: string }) => {
+      console.log('Received student-code event:', data)
       if (selectedStudent && selectedStudent.username === data.username) {
         setStudentCode(data.code)
-        setSelectedStudent((prev) => (prev ? { ...prev } : null))
       }
     })
 
     socket.on(
       'student-code-updated',
       (data: { username: string; code: string }) => {
+        console.log('Received student-code-updated event:', data)
         setStudents((prevStudents) =>
           prevStudents.map((student) =>
             student.username === data.username
-              ? {
-                  ...student,
-                  code: data.code,
-                }
+              ? { ...student, code: data.code }
               : student
           )
         )
         if (selectedStudent?.username === data.username) {
+          console.log(`Updating code for selected student ${data.username}`)
           setStudentCode(data.code)
         }
-        if (role === 'student' && username === data.username) {
+        if (role === 'student' && data.username === username) {
+          console.log(`Updating own code for student ${username}`)
           setStudentCode(data.code)
         }
       }
@@ -336,6 +331,7 @@ export function SessionView({
   const handleSendCode = () => {
     if (socket) {
       if (selectedStudent) {
+        console.log(`Sending code to ${selectedStudent.username}:`, studentCode)
         socket.emit(
           'update-code',
           classroomId,
@@ -348,7 +344,8 @@ export function SessionView({
           variant: 'light',
         })
       } else {
-        socket.emit('send-code-to-all', classroomId, starterCode)
+        console.log('Sending code to all students:', teacherCode)
+        socket.emit('send-code-to-all', classroomId, teacherCode)
         toast({
           title: 'Code Sent',
           description: 'Code sent to all students.',
@@ -411,13 +408,16 @@ export function SessionView({
     setSelectedWeek(parseInt(week))
   }
 
-  const handleStudentSelect = (student: User) => {
+  const handleStudentSelect = (student: User | null) => {
     setSelectedStudent(student)
-    if (socket) {
+    if (student && socket) {
+      console.log('Requesting code for student:', student.username)
       socket.emit('get-student-code', classroomId, student.username)
+    } else {
+      // If no student is selected, show teacher's code
+      setStudentCode(teacherCode)
     }
   }
-
   const renderTeacherView = () => {
     if (isLoading) {
       return (
