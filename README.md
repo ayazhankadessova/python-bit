@@ -135,8 +135,18 @@ Oct 20
 
 Oct 21
 
-- [ ] Remove "Run Code"
-- [ ] Add refresh button and use weekly updates ! what can i use it for?
+- [x] Remove "Run Code"
+- [x] Add refresh button and use weekly updates ! what can i use it for?
+- [x] Current Progress Report should be based on selectedWeek, not based on last Taught week
+- [x] Why ayazhankadessova has completed?
+- [ ] User API to reun code
+- [] 2/0 completed ?
+- [] Send code to all students
+- [ ] be able to check every students' current code
+- [ ] be able to send code to specific student
+- [ ] How many tasks did student complete for this week?
+- [ ] Remove completed tasks from server.js
+- [ ] Integrate AI
 
 What to ask?
 
