@@ -47,41 +47,6 @@ export async function GET(
   }
 }
 
-// // GET: Retrieve a specific classroom
-// export async function GET(
-//   request: Request,
-//   { params }: { params: { id: string } }
-// ) {
-//   const id = params.id
-//   if (!isValidObjectId(id)) {
-//     return NextResponse.json(
-//       { message: 'Invalid classroom ID' },
-//       { status: 400 }
-//     )
-//   }
-
-//   const client = await clientPromise
-//   const db = client.db('pythonbit')
-
-//   try {
-//     const classroom = await db
-//       .collection('classrooms')
-//       .findOne({ _id: new ObjectId(id) })
-//     if (!classroom) {
-//       return NextResponse.json(
-//         { message: 'Classroom not found' },
-//         { status: 404 }
-//       )
-//     }
-//     return NextResponse.json(classroom)
-//   } catch (error) {
-//     return NextResponse.json(
-//       { message: 'Error retrieving classroom', error },
-//       { status: 500 }
-//     )
-//   }
-// }
-
 // PUT: Update a specific classroom
 export async function PUT(
   request: Request,
@@ -102,21 +67,20 @@ export async function PUT(
     const updateData = await request.json()
     delete updateData._id // Ensure _id is not part of the update data
 
-    const result = await db
-      .collection('classrooms')
-      .updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { ...updateData, updatedAt: new Date() } }
-      )
+    const result = await db.collection('classrooms').findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $set: { ...updateData, updatedAt: new Date() } },
+      { returnDocument: 'after' } // This option returns the updated document
+    )
 
-    if (result.matchedCount === 0) {
-      return NextResponse.json(
-        { message: 'Classroom not found' },
-        { status: 404 }
-      )
-    }
+    // if (result.matchedCount === 0) {
+    //   return NextResponse.json(
+    //     { message: 'Classroom not found' },
+    //     { status: 404 }
+    //   )
+    // }
 
-    return NextResponse.json({ message: 'Classroom updated successfully' })
+    return NextResponse.json(result)
   } catch (error) {
     return NextResponse.json(
       { message: 'Error updating classroom', error },
