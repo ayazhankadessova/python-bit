@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
@@ -20,12 +20,22 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+interface Curriculum {
+  _id: string
+  name: string
+}
+
+interface Student {
+  _id: string
+  name: string
+  email: string
+  role: 'student'
+  school: string
+  grade?: number
+}
+
 const formSchema = z.object({
   name: z.string().min(1, 'Classroom name is required'),
-  teacherId: z
-    .string()
-    .min(24, 'Teacher ID must be 24 characters')
-    .max(24, 'Teacher ID must be 24 characters'),
   curriculumId: z
     .string()
     .min(24, 'Curriculum ID must be 24 characters')
@@ -36,33 +46,25 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>
 
-interface Curriculum {
-  _id: string
-  name: string
-}
-
-interface User {
-  _id: string
-  id: string
-  username: string
-  email: string
-  role: string
-}
-
 interface CreateClassroomFormProps {
-  onSubmit: (data: FormData) => void
+  onSubmit: (data: FormData & { teacherId: string }) => void
+  teacherId: string
+  teacherSchool: string
 }
 
-export function CreateClassroomForm({ onSubmit }: CreateClassroomFormProps) {
+export function CreateClassroomForm({
+  onSubmit,
+  teacherId,
+  teacherSchool,
+}: CreateClassroomFormProps) {
   const [curricula, setCurricula] = useState<Curriculum[]>([])
-  const [students, setStudents] = useState<User[]>([])
-  const [selectedStudents, setSelectedStudents] = useState<string[]>([])
+  const [filteredStudents, setFilteredStudents] = useState<Student[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      teacherId: '',
       curriculumId: '',
       curriculumName: '',
       students: [],
@@ -70,31 +72,73 @@ export function CreateClassroomForm({ onSubmit }: CreateClassroomFormProps) {
   })
 
   useEffect(() => {
-    fetch('/api/curriculum')
-      .then((response) => response.json())
-      .then((data: Curriculum[]) => setCurricula(data))
-      .catch((error) => console.error('Error fetching curricula:', error))
+    const fetchData = async () => {
+      const token = localStorage.getItem('token')
+      if (!token) return
 
-    fetch('/api/users')
-      .then((response) => response.json())
-      .then((data: User[]) =>
-        setStudents(data.filter((user) => user.role === 'student'))
-      )
-      .catch((error) => console.error('Error fetching users:', error))
-  }, [])
+      try {
+        setIsLoading(true)
 
-  const handleSubmit = (data: FormData) => {
-    onSubmit({ ...data, students: selectedStudents })
+        // Fetch curricula
+        const curriculaResponse = await fetch('/api/curriculum', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        if (!curriculaResponse.ok) throw new Error('Failed to fetch curricula')
+        const curriculaData = await curriculaResponse.json()
+        setCurricula(curriculaData)
+
+        // Fetch students
+        // In CreateClassroomForm
+        const studentsResponse = await fetch(
+          `/api/users?role=student&school=${encodeURIComponent(teacherSchool)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        if (!studentsResponse.ok) throw new Error('Failed to fetch students')
+        const studentsData = await studentsResponse.json()
+
+        // Store all students and filter them
+        // setAllStudents(studentsData)
+        // const schoolStudents = studentsData.filter(
+        //   (student: Student) => student.school === teacherSchool
+        // )
+        setFilteredStudents(studentsData)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [teacherSchool])
+
+  const handleStudentToggle = (studentId: string) => {
+    const currentStudents = form.getValues('students')
+    const updatedStudents = currentStudents.includes(studentId)
+      ? currentStudents.filter((id) => id !== studentId)
+      : [...currentStudents, studentId]
+
+    form.setValue('students', updatedStudents, {
+      shouldValidate: true,
+      shouldDirty: true,
+    })
   }
 
-  const handleStudentSelect = (username: string) => {
-    setSelectedStudents((prev) => {
-      const newSelection = prev.includes(username)
-        ? prev.filter((s) => s !== username)
-        : [...prev, username]
-      form.setValue('students', newSelection)
-      return newSelection
+  const handleSubmit = (data: FormData) => {
+    onSubmit({
+      ...data,
+      teacherId,
     })
+  }
+
+  if (isLoading) {
+    return <div className='p-4 text-center'>Loading...</div>
   }
 
   return (
@@ -116,19 +160,7 @@ export function CreateClassroomForm({ onSubmit }: CreateClassroomFormProps) {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name='teacherId'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Teacher ID</FormLabel>
-              <FormControl>
-                <Input placeholder='24-character Teacher ID' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <FormField
           control={form.control}
           name='curriculumId'
@@ -164,35 +196,54 @@ export function CreateClassroomForm({ onSubmit }: CreateClassroomFormProps) {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name='students'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Students</FormLabel>
+              <FormLabel>Students from {teacherSchool}</FormLabel>
               <FormControl>
-                <div className='flex flex-wrap gap-2'>
-                  {students.map((student) => (
-                    <Button
-                      key={student._id}
-                      type='button'
-                      variant={
-                        selectedStudents.includes(student.username)
-                          ? 'default'
-                          : 'outline'
-                      }
-                      onClick={() => handleStudentSelect(student.username)}
-                    >
-                      {student.username}
-                    </Button>
-                  ))}
+                <div className='flex flex-wrap gap-2 max-h-60 overflow-y-auto p-2 border rounded-md'>
+                  {filteredStudents.length === 0 ? (
+                    <p className='text-sm text-muted-foreground'>
+                      No students available from {teacherSchool}
+                    </p>
+                  ) : (
+                    filteredStudents.map((student) => (
+                      <Button
+                        key={student._id}
+                        type='button'
+                        variant={
+                          field.value.includes(student._id)
+                            ? 'default'
+                            : 'outline'
+                        }
+                        onClick={() => handleStudentToggle(student._id)}
+                        className='flex-grow-0'
+                      >
+                        {student.name}
+                        {student.grade && ` (Grade ${student.grade})`}
+                      </Button>
+                    ))
+                  )}
                 </div>
               </FormControl>
+              <p className='text-sm text-muted-foreground mt-2'>
+                {field.value.length} student(s) selected
+              </p>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type='submit'>Create Classroom</Button>
+
+        <Button
+          type='submit'
+          className='w-full'
+          disabled={isLoading || filteredStudents.length === 0}
+        >
+          Create Classroom
+        </Button>
       </form>
     </Form>
   )

@@ -48,7 +48,6 @@ export function SessionView({
   const { toast } = useToast()
   const [classroom, setClassroom] = useState<Classroom | null>(null)
   const [curriculum, setCurriculum] = useState<Curriculum | null>(null)
-  const [starterCode, setStarterCode] = useState('')
   const [studentCode, setStudentCode] = useState('')
   const [students, setStudents] = useState<User[]>([])
   const [selectedStudent, setSelectedStudent] = useState<User | null>(null)
@@ -241,29 +240,23 @@ export function SessionView({
       if (selectedStudent && selectedStudent.username === data.username) {
         setStudentCode(data.code)
       }
-    })
-
-    socket.on(
-      'student-code-updated',
-      (data: { username: string; code: string }) => {
-        console.log('Received student-code-updated event:', data)
-        setStudents((prevStudents) =>
-          prevStudents.map((student) =>
-            student.username === data.username
-              ? { ...student, code: data.code }
-              : student
-          )
+      // Also update the students array to keep it in sync
+      setStudents((prevStudents) =>
+        prevStudents.map((student) =>
+          student.username === data.username
+            ? { ...student, code: data.code }
+            : student
         )
-        if (selectedStudent?.username === data.username) {
-          console.log(`Updating code for selected student ${data.username}`)
-          setStudentCode(data.code)
-        }
-        if (role === 'student' && data.username === username) {
-          console.log(`Updating own code for student ${username}`)
-          setStudentCode(data.code)
-        }
+      )
+
+      if (selectedStudent?.username === data.username) {
+        setStudentCode(data.code)
       }
-    )
+
+      if (username === data.username) {
+        setStudentCode(data.code)
+      }
+    })
 
     socket.on(
       'execution-complete',
@@ -346,6 +339,13 @@ export function SessionView({
       } else {
         console.log('Sending code to all students:', teacherCode)
         socket.emit('send-code-to-all', classroomId, teacherCode)
+        // Update all student codes in the local state
+        setStudents((prevStudents) =>
+          prevStudents.map((student) => ({
+            ...student,
+            code: teacherCode,
+          }))
+        )
         toast({
           title: 'Code Sent',
           description: 'Code sent to all students.',
@@ -358,6 +358,9 @@ export function SessionView({
   const handleSubmitCode = async () => {
     if (role === 'student' && tasks.length > 0 && classroom) {
       try {
+        // Update code in socket server before submission
+        socket?.emit('update-code', classroomId, username, studentCode)
+
         const response = await fetch('/api/submit-code', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -409,15 +412,29 @@ export function SessionView({
   }
 
   const handleStudentSelect = (student: User | null) => {
+    // If clicking the already selected student, deselect them
+    if (selectedStudent?.username === student?.username) {
+      setSelectedStudent(null)
+      setStudentCode(teacherCode)
+      return
+    }
+
     setSelectedStudent(student)
-    if (student && socket) {
+    if (student) {
       console.log('Requesting code for student:', student.username)
-      socket.emit('get-student-code', classroomId, student.username)
+      socket?.emit('get-student-code', classroomId, student.username)
+
+      const currentStudent = students.find(
+        (s) => s.username === student.username
+      )
+      if (currentStudent?.code) {
+        setStudentCode(currentStudent.code)
+      }
     } else {
-      // If no student is selected, show teacher's code
       setStudentCode(teacherCode)
     }
   }
+
   const renderTeacherView = () => {
     if (isLoading) {
       return (
@@ -480,8 +497,8 @@ export function SessionView({
         )}
 
         <CodeExecutor
-          code={selectedStudent ? studentCode : starterCode}
-          onChange={selectedStudent ? setStudentCode : setStarterCode}
+          code={selectedStudent ? studentCode : teacherCode}
+          onChange={selectedStudent ? setStudentCode : setTeacherCode} // Changed from setStarterCode to setTeacherCode
           socket={socket}
           classroomId={classroomId}
           username={username}

@@ -1,268 +1,116 @@
-import { NextResponse } from 'next/server'
-import clientPromise from '../../../lib/mongodb'
-import { Classroom, Week } from '@/models/types'
+// app/api/classroom/route.ts
+import { NextRequest, NextResponse } from 'next/server'
 import { ObjectId } from 'mongodb'
+import clientPromise from '@/lib/mongodb'
+import { verifyAuth } from '@/lib/auth'
 
-export async function POST(request: Request) {
+export async function GET(req: NextRequest) {
   try {
+    // Verify auth token and check if user is a teacher
+    const decoded = await verifyAuth(req)
+    if (decoded.role !== 'teacher') {
+      return NextResponse.json(
+        { error: 'Only teachers can access classrooms' },
+        { status: 403 }
+      )
+    }
+
+    const { searchParams } = new URL(req.url)
+    const teacherId = searchParams.get('teacherId')
+
+    // Verify that the requesting user is the same as the teacherId
+    if (teacherId !== decoded.userId) {
+      return NextResponse.json(
+        { error: 'Unauthorized access to classroom data' },
+        { status: 403 }
+      )
+    }
+
     const client = await clientPromise
     const db = client.db('pythonbit')
-    const { name, teacherId, curriculumId, curriculumName, students } =
-      await request.json()
-
-    if (
-      !name ||
-      !teacherId ||
-      !curriculumId ||
-      !curriculumName ||
-      !students ||
-      students.length === 0
-    ) {
-      return NextResponse.json(
-        { message: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
-
-    // Fetch user documents for the selected students
-    const studentDocs = await db
-      .collection('users')
-      .find({ username: { $in: students }, role: 'student' })
+    const classrooms = await db
+      .collection('classrooms')
+      .find({ teacherId: new ObjectId(teacherId) })
       .toArray()
 
-    if (studentDocs.length !== students.length) {
+    return NextResponse.json(classrooms)
+  } catch (error) {
+    console.error('Error fetching classrooms:', error)
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    // Verify auth token and check if user is a teacher
+    const decoded = await verifyAuth(req)
+    if (decoded.role !== 'teacher') {
       return NextResponse.json(
-        { message: 'One or more selected students are invalid' },
+        { error: 'Only teachers can create classrooms' },
+        { status: 403 }
+      )
+    }
+
+    const body = await req.json()
+    const { name, teacherId, curriculumId, curriculumName, students } = body
+
+    // Verify that the requesting user is the same as the teacherId
+    if (teacherId !== decoded.userId) {
+      return NextResponse.json(
+        { error: 'Cannot create classroom for another teacher' },
+        { status: 403 }
+      )
+    }
+
+    if (!name || !teacherId || !curriculumId || !curriculumName) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
         { status: 400 }
       )
     }
 
-    const newClassroom = {
+    const client = await clientPromise
+    const db = client.db('pythonbit')
+
+    // Create new classroom
+    const classroom = await db.collection('classrooms').insertOne({
       name,
       teacherId: new ObjectId(teacherId),
       curriculumId: new ObjectId(curriculumId),
       curriculumName,
+      students: students || [],
       lastTaughtWeek: 0,
-      weeks: {},
-      students: studentDocs.map((student) => student._id), // Store student ObjectIds
       createdAt: new Date(),
       updatedAt: new Date(),
-    }
+    })
 
-    const result = await db.collection('classrooms').insertOne(newClassroom)
-
-    const createdClassroom = {
-      ...newClassroom,
-      _id: result.insertedId,
-      teacherId: teacherId,
-      curriculumId: curriculumId,
-      students: students, // Return usernames for the frontend
-    }
-
-    return NextResponse.json(createdClassroom, { status: 201 })
-  } catch (e) {
-    console.error(e)
-    return NextResponse.json(
-      { message: 'Error creating classroom' },
-      { status: 500 }
-    )
-  }
-}
-
-// // Function to update student progress
-// export async function updateStudentProgress(
-//   db: any,
-//   classroomId: string,
-//   weekNumber: number,
-//   userId: string,
-//   username: string,
-//   taskId: string,
-//   passed: boolean
-// ) {
-//   if (passed) {
-//     await db.collection('classrooms').updateOne(
-//       {
-//         _id: new ObjectId(classroomId),
-//         'weeklyProgress.weekNumber': weekNumber,
-//         'weeklyProgress.students.userId': userId,
-//       },
-//       {
-//         $addToSet: {
-//           'weeklyProgress.$[week].students.$[student].completedTasks': taskId,
-//         },
-//         $set: { updatedAt: new Date() },
-//       },
-//       {
-//         arrayFilters: [
-//           { 'week.weekNumber': weekNumber },
-//           { 'student.userId': userId },
-//         ],
-//         upsert: true,
-//       }
-//     )
-//   }
-// }
-
-// // Function to get classroom progress for a specific week
-// export async function getClassroomProgressForWeek(
-//   db: any,
-//   classroomId: string,
-//   weekNumber: number
-// ) {
-//   const classroom = await db.collection('classrooms').findOne(
-//     { _id: new ObjectId(classroomId) },
-//     {
-//       projection: {
-//         weeklyProgress: { $elemMatch: { weekNumber: weekNumber } },
-//       },
-//     }
-//   )
-
-//   return classroom?.weeklyProgress?.[0] || { weekNumber, students: [] }
-// }
-
-// // POST: Create a new classroom
-// export async function POST(request: Request) {
-//   try {
-//     const client = await clientPromise
-//     const db = client.db('pythonbit')
-//     const { name, teacherId, curriculumId, curriculumName } =
-//       await request.json()
-
-//     if (!name || !teacherId || !curriculumId || !curriculumName) {
-//       return NextResponse.json(
-//         { message: 'Missing required fields' },
-//         { status: 400 }
-//       )
-//     }
-
-//     const newClassroom: Omit<Classroom, '_id'> = {
-//       name,
-//       teacherId,
-//       curriculumId,
-//       curriculumName,
-//       lastTaughtWeek: 0,
-//       createdAt: new Date(),
-//       updatedAt: new Date(),
-//     }
-
-//     const result = await db.collection('classrooms').insertOne(newClassroom)
-//     const createdClassroom: Classroom = {
-//       ...newClassroom,
-//       _id: result.insertedId.toString(),
-//     }
-
-//     return NextResponse.json(createdClassroom, { status: 201 })
-//   } catch (e) {
-//     console.error(e)
-//     return NextResponse.json(
-//       { message: 'Error creating classroom' },
-//       { status: 500 }
-//     )
-//   }
-// }
-
-// GET: Retrieve classrooms
-export async function GET(request: Request) {
-  try {
-    const client = await clientPromise
-    const db = client.db('pythonbit')
-    const { searchParams } = new URL(request.url)
-    const id = searchParams.get('id')
-
-    if (id) {
-      const classroom = await db
-        .collection('classrooms')
-        .findOne({ _id: new ObjectId(id) })
-      if (!classroom) {
-        return NextResponse.json(
-          { message: 'Classroom not found' },
-          { status: 404 }
-        )
-      }
-      return NextResponse.json(classroom)
-    }
-
-    const classrooms = await db.collection('classrooms').find().toArray()
-    return NextResponse.json(classrooms)
-  } catch (e) {
-    console.error(e)
-    return NextResponse.json(
-      { message: 'Error retrieving classrooms' },
-      { status: 500 }
-    )
-  }
-}
-
-// PUT: Update a classroom
-export async function PUT(request: Request) {
-  try {
-    const client = await clientPromise
-    const db = client.db('pythonbit')
-    const { _id, ...updateData } = await request.json()
-
-    if (!_id) {
-      return NextResponse.json(
-        { message: 'Missing classroom ID' },
-        { status: 400 }
-      )
-    }
-
-    const result = await db
-      .collection('classrooms')
+    // Update teacher's classrooms array
+    await db
+      .collection('users')
       .updateOne(
-        { _id: new ObjectId(_id) },
-        { $set: { ...updateData, updatedAt: new Date() } }
+        { _id: new ObjectId(teacherId) },
+        { $push: { classrooms: classroom.insertedId } }
       )
 
-    if (result.matchedCount === 0) {
-      return NextResponse.json(
-        { message: 'Classroom not found' },
-        { status: 404 }
-      )
+    return NextResponse.json({
+      _id: classroom.insertedId,
+      name,
+      teacherId,
+      curriculumId,
+      curriculumName,
+      students,
+      lastTaughtWeek: 0,
+    })
+  } catch (error) {
+    console.error('Error creating classroom:', error)
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 401 })
     }
-
-    return NextResponse.json({ message: 'Classroom updated successfully' })
-  } catch (e) {
-    console.error(e)
     return NextResponse.json(
-      { message: 'Error updating classroom' },
-      { status: 500 }
-    )
-  }
-}
-
-// DELETE: Delete a classroom
-export async function DELETE(request: Request) {
-  try {
-    const client = await clientPromise
-    const db = client.db('pythonbit')
-    const { searchParams } = new URL(request.url)
-    const id = searchParams.get('id')
-
-    if (!id) {
-      return NextResponse.json(
-        { message: 'Missing classroom ID' },
-        { status: 400 }
-      )
-    }
-
-    const result = await db
-      .collection('classrooms')
-      .deleteOne({ _id: new ObjectId(id) })
-
-    if (result.deletedCount === 0) {
-      return NextResponse.json(
-        { message: 'Classroom not found' },
-        { status: 404 }
-      )
-    }
-
-    return NextResponse.json({ message: 'Classroom deleted successfully' })
-  } catch (e) {
-    console.error(e)
-    return NextResponse.json(
-      { message: 'Error deleting classroom' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     )
   }

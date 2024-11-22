@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import clientPromise from '../../../lib/mongodb'
 import { User } from '@/models/types'
 import { ObjectId } from 'mongodb'
@@ -46,12 +46,29 @@ export async function POST(request: Request) {
 }
 
 // GET: Retrieve all users
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Get query parameters
+    const searchParams = request.nextUrl.searchParams
+    const role = searchParams.get('role')
+    const school = searchParams.get('school')
+
+    // Build the query filter
+    const filter: { role?: string; school?: string } = {}
+
+    if (role) {
+      filter.role = role
+    }
+
+    if (school) {
+      filter.school = school
+    }
+
     const client = await clientPromise
     const db = client.db('pythonbit')
 
-    const users = await db.collection('users').find().toArray()
+    // Apply the filters to the database query
+    const users = await db.collection('users').find(filter).toArray()
 
     return NextResponse.json(users)
   } catch (e) {
@@ -63,30 +80,6 @@ export async function GET() {
   }
 }
 
-// export async function GET(
-//   request: Request,
-//   { params }: { params: { id: string } }
-// ) {
-//   try {
-//     const client = await clientPromise
-//     const db = client.db('pythonbit')
-//     const userId = params.id
-
-//     const user = await db.collection('users').findOne({ id: userId })
-
-//     if (!user) {
-//       return NextResponse.json({ message: 'User not found' }, { status: 404 })
-//     }
-
-//     return NextResponse.json(user)
-//   } catch (e) {
-//     console.error(e)
-//     return NextResponse.json(
-//       { message: 'Error retrieving user' },
-//       { status: 500 }
-//     )
-//   }
-// }
 // PUT: Update a user
 export async function PUT(request: Request) {
   try {

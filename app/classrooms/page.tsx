@@ -1,6 +1,6 @@
 'use client'
-import React, { useState, useEffect, useCallback } from 'react'
-import { Search, Plus, Play, Link } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { Search, Plus, Play } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -23,42 +23,64 @@ import { CreateClassroomForm } from './CreateClassroomForm'
 import { useToast } from '@/components/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { Classroom } from '@/models/types'
+import { Teacher } from '@/models/types'
 
-const ClassroomPage: React.FC = () => {
+const ClassroomPage = () => {
   const { toast } = useToast()
   const router = useRouter()
   const [classrooms, setClassrooms] = useState<Classroom[]>([])
-  const [searchTerm, setSearchTerm] = useState<string>('')
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [userData, setUserData] = useState<Teacher | null>(null)
 
   useEffect(() => {
     const fetchClassrooms = async () => {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        router.push('/')
+        return
+      }
+
       try {
-        const response = await fetch('/api/classroom')
-        if (!response.ok) {
-          throw new Error('Failed to fetch classrooms')
-        }
+        // Get the current user first
+        const userResponse = await fetch('/api/auth/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (!userResponse.ok) throw new Error('Failed to fetch user')
+        const userData = await userResponse.json()
+        setUserData(userData) // Store user data
+
+        // Then fetch their classrooms
+        const response = await fetch(
+          `/api/classroom?teacherId=${userData._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+
+        if (!response.ok) throw new Error('Failed to fetch classrooms')
         const data = await response.json()
         setClassrooms(data)
       } catch (error) {
-        console.error('Error fetching classrooms:', error)
+        console.error('Error:', error)
+        toast({
+          title: 'Error',
+          description: 'Failed to fetch classrooms. Please try again.',
+          variant: 'destructive',
+        })
       } finally {
         setIsLoading(false)
       }
     }
+
     fetchClassrooms()
-  }, [])
-
-  const filteredClassrooms = classrooms.filter(
-    (classroom) =>
-      classroom.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      classroom.curriculumName.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value)
-  }
+  }, [router, toast])
 
   const handleCreateClassroom = async (data: {
     name: string
@@ -68,32 +90,29 @@ const ClassroomPage: React.FC = () => {
     curriculumName: string
   }) => {
     try {
-      const classroomData = {
-        ...data,
-        lastTaughtWeek: 0, // Provide a default value
-      }
-
+      const token = localStorage.getItem('token')
       const response = await fetch('/api/classroom', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(classroomData),
+        body: JSON.stringify({
+          ...data,
+          lastTaughtWeek: 0,
+        }),
       })
 
-      if (!response.ok) {
-        throw new Error('Failed to create classroom')
-      }
+      if (!response.ok) throw new Error('Failed to create classroom')
 
       const newClassroom = await response.json()
       setClassrooms([...classrooms, newClassroom])
       setIsDialogOpen(false)
       toast({
-        title: 'Classroom created',
-        description: 'New classroom has been successfully created.',
+        title: 'Success',
+        description: 'Classroom created successfully.',
       })
     } catch (error) {
-      console.error('Error creating classroom:', error)
       toast({
         title: 'Error',
         description: 'Failed to create classroom. Please try again.',
@@ -104,22 +123,16 @@ const ClassroomPage: React.FC = () => {
 
   const handleStartLesson = async (classroomId: string) => {
     try {
-      const response = await fetch(`/api/classroom/${classroomId}/session`, {
-        method: 'POST',
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to create session')
+      if (!userData) {
+        throw new Error('No user data available')
       }
 
-      // const { sessionId } = await response.json()
-
-      // Redirect to the classroom session
-      router.push(
-        `/classroom/${classroomId}?&role=teacher&username=gulmirabairkenova`
-      )
+      // Create the URL with query parameters
+      const url = `/classroom/${classroomId}?username=${encodeURIComponent(
+        userData.name
+      )}&role=teacher`
+      router.push(url)
     } catch (error) {
-      console.error('Error starting lesson:', error)
       toast({
         title: 'Error',
         description: 'Failed to start the lesson. Please try again.',
@@ -129,12 +142,28 @@ const ClassroomPage: React.FC = () => {
   }
 
   if (isLoading) {
-    return <div>Loading classrooms...</div>
+    return (
+      <div className='flex justify-center items-center h-screen'>
+        Loading...
+      </div>
+    )
   }
 
+  const filteredClassrooms = classrooms.filter(
+    (classroom) =>
+      classroom.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      classroom.curriculumName.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   return (
-    <div className='container mx-auto p-4'>
-      <h1 className='text-3xl font-bold mb-6'>My Classrooms</h1>
+    <div className='container mx-auto p-6'>
+      <div className='flex justify-between items-center mb-6'>
+        <h1 className='text-3xl font-bold'>My Classrooms</h1>
+        <Button variant='outline' onClick={() => router.push('/')}>
+          Back to Dashboard
+        </Button>
+      </div>
+
       <div className='flex justify-between mb-6'>
         <div className='relative w-64'>
           <Search className='absolute left-2 top-2.5 h-4 w-4 text-gray-500' />
@@ -143,9 +172,10 @@ const ClassroomPage: React.FC = () => {
             placeholder='Search classrooms'
             className='pl-8'
             value={searchTerm}
-            onChange={handleSearch}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
+
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -159,28 +189,48 @@ const ClassroomPage: React.FC = () => {
                 Fill in the details to create a new classroom.
               </DialogDescription>
             </DialogHeader>
-            <CreateClassroomForm onSubmit={handleCreateClassroom} />
+            {userData && ( // Only render form if we have user data
+              <CreateClassroomForm
+                onSubmit={handleCreateClassroom}
+                teacherId={userData._id}
+                teacherSchool={userData.school}
+              />
+            )}
           </DialogContent>
         </Dialog>
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        {filteredClassrooms.map((classroom) => (
-          <Card key={classroom._id}>
-            <CardHeader>
-              <CardTitle>{classroom.name}</CardTitle>
-              <CardDescription>{classroom.curriculumName}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Last topic: {classroom.lastTopic}</p>
-            </CardContent>
-            <CardFooter className='flex justify-between'>
-              <Button onClick={() => handleStartLesson(classroom._id)}>
-                <Play className='mr-2 h-4 w-4' /> Start Lesson
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+
+      {filteredClassrooms.length === 0 ? (
+        <div className='text-center py-10'>
+          <p className='text-gray-500'>
+            No classrooms found. Create your first classroom to get started!
+          </p>
+        </div>
+      ) : (
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          {filteredClassrooms.map((classroom) => (
+            <Card key={classroom._id}>
+              <CardHeader>
+                <CardTitle>{classroom.name}</CardTitle>
+                <CardDescription>{classroom.curriculumName}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className='text-sm text-gray-600'>
+                  Last taught: Week {classroom.lastTaughtWeek || 0}
+                </p>
+                <p className='text-sm text-gray-600'>
+                  Students: {classroom.students?.length || 0}
+                </p>
+              </CardContent>
+              <CardFooter className='flex justify-between'>
+                <Button onClick={() => handleStartLesson(classroom._id)}>
+                  <Play className='mr-2 h-4 w-4' /> Start Lesson
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

@@ -7,80 +7,49 @@
 //   role: string
 //   createdAt: Date
 //   updatedAt: Date
-//   code?: string
-//   completedTasks?: number[] // Changed back to number[]
-// }
-
-// interface StudentProgress {
-//   userId: string
-//   completedTasks: number[]
-// }
-
-// export interface Classroom {
-//   _id: string
-//   name: string
-//   teacherId: string
-//   curriculumId: string
-//   curriculumName: string
-//   lastTaughtWeek: number
-//   createdAt: Date
-//   updatedAt: Date
-//   students?: string[]
-//   progress: WeeklyProgress[]
-//   weeks: Week[]
-// }
-
-// export interface WeeklyProgress {
-//   _id: string
-//   weekNumber: number
-//   studentProgress?: StudentProgress[]
-// }
-
-// export interface Week {
-//   weekNumber: number
-//   topic: string
-//   assignmentId: string // This will be an ObjectId, but we'll use string for simplicity
-// }
-
-// export interface Curriculum {
-//   _id: string
-//   name: string
-//   description: string
-//   weeks: Week[]
-//   createdAt: Date
-//   updatedAt: Date
-// }
-
-// export interface Task {
-//   id: number
-//   title: string
-//   description: string
-//   testCases: Array<{
-//     input: string
-//     expectedOutput: string
-//   }>
-// }
-
-// export interface Assignment {
-//   _id: string
-//   classroomId: string
-//   studentId: string
-//   weekNumber: number
-//   code: string
-//   feedback: string
-//   score: number
-//   tasks: Task[]
 // }
 
 export interface User {
   _id: string
-  id: string
-  username: string
   email: string
-  password: string
-  role: string
+  username: string
+  role: 'teacher' | 'student'
+  school: string
   createdAt: Date
   updatedAt: Date
+  code?: string | null
+}
+
+export interface Teacher extends User {
+  role: 'teacher'
+  classrooms?: string[] // Array of classroom IDs
+  subject?: string
+}
+
+export interface Student extends User {
+  role: 'student'
+  enrolledClassrooms?: string[] // Array of classroom IDs
+  grade?: number
+}
+
+export interface LoginCredentials {
+  email: string
+  password: string
+}
+
+export interface SignupData {
+  email: string
+  password: string
+  username: string
+  role: 'teacher' | 'student'
+  school?: string
+  subject?: string // for teachers
+  grade?: number // for students
+}
+
+export interface AuthResponse {
+  user: User
+  token: string
 }
 
 export interface WeeklyProgress {

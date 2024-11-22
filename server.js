@@ -1,3 +1,5 @@
+// server.js
+
 import express from 'express'
 import next from 'next'
 import { createServer } from 'http'
@@ -72,12 +74,14 @@ app.prepare().then(async () => {
         const classroom = classrooms.get(classroomId)
         const student = classroom.students.get(username)
         if (student) {
+          // Update the stored code
           student.code = code
+
+          // Log the update for debugging
           console.log(`Updated student data for ${username}:`, student)
-          console.log(
-            `Emitting student-code-updated event to room ${classroomId}`
-          )
-          io.to(classroomId).emit('student-code-updated', {
+          console.log(`Current code for ${username}:`, student.code)
+
+          io.to(classroomId).emit('student-code', {
             username: username,
             code: code,
           })
@@ -99,9 +103,9 @@ app.prepare().then(async () => {
         classroom.students.forEach((student, username) => {
           student.code = code
           console.log(
-            `Emitting student-code-updated event for ${username} to room ${classroomId}`
+            `Emitting student-code event for ${username} to room ${classroomId}`
           )
-          io.to(classroomId).emit('student-code-updated', {
+          io.to(classroomId).emit('student-code', {
             username: username,
             code: code,
           })
@@ -121,7 +125,13 @@ app.prepare().then(async () => {
         const classroom = classrooms.get(classroomId)
         const student = classroom.students.get(username)
         if (student) {
-          console.log(`Sending code for student ${username}:`, student.code)
+          // Log the current state for debugging
+          console.log(
+            `Current stored code for student ${username}:`,
+            student.code
+          )
+
+          // Emit the current code back to the requester
           socket.emit('student-code', {
             username: username,
             code: student.code,
@@ -155,8 +165,9 @@ app.prepare().then(async () => {
 
     socket.on('disconnect', () => {
       console.log('Client disconnected')
-      classrooms.forEach((classroom, classroomId) => {
-        handleLeaveRoom(socket, classroomId, socket.username)
+      // Clear any stored state for this socket
+      socket.rooms.forEach((room) => {
+        handleLeaveRoom(socket, room, socket.username)
       })
     })
   })

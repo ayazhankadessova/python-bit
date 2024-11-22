@@ -127,13 +127,13 @@ Backend:
 
 - [x] stuck at load sesion data
 
-Oct 20
+## Oct 20
 
 - [x] Change the background of the toast
 - [x] How can teacher see the progress -> api send smth to session-view and session view emits smth to socket
 - [ ] Created weekly progress table
 
-Oct 21
+## Oct 21
 
 - [x] Remove "Run Code"
 - [x] Add refresh button and use weekly updates ! what can i use it for?
@@ -152,6 +152,17 @@ Oct 21
 - [ ] In curricula, we will save actual submission -> submissions table.
 - [ ] Integrate AI
 
+## Nov 22
+
+- [x] let teacher login and they can see all classes that she has.
+- [x] cant find GET /classroom/6740320f2cf18e4ef71cdbcc/session 404 in 678ms
+- [ ] send code to all students in the classroom
+- [ ] change student's views
+- [ ] how students join classroom, change that, maybe we show active classroom?
+- [ ]
+- [ ] Full Programmes -> get reference from Microsoft
+- [ ] show last topic for every classroom.
+
 What to ask?
 
 - [ ] Do i need to save submissions?
@@ -168,7 +179,11 @@ refresh shows progress
 [ ] check out weekly progress
 [ ] assoc week with weekly report
 
-
 - [ ] queuing system to execute code
 - [ ] save as files
 - [ ] how many libraries are there needed ?
+
+```
+db.classrooms.createIndex({ teacherId: 1 })
+db.users.createIndex({ email: 1 }, { unique: true })
+```

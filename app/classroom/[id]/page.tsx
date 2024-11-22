@@ -17,49 +17,63 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
   const [socket, setSocket] = useState<Socket | null>(null)
   const [user, setUser] = useState<User | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const sessionId = searchParams.get('session')
-  const role = searchParams.get('role')
   const username = searchParams.get('username')
+  const role = searchParams.get('role')
   const classroomId = params.id
 
+  // Separate user fetching effect
   useEffect(() => {
     const fetchUserData = async () => {
-      if (username) {
-        try {
-          const response = await fetch(`/api/users/${username}`)
-          if (response.ok) {
-            const userData: User = await response.json()
-            console.log('Fetched user data:', userData)
-            setUser(userData)
-          } else {
-            const errorData = await response.json()
-            console.error('Failed to fetch user data:', errorData)
-            setError(`Failed to fetch user data: ${errorData.message}`)
-          }
-        } catch (error) {
-          console.error('Error fetching user data:', error)
-          setError('Error fetching user data. Please try again.')
+      setIsLoading(true)
+
+      try {
+        const token = localStorage.getItem('token')
+        if (!token) {
+          setError('Not authenticated')
+          router.push('/')
+          return
         }
-      } else {
-        console.error('No username provided')
-        console.log(username)
-        setError('No username provided. Unable to fetch user data.')
+
+        const response = await fetch('/api/auth/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (response.ok) {
+          const userData = await response.json()
+          setUser(userData)
+        } else {
+          throw new Error('Failed to fetch user data')
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+        setError('Error fetching user data. Please try again.')
+      } finally {
+        setIsLoading(false)
       }
     }
 
     fetchUserData()
+  }, [router]) // Only depend on router
+
+  // Separate socket connection effect
+  useEffect(() => {
+    if (!user) return // Don't create socket connection until we have user data
 
     const newSocket = io('http://localhost:3000')
     setSocket(newSocket)
 
     newSocket.on('connect', () => {
       console.log('Connected to socket server')
-      // if (role === 'teacher') {
-      //   newSocket.emit('join-room', classroomId, username, true)
-      // } else if (role === 'student') {
-      //   newSocket.emit('join-room', classroomId, username, false)
-      // }
+      newSocket.emit(
+        'join-room',
+        classroomId,
+        user.username,
+        role === 'teacher'
+      )
     })
 
     newSocket.on('connect_error', (error) => {
@@ -67,22 +81,18 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
       setError('Failed to connect to the classroom. Please try again.')
     })
 
-    // newSocket.on('session-ended', () => {
-    //   console.log('Session ended by teacher')
-    //   router.push('/classrooms')
-    // })
-
     return () => {
+      console.log('Disconnecting socket')
       newSocket.disconnect()
     }
-  }, [classroomId, sessionId, router, role, username])
+  }, [classroomId, role, user]) // Only depend on necessary values
 
   const handleEndSession = () => {
-    if (socket) {
+    if (socket && user) {
       if (role === 'teacher') {
         socket.emit('end-session', classroomId)
       } else {
-        socket.emit('leave-room', classroomId, username)
+        socket.emit('leave-room', classroomId, user.username)
       }
       socket.disconnect()
     }
@@ -90,16 +100,30 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
   }
 
   if (error) {
-    return <div className='text-red-500'>Error: {error}</div>
+    return (
+      <div className='flex flex-col items-center justify-center min-h-screen'>
+        <div className='text-red-500 mb-4'>Error: {error}</div>
+        <button
+          onClick={() => router.push('/classrooms')}
+          className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+        >
+          Return to Classrooms
+        </button>
+      </div>
+    )
   }
 
-  if (!user) {
-    return <div>Loading...</div>
+  if (isLoading || !user) {
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        Loading...
+      </div>
+    )
   }
 
   return (
     <SessionView
-      username={username}
+      username={user.username}
       classroomId={classroomId}
       onEndSession={handleEndSession}
       socket={socket}
