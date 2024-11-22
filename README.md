@@ -167,4 +167,8 @@ refresh shows progress
 [x] checkout all the types
 [ ] check out weekly progress
 [ ] assoc week with weekly report
-[]
+
+
+- [ ] queuing system to execute code
+- [ ] save as files
+- [ ] how many libraries are there needed ?
