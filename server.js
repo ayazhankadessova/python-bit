@@ -21,39 +21,70 @@ app.prepare().then(async () => {
   const io = new SocketIOServer(httpServer)
 
   const classrooms = new Map()
+  const activeSessions = new Set()
 
   io.on('connection', (socket) => {
     console.log('Client connected')
 
-    socket.on('join-room', (classroomId, username, isTeacher) => {
-      console.log(`User ${username} joining room ${classroomId}`)
-      socket.join(classroomId)
+    // server.js - modify the join-room handler
+    socket.on('join-room', async (classroomId, username, isTeacher) => {
+      console.log(`User ${username} attempting to join room ${classroomId}`)
 
-      if (!classrooms.has(classroomId)) {
-        console.log(`Creating new classroom ${classroomId}`)
-        classrooms.set(classroomId, {
-          students: new Map(),
-          teacher: null,
+      try {
+        // Immediately check and emit session status
+        const sessionActive = activeSessions.has(classroomId)
+        socket.emit('session-status', {
+          active: isTeacher || sessionActive,
+          message: sessionActive
+            ? 'Session is active'
+            : 'No active session found',
         })
-      }
 
-      const classroom = classrooms.get(classroomId)
+        // If student and no active session, return early
+        if (!isTeacher && !sessionActive) {
+          console.log(
+            `Student ${username} attempted to join inactive session ${classroomId}`
+          )
+          return
+        }
 
-      if (isTeacher) {
-        classroom.teacher = username
-        console.log(`Teacher ${username} joined classroom ${classroomId}`)
-      } else {
-        classroom.students.set(username, {
-          username: username,
-          code: '',
+        // Continue with room joining logic
+        socket.join(classroomId)
+
+        if (!classrooms.has(classroomId)) {
+          classrooms.set(classroomId, {
+            students: new Map(),
+            teacher: null,
+          })
+        }
+
+        const classroom = classrooms.get(classroomId)
+
+        if (isTeacher) {
+          classroom.teacher = username
+          activeSessions.add(classroomId)
+          console.log(
+            `Teacher ${username} created/joined session for ${classroomId}`
+          )
+        } else {
+          classroom.students.set(username, {
+            username: username,
+            code: '',
+          })
+          console.log(
+            `Student ${username} joined active session ${classroomId}`
+          )
+        }
+
+        // Emit updated participants
+        io.to(classroomId).emit('update-participants', {
+          teacher: classroom.teacher,
+          students: Array.from(classroom.students.values()),
         })
-        console.log(`Student ${username} joined classroom ${classroomId}`)
+      } catch (error) {
+        console.error('Error in join-room:', error)
+        socket.emit('error', 'Failed to join classroom')
       }
-
-      io.to(classroomId).emit('update-participants', {
-        teacher: classroom.teacher,
-        students: Array.from(classroom.students.values()),
-      })
     })
 
     socket.on('leave-room', (classroomId, username) => {
@@ -157,8 +188,18 @@ app.prepare().then(async () => {
 
     socket.on('end-session', (classroomId) => {
       if (classrooms.has(classroomId)) {
+        console.log(`Ending session for classroom ${classroomId}`)
+
+        // Remove from active sessions
+        activeSessions.delete(classroomId)
+
+        // Notify all clients
         io.to(classroomId).emit('session-ended')
+
+        // Disconnect all sockets in the room
         io.in(classroomId).disconnectSockets(true)
+
+        // Clean up classroom data
         classrooms.delete(classroomId)
       }
     })
