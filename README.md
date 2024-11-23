@@ -170,9 +170,13 @@ Backend:
 - [x] clean up classrooms (remove old ones)
 - [x] Remove Class code from my classrooms list
 - [x] Show Student name no their grade when u create classroom
+
+## Nov 24
+
 - [ ] Ask AI HELP {chat gpt token?}
 - [ ] Full Programmes -> get reference from Microsoft
 - [ ] show last topic for every classroom.
+- [ ] Finally do smth w microbit AHHAHAH
 
 What to ask?
 
