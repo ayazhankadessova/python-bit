@@ -54,12 +54,7 @@ export default function LoginForm() {
       // Store token in localStorage
       localStorage.setItem('token', token)
 
-      // Redirect based on role
-      if (user.role === 'teacher') {
-        router.push('/classrooms')
-      } else {
-        router.push('/dashboard')
-      }
+      router.push('/dashboard')
 
       toast({
         title: 'Success',
