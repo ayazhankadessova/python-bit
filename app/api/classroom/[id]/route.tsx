@@ -89,7 +89,8 @@ export async function PUT(
   }
 }
 
-// DELETE: Delete a specific classroom
+// app/api/classroom/[id]/route.ts
+
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
@@ -106,21 +107,79 @@ export async function DELETE(
   const db = client.db('pythonbit')
 
   try {
-    const result = await db
-      .collection('classrooms')
-      .deleteOne({ _id: new ObjectId(id) })
+    // First get the classroom to find associated users
+    const classroom = await db.collection('classrooms').findOne({
+      _id: new ObjectId(id),
+    })
 
-    if (result.deletedCount === 0) {
+    if (!classroom) {
       return NextResponse.json(
         { message: 'Classroom not found' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json({ message: 'Classroom deleted successfully' })
+    // Start a session for transaction
+    const session = client.startSession()
+
+    try {
+      await session.withTransaction(async () => {
+        // Delete the classroom
+        await db
+          .collection('classrooms')
+          .deleteOne({ _id: new ObjectId(id) }, { session })
+
+        // Remove classroom from teacher's array
+        await db.collection('users').updateOne(
+          { _id: classroom.teacherId },
+          {
+            $pull: { classrooms: new ObjectId(id) },
+            $set: { updatedAt: new Date() },
+          },
+          { session }
+        )
+
+        // Remove classroom from all students' enrolledClassrooms array
+        if (classroom.students && classroom.students.length > 0) {
+          await db.collection('users').updateMany(
+            {
+              _id: {
+                $in: classroom.students.map((id: string) => new ObjectId(id)),
+              },
+              role: 'student',
+            },
+            {
+              $pull: { enrolledClassrooms: new ObjectId(id) },
+              $set: { updatedAt: new Date() },
+            },
+            { session }
+          )
+        }
+
+        // Optional: Delete any associated data (like progress records)
+        await db
+          .collection('weeklyProgress')
+          .deleteMany({ classroomId: new ObjectId(id) }, { session })
+      })
+
+      await session.endSession()
+
+      return NextResponse.json({
+        message: 'Classroom and all associated data deleted successfully',
+      })
+    } catch (error) {
+      await session.abortTransaction()
+      throw error
+    } finally {
+      await session.endSession()
+    }
   } catch (error) {
+    console.error('Error deleting classroom:', error)
     return NextResponse.json(
-      { message: 'Error deleting classroom', error },
+      {
+        message: 'Error deleting classroom',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     )
   }
