@@ -35,12 +35,25 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
   const [error, setError] = useState<string | null>(null)
   const [isActiveSession, setIsActiveSession] = useState<boolean>(false)
   const [isCheckingSession, setIsCheckingSession] = useState(true)
-  const [classroom, setClassroom] = useState<ClassroomData | null>(null)
+  const [retryCount, setRetryCount] = useState(0) // Add retry counter
 
   const username = searchParams.get('username')
   const role = searchParams.get('role')
   const classroomId = params.id
 
+  const handleRetryConnection = () => {
+    setIsCheckingSession(true)
+    setError(null)
+    setIsActiveSession(false)
+    if (socket) {
+      socket.disconnect()
+      setSocket(null)
+    }
+    // Instead of router.refresh(), increment retry counter
+    setRetryCount((prev) => prev + 1)
+  }
+
+  // Fetch user data
   // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
@@ -70,111 +83,90 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
     fetchUserData()
   }, [router])
 
-  // Fetch classroom data and check session status
-  useEffect(() => {
-    const fetchClassroomData = async () => {
-      try {
-        const token = localStorage.getItem('token')
-        const response = await fetch(`/api/classroom/${classroomId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-
-        if (!response.ok) throw new Error('Failed to fetch classroom data')
-        const data = await response.json()
-        setClassroom(data)
-      } catch (error) {
-        console.error('Error fetching classroom:', error)
-        setError('Failed to fetch classroom data')
-      }
-    }
-
-    fetchClassroomData()
-  }, [classroomId])
-
   // Socket connection with delayed session check
-  // app/classroom/[id]/page.tsx - modify the socket connection effect
+  // Socket connection with delayed session check
   useEffect(() => {
     if (!user) return
 
     let statusCheckTimeout: NodeJS.Timeout
+    let connectionAttemptTimeout: NodeJS.Timeout
 
     const connectSocket = async () => {
-      setIsCheckingSession(true)
-      const newSocket = io('http://localhost:3000')
-      setSocket(newSocket)
+      try {
+        setIsCheckingSession(true)
 
-      // Set a timeout for session check
-      statusCheckTimeout = setTimeout(() => {
-        setIsCheckingSession(false)
-        if (role === 'student') {
-          console.log('Session status check timed out')
-          toast({
-            title: 'Connection Error',
-            description: 'Unable to check session status. Please try again.',
-            variant: 'destructive',
-          })
-          router.push('/dashboard')
+        // Clear any existing socket
+        if (socket) {
+          socket.disconnect()
+          setSocket(null)
         }
-      }, 5000) // 5 second timeout
 
-      newSocket.on('connect', () => {
-        console.log('Connected to socket server')
-        newSocket.emit(
-          'join-room',
-          classroomId,
-          user.username,
-          role === 'teacher'
-        )
-      })
+        const newSocket = io('http://localhost:3000')
+        setSocket(newSocket)
 
-      newSocket.on(
-        'session-status',
-        (data: { active: boolean; message?: string }) => {
-          clearTimeout(statusCheckTimeout)
-          console.log('Received session status:', data)
-          setIsActiveSession(data.active)
+        // Set a timeout for session check
+        statusCheckTimeout = setTimeout(() => {
           setIsCheckingSession(false)
-
-          if (!data.active && role === 'student') {
-            toast({
-              title: 'No Active Session',
-              description:
-                data.message || 'The teacher has not started the session yet.',
-              variant: 'destructive',
-            })
-            router.push('/dashboard')
+          if (role === 'student') {
+            setError('Connection timeout. Please try again.')
           }
-        }
-      )
+        }, SESSION_CHECK_TIMEOUT)
 
-      newSocket.on('connect_error', (error) => {
-        clearTimeout(statusCheckTimeout)
-        console.error('Socket connection error:', error)
-        setError('Failed to connect to the classroom. Please try again.')
-        setIsCheckingSession(false)
-        router.push('/dashboard')
-      })
+        newSocket.on('connect', () => {
+          console.log('Connected to socket server')
+          newSocket.emit(
+            'join-room',
+            classroomId,
+            user.username,
+            role === 'teacher'
+          )
+        })
 
-      newSocket.on('error', (error) => {
+        newSocket.on(
+          'session-status',
+          (data: { active: boolean; message?: string }) => {
+            clearTimeout(statusCheckTimeout)
+            console.log('Received session status:', data)
+            setIsActiveSession(data.active)
+            setIsCheckingSession(false)
+
+            if (!data.active && role === 'student') {
+              setError('No active session found')
+            }
+          }
+        )
+
+        newSocket.on('connect_error', (error) => {
+          clearTimeout(statusCheckTimeout)
+          console.error('Socket connection error:', error)
+          setError('Failed to connect. Please try again.')
+          setIsCheckingSession(false)
+        })
+
+        newSocket.on('error', (error) => {
+          clearTimeout(statusCheckTimeout)
+          console.error('Socket error:', error)
+          setError(error)
+          setIsCheckingSession(false)
+        })
+      } catch (error) {
         clearTimeout(statusCheckTimeout)
-        console.error('Socket error:', error)
-        setError(error)
+        setError('Connection failed. Please try again.')
         setIsCheckingSession(false)
-        router.push('/dashboard')
-      })
+      }
     }
 
-    connectSocket()
+    // Add a small delay before attempting connection
+    connectionAttemptTimeout = setTimeout(connectSocket, 500)
 
     return () => {
       clearTimeout(statusCheckTimeout)
+      clearTimeout(connectionAttemptTimeout)
       if (socket) {
         socket.disconnect()
       }
     }
-  }, [classroomId, role, user, router, toast])
+  }, [classroomId, role, user, retryCount]) // Add retryCount to dependencies
 
   const handleEndSession = () => {
     if (socket && user) {
@@ -191,16 +183,28 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
   // Modify the loading state render
   if (role === 'student' && isCheckingSession) {
     return (
-      <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
-        <Loader2 className='h-8 w-8 animate-spin' />
-        <p className='text-lg text-gray-600'>
-          {isCheckingSession ? 'Checking session status...' : 'Loading...'}
-        </p>
-        <p className='text-sm text-gray-400'>
-          {isCheckingSession
-            ? `Timeout in ${Math.ceil(SESSION_CHECK_TIMEOUT / 1000)}s`
-            : ''}
-        </p>
+      <div className='flex flex-col items-center justify-center min-h-screen'>
+        <Card className='w-96'>
+          <CardContent className='pt-6 text-center'>
+            <Loader2 className='h-8 w-8 animate-spin mx-auto mb-4' />
+            <h2 className='text-xl font-semibold mb-2'>
+              Checking Session Status
+            </h2>
+            <p className='text-gray-600 mb-4'>
+              Attempting to connect to the classroom...
+            </p>
+            <p className='text-sm text-gray-400 mb-6'>
+              Timeout in {Math.ceil(SESSION_CHECK_TIMEOUT / 1000)}s
+            </p>
+            <Button
+              onClick={() => router.push('/dashboard')}
+              variant='outline'
+              className='w-full'
+            >
+              Cancel
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -209,10 +213,29 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
   if (error) {
     return (
       <div className='flex flex-col items-center justify-center min-h-screen'>
-        <div className='text-red-500 mb-4'>Error: {error}</div>
-        <Button onClick={() => router.push('/dashboard')}>
-          Return to Dashboard
-        </Button>
+        <Card className='w-96'>
+          <CardContent className='pt-6 text-center'>
+            <h2 className='text-xl font-semibold mb-4'>Connection Error</h2>
+            <p className='text-red-500 mb-6'>{error}</p>
+            <div className='space-y-3'>
+              <Button
+                onClick={handleRetryConnection}
+                className='w-full mb-2'
+                variant='default'
+              >
+                <Loader2 className='mr-2 h-4 w-4' />
+                Try Again
+              </Button>
+              <Button
+                onClick={() => router.push('/dashboard')}
+                className='w-full'
+                variant='outline'
+              >
+                Return to Dashboard
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -225,12 +248,25 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
           <CardContent className='pt-6 text-center'>
             <h2 className='text-xl font-semibold mb-4'>No Active Session</h2>
             <p className='text-gray-600 mb-6'>
-              The teacher hasn't started the session yet. Please try again
-              later.
+              The teacher hasn't started the session yet.
             </p>
-            <Button onClick={() => router.push('/dashboard')}>
-              Return to Dashboard
-            </Button>
+            <div className='space-y-3'>
+              <Button
+                onClick={handleRetryConnection}
+                className='w-full mb-2'
+                variant='default'
+              >
+                <Loader2 className='mr-2 h-4 w-4' />
+                Try Again
+              </Button>
+              <Button
+                onClick={() => router.push('/dashboard')}
+                className='w-full'
+                variant='outline'
+              >
+                Return to Dashboard
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -249,6 +285,12 @@ const ClassroomPage: React.FC<ClassroomPageProps> = ({ params }) => {
       />
     )
   }
+
+  return (
+    <div className='flex items-center justify-center min-h-screen'>
+      <Loader2 className='h-8 w-8 animate-spin' />
+    </div>
+  )
 }
 
 export default ClassroomPage

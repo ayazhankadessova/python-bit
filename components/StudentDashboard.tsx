@@ -20,13 +20,7 @@ import {
 } from '@/components/ui/dialog'
 import { BookOpen, Trophy, Users } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-
-interface ClassroomDetails {
-  _id: string
-  name: string
-  classCode: string
-  lastTaughtWeek: number
-}
+import { Classroom } from '@/models/types'
 
 interface StudentDashboardProps {
   user: Student
@@ -36,9 +30,7 @@ interface StudentDashboardProps {
 export function StudentDashboard({ user, onSignOut }: StudentDashboardProps) {
   const router = useRouter()
   const { toast } = useToast()
-  const [enrolledClassrooms, setEnrolledClassrooms] = useState<
-    ClassroomDetails[]
-  >([])
+  const [enrolledClassrooms, setEnrolledClassrooms] = useState<Classroom[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -75,7 +67,7 @@ export function StudentDashboard({ user, onSignOut }: StudentDashboardProps) {
     fetchClassrooms()
   }, [user.classrooms, toast])
 
-  const handleJoinClassroom = (classroom: ClassroomDetails) => {
+  const handleJoinClassroom = (classroom: Classroom) => {
     router.push(
       `/classroom/${classroom._id}?username=${encodeURIComponent(
         user.username
@@ -113,7 +105,7 @@ export function StudentDashboard({ user, onSignOut }: StudentDashboardProps) {
                     <div className='space-y-2'>
                       <h3 className='font-semibold'>{classroom.name}</h3>
                       <p className='text-sm text-gray-500'>
-                        Class Code: {classroom.classCode}
+                        Program: {classroom.curriculumName}
                       </p>
                       <Button
                         className='w-full'
