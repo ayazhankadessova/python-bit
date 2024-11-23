@@ -19,19 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Student } from '@/models/types'
 
 interface Curriculum {
   _id: string
   name: string
-}
-
-interface Student {
-  _id: string
-  name: string
-  email: string
-  role: 'student'
-  school: string
-  grade?: number
 }
 
 const formSchema = z.object({
@@ -102,11 +94,6 @@ export function CreateClassroomForm({
         if (!studentsResponse.ok) throw new Error('Failed to fetch students')
         const studentsData = await studentsResponse.json()
 
-        // Store all students and filter them
-        // setAllStudents(studentsData)
-        // const schoolStudents = studentsData.filter(
-        //   (student: Student) => student.school === teacherSchool
-        // )
         setFilteredStudents(studentsData)
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -222,8 +209,8 @@ export function CreateClassroomForm({
                         onClick={() => handleStudentToggle(student._id)}
                         className='flex-grow-0'
                       >
-                        {student.name}
-                        {student.grade && ` (Grade ${student.grade})`}
+                        {student.username}
+                        {` (Grade ${student.grade})`}
                       </Button>
                     ))
                   )}
