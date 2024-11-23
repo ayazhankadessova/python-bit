@@ -165,9 +165,11 @@ Backend:
 
 #### Student Dashboard:
 
-- [ ] Show name of every classroom ur enrolled
-- [ ] Join classroom -> if not yet made by teacher, then show that there is no active session
-- [ ] Show Student name no their grade when u create classroom
+- [x] Show name of every classroom ur enrolled
+- [x] Join classroom -> if not yet made by teacher, then show that there is no active session
+- [x] clean up classrooms (remove old ones)
+- [x] Remove Class code from my classrooms list
+- [x] Show Student name no their grade when u create classroom
 - [ ] Ask AI HELP {chat gpt token?}
 - [ ] Full Programmes -> get reference from Microsoft
 - [ ] show last topic for every classroom.
