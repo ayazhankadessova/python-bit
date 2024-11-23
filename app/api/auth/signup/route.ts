@@ -4,6 +4,7 @@ import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
 import { z } from 'zod'
 import clientPromise from '@/lib/mongodb'
+import { createToken } from '@/lib/auth' // Add this import
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -24,8 +25,6 @@ const signupSchema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-
-    // Validate request body
     const parsedBody = signupSchema.parse(body)
     const { email, password, username, role, school, subject, grade } =
       parsedBody
@@ -34,7 +33,6 @@ export async function POST(req: NextRequest) {
     const db = client.db('pythonbit')
     const usersCollection = db.collection('users')
 
-    // Check if user already exists
     const existingUser = await usersCollection.findOne({ email })
     if (existingUser) {
       return NextResponse.json(
@@ -43,10 +41,8 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Create user document based on role
     const baseUser = {
       email,
       password: hashedPassword,
@@ -67,24 +63,17 @@ export async function POST(req: NextRequest) {
         : {
             ...baseUser,
             grade,
-            enrolledClassrooms: [],
+            classrooms: [], // Changed from classrooms to classrooms for students
           }
 
-    // Insert user
     const result = await usersCollection.insertOne(userDoc)
 
-    // Generate JWT token
-    const token = jwt.sign(
-      {
-        userId: result.insertedId,
-        email,
-        role,
-      },
-      JWT_SECRET,
-      { expiresIn: '24h' }
-    )
+    // Use the createToken function from lib/auth
+    const token = await createToken({
+      _id: result.insertedId.toString(),
+      role: role,
+    })
 
-    // Don't send password back to client
     const { password: _, ...userWithoutPassword } = userDoc
 
     return NextResponse.json({

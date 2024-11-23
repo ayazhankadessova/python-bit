@@ -35,6 +35,7 @@ const ClassroomPage = () => {
   const [userData, setUserData] = useState<Teacher | null>(null)
 
   useEffect(() => {
+    // In ClassroomPage.tsx
     const fetchClassrooms = async () => {
       const token = localStorage.getItem('token')
       if (!token) {
@@ -43,19 +44,25 @@ const ClassroomPage = () => {
       }
 
       try {
-        // Get the current user first
+        console.log('Token from localStorage:', token) // Debug log
+
         const userResponse = await fetch('/api/auth/me', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
 
-        if (!userResponse.ok) throw new Error('Failed to fetch user')
-        const userData = await userResponse.json()
-        setUserData(userData) // Store user data
+        if (!userResponse.ok) {
+          const errorText = await userResponse.text()
+          console.error('User response error:', errorText)
+          throw new Error('Failed to fetch user')
+        }
 
-        // Then fetch their classrooms
-        const response = await fetch(
+        const userData = await userResponse.json()
+        console.log('User data:', userData)
+        setUserData(userData)
+
+        const classroomsResponse = await fetch(
           `/api/classroom?teacherId=${userData._id}`,
           {
             headers: {
@@ -64,11 +71,17 @@ const ClassroomPage = () => {
           }
         )
 
-        if (!response.ok) throw new Error('Failed to fetch classrooms')
-        const data = await response.json()
+        if (!classroomsResponse.ok) {
+          const errorText = await classroomsResponse.text()
+          console.error('Classrooms response error:', errorText)
+          throw new Error('Failed to fetch classrooms')
+        }
+
+        const data = await classroomsResponse.json()
+        console.log('Classrooms data:', data)
         setClassrooms(data)
       } catch (error) {
-        console.error('Error:', error)
+        console.error('Fetch error:', error)
         toast({
           title: 'Error',
           description: 'Failed to fetch classrooms. Please try again.',
@@ -129,7 +142,7 @@ const ClassroomPage = () => {
 
       // Create the URL with query parameters
       const url = `/classroom/${classroomId}?username=${encodeURIComponent(
-        userData.name
+        userData.username
       )}&role=teacher`
       router.push(url)
     } catch (error) {

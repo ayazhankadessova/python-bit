@@ -20,18 +20,21 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useToast } from '@/components/hooks/use-toast'
-import { SignupData } from '@/models/types'
+import { useToast } from '@/hooks/use-toast'
 
+// Define the signup schema
 const signupSchema = z.object({
   email: z.string().email('Invalid email address'),
+  username: z.string().min(2, 'Username must be at least 2 characters'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  name: z.string().min(2, 'Name must be at least 2 characters'),
   role: z.enum(['teacher', 'student']),
-  school: z.string().optional(),
+  school: z.string().min(1, 'School name is required'),
   subject: z.string().optional(),
   grade: z.number().optional(),
 })
+
+// Infer the type from the schema
+type SignupData = z.infer<typeof signupSchema>
 
 export default function SignupForm() {
   const { toast } = useToast()
@@ -42,10 +45,11 @@ export default function SignupForm() {
     resolver: zodResolver(signupSchema),
     defaultValues: {
       email: '',
-      password: '',
       username: '',
-      role: 'teacher',
+      password: '',
+      role: 'student',
       school: '',
+      subject: '',
     },
   })
 
@@ -63,24 +67,25 @@ export default function SignupForm() {
       })
 
       if (!response.ok) {
-        throw new Error('Signup failed')
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Signup failed')
       }
 
       const { user, token } = await response.json()
-
-      // Store token in localStorage
       localStorage.setItem('token', token)
-
-      router.push('/dashboard')
 
       toast({
         title: 'Success',
         description: 'Account created successfully!',
       })
+
+      router.push('/dashboard')
     } catch (error) {
+      console.error('Signup error:', error)
       toast({
         title: 'Error',
-        description: 'Failed to create account. Please try again.',
+        description:
+          error instanceof Error ? error.message : 'Failed to create account',
         variant: 'destructive',
       })
     } finally {
@@ -119,12 +124,12 @@ export default function SignupForm() {
 
           <FormField
             control={form.control}
-            username='name'
+            name='username'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter your full name' {...field} />
+                  <Input placeholder='Choose a username' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -179,7 +184,7 @@ export default function SignupForm() {
             name='school'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>School Name (Optional)</FormLabel>
+                <FormLabel>School Name</FormLabel>
                 <FormControl>
                   <Input placeholder='Enter your school name' {...field} />
                 </FormControl>
@@ -216,7 +221,11 @@ export default function SignupForm() {
                       type='number'
                       placeholder='Enter your grade'
                       {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value))}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? parseInt(e.target.value) : undefined
+                        )
+                      }
                     />
                   </FormControl>
                   <FormMessage />

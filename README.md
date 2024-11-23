@@ -156,10 +156,19 @@ Backend:
 
 - [x] let teacher login and they can see all classes that she has.
 - [x] cant find GET /classroom/6740320f2cf18e4ef71cdbcc/session 404 in 678ms
-- [ ] send code to all students in the classroom
-- [ ] change student's views
-- [ ] how students join classroom, change that, maybe we show active classroom?
-- [ ]
+- [x] send code to all students in the classroom
+
+## Nov 23
+
+- [x] change student's views
+- [x] how students join classroom, change that, maybe we show active classroom?
+
+#### Student Dashboard:
+
+- [ ] Show name of every classroom ur enrolled
+- [ ] Join classroom -> if not yet made by teacher, then show that there is no active session
+- [ ] Show Student name no their grade when u create classroom
+- [ ] Ask AI HELP {chat gpt token?}
 - [ ] Full Programmes -> get reference from Microsoft
 - [ ] show last topic for every classroom.
 

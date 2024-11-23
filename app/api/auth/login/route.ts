@@ -1,9 +1,9 @@
 // app/api/auth/login/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { MongoClient } from 'mongodb'
-import * as bcrypt from 'bcryptjs'
-import * as jwt from 'jsonwebtoken'
+import clientPromise from '@/lib/mongodb'
 import { z } from 'zod'
+import { createToken } from '@/lib/auth'
 
 const uri = process.env.MONGODB_URI!
 const client = new MongoClient(uri)
@@ -14,68 +14,41 @@ const loginSchema = z.object({
   password: z.string().min(6),
 })
 
-export async function POST(req: NextRequest) {
+// app/api/auth/login/route.ts
+export async function POST(request: Request) {
   try {
-    const body = await req.json()
+    const { email, password } = await request.json()
 
-    // Validate request body
-    const parsedBody = loginSchema.parse(body)
-    const { email, password } = parsedBody
-
-    await client.connect()
+    const client = await clientPromise
     const db = client.db('pythonbit')
-    const usersCollection = db.collection('users')
 
-    // Find user by email
-    const user = await usersCollection.findOne({ email })
+    const user = await db.collection('users').findOne({ email })
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: 'Invalid credentials' },
         { status: 401 }
       )
     }
 
-    // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password)
-    if (!isValidPassword) {
-      return NextResponse.json(
-        { error: 'Invalid email or password' },
-        { status: 401 }
-      )
-    }
+    // Create token with both _id and role
+    const token = await createToken({
+      _id: user._id.toString(),
+      role: user.role,
+    })
 
-    // Generate JWT token
-    const token = jwt.sign(
-      {
-        userId: user._id,
-        email: user.email,
-        role: user.role,
-      },
-      JWT_SECRET,
-      { expiresIn: '24h' }
-    )
-
-    // Don't send password back to client
-    const { password: _, ...userWithoutPassword } = user
-
-    return NextResponse.json({
-      user: userWithoutPassword,
+    console.log('Created token for user:', {
+      userId: user._id.toString(),
+      role: user.role,
       token,
     })
+
+    return NextResponse.json({ token, user })
   } catch (error) {
     console.error('Login error:', error)
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input', details: error.errors },
-        { status: 400 }
-      )
-    }
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     )
-  } finally {
-    await client.close()
   }
 }

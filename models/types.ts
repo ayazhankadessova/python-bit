@@ -18,17 +18,18 @@ export interface User {
   createdAt: Date
   updatedAt: Date
   code?: string | null
+  classrooms?: string[]
 }
 
 export interface Teacher extends User {
   role: 'teacher'
-  classrooms?: string[] // Array of classroom IDs
+  // classrooms?: string[] // Array of classroom IDs
   subject?: string
 }
 
 export interface Student extends User {
   role: 'student'
-  enrolledClassrooms?: string[] // Array of classroom IDs
+  // classrooms?: string[] // Array of classroom IDs
   grade?: number
 }
 
@@ -71,16 +72,30 @@ export interface StudentCompletion {
   completedAt: Date
 }
 
+// export interface Classroom {
+//   _id: string
+//   name: string
+//   teacherId: string
+//   curriculumId: string
+//   curriculumName: string
+//   lastTaughtWeek: number
+//   createdAt: Date
+//   updatedAt: Date
+//   students: string[] // Array of student usernames
+// }
+
+// models/types.ts
 export interface Classroom {
   _id: string
   name: string
   teacherId: string
   curriculumId: string
   curriculumName: string
+  students: string[]
   lastTaughtWeek: number
+  classCode: string
   createdAt: Date
   updatedAt: Date
-  students: string[] // Array of student usernames
 }
 
 export interface Week {
