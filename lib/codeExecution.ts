@@ -15,26 +15,64 @@ export async function updateStudentProgress(
   try {
     await client.connect()
     const db = client.db('pythonbit')
-    if (passed) {
-      await db.collection('classrooms').updateOne(
+
+    // Check if weekly progress already exists
+    const weeklyProgress = await db.collection('weeklyProgress').findOne({
+      classroomId: new ObjectId(classroomId),
+      weekNumber,
+    })
+
+    if (weeklyProgress) {
+      // Update the existing weekly progress record
+      await db.collection('weeklyProgress').updateOne(
         {
-          _id: new ObjectId(classroomId),
-          'weeks.weekNumber': weekNumber,
-          'weeks.students.username': username,
+          _id: weeklyProgress._id,
         },
         {
           $addToSet: {
-            'weeks.$[week].students.$[student].completedTasks': taskId,
+            'tasks.$[task].completedBy': username,
           },
           $set: {
-            'weeks.$[week].students.$[student].code': code,
+            'tasks.$[task].code': code,
           },
         },
         {
           arrayFilters: [
-            { 'week.weekNumber': weekNumber },
-            { 'student.username': username },
+            {
+              'task.taskId': taskId,
+            },
           ],
+        }
+      )
+    } else {
+      // Create a new weekly progress record
+      const newWeeklyProgress = {
+        classroomId: new ObjectId(classroomId),
+        weekNumber,
+        tasks: [
+          {
+            taskId,
+            completedBy: passed ? [username] : [],
+            code: passed ? code : '',
+          },
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+
+      const result = await db
+        .collection('weeklyProgress')
+        .insertOne(newWeeklyProgress)
+
+      // Update the classroom with the new weekly progress ID
+      await db.collection('classrooms').updateOne(
+        {
+          _id: new ObjectId(classroomId),
+        },
+        {
+          $set: {
+            [`weeks.${weekNumber}`]: result.insertedId.toString(),
+          },
         }
       )
     }
@@ -43,6 +81,7 @@ export async function updateStudentProgress(
   }
 }
 
+// Rest of the file remains the same...
 export async function executeAndTestCode(
   code: string,
   taskId: string

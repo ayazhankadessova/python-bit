@@ -35,10 +35,7 @@ export async function GET(req: NextRequest) {
     const client = await clientPromise
     const db = client.db('pythonbit')
 
-    const classrooms = await db
-      .collection('classrooms')
-      .find({ teacherId: new ObjectId(teacherId) })
-      .toArray()
+    const classrooms = await db.collection('classrooms').find({}).toArray()
 
     console.log('Found classrooms:', classrooms) // Debug log
 
