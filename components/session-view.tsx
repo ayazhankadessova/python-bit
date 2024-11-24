@@ -65,6 +65,13 @@ export function SessionView({
   )
   const [teacherCode, setTeacherCode] = useState('')
 
+  useEffect(() => {
+    const currentTask = tasks[currentTaskIndex]
+    if (currentTask?.starterCode && !studentCode) {
+      setStudentCode(currentTask.starterCode)
+    }
+  }, [currentTaskIndex, tasks, studentCode])
+
   const fetchTasks = useCallback(
     async (weekNumber: number, curriculumData: Curriculum) => {
       const weekData = curriculumData.weeks.find(
@@ -527,6 +534,8 @@ export function SessionView({
       )
     }
 
+    const currentTask = tasks[currentTaskIndex]
+
     return (
       <div className='w-2/3 p-4'>
         <div className='flex justify-between mb-4'>
@@ -548,14 +557,38 @@ export function SessionView({
         <Card className='mb-4'>
           <CardHeader>
             <CardTitle className='flex items-center justify-between'>
-              {tasks[currentTaskIndex]?.title}
+              {currentTask?.title}
               <span className='text-sm font-normal'>
                 Task {currentTaskIndex + 1}/{tasks.length}
               </span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className='mb-4'>{tasks[currentTaskIndex]?.description}</p>
+            <p className='mb-4'>{currentTask?.description}</p>
+
+            {/* Starter Code Section */}
+            {currentTask?.starterCode && (
+              <div className='mb-4'>
+                <div className='flex items-center justify-between mb-2'>
+                  <h3 className='text-sm font-medium text-gray-500'>
+                    Starter Code
+                  </h3>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => setStudentCode(currentTask.starterCode)}
+                  >
+                    Reset to Starter Code
+                  </Button>
+                </div>
+                <div className='bg-gray-100 p-4 rounded-md'>
+                  <pre className='text-sm overflow-x-auto'>
+                    <code>{currentTask.starterCode}</code>
+                  </pre>
+                </div>
+              </div>
+            )}
+
             <CodeExecutor
               code={studentCode}
               onChange={setStudentCode}
@@ -565,11 +598,20 @@ export function SessionView({
               role={role}
             />
 
-            <div className='flex mt-4'>
+            <div className='flex justify-between mt-4'>
               <Button onClick={handleSubmitCode}>
                 Submit Code
                 <CheckCircle2 className='ml-2 h-4 w-4' />
               </Button>
+
+              {currentTask?.starterCode && (
+                <Button
+                  variant='outline'
+                  onClick={() => setStudentCode(currentTask.starterCode)}
+                >
+                  Reset Code
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>

@@ -174,7 +174,8 @@ Backend:
 ## Nov 24
 
 - [ ] Ask AI HELP {chat gpt token?}
-- [ ] Full Programmes -> get reference from Microsoft
+- [x] Full Programmes -> get reference from Microsoft -> https://makecode.microbit.org/courses/csintro-educator
+- [ ] change task id to int32
 - [ ] show last topic for every classroom.
 - [ ] Finally do smth w microbit AHHAHAH
 

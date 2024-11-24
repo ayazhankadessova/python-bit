@@ -128,6 +128,7 @@ export interface Task {
   id: number
   title: string
   description: string
+  starterCode: string
   testCases: Array<{
     input: string
     expectedOutput: string
