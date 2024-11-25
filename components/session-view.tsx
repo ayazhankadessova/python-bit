@@ -29,6 +29,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import CodeMirror from '@uiw/react-codemirror'
+import { vscodeDark } from '@uiw/codemirror-theme-vscode'
+import { python } from '@codemirror/lang-python'
 
 interface SessionViewProps {
   classroomId: string
@@ -511,6 +514,13 @@ export function SessionView({
           username={username}
           role={role}
         />
+
+        {/* <CodeMirror
+          value='print(1)'
+          theme={vscodeDark}
+          extensions={[python()]}
+          style={{ fontSize: 16 }}
+        /> */}
 
         <Button onClick={handleSendCode} className='mt-4'>
           {selectedStudent

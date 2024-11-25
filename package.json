@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@codemirror/lang-python": "^6.1.6",
     "@hookform/resolvers": "^3.9.0",
     "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -23,6 +24,8 @@
     "@radix-ui/react-toast": "^1.2.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.7",
+    "@uiw/codemirror-theme-vscode": "^4.23.6",
+    "@uiw/react-codemirror": "^4.23.6",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -40,6 +43,7 @@
     "react-hook-form": "^7.53.0",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
+    "split.js": "^1.6.5",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"

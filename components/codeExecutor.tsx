@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Loader2, Play, StopCircle, Save } from 'lucide-react'
-import Editor from '@monaco-editor/react'
+import CodeMirror from '@uiw/react-codemirror'
+import { vscodeDark } from '@uiw/codemirror-theme-vscode'
+import { python } from '@codemirror/lang-python'
+import Split from 'split.js'
+import './styles/CodeEditor.css' // Add this import
 
 interface CodeEditorProps {
   code: string
@@ -26,27 +29,32 @@ const PythonCodeEditor = ({
   const [isRunning, setIsRunning] = useState(false)
   const [execId, setExecId] = useState('')
 
-  // Monaco editor options
-  const editorOptions = {
-    minimap: { enabled: false },
-    fontSize: 14,
-    lineNumbers: 'on',
-    roundedSelection: false,
-    scrollBeyondLastLine: false,
-    automaticLayout: true,
-    wordWrap: 'on' as const,
-    suggestOnTriggerCharacters: true,
-    tabSize: 4,
-    rulers: [80],
-    quickSuggestions: {
-      other: true,
-      comments: true,
-      strings: true,
-    },
-  }
+  const splitRef = useRef<any>(null)
+  const editorContainerRef = useRef<HTMLDivElement>(null)
+  const outputContainerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (editorContainerRef.current && outputContainerRef.current) {
+      splitRef.current = Split(
+        [editorContainerRef.current, outputContainerRef.current],
+        {
+          sizes: [65, 35],
+          minSize: [200, 100],
+          direction: 'vertical',
+          gutterSize: 6,
+          snapOffset: 0,
+        }
+      )
+    }
+
+    return () => {
+      if (splitRef.current) {
+        splitRef.current.destroy()
+      }
+    }
+  }, [])
 
   const handleSaveCode = () => {
-    console.log('Saving code for', username, 'in classroom', classroomId)
     if (socket && role === 'student') {
       socket.emit('update-code', classroomId, username, code)
     }
@@ -107,32 +115,54 @@ const PythonCodeEditor = ({
     }
   }
 
-  function handleEditorDidMount(editor: any) {
-    // Enable Python syntax highlighting and suggestions
-    editor.updateOptions({
-      ...editorOptions,
-    })
-  }
+  const editorBgColor = '#1e1e1e'
 
   return (
-    <div className='flex flex-col gap-4'>
-      <Card className='p-4'>
-        <div className='h-[400px] mb-4'>
-          <Editor
-            height='100%'
-            defaultLanguage='python'
+    <div className='flex flex-col h-[calc(100vh-theme(space.16))] bg-zinc-950 rounded-lg overflow-hidden border border-zinc-800'>
+      <div ref={editorContainerRef} className='min-h-0 flex flex-col'>
+        <div
+          className='relative h-full'
+          style={{ backgroundColor: editorBgColor }}
+        >
+          <CodeMirror
             value={code}
-            onChange={(value) => onChange(value || '')}
-            theme='vs-dark'
-            options={editorOptions}
-            onMount={handleEditorDidMount}
+            height='100%'
+            theme={vscodeDark}
+            extensions={[python()]}
+            onChange={onChange}
+            style={{ fontSize: 14 }}
+            basicSetup={{
+              lineNumbers: true,
+              highlightActiveLineGutter: true,
+              highlightSpecialChars: true,
+              history: true,
+              foldGutter: true,
+              drawSelection: true,
+              dropCursor: true,
+              allowMultipleSelections: true,
+              indentOnInput: true,
+              syntaxHighlighting: true,
+              bracketMatching: true,
+              closeBrackets: true,
+              autocompletion: true,
+              rectangularSelection: true,
+              crosshairCursor: true,
+              highlightActiveLine: true,
+              highlightSelectionMatches: true,
+              closeBracketsKeymap: true,
+              defaultKeymap: true,
+              searchKeymap: true,
+              historyKeymap: true,
+              foldKeymap: true,
+              completionKeymap: true,
+              lintKeymap: true,
+            }}
           />
         </div>
-        <div className='flex gap-2'>
+        <div className='flex gap-2 p-2 bg-zinc-900 border-t border-zinc-800'>
           <Button
             onClick={handleRunCode}
-            // disabled={isRunning || !code.trim()}
-            className='w-24'
+            className='w-24 bg-emerald-600 hover:bg-emerald-700'
           >
             {isRunning ? (
               <Loader2 className='w-4 h-4 animate-spin' />
@@ -152,29 +182,36 @@ const PythonCodeEditor = ({
             </Button>
           )}
           {role === 'student' && (
-            <Button onClick={handleSaveCode} className='w-24'>
+            <Button onClick={handleSaveCode} variant='outline' className='w-24'>
               <Save className='w-4 h-4 mr-2' />
               Save
             </Button>
           )}
         </div>
-      </Card>
+      </div>
 
-      <Card className='p-4'>
-        <h3 className='font-semibold mb-2'>Output</h3>
-        <pre className='bg-zinc-950 text-white p-4 rounded-md overflow-auto max-h-[200px] font-mono whitespace-pre-wrap'>
+      <div
+        ref={outputContainerRef}
+        className='min-h-0 flex flex-col bg-zinc-900 p-4'
+      >
+        <div className='flex items-center gap-2 mb-3'>
+          <div className='h-2 w-2 rounded-full bg-emerald-500'></div>
+          <h3 className='font-medium text-zinc-200'>Output</h3>
+        </div>
+
+        <pre className='font-mono text-sm text-zinc-200 whitespace-pre-wrap h-full overflow-auto'>
           {output || 'No output yet...'}
         </pre>
-      </Card>
 
-      {error && (
-        <Card className='p-4 border-red-500'>
-          <h3 className='font-semibold mb-2 text-red-500'>Error</h3>
-          <pre className='bg-red-50 text-red-500 p-4 rounded-md overflow-auto max-h-[200px] font-mono whitespace-pre-wrap'>
-            {error}
-          </pre>
-        </Card>
-      )}
+        {error && (
+          <div className='mt-4 border-l-4 border-red-500 bg-red-950/20 p-4 rounded'>
+            <h3 className='font-medium text-red-400 mb-2'>Error</h3>
+            <pre className='font-mono text-sm text-red-200 whitespace-pre-wrap'>
+              {error}
+            </pre>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

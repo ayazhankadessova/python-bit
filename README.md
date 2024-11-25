@@ -175,9 +175,13 @@ Backend:
 
 - [ ] Ask AI HELP {chat gpt token?}
 - [x] Full Programmes -> get reference from Microsoft -> https://makecode.microbit.org/courses/csintro-educator
-- [ ] change task id to int32
+- [x] change task id to int32
+- [ ] test case for week 1 ok
+- [ ] test cases for all weeks
+- [ ] check progress
 - [ ] show last topic for every classroom.
 - [ ] Finally do smth w microbit AHHAHAH
+- [ ] add student progress for every student!
 
 What to ask?
 
@@ -202,4 +206,10 @@ refresh shows progress
 ```
 db.classrooms.createIndex({ teacherId: 1 })
 db.users.createIndex({ email: 1 }, { unique: true })
+```
+
+- Recoil auth model
+
+```
+"Recoil auth state" refers to the practice of storing user authentication information (like login status, user details) within the state management system "Recoil" in a React application, allowing easy access to this data across different components in your app without needing to pass it down manually through props; essentially, it's a way to centrally manage your application's authentication state using Recoil's "atom" mechanism
 ```
