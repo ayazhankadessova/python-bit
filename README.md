@@ -177,11 +177,13 @@ Backend:
 - [x] Full Programmes -> get reference from Microsoft -> https://makecode.microbit.org/courses/csintro-educator
 - [x] change task id to int32
 - [ ] test case for week 1 ok
-- [ ] test cases for all weeks
+- [ ] add test cases section
+- [ ] test cases for all weeks. Test case boxes like in leetcode
 - [ ] check progress
 - [ ] show last topic for every classroom.
 - [ ] Finally do smth w microbit AHHAHAH
 - [ ] add student progress for every student!
+- [ ] Sessiom view -> every task will go to another link -> new view
 
 What to ask?
 
@@ -209,7 +211,27 @@ db.users.createIndex({ email: 1 }, { unique: true })
 ```
 
 - Recoil auth model
+- split js
+- uiw/codemirror
 
 ```
-"Recoil auth state" refers to the practice of storing user authentication information (like login status, user details) within the state management system "Recoil" in a React application, allowing easy access to this data across different components in your app without needing to pass it down manually through props; essentially, it's a way to centrally manage your application's authentication state using Recoil's "atom" mechanism
+npm install @uiw/react-codemirror @codemirror/lang-python @uiw/codemirror-theme-vscode
+
 ```
+
+"Recoil auth state" refers to the practice of storing user authentication information (like login status, user details) within the state management system "Recoil" in a React application, allowing easy access to this data across different components in your app without needing to pass it down manually through props; essentially, it's a way to centrally manage your application's authentication state using Recoil's "atom" mechanism
+
+```
+
+- Workspace: Playground(EditorFooter.tsx, Playground.tsx), ProblemDescription (ProblemDescription.tsx)
+```
+
+## DB:
+
+1. Week 1 can have many 3 problems
+2. Problem : id, title, category, difficulty, likes, dislikes, videoId
+3. Users: id, displayName, email, likedProblems, dislikedProblems, starredProblems, solvedProblems, createdAt, updatedAt
+
+## Local:
+
+1. Problems: id, title, problemStatement, examples(also test cases), constraints, order, startedCode, handleFunction, startedFunctionName
