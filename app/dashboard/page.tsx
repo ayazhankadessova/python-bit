@@ -25,7 +25,7 @@ export default function DashboardPage() {
       {user?.role === 'teacher' ? (
         <TeacherDashboard user={user} onSignOut={signOut} />
       ) : (
-        <StudentDashboard user={user} onSignOut={signOut} />
+        <StudentDashboard user={user!} onSignOut={signOut} />
       )}
     </ProtectedRoute>
   )

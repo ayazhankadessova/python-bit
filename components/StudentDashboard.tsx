@@ -24,11 +24,14 @@ import { BookOpen, Trophy, Users, Loader2 } from 'lucide-react'
 
 interface User {
   uid: string
-  displayName: string
-  email: string
+  email: string | null
+  displayName: string | null
+  role?: 'student' | 'teacher'
   school?: string
-  grade?: number
+  likedProblems?: string[]
+  dislikedProblems?: string[]
   solvedProblems?: string[]
+  starredProblems?: string[]
 }
 
 interface Classroom {

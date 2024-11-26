@@ -498,7 +498,7 @@ const ClassroomPage = () => {
                 </p>
               </CardContent>
               <CardFooter className='flex justify-between'>
-                <Button onClick={() => handleStartLesson(classroom._id)}>
+                <Button onClick={() => handleStartLesson(classroom.id)}>
                   <Play className='mr-2 h-4 w-4' /> Start Lesson
                 </Button>
               </CardFooter>
