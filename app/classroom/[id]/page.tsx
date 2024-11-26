@@ -375,25 +375,17 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
 
         setClassroom(classroomData)
 
-        // Determine user role
-        if (classroomData.teacherId === user.uid) {
-          setUserRole('teacher')
-        } else if (classroomData.studentIds.includes(user.uid)) {
-          setUserRole('student')
-        } else {
-          setError('Not authorized to join this classroom')
-          router.push('/classrooms')
-        }
+        setUserRole(user?.role!)
 
         // Update lastTaughtWeek for teachers
         if (classroomData.teacherId === user.uid) {
-          const currentWeek = Math.ceil(
-            (new Date().getTime() -
-              new Date(classroomData.createdAt).getTime()) /
-              (7 * 24 * 60 * 60 * 1000)
-          )
+          // const currentWeek = Math.ceil(
+          //   (new Date().getTime() -
+          //     new Date(classroomData.).getTime()) /
+          //     (7 * 24 * 60 * 60 * 1000)
+          // )
           await updateDoc(classroomRef, {
-            lastTaughtWeek: currentWeek,
+            lastTaughtWeek: 1,
             isActive: true,
           })
         }

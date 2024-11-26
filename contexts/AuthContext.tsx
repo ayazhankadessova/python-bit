@@ -12,15 +12,32 @@ import { auth, fireStore } from '@/firebase/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 import { useRouter } from 'next/navigation'
 
+// interface User {
+//   uid: string
+//   email: string | null
+//   displayName: string | null
+//   role?: 'student' | 'teacher'
+//   school?: string
+//   likedProblems?: string[]
+//   dislikedProblems?: string[]
+//   solvedProblems?: string[]
+//   starredProblems?: string[]
+// }
+interface UserClassroom {
+  classroomId: string
+  joinedAt: number
+}
+
 interface User {
   uid: string
   email: string | null
   displayName: string | null
   role?: 'student' | 'teacher'
   school?: string
+  solvedProblems?: string[]
+  classrooms?: UserClassroom[]
   likedProblems?: string[]
   dislikedProblems?: string[]
-  solvedProblems?: string[]
   starredProblems?: string[]
 }
 
@@ -58,6 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           dislikedProblems: data.dislikedProblems || [],
           solvedProblems: data.solvedProblems || [],
           starredProblems: data.starredProblems || [],
+          classrooms: data.classrooms || [],
         })
       } catch (error) {
         console.error('Error fetching user data:', error)

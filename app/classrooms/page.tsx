@@ -299,35 +299,6 @@ const ClassroomPage = () => {
     }
   }, [user, toast])
 
-  const handleCreateClassroom = async (formData: CreateClassroomFormData) => {
-    try {
-      const classroomData: Omit<Classroom, '_id'> = {
-        ...formData,
-        teacherId: user?.uid || '',
-        studentIds: [],
-        createdAt: new Date().toISOString(),
-        code: Math.random().toString(36).substring(2, 8).toUpperCase(),
-      }
-
-      await addDoc(collection(fireStore, 'classrooms'), classroomData)
-
-      toast({
-        title: 'Success',
-        description: 'Classroom created successfully',
-      })
-
-      setIsDialogOpen(false)
-      window.location.reload()
-    } catch (error) {
-      console.error('Error creating classroom:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to create classroom',
-        variant: 'destructive',
-      })
-    }
-  }
-
   const handleJoinClassroom = async () => {
     try {
       const classroomQuery = query(
@@ -487,14 +458,14 @@ const ClassroomPage = () => {
                 <p className='text-sm text-gray-600'>
                   {user?.role === 'teacher' && (
                     <>
-                      Classroom Code: {classroom.code}
+                      Classroom Code: {classroom.classCode}
                       <br />
                     </>
                   )}
                   Last taught: Week {classroom.lastTaughtWeek || 0}
                 </p>
                 <p className='text-sm text-gray-600'>
-                  Students: {classroom.studentIds?.length || 0}
+                  Students: {classroom.students?.length || 0}
                 </p>
               </CardContent>
               <CardFooter className='flex justify-between'>
