@@ -182,7 +182,9 @@ Backend:
 - [x] User created with AuthContext
 - [x] Create curricula with 2 weeks
 - [x] create teacher
-- [ ] weeklyprogress => "classroomid-week" => {task1: [array of users who completed - no duplicates]}
+- [x] weeklyprogress => "classroomid-week" => {task1: [array of users who completed - no duplicates]}
+- [ ] I need to work on CodeExecutor. Really try to do 2 simple functions! and test.
+- [ ] Run code doesn't work bc function
 - [ ] Create task Ids (the functions will stay locally)
 - [ ] fix students dashboard -> it doesnt retrieve enrolled classrooms effectively
 - [ ] choose week
