@@ -44,6 +44,7 @@
     "react-dom": "^18",
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.53.2",
+    "react-split": "^2.0.14",
     "react-toastify": "^10.0.6",
     "recoil": "^0.7.7",
     "socket.io": "^4.7.5",

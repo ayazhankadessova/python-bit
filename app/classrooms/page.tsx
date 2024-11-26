@@ -379,7 +379,7 @@ const ClassroomPage = () => {
   }
 
   const handleStartLesson = (classroomId: string) => {
-    router.push(`/classroom/${classroomId}/lesson`)
+    router.push(`/classroom/${classroomId}`)
   }
 
   const filteredClassrooms = classrooms.filter((classroom) =>

@@ -181,8 +181,13 @@ Backend:
 
 - [x] User created with AuthContext
 - [x] Create curricula with 2 weeks
-- [ ] create teacher
+- [x] create teacher
 - [ ] Create task Ids (the functions will stay locally)
+- [ ] how to save progress
+- [ ] no document to update
+- [ ] make meaningful ids for classroom?
+- [ ] all interfaces in one place
+- [ ] remove atom stuff
 - [ ] Create classroom tasks -> taskId
 - [ ] think of how to create a classroom
 - [ ] test case for week 1 ok
@@ -193,6 +198,11 @@ Backend:
 - [ ] Finally do smth w microbit AHHAHAH
 - [ ] add student progress for every student!
 - [ ] Sessiom view -> every task will go to another link -> new view
+      \
+
+##background-position
+
+- [ ] UseAuth must be used within AuthProvider after login
 
 ## Nov 26 addtnl
 
