@@ -21,8 +21,15 @@ interface ProblemInputs {
   difficulty: string
   category: string
   order: string
-  videoId: string
+  videoId?: string
   link?: string
+}
+
+// Separate interface for the problem document that goes to Firestore
+interface ProblemDocument extends Omit<ProblemInputs, 'order'> {
+  order: number
+  likes: number
+  dislikes: number
 }
 
 const initialState: ProblemInputs = {
@@ -63,14 +70,19 @@ const ProblemForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
+
     try {
-      const newProblem = {
+      const problemDoc: ProblemDocument = {
         ...inputs,
         order: Number(inputs.order),
+        videoId: inputs.videoId || '',
         link: inputs.link || '',
+        // Initialize new fields
+        likes: 0,
+        dislikes: 0,
       }
 
-      await setDoc(doc(fireStore, 'problems', inputs.id), newProblem)
+      await setDoc(doc(fireStore, 'problems', inputs.id), problemDoc)
       alert('Problem saved successfully!')
       setInputs(initialState)
     } catch (error) {
@@ -108,6 +120,9 @@ const ProblemForm = () => {
               required
               className='bg-gray-50 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500'
             />
+            <p className='text-sm text-gray-500'>
+              This will be used as a unique identifier for the problem
+            </p>
           </div>
 
           <div className='space-y-2'>
@@ -189,7 +204,7 @@ const ProblemForm = () => {
 
           <div className='space-y-2'>
             <Label htmlFor='videoId' className='text-gray-700'>
-              Video ID
+              Video ID (Optional)
             </Label>
             <Input
               id='videoId'
@@ -197,7 +212,6 @@ const ProblemForm = () => {
               value={inputs.videoId}
               onChange={handleInputChange}
               placeholder='YouTube Video ID'
-              required
               className='bg-gray-50 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500'
             />
           </div>

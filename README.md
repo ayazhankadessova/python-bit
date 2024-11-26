@@ -176,6 +176,13 @@ Backend:
 - [ ] Ask AI HELP {chat gpt token?}
 - [x] Full Programmes -> get reference from Microsoft -> https://makecode.microbit.org/courses/csintro-educator
 - [x] change task id to int32
+
+## Nov 26 : Revamp everything to Firebase :))) hahahah
+
+- [x] User created with AuthContext
+- [ ] Create curricula with 2 weeks
+- [ ] Create task Ids (the functions will stay locally)
+- [ ] Create classroom tasks -> taskId
 - [ ] test case for week 1 ok
 - [ ] add test cases section
 - [ ] test cases for all weeks. Test case boxes like in leetcode
@@ -234,4 +241,15 @@ npm install @uiw/react-codemirror @codemirror/lang-python @uiw/codemirror-theme-
 
 ## Local:
 
-1. Problems: id, title, problemStatement, examples(also test cases), constraints, order, startedCode, handleFunction, startedFunctionName
+1. Problems: id, title, problemStatement, examples(also test cases), constraints, order (no need), startedCode, handlerFunction (test code), startedFunctionName
+
+## Nov 25
+
+1. `npm i assert` -> check if function gives us correct code
+2. send callback function
+3. create new problems
+
+## firestore
+
+1. build -> db
+2. Start in test mode
