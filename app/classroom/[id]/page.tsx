@@ -618,11 +618,9 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
   if (user && classroom && (isActiveSession || userRole === 'teacher')) {
     return (
       <SessionView
-        username={user.displayName || user.email || 'Unknown User'}
         classroomId={classroomId}
         onEndSession={handleEndSession}
         socket={socket}
-        role={userRole || 'student'}
       />
     )
   }

@@ -1016,28 +1016,32 @@ import Split from 'react-split'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
-import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore'
+import { doc, getDoc, updateDoc, arrayUnion, setDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { BookOpen, CheckCircle2, MessageSquareMore } from 'lucide-react'
 import { Problem } from '@/utils/types/problem'
 import { problems } from '@/utils/problems'
+import { useAuth } from '@/contexts/AuthContext'
 // import useLocalStorage from '@/hooks/useLocalStorage'
 
 interface SessionViewProps {
   classroomId: string
   onEndSession: () => void
   socket: Socket | null
-  role: 'teacher' | 'student'
-  username: string
+}
+
+interface WeeklyProgress {
+  taskCompletions: {
+    [taskId: string]: string[] // Array of user IDs who completed the task
+  }
 }
 
 export function SessionView({
   classroomId,
   onEndSession,
   socket,
-  role,
-  username,
 }: SessionViewProps) {
+  const { user } = useAuth()
   const { toast } = useToast()
   const [currentProblem, setCurrentProblem] = useState<Problem | null>(null)
   const [studentCode, setStudentCode] = useState('')
@@ -1098,8 +1102,8 @@ export function SessionView({
           }
         }
 
-        if (role === 'student') {
-          const userRef = doc(fireStore, 'users', username)
+        if (user && user.role === 'student') {
+          const userRef = doc(fireStore, 'users', user.uid)
           const userDoc = await getDoc(userRef)
           if (userDoc.exists()) {
             setCompletedProblems(userDoc.data().solvedProblems || [])
@@ -1118,19 +1122,24 @@ export function SessionView({
     }
 
     fetchData()
-  }, [classroomId, username, role, toast])
+  }, [classroomId, user, toast])
 
   // Socket event handlers
   useEffect(() => {
     if (!socket) return
 
     if (!joinedRoom.current) {
-      socket.emit('join-room', classroomId, username, role === 'teacher')
+      socket.emit(
+        'join-room',
+        classroomId,
+        user?.displayName,
+        user?.role === 'teacher'
+      )
       joinedRoom.current = true
     }
 
     socket.on('student-code', (data: { username: string; code: string }) => {
-      if (username === data.username) {
+      if (user?.displayName === data.username) {
         setStudentCode(data.code)
       }
     })
@@ -1169,7 +1178,7 @@ export function SessionView({
       socket.off('execution-complete')
       socket.off('session-ended')
     }
-  }, [socket, role, toast, onEndSession, username, classroomId])
+  }, [socket, user, toast, onEndSession, classroomId])
 
   const handleProblemSelect = (problemId: string) => {
     const problem = problems[problemId]
@@ -1178,7 +1187,12 @@ export function SessionView({
 
     // Emit code update to socket
     if (socket) {
-      socket.emit('update-code', classroomId, username, problem.starterCode)
+      socket.emit(
+        'update-code',
+        classroomId,
+        user?.displayName,
+        problem.starterCode
+      )
     }
   }
 
@@ -1225,23 +1239,85 @@ export function SessionView({
   //     })
   //   }
   // }
+  // const handleSubmitCode = async () => {
+  //   if (!currentProblem) return
+
+  //   try {
+  //     const success = currentProblem.handlerFunction(studentCode)
+
+  //     if (success) {
+  //       const userRef = doc(fireStore, 'users', user.id)
+  //       await updateDoc(userRef, {
+  //         solvedProblems: arrayUnion(currentProblem.id),
+  //       })
+
+  //       setCompletedProblems((prev) => [...prev, currentProblem.id])
+  //       toast({
+  //         title: 'Success!',
+  //         description: 'All test cases passed!',
+  //         variant: 'default',
+  //       })
+  //     }
+  //   } catch (error: any) {
+  //     toast({
+  //       title: 'Error',
+  //       description: error.message,
+  //       variant: 'destructive',
+  //     })
+  //   }
+  // }
+
   const handleSubmitCode = async () => {
-    if (!currentProblem) return
+    if (!currentProblem || !user || !selectedWeek) return
 
     try {
       const success = currentProblem.handlerFunction(studentCode)
 
       if (success) {
-        const userRef = doc(fireStore, 'users', username)
+        // Update user's solved problems
+        const userRef = doc(fireStore, 'users', user.uid)
         await updateDoc(userRef, {
           solvedProblems: arrayUnion(currentProblem.id),
         })
+
+        // Update weekly progress
+        const weeklyProgressId = `${classroomId}-${selectedWeek}`
+        const weeklyProgressRef = doc(
+          fireStore,
+          'weeklyProgress',
+          weeklyProgressId
+        )
+        const weeklyProgressDoc = await getDoc(weeklyProgressRef)
+
+        if (weeklyProgressDoc.exists()) {
+          // Update existing document
+          await updateDoc(weeklyProgressRef, {
+            [`taskCompletions.${currentProblem.id}`]: arrayUnion(user.uid),
+          })
+        } else {
+          // Create new document
+          const initialProgress: WeeklyProgress = {
+            taskCompletions: {
+              [currentProblem.id]: [user.uid],
+            },
+          }
+          await setDoc(weeklyProgressRef, initialProgress)
+        }
 
         setCompletedProblems((prev) => [...prev, currentProblem.id])
         toast({
           title: 'Success!',
           description: 'All test cases passed!',
           variant: 'default',
+        })
+
+        // Optionally notify teacher through socket
+        socket?.emit('task-completed', {
+          classroomId,
+          weekNumber: selectedWeek,
+          taskId: currentProblem.id,
+          userId: user.uid,
+          userName: user.displayName || user.email,
         })
       }
     } catch (error: any) {
@@ -1349,7 +1425,12 @@ export function SessionView({
               extensions={[python()]}
               onChange={(value) => {
                 setStudentCode(value)
-                socket?.emit('update-code', classroomId, username, value)
+                socket?.emit(
+                  'update-code',
+                  classroomId,
+                  user?.displayName,
+                  value
+                )
               }}
             />
           </div>

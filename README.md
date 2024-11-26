@@ -182,9 +182,13 @@ Backend:
 - [x] User created with AuthContext
 - [x] Create curricula with 2 weeks
 - [x] create teacher
+- [ ] weeklyprogress => "classroomid-week" => {task1: [array of users who completed - no duplicates]}
 - [ ] Create task Ids (the functions will stay locally)
+- [ ] fix students dashboard -> it doesnt retrieve enrolled classrooms effectively
+- [ ] choose week
 - [ ] how to save progress
 - [ ] no document to update
+- [ ] is it actually checking ?
 - [ ] make meaningful ids for classroom?
 - [ ] all interfaces in one place
 - [ ] remove atom stuff

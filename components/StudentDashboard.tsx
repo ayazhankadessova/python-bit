@@ -243,10 +243,10 @@ export function StudentDashboard({ user, onSignOut }: StudentDashboardProps) {
                 <p className='text-sm font-medium'>School</p>
                 <p className='text-2xl font-bold'>{user.school || 'Not set'}</p>
               </div>
-              <div>
+              {/* <div>
                 <p className='text-sm font-medium'>Grade</p>
-                <p className='text-2xl font-bold'>{user.grade || 'Not set'}</p>
-              </div>
+                <p className='text-2xl font-bold'>{user. || 'Not set'}</p>
+              </div> */}
               <div>
                 <p className='text-sm font-medium'>Enrolled Classes</p>
                 <p className='text-2xl font-bold'>
