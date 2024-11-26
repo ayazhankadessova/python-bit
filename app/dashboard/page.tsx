@@ -23,11 +23,9 @@ export default function DashboardPage() {
   return (
     <ProtectedRoute>
       {user?.role === 'teacher' ? (
-        <div>Teacher</div>
+        <TeacherDashboard user={user} onSignOut={signOut} />
       ) : (
-        // <TeacherDashboard user={user} onSignOut={signOut} />
-        <div>Student</div>
-        // <StudentDashboard user={user} onSignOut={signOut} />
+        <StudentDashboard user={user} onSignOut={signOut} />
       )}
     </ProtectedRoute>
   )

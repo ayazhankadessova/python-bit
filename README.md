@@ -180,9 +180,11 @@ Backend:
 ## Nov 26 : Revamp everything to Firebase :))) hahahah
 
 - [x] User created with AuthContext
-- [ ] Create curricula with 2 weeks
+- [x] Create curricula with 2 weeks
+- [ ] create teacher
 - [ ] Create task Ids (the functions will stay locally)
 - [ ] Create classroom tasks -> taskId
+- [ ] think of how to create a classroom
 - [ ] test case for week 1 ok
 - [ ] add test cases section
 - [ ] test cases for all weeks. Test case boxes like in leetcode
@@ -192,7 +194,10 @@ Backend:
 - [ ] add student progress for every student!
 - [ ] Sessiom view -> every task will go to another link -> new view
 
-What to ask?
+## Nov 26 addtnl
+
+- [ ] remove so many router pusher like why so many ahahha
+      What to ask?
 
 - [ ] Do i need to save submissions?
 - [ ] Do we need starter code?

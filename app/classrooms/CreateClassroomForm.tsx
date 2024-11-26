@@ -1,8 +1,20 @@
-import React, { useState, useEffect } from 'react'
+// components/CreateClassroomForm.tsx
+'use client'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Button } from '@/components/ui/button'
+import * as z from 'zod'
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  writeBatch,
+  doc,
+  arrayUnion,
+} from 'firebase/firestore'
+import { fireStore } from '@/firebase/firebase'
+import { nanoid } from 'nanoid'
 import {
   Form,
   FormControl,
@@ -12,6 +24,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -19,91 +32,152 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Student } from '@/models/types'
+import { Loader2 } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 
-interface Curriculum {
-  _id: string
-  name: string
-}
-
-const formSchema = z.object({
-  name: z.string().min(1, 'Classroom name is required'),
-  curriculumId: z
-    .string()
-    .min(24, 'Curriculum ID must be 24 characters')
-    .max(24, 'Curriculum ID must be 24 characters'),
-  curriculumName: z.string().min(1, 'Curriculum name is required'),
-  students: z.array(z.string()).min(1, 'At least one student must be selected'),
-})
-
-type FormData = z.infer<typeof formSchema>
-
-interface CreateClassroomFormProps {
-  onSubmit: (data: FormData & { teacherId: string }) => void
+interface Props {
   teacherId: string
   teacherSchool: string
 }
 
-export function CreateClassroomForm({
-  onSubmit,
-  teacherId,
-  teacherSchool,
-}: CreateClassroomFormProps) {
-  const [curricula, setCurricula] = useState<Curriculum[]>([])
-  const [filteredStudents, setFilteredStudents] = useState<Student[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+interface Curriculum {
+  id: string
+  name?: string
+}
 
-  const form = useForm<FormData>({
+interface Student {
+  id: string
+  displayName?: string
+  email?: string
+  grade?: number
+}
+
+const formSchema = z.object({
+  name: z.string().min(1, 'Classroom name is required'),
+  curriculumId: z.string().min(1, 'Curriculum is required'),
+  students: z.array(z.string()).min(1, 'At least one student must be selected'),
+})
+
+// interface Props {
+//   onSubmit: (data: Props) => Promise<void>
+// }
+
+// export const CreateClassroomForm: React.FC<Props> = ({ onSubmit }) => {
+//   // Your form implementation
+// }
+
+export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
+  const [curricula, setCurricula] = useState<Curriculum[]>([])
+  const [students, setStudents] = useState<Student[]>([])
+  const [loading, setLoading] = useState(true)
+  const { toast } = useToast()
+
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
       curriculumId: '',
-      curriculumName: '',
       students: [],
     },
   })
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('token')
-      if (!token) return
-
       try {
-        setIsLoading(true)
-
-        // Fetch curricula
-        const curriculaResponse = await fetch('/api/curriculum', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        if (!curriculaResponse.ok) throw new Error('Failed to fetch curricula')
-        const curriculaData = await curriculaResponse.json()
-        setCurricula(curriculaData)
-
-        // Fetch students
-        // In CreateClassroomForm
-        const studentsResponse = await fetch(
-          `/api/users?role=student&school=${encodeURIComponent(teacherSchool)}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        const curriculaSnap = await getDocs(collection(fireStore, 'curricula'))
+        setCurricula(
+          curriculaSnap.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
         )
-        if (!studentsResponse.ok) throw new Error('Failed to fetch students')
-        const studentsData = await studentsResponse.json()
 
-        setFilteredStudents(studentsData)
+        const studentsQuery = query(
+          collection(fireStore, 'users'),
+          where('role', '==', 'student'),
+          where('school', '==', teacherSchool)
+        )
+        const studentsSnap = await getDocs(studentsQuery)
+        setStudents(
+          studentsSnap.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+        )
       } catch (error) {
         console.error('Error fetching data:', error)
+        toast({
+          title: 'Error',
+          description: 'Failed to load curricula and students',
+          variant: 'destructive',
+        })
       } finally {
-        setIsLoading(false)
+        setLoading(false)
       }
     }
 
     fetchData()
-  }, [teacherSchool])
+  }, [teacherSchool, toast])
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      setLoading(true)
+      const batch = writeBatch(fireStore)
+
+      const classroomId = nanoid()
+      const classCode = nanoid(6).toUpperCase()
+
+      const classroomRef = doc(fireStore, 'classrooms', classroomId)
+      batch.set(classroomRef, {
+        id: classroomId,
+        name: data.name,
+        teacherId,
+        curriculumId: data.curriculumId,
+        curriculumName: curricula.find((c) => c.id === data.curriculumId)?.name,
+        students: data.students,
+        classCode,
+        lastTaughtWeek: 0,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        weeklyProgressIds: {},
+      })
+
+      const teacherRef = doc(fireStore, 'users', teacherId)
+      batch.update(teacherRef, {
+        classrooms: arrayUnion(classroomId),
+        updatedAt: Date.now(),
+      })
+
+      data.students.forEach((studentId) => {
+        const studentRef = doc(fireStore, 'users', studentId)
+        batch.update(studentRef, {
+          classrooms: arrayUnion({
+            classroomId,
+            joinedAt: Date.now(),
+          }),
+          updatedAt: Date.now(),
+        })
+      })
+
+      await batch.commit()
+
+      toast({
+        title: 'Success',
+        description: 'Classroom created successfully',
+      })
+
+      form.reset()
+    } catch (error) {
+      console.error('Error creating classroom:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to create classroom',
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleStudentToggle = (studentId: string) => {
     const currentStudents = form.getValues('students')
@@ -113,27 +187,20 @@ export function CreateClassroomForm({
 
     form.setValue('students', updatedStudents, {
       shouldValidate: true,
-      shouldDirty: true,
     })
   }
 
-  const handleSubmit = (data: FormData) => {
-    onSubmit({
-      ...data,
-      teacherId,
-    })
-  }
-
-  if (isLoading) {
-    return <div className='p-4 text-center'>Loading...</div>
+  if (loading) {
+    return (
+      <div className='flex items-center justify-center min-h-[400px]'>
+        <Loader2 className='h-8 w-8 animate-spin' />
+      </div>
+    )
   }
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className='space-y-8 bg-white p-6 rounded-lg shadow'
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
         <FormField
           control={form.control}
           name='name'
@@ -141,7 +208,7 @@ export function CreateClassroomForm({
             <FormItem>
               <FormLabel>Classroom Name</FormLabel>
               <FormControl>
-                <Input placeholder='Grade 7A' {...field} />
+                <Input placeholder='Python Afternoon Class' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -153,27 +220,16 @@ export function CreateClassroomForm({
           name='curriculumId'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Study Program</FormLabel>
-              <Select
-                onValueChange={(value) => {
-                  const selectedCurriculum = curricula.find(
-                    (c) => c._id === value
-                  )
-                  if (selectedCurriculum) {
-                    form.setValue('curriculumId', value)
-                    form.setValue('curriculumName', selectedCurriculum.name)
-                  }
-                }}
-                value={field.value}
-              >
+              <FormLabel>Curriculum</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder='Select a study programme to follow' />
+                    <SelectValue placeholder='Select a curriculum' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   {curricula.map((curriculum) => (
-                    <SelectItem key={curriculum._id} value={curriculum._id}>
+                    <SelectItem key={curriculum.id} value={curriculum.id}>
                       {curriculum.name}
                     </SelectItem>
                   ))}
@@ -191,26 +247,26 @@ export function CreateClassroomForm({
             <FormItem>
               <FormLabel>Students from {teacherSchool}</FormLabel>
               <FormControl>
-                <div className='flex flex-wrap gap-2 max-h-60 overflow-y-auto p-2 border rounded-md'>
-                  {filteredStudents.length === 0 ? (
-                    <p className='text-sm text-muted-foreground'>
+                <div className='flex flex-wrap gap-2 max-h-60 overflow-y-auto p-2 border rounded-md bg-background'>
+                  {students.length === 0 ? (
+                    <p className='text-sm text-muted-foreground p-2'>
                       No students available from {teacherSchool}
                     </p>
                   ) : (
-                    filteredStudents.map((student) => (
+                    students.map((student) => (
                       <Button
-                        key={student._id}
+                        key={student.id}
                         type='button'
                         variant={
-                          field.value.includes(student._id)
+                          field.value.includes(student.id)
                             ? 'default'
                             : 'outline'
                         }
-                        onClick={() => handleStudentToggle(student._id)}
+                        onClick={() => handleStudentToggle(student.id)}
                         className='flex-grow-0'
                       >
-                        {student.username}
-                        {` (Grade ${student.grade})`}
+                        {student.displayName}
+                        {student.grade && ` (Grade ${student.grade})`}
                       </Button>
                     ))
                   )}
@@ -227,9 +283,16 @@ export function CreateClassroomForm({
         <Button
           type='submit'
           className='w-full'
-          disabled={isLoading || filteredStudents.length === 0}
+          disabled={loading || students.length === 0}
         >
-          Create Classroom
+          {loading ? (
+            <>
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              Creating Classroom...
+            </>
+          ) : (
+            'Create Classroom'
+          )}
         </Button>
       </form>
     </Form>

@@ -1,9 +1,8 @@
 // components/StudentDashboard.tsx
-import React, { useState, useEffect } from 'react'
+'use client'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Student } from '@/models/types'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Card,
   CardHeader,
@@ -12,74 +11,151 @@ import {
   CardContent,
 } from '@/components/ui/card'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import { BookOpen, Trophy, Users } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
-import { Classroom } from '@/models/types'
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  DocumentData,
+} from 'firebase/firestore'
+import { fireStore } from '@/firebase/firebase'
+import { BookOpen, Trophy, Users, Loader2 } from 'lucide-react'
+
+interface User {
+  uid: string
+  displayName: string
+  email: string
+  school?: string
+  grade?: number
+  solvedProblems?: string[]
+}
+
+interface Classroom {
+  id: string
+  name?: string
+  curriculumId: string
+  students: string[]
+  // curriculum?: {
+  //   name?: string
+  //   description?: string
+  // }
+  [key: string]: any // For other potential fields
+}
+
+// interface Week {
+//   weekNumber: number
+//   topic: string
+//   assignmentIds: string[] // Array of problem IDs
+// }
+
+// interface CurriculumInputs {
+//   id: string
+//   name: string
+//   description: string
+//   weeks: Week[]
+// }
+
+interface Progress {
+  solvedProblems: number
+  completedWeeks: number
+}
 
 interface StudentDashboardProps {
-  user: Student
+  user: User
   onSignOut: () => void
 }
 
 export function StudentDashboard({ user, onSignOut }: StudentDashboardProps) {
   const router = useRouter()
-  const { toast } = useToast()
   const [enrolledClassrooms, setEnrolledClassrooms] = useState<Classroom[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
+  const [progress, setProgress] = useState<Progress>({
+    solvedProblems: 0,
+    completedWeeks: 0,
+  })
 
   useEffect(() => {
-    const fetchClassrooms = async () => {
-      if (!user.classrooms?.length) {
-        setIsLoading(false)
-        return
-      }
-
+    const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token')
-        const promises = user.classrooms.map((classroomId) =>
-          fetch(`/api/classroom/${classroomId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }).then((res) => res.json())
+        const classroomsQuery = query(
+          collection(fireStore, 'classrooms'),
+          where('students', 'array-contains', user.uid)
+        )
+        const classroomsSnap = await getDocs(classroomsQuery)
+
+        const classroomsData: Classroom[] = await Promise.all(
+          classroomsSnap.docs.map(async (classDoc) => {
+            const data = classDoc.data()
+            const curriculumDoc = await getDoc(
+              doc(fireStore, 'curricula', data.curriculumId)
+            )
+
+            return {
+              id: classDoc.id,
+              name: data.name,
+              curriculumId: data.curriculumId,
+              students: data.students || [],
+              curriculum: curriculumDoc.data() || undefined,
+              ...data,
+            }
+          })
         )
 
-        const classrooms = await Promise.all(promises)
-        setEnrolledClassrooms(classrooms)
-      } catch (error) {
-        console.error('Error fetching classrooms:', error)
-        toast({
-          title: 'Error',
-          description: 'Failed to fetch enrolled classrooms',
-          variant: 'destructive',
+        setEnrolledClassrooms(classroomsData)
+
+        // Calculate progress
+        const totalWeeks = classroomsData.reduce((acc, classroom) => {
+          const curriculumWeeks = classroom.curriculum?.weeks?.length || 0
+          return acc + curriculumWeeks
+        }, 0)
+
+        setProgress({
+          solvedProblems: user.solvedProblems?.length || 0,
+          completedWeeks: Math.min(
+            totalWeeks,
+            user.solvedProblems?.length || 0
+          ),
         })
+      } catch (error) {
+        console.error('Error fetching data:', error)
       } finally {
-        setIsLoading(false)
+        setLoading(false)
       }
     }
 
-    fetchClassrooms()
-  }, [user.classrooms, toast])
+    fetchData()
+  }, [user.uid, user.solvedProblems])
 
-  const handleJoinClassroom = (classroom: Classroom) => {
-    router.push(
-      `/classroom/${classroom._id}?username=${encodeURIComponent(
-        user.username
-      )}&role=student`
+  const handleJoinClassroom = (classroomId: string) => {
+    router.push(`/classroom/${classroomId}`)
+  }
+
+  if (loading) {
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        <Loader2 className='h-8 w-8 animate-spin' />
+      </div>
     )
+  }
+
+  // Progress calculation helpers
+  const getProgressPercentage = (solved: number, total: number) =>
+    total > 0 ? Math.round((solved / total) * 100) : 0
+
+  const getProgressColor = (percentage: number) => {
+    if (percentage >= 75) return 'text-green-600'
+    if (percentage >= 50) return 'text-yellow-600'
+    return 'text-blue-600'
   }
 
   return (
     <div className='container mx-auto p-6'>
       <div className='mb-8 flex justify-between items-center'>
         <div>
-          <h1 className='text-4xl font-bold mb-2'>Welcome, {user.username}!</h1>
+          <h1 className='text-4xl font-bold mb-2'>
+            Welcome, {user.displayName}!
+          </h1>
           <p className='text-gray-600'>Ready to learn Python?</p>
         </div>
         <Button variant='outline' onClick={onSignOut}>
@@ -97,21 +173,19 @@ export function StudentDashboard({ user, onSignOut }: StudentDashboardProps) {
           </CardHeader>
           <CardContent>
             <div className='space-y-4'>
-              {isLoading ? (
-                <p className='text-sm text-gray-500'>Loading classes...</p>
-              ) : enrolledClassrooms.length > 0 ? (
+              {enrolledClassrooms.length > 0 ? (
                 enrolledClassrooms.map((classroom) => (
-                  <Card key={classroom._id} className='p-4'>
+                  <Card key={classroom.id} className='p-4'>
                     <div className='space-y-2'>
                       <h3 className='font-semibold'>{classroom.name}</h3>
                       <p className='text-sm text-gray-500'>
-                        Program: {classroom.curriculumName}
+                        Program: {classroom.curriculum?.name}
                       </p>
                       <Button
                         className='w-full'
-                        onClick={() => handleJoinClassroom(classroom)}
+                        onClick={() => handleJoinClassroom(classroom.id)}
                       >
-                        {'Join Class'}
+                        Join Class
                       </Button>
                     </div>
                   </Card>
@@ -129,17 +203,25 @@ export function StudentDashboard({ user, onSignOut }: StudentDashboardProps) {
               <Trophy className='h-5 w-5' />
               My Progress
             </CardTitle>
-            <CardDescription>Track your learning journey</CardDescription>
           </CardHeader>
           <CardContent>
             <div className='space-y-4'>
               <div>
-                <p className='text-sm font-medium'>Grade Level</p>
-                <p className='text-2xl font-bold'>{user.grade || 'Not set'}</p>
+                <p className='text-sm font-medium'>Problems Solved</p>
+                <p
+                  className={`text-2xl font-bold ${getProgressColor(
+                    getProgressPercentage(
+                      progress.solvedProblems,
+                      progress.solvedProblems + 5 // Adjust target as needed
+                    )
+                  )}`}
+                >
+                  {progress.solvedProblems}
+                </p>
               </div>
               <div>
-                <p className='text-sm font-medium'>Classes Completed</p>
-                <p className='text-2xl font-bold'>0</p>
+                <p className='text-sm font-medium'>Completed Weeks</p>
+                <p className='text-2xl font-bold'>{progress.completedWeeks}</p>
               </div>
             </div>
           </CardContent>
@@ -155,13 +237,17 @@ export function StudentDashboard({ user, onSignOut }: StudentDashboardProps) {
           <CardContent>
             <div className='space-y-4'>
               <div>
-                <p className='text-sm font-medium'>School Name</p>
-                <p className='text-2xl font-bold'>{user.school}</p>
+                <p className='text-sm font-medium'>School</p>
+                <p className='text-2xl font-bold'>{user.school || 'Not set'}</p>
+              </div>
+              <div>
+                <p className='text-sm font-medium'>Grade</p>
+                <p className='text-2xl font-bold'>{user.grade || 'Not set'}</p>
               </div>
               <div>
                 <p className='text-sm font-medium'>Enrolled Classes</p>
                 <p className='text-2xl font-bold'>
-                  {user.classrooms?.length || 0}
+                  {enrolledClassrooms.length}
                 </p>
               </div>
             </div>
