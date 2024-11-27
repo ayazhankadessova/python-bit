@@ -486,8 +486,8 @@
 // ClassroomPage.tsx
 'use client'
 import { useAuth } from '@/contexts/AuthContext'
-import { TeacherClassroomsView } from './TeacherClassroomsView'
-import { StudentClassroomsView } from './StudentClassroomsView'
+import { TeacherClassroomsView } from '@/components/classrooms/TeacherClassroomsView'
+import { StudentClassroomsView } from '@/components/classrooms/StudentClassroomsView'
 import { Loader2 } from 'lucide-react'
 
 const ClassroomPage = () => {

@@ -17,34 +17,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { CreateClassroomForm } from './CreateClassroomForm'
 import { useToast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  arrayUnion,
-  query,
-  collection,
-  where,
-  getDocs,
-} from 'firebase/firestore'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { User, ClassroomTC } from '@/utils/types/firebase'
 
-interface StudentClassroomsViewProps {
+interface TeacherClassroomsViewProps {
   user: User
 }
 
-export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
+export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
   const { toast } = useToast()
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
-  const [classroomCode, setClassroomCode] = useState('')
-  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [classrooms, setClassrooms] = useState<ClassroomTC[]>([])
 
@@ -73,22 +63,26 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
               const classroomData = classroomDoc.data()
               let curriculumData = undefined
 
-              try {
-                const curriculumDoc = await getDoc(
-                  doc(fireStore, 'curricula', classroomData.curriculumId)
-                )
-                if (curriculumDoc.exists()) {
-                  curriculumData = curriculumDoc.data()
+              // Only fetch curriculum data for classrooms where user is the teacher
+              if (classroomData.teacherId === user.uid) {
+                try {
+                  const curriculumDoc = await getDoc(
+                    doc(fireStore, 'curricula', classroomData.curriculumId)
+                  )
+                  if (curriculumDoc.exists()) {
+                    curriculumData = curriculumDoc.data()
+                  }
+                } catch (error) {
+                  console.error('Error fetching curriculum:', error)
                 }
-              } catch (error) {
-                console.error('Error fetching curriculum:', error)
-              }
 
-              return {
-                id: classroomDoc.id,
-                ...classroomData,
-                curriculum: curriculumData,
-              } as ClassroomTC
+                return {
+                  id: classroomDoc.id,
+                  ...classroomData,
+                  curriculum: curriculumData,
+                } as ClassroomTC
+              }
+              return null
             } catch (error) {
               console.error(`Error fetching classroom ${classroomId}:`, error)
               return null
@@ -115,88 +109,14 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
     fetchClassroomData()
   }, [user, toast])
 
-  const handleJoinClassroom = async () => {
-    try {
-      const classroomQuery = query(
-        collection(fireStore, 'classrooms'),
-        where('classCode', '==', classroomCode.toUpperCase())
-      )
-
-      const classroomSnap = await getDocs(classroomQuery)
-
-      if (classroomSnap.empty) {
-        toast({
-          title: 'Error',
-          description: 'Invalid classroom code',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      const classroom = classroomSnap.docs[0]
-
-      if (user.classrooms?.includes(classroom.id)) {
-        toast({
-          title: 'Error',
-          description: 'You are already enrolled in this classroom',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      // Update classroom's students array
-      await updateDoc(doc(fireStore, 'classrooms', classroom.id), {
-        students: arrayUnion(user.uid),
-      })
-
-      // Update user's classrooms array
-      const userRef = doc(fireStore, 'users', user.uid)
-      await updateDoc(userRef, {
-        classrooms: arrayUnion(classroom.id),
-      })
-
-      toast({
-        title: 'Success',
-        description: 'Successfully joined classroom',
-      })
-
-      setIsJoinDialogOpen(false)
-      window.location.reload()
-    } catch (error) {
-      console.error('Error joining classroom:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to join classroom',
-        variant: 'destructive',
-      })
-    }
-  }
-
   const handleStartLesson = async (classroomId: string) => {
     try {
-      const classroomDoc = await getDoc(
-        doc(fireStore, 'classrooms', classroomId)
-      )
+      const classroomRef = doc(fireStore, 'classrooms', classroomId)
 
-      if (!classroomDoc.exists()) {
-        toast({
-          title: 'Error',
-          description: 'Classroom not found',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      const classroomData = classroomDoc.data()
-
-      if (!classroomData.activeSession) {
-        toast({
-          title: 'No Active Session',
-          description: 'Please wait for the teacher to start the session',
-          variant: 'destructive',
-        })
-        return
-      }
+      // Update classroom to active session
+      await updateDoc(classroomRef, {
+        activeSession: true,
+      })
 
       router.push(`/classroom/${classroomId}`)
     } catch (error) {
@@ -224,8 +144,8 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
   return (
     <div className='container mx-auto p-6'>
       <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-3xl font-bold'>My Enrolled Classrooms</h1>
-        <Button variant='outline' onClick={() => router.push('/')}>
+        <h1 className='text-3xl font-bold'>My Classrooms</h1>
+        <Button variant='outline' onClick={() => router.push('/dashboard')}>
           Back to Dashboard
         </Button>
       </div>
@@ -242,27 +162,23 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
           />
         </div>
 
-        <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className='mr-2 h-4 w-4' /> Join Classroom
+              <Plus className='mr-2 h-4 w-4' /> Create New Classroom
             </Button>
           </DialogTrigger>
           <DialogContent className='bg-white'>
             <DialogHeader>
-              <DialogTitle>Join Classroom</DialogTitle>
+              <DialogTitle>Create New Classroom</DialogTitle>
               <DialogDescription>
-                Enter the classroom code provided by your teacher.
+                Fill in the details to create a new classroom.
               </DialogDescription>
             </DialogHeader>
-            <Input
-              placeholder='Enter classroom code'
-              value={classroomCode}
-              onChange={(e) => setClassroomCode(e.target.value)}
+            <CreateClassroomForm
+              teacherId={user.uid}
+              teacherSchool={user.school!}
             />
-            <DialogFooter>
-              <Button onClick={handleJoinClassroom}>Join</Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
@@ -270,7 +186,7 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
       {filteredClassrooms.length === 0 ? (
         <div className='text-center py-10'>
           <p className='text-gray-500'>
-            No classrooms found. Join a classroom to get started!
+            No classrooms found. Create your first classroom to get started!
           </p>
         </div>
       ) : (
@@ -279,10 +195,13 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
             <Card key={classroom.id}>
               <CardHeader>
                 <CardTitle>{classroom.name}</CardTitle>
-                <CardDescription>{classroom.curriculumName}</CardDescription>
+                <CardDescription>{classroom.curriculum?.name}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className='space-y-2'>
+                  <p className='text-sm text-gray-600'>
+                    Classroom Code: {classroom.classCode}
+                  </p>
                   <p className='text-sm text-gray-600'>
                     Last taught: Week {classroom.lastTaughtWeek || 0}
                   </p>
@@ -300,20 +219,22 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
                       ? '● Session Active'
                       : '○ No Active Session'}
                   </div>
+                  {classroom.curriculum?.weeks && (
+                    <p className='text-sm text-blue-600'>
+                      Total Weeks: {classroom.curriculum.weeks.length}
+                    </p>
+                  )}
                 </div>
               </CardContent>
               <CardFooter className='flex justify-between'>
                 <Button
                   onClick={() => handleStartLesson(classroom.id)}
-                  disabled={!classroom.activeSession}
+                  variant={classroom.activeSession ? 'default' : 'secondary'}
                 >
-                  {classroom.activeSession ? (
-                    <>
-                      <Play className='mr-2 h-4 w-4' /> Join Session
-                    </>
-                  ) : (
-                    'Waiting for teacher'
-                  )}
+                  <Play className='mr-2 h-4 w-4' />
+                  {classroom.activeSession
+                    ? 'Continue Session'
+                    : 'Start Session'}
                 </Button>
               </CardFooter>
             </Card>

@@ -1,7 +1,7 @@
 // app/dashboard/page.tsx
 'use client'
-import { TeacherDashboard } from '@/components/TeacherDashboard'
-import { StudentDashboard } from '@/components/StudentDashboard'
+import { TeacherDashboard } from '@/components//dashboard/TeacherDashboard'
+import { StudentDashboard } from '@/components/dashboard/StudentDashboard'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2 } from 'lucide-react'
 import ProtectedRoute from '@/components/ProtectedRoute'
@@ -23,7 +23,7 @@ export default function DashboardPage() {
   return (
     <ProtectedRoute>
       {user?.role === 'teacher' ? (
-        <TeacherDashboard user={user} onSignOut={signOut} />
+        <TeacherDashboard onSignOut={signOut} />
       ) : (
         <StudentDashboard onSignOut={signOut} />
       )}
