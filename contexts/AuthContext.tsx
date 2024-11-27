@@ -1,4 +1,3 @@
-// contexts/AuthContext.tsx
 'use client'
 import {
   createContext,
@@ -10,36 +9,7 @@ import {
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, fireStore } from '@/firebase/firebase'
 import { doc, getDoc } from 'firebase/firestore'
-import { useRouter } from 'next/navigation'
-
-// interface User {
-//   uid: string
-//   email: string | null
-//   displayName: string | null
-//   role?: 'student' | 'teacher'
-//   school?: string
-//   likedProblems?: string[]
-//   dislikedProblems?: string[]
-//   solvedProblems?: string[]
-//   starredProblems?: string[]
-// }
-interface UserClassroom {
-  classroomId: string
-  joinedAt: number
-}
-
-interface User {
-  uid: string
-  email: string | null
-  displayName: string | null
-  role?: 'student' | 'teacher'
-  school?: string
-  solvedProblems?: string[]
-  classrooms?: UserClassroom[]
-  likedProblems?: string[]
-  dislikedProblems?: string[]
-  starredProblems?: string[]
-}
+import { FirebaseUserData, User } from '@/utils/types/firebase'
 
 interface AuthContextType {
   user: User | null
@@ -52,7 +22,6 @@ const AuthContext = createContext<AuthContextType | null>(null)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userData, setUserData] = useState<User | null>(null)
   const [user, loading] = useAuthState(auth)
-  const router = useRouter()
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -63,12 +32,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         const userDoc = await getDoc(doc(fireStore, 'users', user.uid))
-        const data = userDoc.data() as User
+        const data = userDoc.data() as FirebaseUserData
+
+        // Ensure required fields are present, otherwise set to null
+        if (!data.email || !data.displayName || !data.role || !data.school) {
+          console.error('Missing required user data')
+          setUserData(null)
+          return
+        }
 
         setUserData({
           uid: user.uid,
-          email: user.email,
-          displayName: data.displayName || user.displayName,
+          email: data.email,
+          displayName: data.displayName,
           role: data.role,
           school: data.school,
           likedProblems: data.likedProblems || [],
@@ -90,26 +66,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = useCallback(async () => {
     try {
-      // Clear user data first
       setUserData(null)
-
-      // Navigate before sign out to prevent delay
-      // router.push('/')
-
-      // Sign out from Firebase
       await auth.signOut()
     } catch (error) {
       console.error('Error signing out:', error)
-      // Restore user data if sign out fails
-      if (user) {
-        setUserData({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-        })
+
+      // Only restore user data if we have all required fields
+      if (user && userData) {
+        setUserData(userData) // Restore the previous valid state
       }
     }
-  }, [router, user])
+  }, [user, userData])
 
   const value = {
     user: userData,
