@@ -183,6 +183,9 @@ Backend:
 - [x] Create curricula with 2 weeks
 - [x] create teacher
 - [x] weeklyprogress => "classroomid-week" => {task1: [array of users who completed - no duplicates]}
+
+## Nov 27
+
 - [ ] I need to work on CodeExecutor. Really try to do 2 simple functions! and test.
 - [ ] Run code doesn't work bc function
 - [ ] Create task Ids (the functions will stay locally)
@@ -204,6 +207,11 @@ Backend:
 - [ ] Finally do smth w microbit AHHAHAH
 - [ ] add student progress for every student!
 - [ ] Sessiom view -> every task will go to another link -> new view
+
+## Nov 28
+
+- [ ] Teacher dashboard & student dashboard -> many overlap
+- [ ] Student classrooms & teacher classrooms -> many overlap
       \
 
 ##background-position
