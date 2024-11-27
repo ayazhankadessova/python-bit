@@ -363,7 +363,7 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
       try {
         // Fetch classroom and curriculum data for each enrolled classroom
         const classroomsData = await Promise.all(
-          user.classrooms.map(async ({ classroomId }) => {
+          user.classrooms.map(async (classroomId) => {
             try {
               const classroomDoc = await getDoc(
                 doc(fireStore, 'classrooms', classroomId)
@@ -476,10 +476,10 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
     })
   }
 
-  const getEarliestJoinDate = () => {
-    if (!user?.classrooms || user.classrooms.length === 0) return null
-    return Math.min(...user.classrooms.map((c) => c.joinedAt))
-  }
+  // const getEarliestJoinDate = () => {
+  //   if (!user?.classrooms || user.classrooms.length === 0) return null
+  //   return Math.min(...user.classrooms.map((c) => c.joinedAt))
+  // }
 
   if (loading) {
     return (
@@ -522,7 +522,7 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
               {enrolledClassrooms.length > 0 ? (
                 enrolledClassrooms.map((classroom) => {
                   const userClassroom = user.classrooms?.find(
-                    (uc) => uc.classroomId === classroom.id
+                    (uc) => uc === classroom.id
                   )
                   return (
                     <Card key={classroom.id} className='p-4'>
@@ -531,11 +531,11 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
                         <p className='text-sm text-gray-500'>
                           Program: {classroom.curriculum?.name || 'N/A'}
                         </p>
-                        {userClassroom && (
+                        {/* {userClassroom && (
                           <p className='text-xs text-gray-400'>
                             Joined: {formatJoinDate(userClassroom.joinedAt)}
                           </p>
-                        )}
+                        )} */}
                         <div className='flex justify-between items-center'>
                           <span
                             className={`text-sm ${
@@ -612,14 +612,14 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
                 <p className='text-sm font-medium'>Email</p>
                 <p className='text-lg truncate'>{user.email || 'Not set'}</p>
               </div>
-              <div>
+              {/* <div>
                 <p className='text-sm font-medium'>Enrolled Since</p>
                 <p className='text-lg'>
                   {getEarliestJoinDate()
-                    ? formatJoinDate(getEarliestJoinDate()!)
+                    ? "Classes"
                     : 'No classes yet'}
                 </p>
-              </div>
+              </div> */}
             </div>
           </CardContent>
         </Card>
