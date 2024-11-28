@@ -37,6 +37,7 @@ import { Problem } from '@/utils/types/problem'
 import { problems } from '@/utils/problems'
 import { useToast } from '@/hooks/use-toast'
 import { Send, Play, StopCircle } from 'lucide-react'
+import { Week } from '@/utils/types/firebase'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -204,6 +205,7 @@ export function TeacherSessionView({
     return () => unsubscribe()
   }, [classroomId, selectedWeek])
 
+  // Update the handleStartWeek function
   const handleStartWeek = async () => {
     if (!selectedWeek || !user) return
 
@@ -213,6 +215,34 @@ export function TeacherSessionView({
         lastTaughtWeek: selectedWeek,
         activeSession: true,
       })
+
+      // Fetch problems for the selected week
+      const classroomDoc = await getDoc(classroomRef)
+      if (classroomDoc.exists()) {
+        const classroomData = classroomDoc.data()
+        const curriculumRef = doc(
+          fireStore,
+          'curricula',
+          classroomData.curriculumId
+        )
+        const curriculumDoc = await getDoc(curriculumRef)
+
+        if (curriculumDoc.exists()) {
+          const curriculumData = curriculumDoc.data()
+          const weekData = curriculumData.weeks.find(
+            (w: Week) => w.weekNumber === selectedWeek
+          )
+
+          if (weekData) {
+            setWeekProblems(weekData.assignmentIds)
+            if (weekData.assignmentIds.length > 0) {
+              const firstProblem = problems[weekData.assignmentIds[0]]
+              setCurrentProblem(firstProblem)
+              setTeacherCode(firstProblem.starterCode)
+            }
+          }
+        }
+      }
 
       const weeklyProgressRef = doc(
         fireStore,
@@ -232,7 +262,7 @@ export function TeacherSessionView({
       setIsWeekSelectionOpen(false)
       toast({
         title: 'Week Started',
-        description: 'Students can now join the session.',
+        description: `Week ${selectedWeek} started successfully. Problems have been updated.`,
       })
     } catch (error) {
       console.error('Error starting week:', error)
@@ -266,6 +296,53 @@ export function TeacherSessionView({
       })
     }
   }
+
+  useEffect(() => {
+    const updateWeekProblems = async () => {
+      if (!selectedWeek) return
+
+      try {
+        const classroomRef = doc(fireStore, 'classrooms', classroomId)
+        const classroomDoc = await getDoc(classroomRef)
+
+        if (!classroomDoc.exists()) return
+
+        const classroomData = classroomDoc.data()
+        const curriculumRef = doc(
+          fireStore,
+          'curricula',
+          classroomData.curriculumId
+        )
+        const curriculumDoc = await getDoc(curriculumRef)
+
+        if (curriculumDoc.exists()) {
+          const curriculumData = curriculumDoc.data()
+          const weekData = curriculumData.weeks.find(
+            (w: Week) => w.weekNumber === selectedWeek
+          )
+
+          if (weekData) {
+            setWeekProblems(weekData.assignmentIds)
+            // Set the first problem of the new week as current
+            if (weekData.assignmentIds.length > 0) {
+              const firstProblem = problems[weekData.assignmentIds[0]]
+              setCurrentProblem(firstProblem)
+              setTeacherCode(firstProblem.starterCode)
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error updating week problems:', error)
+        toast({
+          title: 'Error',
+          description: 'Failed to load week problems',
+          variant: 'destructive',
+        })
+      }
+    }
+
+    updateWeekProblems()
+  }, [selectedWeek, classroomId, toast])
 
   const handleRunCode = () => {
     if (!socket) return
@@ -418,9 +495,14 @@ export function TeacherSessionView({
             <DialogTitle>Select Week</DialogTitle>
             <DialogDescription>Choose which week to teach</DialogDescription>
           </DialogHeader>
-          <Select onValueChange={(value) => setSelectedWeek(parseInt(value))}>
+          <Select
+            value={selectedWeek?.toString()}
+            onValueChange={(value) => setSelectedWeek(parseInt(value))}
+          >
             <SelectTrigger>
-              <SelectValue placeholder='Select week' />
+              <SelectValue placeholder='Select week'>
+                {selectedWeek ? `Week ${selectedWeek}` : 'Select week'}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {Array.from({ length: totalWeeks }, (_, i) => (

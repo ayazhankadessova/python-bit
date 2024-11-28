@@ -178,11 +178,7 @@ export default function CreateClassroomPage() {
       data.students.forEach((studentId) => {
         const studentRef = doc(fireStore, 'users', studentId)
         batch.update(studentRef, {
-          classrooms: arrayUnion({
-            classroomId,
-            joinedAt: Date.now(),
-          }),
-          updatedAt: Date.now(),
+          classrooms: arrayUnion(classroomId),
         })
       })
 

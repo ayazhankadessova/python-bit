@@ -98,7 +98,7 @@ export interface ClassroomTC {
   curriculum?: CurriculumInputs
 }
 
-interface Week {
+export interface Week {
   weekNumber: number
   topic: string
   assignmentIds: string[] // Array of problem IDs

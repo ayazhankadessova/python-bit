@@ -183,21 +183,23 @@ Backend:
 - [x] Create curricula with 2 weeks
 - [x] create teacher
 - [x] weeklyprogress => "classroomid-week" => {task1: [array of users who completed - no duplicates]}
+- [ ] what should be my function name? test cases?
+- [ ] fix function names mappings
+- [ ] show test cases and let students add their own test cases
 
 ## Nov 27
 
-- [ ] I need to work on CodeExecutor. Really try to do 2 simple functions! and test.
+- [x] Teacher dashboard & student dashboard -> fix types
+- [x] Student classrooms & teacher classrooms -> fix types
+- [ ] Why not showing week 2 problems??
+- [ ] add 2 more problems
 - [ ] Run code doesn't work bc function
-- [ ] Create task Ids (the functions will stay locally)
-- [ ] fix students dashboard -> it doesnt retrieve enrolled classrooms effectively
 - [ ] choose week
 - [ ] how to save progress
 - [ ] no document to update
 - [ ] is it actually checking ?
-- [ ] make meaningful ids for classroom?
 - [ ] all interfaces in one place
 - [ ] remove atom stuff
-- [ ] Create classroom tasks -> taskId
 - [ ] think of how to create a classroom
 - [ ] test case for week 1 ok
 - [ ] add test cases section
@@ -212,9 +214,13 @@ Backend:
 
 - [ ] Teacher dashboard & student dashboard -> many overlap
 - [ ] Student classrooms & teacher classrooms -> many overlap
-      \
-
-##background-position
+- [ ] dont update code card after the test casses are passed
+- [ ] Show which test cases are we running -> students can choose which test cases they want to run
+- [ ] add progress for teacher
+- [ ] week selection -> save
+- [ ] add task completings to weeklyProgress
+- [ ] fix topics
+      ##background-position
 
 - [ ] UseAuth must be used within AuthProvider after login
 
@@ -282,3 +288,39 @@ npm install @uiw/react-codemirror @codemirror/lang-python @uiw/codemirror-theme-
 
 1. build -> db
 2. Start in test mode
+
+Week 3:
+
+Lists and loops
+Basic data processing
+
+List Average Calculator:
+
+List operations
+Looping
+Basic statistics
+Number formatting
+Error handling for edge cases
+
+Data Filter:
+
+Multiple parameters
+List filtering
+Comparison operators
+List comprehension (as an optional advanced approach)
+Maintaining order
+
+Week 4:
+
+Dictionaries
+File handling
+
+Week 5:
+
+Functions with multiple parameters
+Error handling
+
+Week 6:
+
+Simple classes
+Final project

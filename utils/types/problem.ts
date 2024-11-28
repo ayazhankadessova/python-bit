@@ -15,8 +15,14 @@ export type Problem = {
   constraints: string
   order: number
   starterCode: string
-  handlerFunction: ((fn: any) => boolean) | string
-  starterFunctionName: string
+  handlerFunction: (fn: any) => boolean
+  starterFunctionName?: string
+  testCases?: TestCase[]
+}
+
+interface TestCase {
+  input: any
+  expected: any
 }
 
 export type DBProblem = {

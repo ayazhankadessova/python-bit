@@ -5,6 +5,7 @@ const starterCodeTwoSum = `function twoSum(nums,target){
   // Write your code here
 };`
 
+// we send function
 // checks if the user has the correct code
 const handlerTwoSum = (fn: any) => {
   // fn is the callback that user's code is passed into

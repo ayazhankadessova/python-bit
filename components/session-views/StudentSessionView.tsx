@@ -1,24 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { Socket } from 'socket.io-client'
 import Split from 'react-split'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
-import { doc, getDoc, updateDoc, arrayUnion, setDoc } from 'firebase/firestore'
+import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Problem } from '@/utils/types/problem'
 import { problems } from '@/utils/problems'
 import { useToast } from '@/hooks/use-toast'
-import {
-  BookOpen,
-  MessageSquareMore,
-  Play,
-  StopCircle,
-  Bot,
-} from 'lucide-react'
+import { Play, StopCircle, Bot } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -31,13 +25,6 @@ interface StudentSessionViewProps {
   classroomId: string
   onEndSession: () => void
   socket: Socket | null
-}
-
-interface WeeklyProgress {
-  taskCompletions: {
-    [taskId: string]: string[] // Array of user IDs who completed the task
-  }
-  activeSession?: boolean
 }
 
 export function StudentSessionView({
@@ -56,9 +43,13 @@ export function StudentSessionView({
   const [isAiHelpOpen, setIsAiHelpOpen] = useState(false)
   const [output, setOutput] = useState('')
   const [isRunning, setIsRunning] = useState(false)
-  const joinedRoom = useRef(false)
+  const [testResults, setTestResults] = useState<
+    {
+      passed: boolean
+      message: string
+    }[]
+  >([])
 
-  // Check if session is active and fetch initial data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,7 +66,6 @@ export function StudentSessionView({
         }
 
         const classroomData = classroomDoc.data()
-
         if (!classroomData.activeSession) {
           toast({
             title: 'No Active Session',
@@ -87,7 +77,6 @@ export function StudentSessionView({
         }
 
         setSelectedWeek(classroomData.lastTaughtWeek)
-
         const curriculumRef = doc(
           fireStore,
           'curricula',
@@ -110,7 +99,6 @@ export function StudentSessionView({
           }
         }
 
-        // Get completed problems
         if (user) {
           const userRef = doc(fireStore, 'users', user.uid)
           const userDoc = await getDoc(userRef)
@@ -133,24 +121,39 @@ export function StudentSessionView({
     fetchData()
   }, [classroomId, user, toast, onEndSession])
 
-  // Socket connection and events
   useEffect(() => {
     if (!socket || !user) return
-
-    if (!joinedRoom.current) {
-      socket.emit('join-room', classroomId, user.displayName, false)
-      joinedRoom.current = true
-    }
 
     socket.on('teacher-code', (code: string) => {
       setStudentCode(code)
     })
 
-    socket.on('execution-output', (data: { output: string }) => {
-      setOutput((prev) => prev + data.output)
-    })
+    socket.on(
+      'execution-output',
+      (data: { output: string; isTest?: boolean }) => {
+        if (data.isTest) {
+          // Handle test case output
+          const result = parseFloat(data.output.trim())
+          const expectedOutput = parseFloat(
+            currentProblem?.examples[0].outputText || ''
+          )
 
-    socket.on('execution-complete', () => {
+          setTestResults((prev) => [
+            ...prev,
+            {
+              passed: result === expectedOutput,
+              message: `Expected ${expectedOutput}, got ${result}`,
+            },
+          ])
+        } else {
+          setOutput((prev) => prev + data.output)
+        }
+        setIsRunning(false)
+      }
+    )
+
+    socket.on('execution-error', (data: { error: string }) => {
+      setOutput((prev) => prev + `Error: ${data.error}\n`)
       setIsRunning(false)
     })
 
@@ -165,80 +168,107 @@ export function StudentSessionView({
     return () => {
       socket.off('teacher-code')
       socket.off('execution-output')
-      socket.off('execution-complete')
+      socket.off('execution-error')
       socket.off('session-ended')
     }
-  }, [socket, user, classroomId, toast, onEndSession])
+  }, [socket, user, currentProblem, toast, onEndSession])
 
-  const handleProblemSelect = (problemId: string) => {
-    const problem = problems[problemId]
-    setCurrentProblem(problem)
-    setStudentCode(problem.starterCode)
-  }
+  const handleRunCode = async () => {
+    if (!currentProblem || !studentCode) return
 
-  const handleRunCode = () => {
-    if (!socket) return
     setIsRunning(true)
     setOutput('')
-    socket.emit('execute-code', {
-      code: studentCode,
-      language: 'python',
-    })
-  }
-
-  const handleSubmitCode = async () => {
-    if (!currentProblem || !user || !selectedWeek) return
 
     try {
-      const success = currentProblem.handlerFunction(studentCode)
+      const response = await fetch('/api/execute-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: studentCode,
+          functionName: currentProblem.starterFunctionName,
+          input: currentProblem.examples[0].inputText,
+        }),
+      })
 
-      if (success) {
-        // Update user's solved problems
-        const userRef = doc(fireStore, 'users', user.uid)
-        await updateDoc(userRef, {
-          solvedProblems: arrayUnion(currentProblem.id),
-        })
-
-        // Update weekly progress
-        const weeklyProgressId = `${classroomId}-${selectedWeek}`
-        const weeklyProgressRef = doc(
-          fireStore,
-          'weeklyProgress',
-          weeklyProgressId
-        )
-        const weeklyProgressDoc = await getDoc(weeklyProgressRef)
-
-        if (weeklyProgressDoc.exists()) {
-          await updateDoc(weeklyProgressRef, {
-            [`taskCompletions.${currentProblem.id}`]: arrayUnion(user.uid),
-          })
-        } else {
-          const initialProgress: WeeklyProgress = {
-            taskCompletions: {
-              [currentProblem.id]: [user.uid],
-            },
-          }
-          await setDoc(weeklyProgressRef, initialProgress)
-        }
-
-        setCompletedProblems((prev) => [...prev, currentProblem.id])
-        toast({
-          title: 'Success!',
-          description: 'All test cases passed!',
-        })
-
-        socket?.emit('task-completed', {
-          taskId: currentProblem.id,
-          studentId: user.uid,
-          studentName: user.displayName,
-        })
+      const result = await response.json()
+      if (result.success) {
+        setOutput(result.output)
+      } else {
+        setOutput(`Error: ${result.error}`)
       }
-    } catch (error: any) {
+    } catch (error) {
+      setOutput(
+        `Error: ${
+          error instanceof Error ? error.message : 'An unknown error occurred'
+        }`
+      )
+    } finally {
+      setIsRunning(false)
+    }
+  }
+
+  async function handleSubmitCode() {
+    if (!currentProblem || !user || !selectedWeek) return
+
+    setIsRunning(true)
+    try {
+      // First validate code structure
+      const isValid = currentProblem.handlerFunction(studentCode)
+      if (!isValid) {
+        throw new Error(
+          'Code validation failed: Please check your function signature and implementation'
+        )
+      }
+
+      // Submit code for testing
+      const response = await fetch('/api/submit-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: studentCode,
+          problemId: currentProblem.id,
+          testCases: currentProblem.testCases,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!result.success) {
+        throw new Error(result.error)
+      }
+
+      // If we get here, all tests passed
+      const userRef = doc(fireStore, 'users', user.uid)
+      await updateDoc(userRef, {
+        solvedProblems: arrayUnion(currentProblem.id),
+      })
+
+      setCompletedProblems((prev) => [...prev, currentProblem.id])
+
+      toast({
+        title: 'Success!',
+        description: 'All test cases passed! Solution submitted successfully.',
+      })
+
+      // Notify teacher of completion
+      socket?.emit('task-completed', {
+        taskId: currentProblem.id,
+        studentId: user.uid,
+        studentName: user.displayName,
+        classroomId,
+      })
+    } catch (error) {
+      console.error('Submit code error:', error)
       toast({
         title: 'Error',
-        description: error.message,
+        description:
+          error instanceof Error ? error.message : 'An unknown error occurred',
         variant: 'destructive',
       })
+    } finally {
+      setIsRunning(false)
     }
   }
 
@@ -246,7 +276,6 @@ export function StudentSessionView({
 
   return (
     <div className='h-screen flex'>
-      {/* Problem List Sidebar */}
       <div className='w-1/4 border-r p-4 bg-background overflow-y-auto'>
         <h2 className='text-xl font-bold mb-4'>Week {selectedWeek} Problems</h2>
         <div className='space-y-2'>
@@ -258,7 +287,11 @@ export function StudentSessionView({
                 className={`cursor-pointer hover:bg-accent ${
                   currentProblem?.id === problemId ? 'border-primary' : ''
                 }`}
-                onClick={() => handleProblemSelect(problemId)}
+                onClick={() => {
+                  const problem = problems[problemId]
+                  setCurrentProblem(problem)
+                  setStudentCode(problem.starterCode) // Add this line
+                }}
               >
                 <CardHeader>
                   <CardTitle className='text-sm flex items-center justify-between'>
@@ -274,9 +307,7 @@ export function StudentSessionView({
         </div>
       </div>
 
-      {/* Main Content */}
       <Split className='flex-1' sizes={[40, 60]} minSize={400}>
-        {/* Problem Description */}
         <div className='p-4 overflow-y-auto'>
           {currentProblem && (
             <>
@@ -289,25 +320,28 @@ export function StudentSessionView({
                     __html: currentProblem.problemStatement,
                   }}
                 />
-                <h3 className='mt-6'>Examples:</h3>
-                {currentProblem.examples.map((example) => (
-                  <div
-                    key={example.id}
-                    className='my-4 p-4 bg-muted rounded-lg'
-                  >
-                    <pre className='mb-2'>Input: {example.inputText}</pre>
-                    <pre className='mb-2'>Output: {example.outputText}</pre>
-                    {example.explanation && (
-                      <p className='text-sm'>{example.explanation}</p>
-                    )}
-                  </div>
-                ))}
               </div>
             </>
           )}
         </div>
 
-        {/* Code Editor and Output */}
+        {currentProblem?.examples && (
+          <div className='mt-4'>
+            <h3 className='text-lg font-semibold mb-2'>Examples</h3>
+            {currentProblem.examples.map((example) => (
+              <div key={example.id} className='bg-muted p-4 rounded-lg mb-2'>
+                <p>Input: {example.inputText}</p>
+                <p>Output: {example.outputText}</p>
+                {example.explanation && (
+                  <p className='text-sm text-muted-foreground mt-1'>
+                    {example.explanation}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className='flex flex-col'>
           <CodeMirror
             value={studentCode}
@@ -346,29 +380,21 @@ export function StudentSessionView({
                 {isRunning ? 'Running...' : 'Run Code'}
               </Button>
             </div>
-            <Button onClick={handleSubmitCode}>Submit Solution</Button>
+            <Button onClick={handleSubmitCode} disabled={isRunning}>
+              Submit Solution
+            </Button>
           </div>
         </div>
       </Split>
 
-      {/* AI Help Dialog */}
       <Dialog open={isAiHelpOpen} onOpenChange={setIsAiHelpOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>AI Help</DialogTitle>
             <DialogDescription>Get help with your code</DialogDescription>
           </DialogHeader>
-          {/* AI help content would go here */}
         </DialogContent>
       </Dialog>
     </div>
   )
 }
-
-// export function StudentSessionView({
-//   classroomId,
-//   onEndSession,
-//   socket,
-// }: StudentSessionViewProps) {
-//   return <div>Student Session</div>
-// }

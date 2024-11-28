@@ -4,16 +4,11 @@ import express from 'express'
 import next from 'next'
 import { createServer } from 'http'
 import { Server as SocketIOServer } from 'socket.io'
-import { spawn } from 'child_process'
-import { MongoClient, ObjectId } from 'mongodb'
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 const runningProcesses = new Map()
-
-const uri = process.env.MONGODB_URI
-// const mongoClient = new MongoClient(uri)
 
 app.prepare().then(async () => {
   const server = express()
@@ -231,86 +226,6 @@ app.prepare().then(async () => {
           students: Array.from(classroom.students.values()),
         })
       }
-    }
-  }
-
-  function executeCode(
-    id,
-    code,
-    classroomId,
-    username,
-    socket,
-    isSubmission = false,
-    taskId = null
-  ) {
-    try {
-      if (runningProcesses.has(username)) {
-        runningProcesses.get(username).kill()
-      }
-
-      const python = spawn('python3', ['-c', code], {
-        timeout: 10000,
-        env: {
-          ...process.env,
-          PYTHONPATH: '/usr/local/lib/python3.9/site-packages',
-        },
-      })
-
-      runningProcesses.set(username, python)
-
-      let output = ''
-      let error = ''
-
-      python.stdout.on('data', (data) => {
-        output += data.toString()
-        if (output.length > 100000) {
-          python.kill()
-          return
-        }
-        console.log(`Output for ${username}:`, data.toString())
-        io.to(classroomId).emit('execution-output', {
-          id,
-          output: data.toString(),
-        })
-      })
-
-      python.stderr.on('data', (data) => {
-        error += data.toString()
-        console.error(`Error for ${username}:`, data.toString())
-        io.to(classroomId).emit('execution-error', {
-          id,
-          error: data.toString(),
-        })
-      })
-
-      python.on('close', (exitCode) => {
-        runningProcesses.delete(username)
-        console.log(`Execution complete for ${username}. Exit code:`, exitCode)
-        console.log(`Final output for ${username}:`, output)
-
-        io.to(classroomId).emit('execution-complete', {
-          id,
-          exitCode,
-          output,
-          error,
-        })
-      })
-
-      python.on('error', (error) => {
-        runningProcesses.delete(username)
-        console.error(`Execution error for ${username}:`, error.message)
-        io.to(classroomId).emit('execution-error', {
-          id,
-          error: error.message,
-        })
-      })
-    } catch (error) {
-      runningProcesses.delete(username)
-      console.error(`Catch block error for ${username}:`, error.message)
-      io.to(classroomId).emit('execution-error', {
-        id,
-        error: error.message,
-      })
     }
   }
 
