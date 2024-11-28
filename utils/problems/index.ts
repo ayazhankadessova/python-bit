@@ -7,6 +7,8 @@ import { temperatureConverterProblem } from './temperature-converter'
 import { reverseStringProblem } from './reverse-string'
 import { dataFilterProblem } from './filter-numbers'
 import { listAverageProblem } from './calculate-average'
+import { wordCounterProblem } from './count-words'
+import { fileProcessorProblem } from './file-processor'
 
 interface ProblemMap {
   [key: string]: Problem
@@ -20,4 +22,6 @@ export const problems: ProblemMap = {
   'reverse-string': reverseStringProblem,
   'filter-numbers': dataFilterProblem,
   'calculate-average': listAverageProblem,
+  'count-words': wordCounterProblem,
+  'file-processor': fileProcessorProblem,
 }
