@@ -7,7 +7,7 @@ import Split from 'react-split'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
-import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Problem } from '@/utils/types/problem'
 import { problems } from '@/utils/problems'
@@ -240,14 +240,6 @@ export function StudentSessionView({
       if (!result.success) {
         throw new Error(result.error)
       }
-
-      // If we get here, all tests passed
-      // const userRef = doc(fireStore, 'users', user.uid)
-      // await updateDoc(userRef, {
-      //   solvedProblems: arrayUnion(currentProblem.id),
-      // })
-
-      // setCompletedProblems((prev) => [...prev, currentProblem.id])
 
       await handleTaskCompletion({
         taskId: currentProblem.id,
