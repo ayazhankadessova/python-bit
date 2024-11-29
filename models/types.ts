@@ -1,24 +1,13 @@
-// export interface User {
-//   _id: string
-//   id: string
-//   username: string
-//   email: string
-//   password: string
-//   role: string
-//   createdAt: Date
-//   updatedAt: Date
-// }
-
 export interface User {
   _id: string
   email: string
   username: string
   role: 'teacher' | 'student'
   school: string
-  createdAt: Date
   updatedAt: Date
   code?: string | null
   classrooms?: string[]
+  createdAt: Date
 }
 
 export interface Teacher extends User {

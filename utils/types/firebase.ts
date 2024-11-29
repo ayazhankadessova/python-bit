@@ -30,6 +30,7 @@ export interface User {
   likedProblems: string[]
   dislikedProblems: string[]
   starredProblems: string[]
+  createdAt: number
 }
 
 // Helper function to validate required user data

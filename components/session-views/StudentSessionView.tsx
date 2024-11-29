@@ -20,7 +20,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import FileProcessorTest from '@/components/FileProcessorTest'
+import FileProcessorTest from './FileProcessorTest'
+import { handleTaskCompletion } from './helpers'
 
 interface StudentSessionViewProps {
   classroomId: string
@@ -241,12 +242,24 @@ export function StudentSessionView({
       }
 
       // If we get here, all tests passed
-      const userRef = doc(fireStore, 'users', user.uid)
-      await updateDoc(userRef, {
-        solvedProblems: arrayUnion(currentProblem.id),
-      })
+      // const userRef = doc(fireStore, 'users', user.uid)
+      // await updateDoc(userRef, {
+      //   solvedProblems: arrayUnion(currentProblem.id),
+      // })
 
-      setCompletedProblems((prev) => [...prev, currentProblem.id])
+      // setCompletedProblems((prev) => [...prev, currentProblem.id])
+
+      await handleTaskCompletion({
+        taskId: currentProblem.id,
+        userId: user.uid,
+        classroomId,
+        selectedWeek,
+        socket,
+        userName: user.displayName || undefined,
+        onUpdateCompletedProblems: (taskId) => {
+          setCompletedProblems((prev) => [...prev, taskId])
+        },
+      })
 
       toast({
         title: 'Success!',
@@ -376,6 +389,7 @@ export function StudentSessionView({
                 socket={socket}
                 userId={user!.uid}
                 classroomId={classroomId}
+                selectedWeek={selectedWeek!}
                 onProblemComplete={(problemId) => {
                   setCompletedProblems((prev) => [...prev, problemId])
                 }}
