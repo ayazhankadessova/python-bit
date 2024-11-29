@@ -3,7 +3,7 @@ import { Problem } from '../types/problem'
 const validateCode = (userCode: string): boolean => {
   try {
     const functionBodyMatch = userCode.match(
-      /def process_file\(filename\):\s*([\s\S]*)/
+      /def file_processor\(filename\):\s*([\s\S]*)/
     )
     if (!functionBodyMatch) throw new Error('Function definition not found')
     const functionBody = functionBodyMatch[1].trim()
@@ -34,11 +34,11 @@ export const fileProcessorHandler = (userCode: string): boolean => {
   return validateCode(userCode)
 }
 
-const starterCodePython = `def process_file(filename):
+const starterCodePython = `def file_processor(filename):
     # Read the file and count lines, words, and characters
     # Return a dictionary with the counts
     # Handle file not found and permission errors
-    # Example: process_file("sample.txt") returns {"lines": 3, "words": 10, "chars": 50}
+    # Example: file_processor("sample.txt") returns {"lines": 3, "words": 10, "chars": 50}
     pass`
 
 export const fileProcessorProblem: Problem = {
@@ -46,7 +46,7 @@ export const fileProcessorProblem: Problem = {
   title: '8. File Statistics Processor',
   problemStatement: `
     <p class='mt-3'>Let's work with files and create a file statistics processor!</p>
-    <p class='mt-3'>Write a function called <code>process_file</code> that:</p>
+    <p class='mt-3'>Write a function called <code>file_processor</code> that:</p>
     <ul class='mt-3'>
       <li>Takes a filename as input</li>
       <li>Reads the file and counts:
@@ -77,7 +77,7 @@ export const fileProcessorProblem: Problem = {
   testCases: [
     {
       input: '"sample.txt"',
-      expected: { lines: 2, words: 4, chars: 20 },
+      expected: { lines: 2, words: 4, chars: 25 },
     },
     {
       input: '"empty.txt"',
@@ -96,12 +96,12 @@ export const fileProcessorProblem: Problem = {
   `,
   starterCode: starterCodePython,
   handlerFunction: fileProcessorHandler,
-  starterFunctionName: 'process_file',
+  starterFunctionName: 'file_processor',
   order: 8,
 }
 
 // Solution:
-// def process_file(filename):
+// def file_processor(filename):
 //     try:
 //         with open(filename, 'r') as file:
 //             content = file.read()

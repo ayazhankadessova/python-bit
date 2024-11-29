@@ -96,7 +96,7 @@ export const wordCounterProblem: Problem = {
   order: 7,
 }
 
-// // Solution:
+// Solution:
 // def count_words(text):
 //     word_count = {}
 //     for word in text.lower().split():

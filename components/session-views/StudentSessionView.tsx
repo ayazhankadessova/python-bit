@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
+import FileProcessorTest from '@/components/FileProcessorTest'
 
 interface StudentSessionViewProps {
   classroomId: string
@@ -339,6 +340,13 @@ export function StudentSessionView({
                 )}
               </div>
             ))}
+          </div>
+        )}
+
+        {currentProblem?.id === 'file-processor' && (
+          <div className='mt-4'>
+            <h3 className='text-lg font-semibold mb-2'>Test Your Solution</h3>
+            <FileProcessorTest code={studentCode} />
           </div>
         )}
 
