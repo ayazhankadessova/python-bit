@@ -12,7 +12,7 @@ import { fireStore } from '@/firebase/firebase'
 import { Problem } from '@/utils/types/problem'
 import { problems } from '@/utils/problems'
 import { useToast } from '@/hooks/use-toast'
-import { Play, StopCircle, Bot } from 'lucide-react'
+import { Play, StopCircle, Bot, RefreshCw } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -273,6 +273,18 @@ export function StudentSessionView({
     }
   }
 
+  const handleUpdateCode = () => {
+    if (!socket || !user) return
+    socket.emit('code-update', {
+      code: studentCode,
+      studentId: user.uid,
+    })
+    toast({
+      title: 'Code Updated',
+      description: 'Your code has been updated for the teacher to see.',
+    })
+  }
+
   if (isLoading) return <div>Loading...</div>
 
   return (
@@ -324,31 +336,28 @@ export function StudentSessionView({
               </div>
             </>
           )}
-        </div>
 
-        {currentProblem?.examples && (
-          <div className='mt-4'>
-            <h3 className='text-lg font-semibold mb-2'>Examples</h3>
-            {currentProblem.examples.map((example) => (
-              <div key={example.id} className='bg-muted p-4 rounded-lg mb-2'>
-                <p>Input: {example.inputText}</p>
-                <p>Output: {example.outputText}</p>
-                {example.explanation && (
-                  <p className='text-sm text-muted-foreground mt-1'>
-                    {example.explanation}
-                  </p>
-                )}
+          {currentProblem?.examples &&
+            currentProblem.id !== 'file-processor' && (
+              <div className='mt-4'>
+                <h3 className='text-lg font-semibold mb-2'>Examples</h3>
+                {currentProblem.examples.map((example) => (
+                  <div
+                    key={example.id}
+                    className='bg-muted p-4 rounded-lg mb-2'
+                  >
+                    <p>Input: {example.inputText}</p>
+                    <p>Output: {example.outputText}</p>
+                    {example.explanation && (
+                      <p className='text-sm text-muted-foreground mt-1'>
+                        {example.explanation}
+                      </p>
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
-
-        {currentProblem?.id === 'file-processor' && (
-          <div className='mt-4'>
-            <h3 className='text-lg font-semibold mb-2'>Test Your Solution</h3>
-            <FileProcessorTest code={studentCode} />
-          </div>
-        )}
+            )}
+        </div>
 
         <div className='flex flex-col'>
           <CodeMirror
@@ -356,22 +365,31 @@ export function StudentSessionView({
             height='60%'
             theme={vscodeDark}
             extensions={[python()]}
-            onChange={(value) => {
-              setStudentCode(value)
-              socket?.emit('code-update', {
-                code: value,
-                studentId: user?.uid,
-              })
-            }}
+            onChange={(value) => setStudentCode(value)}
           />
 
-          <div className='h-40 p-4 bg-black text-white font-mono text-sm overflow-y-auto'>
-            <div className='flex items-center gap-2 mb-2'>
-              <div className='h-2 w-2 rounded-full bg-green-500' />
-              <span className='text-xs text-gray-400'>Output</span>
+          {currentProblem?.id === 'file-processor' ? (
+            <div className='mt-4'>
+              <h3 className='text-lg font-semibold mb-2'>Test Your Solution</h3>
+              <FileProcessorTest
+                code={studentCode}
+                socket={socket}
+                userId={user!.uid}
+                classroomId={classroomId}
+                onProblemComplete={(problemId) => {
+                  setCompletedProblems((prev) => [...prev, problemId])
+                }}
+              />
             </div>
-            <pre>{output || 'No output yet...'}</pre>
-          </div>
+          ) : (
+            <div className='h-40 p-4 bg-black text-white font-mono text-sm overflow-y-auto'>
+              <div className='flex items-center gap-2 mb-2'>
+                <div className='h-2 w-2 rounded-full bg-green-500' />
+                <span className='text-xs text-gray-400'>Output</span>
+              </div>
+              <pre>{output || 'No output yet...'}</pre>
+            </div>
+          )}
 
           <div className='p-4 border-t flex justify-between'>
             <div className='space-x-2'>
@@ -379,18 +397,28 @@ export function StudentSessionView({
                 <Bot className='mr-2 h-4 w-4' />
                 AI Help
               </Button>
-              <Button onClick={handleRunCode} disabled={isRunning}>
-                {isRunning ? (
-                  <StopCircle className='mr-2 h-4 w-4' />
-                ) : (
-                  <Play className='mr-2 h-4 w-4' />
-                )}
-                {isRunning ? 'Running...' : 'Run Code'}
+
+              <Button onClick={handleUpdateCode}>
+                <RefreshCw className='mr-2 h-4 w-4' />
+                Update Code
               </Button>
+
+              {currentProblem?.id !== 'file-processor' && (
+                <>
+                  <Button onClick={handleRunCode} disabled={isRunning}>
+                    {isRunning ? (
+                      <StopCircle className='mr-2 h-4 w-4' />
+                    ) : (
+                      <Play className='mr-2 h-4 w-4' />
+                    )}
+                    {isRunning ? 'Running...' : 'Run Code'}
+                  </Button>
+                  <Button onClick={handleSubmitCode} disabled={isRunning}>
+                    Submit Solution
+                  </Button>
+                </>
+              )}
             </div>
-            <Button onClick={handleSubmitCode} disabled={isRunning}>
-              Submit Solution
-            </Button>
           </div>
         </div>
       </Split>
