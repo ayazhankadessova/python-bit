@@ -77,7 +77,7 @@ export async function GET(req: Request) {
   const result = await unstable_cache(
     async () => _fetchClassroomData(userId),
     [cacheKey],
-    { revalidate: 30 } // Cache for 30 seconds
+    { revalidate: 600 } // Cache for 10 mins
   )()
 
   if (result.error) {
