@@ -376,19 +376,6 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
         setClassroom(classroomData)
 
         setUserRole(user?.role!)
-
-        // Update lastTaughtWeek for teachers
-        if (classroomData.teacherId === user.uid) {
-          // const currentWeek = Math.ceil(
-          //   (new Date().getTime() -
-          //     new Date(classroomData.).getTime()) /
-          //     (7 * 24 * 60 * 60 * 1000)
-          // )
-          await updateDoc(classroomRef, {
-            lastTaughtWeek: 1,
-            isActive: true,
-          })
-        }
       } catch (error) {
         console.error('Error fetching classroom:', error)
         setError('Failed to load classroom data')

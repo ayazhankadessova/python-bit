@@ -22,20 +22,3 @@ export function SessionView(props: SessionViewProps) {
     <StudentSessionView {...props} />
   )
 }
-
-// types.ts
-export interface WeeklyProgress {
-  taskCompletions: {
-    [taskId: string]: string[] // Array of user IDs who completed the task
-  }
-  activeSession?: boolean
-  lastUpdated?: string
-}
-
-export interface Student {
-  id: string
-  displayName: string
-  email: string
-  currentCode?: string
-  solvedProblems?: string[]
-}

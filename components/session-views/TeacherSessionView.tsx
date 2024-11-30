@@ -10,7 +10,7 @@ import { python } from '@codemirror/lang-python'
 import { ShareLink } from '@/components/share-link'
 import { useToast } from '@/hooks/use-toast'
 import { Send, Play, StopCircle, RefreshCw } from 'lucide-react'
-import { WeekSelector } from './WeekSelector' // You'll need to extract this to a separate component
+import { WeekSelector } from './WeekSelector'
 import { fireStore } from '@/firebase/firebase'
 import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore'
 import { Week } from '@/utils/types/firebase'
@@ -22,20 +22,17 @@ interface TeacherSessionViewProps {
   socket: Socket | null
 }
 
-interface Student {
-  id: string
-  displayName: string
-  email: string
-  currentCode?: string
-  solvedProblems?: string[]
-}
-
 interface WeeklyProgress {
   taskCompletions: {
     [taskId: string]: string[] // Array of user IDs who completed the task
   }
   activeSession?: boolean
   lastUpdated?: string
+}
+
+interface Student {
+  username: string
+  code: string
 }
 
 export function TeacherSessionView({
@@ -52,7 +49,6 @@ export function TeacherSessionView({
   const [isLoading, setIsLoading] = useState(true)
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null)
   const [weekProblems, setWeekProblems] = useState<string[]>([])
-  const [isWeekSelectionOpen, setIsWeekSelectionOpen] = useState(false)
   const [totalWeeks, setTotalWeeks] = useState(0)
   const [weeklyProgress, setWeeklyProgress] = useState<WeeklyProgress | null>(
     null
@@ -63,9 +59,7 @@ export function TeacherSessionView({
   const joinedRoom = useRef(false)
   const inviteLink = `${process.env.NEXT_PUBLIC_BASE_URL}/join/${classroomId}`
 
-  const updateWeekProblems = async () => {
-    if (!selectedWeek) return
-
+  const updateWeekProblems = async (weekNumber: number) => {
     try {
       const classroomRef = doc(fireStore, 'classrooms', classroomId)
       const classroomDoc = await getDoc(classroomRef)
@@ -82,7 +76,7 @@ export function TeacherSessionView({
         if (curriculumDoc.exists()) {
           const curriculumData = curriculumDoc.data()
           const weekData = curriculumData.weeks.find(
-            (w: Week) => w.weekNumber === selectedWeek
+            (w: Week) => w.weekNumber === weekNumber
           )
 
           if (weekData) {
@@ -105,20 +99,20 @@ export function TeacherSessionView({
     }
   }
 
-  const handleStartWeek = async () => {
-    if (!selectedWeek || !user) return
+  const handleStartWeek = async (weekNumber: number) => {
+    if (!user) return
 
     try {
       const classroomRef = doc(fireStore, 'classrooms', classroomId)
       await updateDoc(classroomRef, {
-        lastTaughtWeek: selectedWeek,
+        lastTaughtWeek: weekNumber, // Use the passed week number
         activeSession: true,
       })
 
       const weeklyProgressRef = doc(
         fireStore,
         'weeklyProgress',
-        `${classroomId}-${selectedWeek}`
+        `${classroomId}-${weekNumber}` // Use the passed week number
       )
       await setDoc(
         weeklyProgressRef,
@@ -130,12 +124,11 @@ export function TeacherSessionView({
         { merge: true }
       )
 
-      await updateWeekProblems()
+      await updateWeekProblems(weekNumber)
 
-      setIsWeekSelectionOpen(false)
       toast({
         title: 'Week Started',
-        description: `Week ${selectedWeek} started successfully.`,
+        description: `Week ${weekNumber} started successfully.`,
       })
     } catch (error) {
       console.error('Error starting week:', error)
@@ -147,21 +140,121 @@ export function TeacherSessionView({
     }
   }
 
-  const handleRunCode = () => {
-    if (!socket) return
-    setIsRunning(true)
-    setOutput('')
-    socket.emit('execute-code', {
-      code: teacherCode,
-      language: 'python',
-    })
+  const handleStudentSelect = (student: Student | null) => {
+    setSelectedStudent(student)
+    if (!student) {
+      setTeacherCode(currentProblem?.starterCode || '')
+    } else {
+      // Request the student's latest code
+      if (socket) {
+        socket.emit('get-student-code', classroomId, student.username)
+      }
+    }
   }
 
   const handleProblemSelect = (problemId: string) => {
     const problem = problems[problemId]
     setCurrentProblem(problem)
-    setTeacherCode(problem.starterCode)
+    // Only set starter code if no student is selected
+    if (!selectedStudent) {
+      setTeacherCode(problem.starterCode)
+    }
   }
+
+  const handleRunCode = async () => {
+    if (!currentProblem || !teacherCode) return
+
+    setIsRunning(true)
+    setOutput('')
+
+    try {
+      const response = await fetch('/api/execute-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: teacherCode,
+          functionName: currentProblem.starterFunctionName,
+          input: currentProblem.examples[0].inputText,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setOutput(result.output)
+      } else {
+        setOutput(`Error: ${result.error}`)
+      }
+    } catch (error) {
+      setOutput(
+        `Error: ${
+          error instanceof Error ? error.message : 'An unknown error occurred'
+        }`
+      )
+    } finally {
+      setIsRunning(false)
+    }
+  }
+
+  const refreshProgress = async () => {
+    if (!selectedWeek) return
+
+    setIsRefreshing(true)
+    try {
+      const weeklyProgressRef = doc(
+        fireStore,
+        'weeklyProgress',
+        `${classroomId}-${selectedWeek}`
+      )
+      const weeklyProgressDoc = await getDoc(weeklyProgressRef)
+      if (weeklyProgressDoc.exists()) {
+        setWeeklyProgress(weeklyProgressDoc.data() as WeeklyProgress)
+      }
+    } catch (error) {
+      console.error('Error refreshing progress:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to refresh progress',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
+
+  const handleSendCode = () => {
+    if (!socket) return
+
+    if (selectedStudent) {
+      socket.emit('send-code-to-student', {
+        classroomId,
+        studentUsername: selectedStudent.username,
+        code: teacherCode,
+      })
+      toast({
+        title: 'Code Sent',
+        description: `Code sent to ${selectedStudent.username}`,
+      })
+    } else {
+      socket.emit('send-code-to-all', {
+        classroomId,
+        code: teacherCode,
+      })
+      toast({
+        title: 'Code Broadcast',
+        description: 'Code sent to all students',
+      })
+    }
+  }
+
+  useEffect(() => {
+    console.log('Socket connection status:', {
+      socketExists: !!socket,
+      userDisplayName: user?.displayName,
+      classroomId,
+      joinedRoom: joinedRoom.current,
+    })
+  }, [socket, user?.displayName, classroomId])
 
   // Initial data fetch
   useEffect(() => {
@@ -218,97 +311,49 @@ export function TeacherSessionView({
 
     fetchData()
   }, [classroomId, toast])
+
   // Socket event handlers
   useEffect(() => {
-    if (!socket || !user) return
+    if (!socket || !user?.displayName) {
+      console.log('Missing dependencies:', {
+        socket: !!socket,
+        userDisplayName: user?.displayName,
+      })
+      return
+    }
+
+    console.log('Setting up socket event listeners')
 
     if (!joinedRoom.current) {
+      console.log('Joining room:', classroomId)
       socket.emit('join-room', classroomId, user.displayName, true)
       joinedRoom.current = true
     }
 
-    socket.on(
-      'update-participants',
-      (data: { teacher: string | null; students: Student[] }) => {
-        setStudents(data.students)
-      }
-    )
-
-    socket.on(
-      'student-code-update',
-      (data: { studentId: string; code: string }) => {
-        setStudents((prev) =>
-          prev.map((s) =>
-            s.id === data.studentId ? { ...s, currentCode: data.code } : s
-          )
-        )
-      }
-    )
-
-    socket.on('execution-output', (data: { output: string }) => {
-      setOutput((prev) => prev + data.output)
+    socket.on('update-participants', (data) => {
+      console.log('Received update-participants:', data)
+      setStudents(data.students)
     })
 
-    socket.on('execution-complete', () => {
-      setIsRunning(false)
+    // Add new listener for student code response
+    socket.on('student-code', (data) => {
+      console.log('Received student code:', data)
+      setTeacherCode(data.code)
+      setStudents((prev) =>
+        prev.map((s) =>
+          s.username === data.username ? { ...s, code: data.code } : s
+        )
+      )
     })
 
     return () => {
+      console.log('Cleaning up socket event listeners')
       socket.off('update-participants')
-      socket.off('student-code-update')
-      socket.off('execution-output')
-      socket.off('execution-complete')
+      socket.off('student-code')
     }
-  }, [socket, user, classroomId])
+  }, [socket, user?.displayName, classroomId])
 
-  const refreshProgress = async () => {
-    if (!selectedWeek) return
-
-    setIsRefreshing(true)
-    try {
-      const weeklyProgressRef = doc(
-        fireStore,
-        'weeklyProgress',
-        `${classroomId}-${selectedWeek}`
-      )
-      const weeklyProgressDoc = await getDoc(weeklyProgressRef)
-      if (weeklyProgressDoc.exists()) {
-        setWeeklyProgress(weeklyProgressDoc.data() as WeeklyProgress)
-      }
-    } catch (error) {
-      console.error('Error refreshing progress:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to refresh progress',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsRefreshing(false)
-    }
-  }
-
-  const handleSendCode = () => {
-    if (!socket) return
-
-    if (selectedStudent) {
-      socket.emit('send-code', {
-        studentId: selectedStudent.id,
-        code: teacherCode,
-      })
-      toast({
-        title: 'Code Sent',
-        description: `Code sent to ${selectedStudent.displayName}`,
-      })
-    } else {
-      socket.emit('broadcast-code', {
-        code: teacherCode,
-      })
-      toast({
-        title: 'Code Broadcast',
-        description: 'Code sent to all students',
-      })
-    }
-  }
+  if (isLoading) return <div>Loading...</div>
 
   return (
     <div className='h-screen flex'>
@@ -327,23 +372,30 @@ export function TeacherSessionView({
             totalWeeks={totalWeeks}
             onSelectWeek={(weekNumber) => {
               setSelectedWeek(weekNumber)
-              handleStartWeek()
+              handleStartWeek(weekNumber)
             }}
           />
           <div className='space-y-2'>
             <h3 className='font-semibold'>Connected Students</h3>
             {students.map((student) => (
               <Card
-                key={student.id}
+                key={student.username}
                 className={`cursor-pointer hover:bg-accent ${
-                  selectedStudent?.id === student.id ? 'border-primary' : ''
+                  selectedStudent?.username === student.username
+                    ? 'border-primary'
+                    : ''
                 }`}
-                onClick={() => setSelectedStudent(student)}
+                onClick={() => {
+                  // If clicking the same student, deselect them
+                  if (selectedStudent?.username === student.username) {
+                    handleStudentSelect(null)
+                  } else {
+                    handleStudentSelect(student)
+                  }
+                }}
               >
                 <CardHeader>
-                  <CardTitle className='text-sm'>
-                    {student.displayName}
-                  </CardTitle>
+                  <CardTitle className='text-sm'>{student.username}</CardTitle>
                 </CardHeader>
               </Card>
             ))}
@@ -391,16 +443,11 @@ export function TeacherSessionView({
 
           <div className='flex flex-col gap-4'>
             <CodeMirror
-              value={
-                selectedStudent
-                  ? selectedStudent.currentCode || ''
-                  : teacherCode
-              }
+              value={selectedStudent ? selectedStudent.code || '' : teacherCode}
               height='300px'
               theme={vscodeDark}
               extensions={[python()]}
               onChange={setTeacherCode}
-              readOnly={selectedStudent !== null}
             />
 
             <div className='flex justify-between items-center'>
@@ -416,7 +463,7 @@ export function TeacherSessionView({
                 <Button variant='outline' onClick={handleSendCode}>
                   <Send className='mr-2' />
                   {selectedStudent
-                    ? `Send to ${selectedStudent.displayName}`
+                    ? `Send to ${selectedStudent.username}`
                     : 'Send to All'}
                 </Button>
               </div>

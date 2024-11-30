@@ -33,6 +33,21 @@ export interface User {
   createdAt: number
 }
 
+export interface Student {
+  uid: string
+  email: string
+  displayName: string
+  role: 'student' | 'teacher'
+  school: string
+  solvedProblems: string[]
+  classrooms: string[]
+  likedProblems: string[]
+  dislikedProblems: string[]
+  starredProblems: string[]
+  createdAt: number
+  code: string
+}
+
 // Helper function to validate required user data
 export function isValidUserData(data: any): data is FirebaseUserData {
   return (

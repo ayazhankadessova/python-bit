@@ -210,17 +210,23 @@ Backend:
 - [ ] add student progress for every student!
 - [ ] Sessiom view -> every task will go to another link -> new view
 
-## Nov 28
+## Nov 29
 
+- [x] FileProcessor running -> when it's running no need for run code / submit code [special case]
+- [x] add task completions to weeklyProgress
+- [ ] cant send code -> socket actually not seeing anything
+- [ ] more firebase operations under `/api`
+- [ ] cant see names of connected students
+- [ ] when i select week tasks dont get updated
+- [ ] Work on Week 5
 - [ ] Teacher dashboard & student dashboard -> many overlap
 - [ ] Student classrooms & teacher classrooms -> many overlap
 - [ ] dont update code card after the test casses are passed
 - [ ] Show which test cases are we running -> students can choose which test cases they want to run
 - [ ] add progress for teacher
 - [ ] week selection -> save
-- [ ] add task completings to weeklyProgress
 - [ ] fix topics
-      ##background-position
+- [ ]
 
 - [ ] UseAuth must be used within AuthProvider after login
 
@@ -294,6 +300,21 @@ Week 3:
 Lists and loops
 Basic data processing
 
+Week 4:
+
+Dictionaries
+File handling
+
+Week 5:
+
+Functions with multiple parameters
+Error handling
+
+Week 6:
+
+Simple classes
+Final project
+
 List Average Calculator:
 
 List operations
@@ -310,17 +331,31 @@ Comparison operators
 List comprehension (as an optional advanced approach)
 Maintaining order
 
-Week 4:
+## Socket connections
 
-Dictionaries
-File handling
+#### Server.js ON
 
-Week 5:
+1. `socket.on('join-room', async (classroomId, username, isTeacher)`
 
-Functions with multiple parameters
-Error handling
+- Check and emit session status
 
-Week 6:
+```
+// Check and emit session status
+const sessionActive = activeSessions.has(classroomId)
 
-Simple classes
-Final project
+socket.emit('session-status', {
+active: isTeacher || sessionActive,
+message: sessionActive
+? 'Session is active'
+: 'No active session found',
+})
+```
+
+- If student and no active session, reject.
+- Otherwise, add student/teacher, update classroom state
+
+```
+[CLASSROOM STATE] 0UN-CBrCHOQflY7yJnG9v: { teacher: 'nargiz', studentCount: 1, students: [ 'dareka' ] }
+```
+
+2.

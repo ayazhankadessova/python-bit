@@ -43,9 +43,8 @@ export function WeekSelector({
       <Button onClick={() => setIsOpen(true)}>
         Week {selectedWeek || 'Not Selected'}
       </Button>
-
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent>
+        <DialogContent className='bg-white dark:bg-gray-800'>
           <DialogHeader>
             <DialogTitle>Select Week</DialogTitle>
             <DialogDescription>Choose which week to teach</DialogDescription>

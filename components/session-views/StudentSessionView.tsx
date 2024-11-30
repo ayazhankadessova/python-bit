@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
@@ -44,6 +44,7 @@ export function StudentSessionView({
   const [weekProblems, setWeekProblems] = useState<string[]>([])
   const [isAiHelpOpen, setIsAiHelpOpen] = useState(false)
   const [output, setOutput] = useState('')
+  const joinedRoom = useRef(false)
   const [isRunning, setIsRunning] = useState(false)
   const [testResults, setTestResults] = useState<
     {
@@ -123,40 +124,19 @@ export function StudentSessionView({
     fetchData()
   }, [classroomId, user, toast, onEndSession])
 
+  // Socket event handlers
   useEffect(() => {
-    if (!socket || !user) return
+    if (!socket || !user?.displayName) return
 
-    socket.on('teacher-code', (code: string) => {
-      setStudentCode(code)
-    })
+    // Only join room if we haven't already
+    if (!joinedRoom.current) {
+      console.log('Joining room for first time')
+      socket.emit('join-room', classroomId, user.displayName, false)
+      joinedRoom.current = true
+    }
 
-    socket.on(
-      'execution-output',
-      (data: { output: string; isTest?: boolean }) => {
-        if (data.isTest) {
-          // Handle test case output
-          const result = parseFloat(data.output.trim())
-          const expectedOutput = parseFloat(
-            currentProblem?.examples[0].outputText || ''
-          )
-
-          setTestResults((prev) => [
-            ...prev,
-            {
-              passed: result === expectedOutput,
-              message: `Expected ${expectedOutput}, got ${result}`,
-            },
-          ])
-        } else {
-          setOutput((prev) => prev + data.output)
-        }
-        setIsRunning(false)
-      }
-    )
-
-    socket.on('execution-error', (data: { error: string }) => {
-      setOutput((prev) => prev + `Error: ${data.error}\n`)
-      setIsRunning(false)
+    socket.on('teacher-code', (data: { code: string }) => {
+      setStudentCode(data.code)
     })
 
     socket.on('session-ended', () => {
@@ -169,11 +149,9 @@ export function StudentSessionView({
 
     return () => {
       socket.off('teacher-code')
-      socket.off('execution-output')
-      socket.off('execution-error')
       socket.off('session-ended')
     }
-  }, [socket, user, currentProblem, toast, onEndSession])
+  }, [socket, user?.displayName, classroomId, toast, onEndSession])
 
   const handleRunCode = async () => {
     if (!currentProblem || !studentCode) return
@@ -279,11 +257,14 @@ export function StudentSessionView({
   }
 
   const handleUpdateCode = () => {
-    if (!socket || !user) return
+    if (!socket || !user?.displayName) return
+
     socket.emit('code-update', {
       code: studentCode,
-      studentId: user.uid,
+      username: user.displayName,
+      classroomId,
     })
+
     toast({
       title: 'Code Updated',
       description: 'Your code has been updated for the teacher to see.',

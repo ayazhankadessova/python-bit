@@ -1,5 +1,4 @@
 // server.js
-
 import express from 'express'
 import next from 'next'
 import { createServer } from 'http'
@@ -8,7 +7,6 @@ import { Server as SocketIOServer } from 'socket.io'
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
-const runningProcesses = new Map()
 
 app.prepare().then(async () => {
   const server = express()
@@ -19,14 +17,17 @@ app.prepare().then(async () => {
   const activeSessions = new Set()
 
   io.on('connection', (socket) => {
-    console.log('Client connected')
+    console.log('[CONNECTION] Client connected with socket ID:', socket.id)
 
-    // server.js - modify the join-room handler
     socket.on('join-room', async (classroomId, username, isTeacher) => {
-      console.log(`User ${username} attempting to join room ${classroomId}`)
+      console.log(
+        `[JOIN] User ${username} (${
+          socket.id
+        }) joining room ${classroomId} as ${isTeacher ? 'teacher' : 'student'}`
+      )
 
       try {
-        // Immediately check and emit session status
+        // Check and emit session status
         const sessionActive = activeSessions.has(classroomId)
         socket.emit('session-status', {
           active: isTeacher || sessionActive,
@@ -38,15 +39,23 @@ app.prepare().then(async () => {
         // If student and no active session, return early
         if (!isTeacher && !sessionActive) {
           console.log(
-            `Student ${username} attempted to join inactive session ${classroomId}`
+            `[REJECTED] Student ${username} attempted to join inactive session ${classroomId}`
           )
           return
         }
 
-        // Continue with room joining logic
+        // Join the main classroom room
         socket.join(classroomId)
+        socket.username = username
 
+        // If teacher, also join a teacher-specific room
+        if (isTeacher) {
+          socket.join(`${classroomId}-teacher`)
+        }
+
+        // Initialize classroom if needed
         if (!classrooms.has(classroomId)) {
+          console.log(`[NEW CLASSROOM] Creating classroom ${classroomId}`)
           classrooms.set(classroomId, {
             students: new Map(),
             teacher: null,
@@ -56,168 +65,180 @@ app.prepare().then(async () => {
         const classroom = classrooms.get(classroomId)
 
         if (isTeacher) {
+          console.log(
+            `[TEACHER] ${username} registered as teacher for ${classroomId}`
+          )
           classroom.teacher = username
           activeSessions.add(classroomId)
-          console.log(
-            `Teacher ${username} created/joined session for ${classroomId}`
-          )
         } else {
+          console.log(
+            `[STUDENT] Adding ${username} to classroom ${classroomId}`
+          )
           classroom.students.set(username, {
             username: username,
             code: '',
+            socketId: socket.id,
           })
-          console.log(
-            `Student ${username} joined active session ${classroomId}`
-          )
         }
 
-        // Emit updated participants
-        io.to(classroomId).emit('update-participants', {
+        // Log current classroom state
+        console.log(`[CLASSROOM STATE] ${classroomId}:`, {
+          teacher: classroom.teacher,
+          studentCount: classroom.students.size,
+          students: Array.from(classroom.students.keys()),
+        })
+
+        // Send update only to teachers using the teacher-specific room
+        io.to(`${classroomId}-teacher`).emit('update-participants', {
           teacher: classroom.teacher,
           students: Array.from(classroom.students.values()),
         })
       } catch (error) {
-        console.error('Error in join-room:', error)
+        console.error('[ERROR] Error in join-room:', error)
         socket.emit('error', 'Failed to join classroom')
       }
     })
 
     socket.on('leave-room', (classroomId, username) => {
+      console.log(`[LEAVE] User ${username} leaving room ${classroomId}`)
       handleLeaveRoom(socket, classroomId, username)
     })
 
-    socket.on('execute-code', async ({ id, code, classroomId, username }) => {
+    socket.on('code-update', (data) => {
+      const { code, username, classroomId } = data
       console.log(
-        `Executing code for ${username} in classroom ${classroomId}:`,
-        code
+        `[CODE UPDATE] Student ${username} updating code in ${classroomId}`
       )
-      executeCode(id, code, classroomId, username, socket, false)
-    })
 
-    socket.on('update-code', (classroomId, username, code) => {
-      console.log(`Updating code for ${username} in classroom ${classroomId}`)
       if (classrooms.has(classroomId)) {
         const classroom = classrooms.get(classroomId)
-        const student = classroom.students.get(username)
-        if (student) {
-          // Update the stored code
-          student.code = code
-
-          // Log the update for debugging
-          console.log(`Updated student data for ${username}:`, student)
-          console.log(`Current code for ${username}:`, student.code)
-
-          io.to(classroomId).emit('student-code', {
-            username: username,
-            code: code,
-          })
+        if (classroom.students.has(username)) {
+          classroom.students.get(username).code = code
+          // io.to(classroomId).emit('student-code-updated', {
+          //   username,
+          //   code,
+          // })
+          console.log(`[CODE UPDATE SUCCESS] Code updated for ${username}`)
         } else {
-          console.log(
-            `Student ${username} not found in classroom ${classroomId}`
-          )
+          console.log(`[ERROR] Student ${username} not found in classroom`)
         }
       } else {
-        console.log(`Classroom ${classroomId} not found`)
+        console.log(`[ERROR] Classroom ${classroomId} not found`)
       }
     })
 
-    // New event for sending code to all students
-    socket.on('send-code-to-all', (classroomId, code) => {
-      console.log(`Sending code to all students in classroom ${classroomId}`)
-      if (classrooms.has(classroomId)) {
-        const classroom = classrooms.get(classroomId)
-        classroom.students.forEach((student, username) => {
-          student.code = code
-          console.log(
-            `Emitting student-code event for ${username} to room ${classroomId}`
-          )
-          io.to(classroomId).emit('student-code', {
-            username: username,
-            code: code,
-          })
+    socket.on('send-code-to-student', (data) => {
+      const { classroomId, studentUsername, code } = data
+      console.log(
+        `[SEND CODE] Request to send code to student ${studentUsername} in ${classroomId}`
+      )
+
+      if (!classrooms.has(classroomId)) {
+        console.error(`[ERROR] Classroom ${classroomId} not found`)
+        return
+      }
+
+      const classroom = classrooms.get(classroomId)
+      if (classroom.students.has(studentUsername)) {
+        classroom.students.get(studentUsername).code = code
+        io.to(classroomId).emit('teacher-code', {
+          studentUsername,
+          code,
         })
-        console.log(`Code sent to all students in classroom ${classroomId}`)
+        console.log(`[SEND SUCCESS] Code sent to ${studentUsername}`)
       } else {
-        console.log(`Classroom ${classroomId} not found`)
+        console.error(
+          `[ERROR] Student ${studentUsername} not found in classroom`
+        )
       }
     })
 
-    // New event for getting a specific student's code
+    socket.on('send-code-to-all', (data) => {
+      const { classroomId, code } = data
+      console.log(
+        `[BROADCAST] Broadcasting code to all students in ${classroomId}`
+      )
+
+      if (!classrooms.has(classroomId)) {
+        console.error(`[ERROR] Classroom ${classroomId} not found`)
+        return
+      }
+
+      const classroom = classrooms.get(classroomId)
+      classroom.students.forEach((student, username) => {
+        student.code = code
+        console.log(`[BROADCAST] Code set for student ${username}`)
+      })
+
+      io.to(classroomId).emit('teacher-code', { code })
+      console.log(
+        `[BROADCAST SUCCESS] Code sent to all students in ${classroomId}`
+      )
+    })
+
     socket.on('get-student-code', (classroomId, username) => {
       console.log(
-        `Getting code for student ${username} in classroom ${classroomId}`
+        `[GET CODE] Retrieving code for student ${username} in ${classroomId}`
       )
+
       if (classrooms.has(classroomId)) {
         const classroom = classrooms.get(classroomId)
         const student = classroom.students.get(username)
         if (student) {
-          // Log the current state for debugging
-          console.log(
-            `Current stored code for student ${username}:`,
-            student.code
-          )
-
-          // Emit the current code back to the requester
           socket.emit('student-code', {
-            username: username,
+            username,
             code: student.code,
           })
+          console.log(`[GET CODE SUCCESS] Code retrieved for ${username}`)
         } else {
-          console.log(
-            `Student ${username} not found in classroom ${classroomId}`
-          )
+          console.error(`[ERROR] Student ${username} not found`)
         }
       } else {
-        console.log(`Classroom ${classroomId} not found`)
-      }
-    })
-
-    socket.on('stop-execution', ({ id, classroomId, username }) => {
-      const process = runningProcesses.get(username)
-      if (process) {
-        process.kill()
-        runningProcesses.delete(username)
-        io.to(classroomId).emit('execution-complete', { id })
+        console.error(`[ERROR] Classroom ${classroomId} not found`)
       }
     })
 
     socket.on('end-session', (classroomId) => {
+      console.log(`[END SESSION] Ending session for classroom ${classroomId}`)
       if (classrooms.has(classroomId)) {
-        console.log(`Ending session for classroom ${classroomId}`)
-
-        // Remove from active sessions
         activeSessions.delete(classroomId)
-
-        // Notify all clients
         io.to(classroomId).emit('session-ended')
-
-        // Disconnect all sockets in the room
         io.in(classroomId).disconnectSockets(true)
-
-        // Clean up classroom data
         classrooms.delete(classroomId)
+        console.log(`[END SESSION SUCCESS] Session ended for ${classroomId}`)
       }
     })
 
     socket.on('disconnect', () => {
-      console.log('Client disconnected')
-      // Clear any stored state for this socket
-      socket.rooms.forEach((room) => {
-        handleLeaveRoom(socket, room, socket.username)
+      console.log(
+        `[DISCONNECT] Client ${socket.id} (${
+          socket.username || 'unknown'
+        }) disconnected`
+      )
+      classrooms.forEach((classroom, classroomId) => {
+        handleLeaveRoom(socket, classroomId, socket.username)
       })
     })
   })
 
   function handleLeaveRoom(socket, classroomId, username) {
+    console.log(
+      `[LEAVE ROOM] Handling leave room for ${username} in ${classroomId}`
+    )
     socket.leave(classroomId)
+
     if (classrooms.has(classroomId)) {
       const classroom = classrooms.get(classroomId)
       if (classroom.teacher === username) {
+        console.log(`[LEAVE ROOM] Teacher ${username} left ${classroomId}`)
         classroom.teacher = null
       } else {
+        console.log(`[LEAVE ROOM] Student ${username} left ${classroomId}`)
         classroom.students.delete(username)
       }
+
       if (classroom.students.size === 0 && !classroom.teacher) {
+        console.log(`[CLEANUP] Removing empty classroom ${classroomId}`)
         classrooms.delete(classroomId)
       } else {
         io.to(classroomId).emit('participant-left', username)
@@ -229,16 +250,12 @@ app.prepare().then(async () => {
     }
   }
 
-  global.updateStudentProgress = (classroomId, username, taskId) => {
-    io.to(classroomId).emit('student-progress-updated', { username, taskId })
-  }
-
   server.all('*', (req, res) => {
     return handle(req, res)
   })
 
   const PORT = process.env.PORT || 3000
   httpServer.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`)
+    console.log(`[SERVER] Running on http://localhost:${PORT}`)
   })
 })
