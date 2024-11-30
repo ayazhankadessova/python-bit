@@ -220,25 +220,27 @@ Backend:
 
 ## Nov 30
 
+### Easy
+
 - [ ] more firebase operations under `/api`
+- [ ] Dashboard cache
+- [x] Classrooms page cache
+- [ ] Explore page is just list of all problems
+- [ ] lesson progress card -> firestore
+- [x] no need to store both username and code of students , just store the usernames
+- [x] Teacher dashboard & student dashboard -> many overlap
+- [x] Student classrooms & teacher classrooms -> many overlap
+
+### Medium
+
 - [ ] Work on Week 5
-- [ ] no need to store both username and code of students , just store the usernames
-- [ ] Teacher dashboard & student dashboard -> many overlap
-- [ ] Student classrooms & teacher classrooms -> many overlap
 - [ ] dont refresh code card after the test casses are passed
 - [ ] Show which test cases are we running -> students can choose which test cases they want to run
 - [ ] Make progress bar better
 - [ ] fix topics
-
 - [ ] UseAuth must be used within AuthProvider after login
 
-## Nov 26 addtnl
-
-- [ ] remove so many router pusher like why so many ahahha
-      What to ask?
-
-- [ ] Do i need to save submissions?
-- [ ] Do we need starter code?
+## Feedback
 
 Consider implementing a caching mechanism for the classroom and curriculum data to reduce unnecessary API calls.
 If possible, combine the classroom and curriculum data into a single API call to reduce the number of requests.
@@ -246,10 +248,6 @@ Implement error boundaries to handle errors more gracefully at a higher level in
 Use a library like React Query or SWR for better management of asynchronous state and caching.
 
 refresh shows progress
-
-[x] checkout all the types
-[ ] check out weekly progress
-[ ] assoc week with weekly report
 
 - [ ] queuing system to execute code
 - [ ] save as files

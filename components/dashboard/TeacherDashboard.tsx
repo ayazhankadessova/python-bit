@@ -1,18 +1,13 @@
 'use client'
-import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { doc, getDoc } from 'firebase/firestore'
-import { fireStore } from '@/firebase/firebase'
-import { Loader2, Book, Users, Trophy } from 'lucide-react'
-import { ClassroomTC } from '@/utils/types/firebase'
+import { Book, Users, Trophy } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
-import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { ClassroomList } from '@/components/dashboard/ClassroomList'
+import { useTeacherClassrooms } from '@/hooks/useTeacherClassrooms'
 
 interface TeacherDashboardProps {
   onSignOut: () => void
@@ -21,105 +16,30 @@ interface TeacherDashboardProps {
 export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
   const router = useRouter()
   const { user } = useAuth()
-  const { toast } = useToast()
-  const [classrooms, setClassrooms] = useState<ClassroomTC[]>([])
-  const [loading, setLoading] = useState(true)
+  const { classrooms, isLoading, error, mutate } = useTeacherClassrooms(
+    user!.uid
+  )
   const activeClassrooms = classrooms.filter((c) => c.activeSession)
   const totalStudents = classrooms.reduce(
     (acc, classroom) => acc + (classroom.students?.length || 0),
     0
   )
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user) {
-        setLoading(false)
-        return
-      }
-
-      // Moved the early return check up
-      if (
-        !user.classrooms ||
-        !Array.isArray(user.classrooms) ||
-        user.classrooms.length === 0
-      ) {
-        setClassrooms([])
-        setLoading(false)
-        return
-      }
-
-      try {
-        const classroomsData = await Promise.all(
-          user.classrooms.map(async (classroomId) => {
-            try {
-              const classroomDoc = await getDoc(
-                doc(fireStore, 'classrooms', classroomId)
-              )
-              if (!classroomDoc.exists()) return null
-
-              const classroomData = classroomDoc.data()
-
-              // Check for teacher ID match
-              if (
-                !classroomData?.teacherId ||
-                classroomData.teacherId !== user.uid
-              ) {
-                return null
-              }
-
-              let curriculumData = undefined
-
-              if (classroomData.curriculumId) {
-                try {
-                  const curriculumDoc = await getDoc(
-                    doc(fireStore, 'curricula', classroomData.curriculumId)
-                  )
-                  if (curriculumDoc.exists()) {
-                    curriculumData = curriculumDoc.data()
-                  }
-                } catch (error) {
-                  console.error('Error fetching curriculum:', error)
-                }
-              }
-
-              return {
-                id: classroomDoc.id,
-                ...classroomData,
-                curriculum: curriculumData,
-              } as ClassroomTC
-            } catch (error) {
-              console.error(`Error fetching classroom ${classroomId}:`, error)
-              return null
-            }
-          })
-        )
-
-        const validClassrooms = classroomsData.filter(
-          (c): c is ClassroomTC => c !== null
-        )
-        setClassrooms(validClassrooms)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-        toast({
-          title: 'Error',
-          description: 'Failed to load classroom data',
-          variant: 'destructive',
-        })
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [user, toast]) // Removed user.uid from dependencies
-
   // Early return if loading
-  if (loading) return <LoadingSpinner />
+  if (isLoading) return <LoadingSpinner />
 
   // Early return if no user
   if (!user) {
     router.push('/')
     return null
+  }
+
+  if (error) {
+    return (
+      <div className='text-center py-10'>
+        <p className='text-destructive'>Failed to load Dashboard</p>
+      </div>
+    )
   }
 
   return (

@@ -25,8 +25,7 @@ interface TeacherClassroomsViewProps {
   user: User
 }
 
-// components/classrooms/TeacherClassroomsView.tsx
-export function TeacherClassroomsView({ user }: { user: User }) {
+export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
   const { classrooms, isLoading, error } = useTeacherClassrooms(user.uid)
   const { startLesson, isStarting } = useStartLesson()
   const [searchTerm, setSearchTerm] = useState('')
