@@ -1,33 +1,180 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PythonBit: Interactive Python Learning Platform with micro:bit
 
-## Getting Started
+A real-time interactive coding platform that bridges block-based programming to text with Python and micro:bit, designed for students in grades 5-7.
 
-First, run the development server:
+## 🌟 Features
+
+- **Real-time Collaboration**
+
+  - Live code sharing between teachers and students
+  - Real-time code execution and feedback
+  - Virtual classroom environment
+
+- **Curriculum Management**
+
+  - Structured weekly learning modules
+  - Progressive difficulty levels
+  - Integrated micro:bit activities
+
+- **Interactive Learning**
+
+  - Code editor with syntax highlighting
+  - Real-time test case validation
+  - AI-assisted learning support
+
+- **Progress Tracking**
+  - Student progress monitoring
+  - Task completion tracking
+  - Weekly performance analytics
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js 14, React
+- **UI Components**: shadcn/ui
+- **State Management**: Context API
+- **Backend**: Firebase
+  - Authentication
+  - Firestore Database
+  - Real-time updates
+- **Real-time Communication**: Socket.IO
+- **Code Editor**: CodeMirror
+- **Styling**: TailwindCSS
+
+## 🏗 Architecture
+
+### Database Structure (Firestore)
+
+```
+├── users/
+│   └── userId/
+│       ├── displayName
+│       ├── email
+│       ├── role
+│       └── solvedProblems[]
+│
+├── classrooms/
+│   └── classroomId/
+│       ├── teacherId
+│       ├── name
+│       ├── curriculumId
+│       ├── activeSession
+│       └── lastTaughtWeek
+│
+├── curricula/
+│   └── curriculumId/
+│       └── weeks[]/
+│           ├── weekNumber
+│           └── assignmentIds[]
+│
+└── weeklyProgress/
+    └── ${classroomId}-${weekNumber}/
+        ├── activeSession
+        ├── lastUpdated
+        └── taskCompletions/
+            └── taskId/
+                └── completedBy[]
+```
+
+### Real-time Features
+
+- Socket.IO events handling:
+  - Join/leave classroom sessions
+  - Code sharing and updates
+  - Task completion notifications
+  - Student progress updates
+
+## 🚀 Getting Started
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/python-bit.git
+cd python-bit
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up environment variables:
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+NEXT_PUBLIC_BASE_URL=
+```
+
+4. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📱 Components
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Core Components
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `TeacherSessionView`: Manages the teacher's view of the virtual classroom
+- `StudentSessionView`: Handles the student's learning interface
+- `WeekSelector`: Controls curriculum week navigation
+- `FileProcessorTest`: Manages code execution and testing
 
-## Learn More
+### Authentication
 
-To learn more about Next.js, take a look at the following resources:
+- Context-based authentication system
+- Role-based access control
+- Protected routes and sessions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔄 Current Development Status
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Completed Features
+
+- [x] User authentication system
+- [x] Real-time code sharing
+- [x] Basic curriculum structure
+- [x] Task completion tracking
+- [x] Live session management
+
+### In Progress
+
+- [ ] AI assistance integration
+- [ ] Enhanced test case management
+- [ ] micro:bit hardware integration
+- [ ] Extended curriculum content
+
+## 🌐 Future Enhancements
+
+1. **Performance Optimization**
+
+   - Implement caching mechanisms
+   - Optimize database queries
+   - Reduce unnecessary API calls
+
+2. **Feature Additions**
+
+   - Advanced AI code assistance
+   - Extended micro:bit integration
+   - Enhanced progress visualization
+   - Comprehensive test suite
+
+3. **UI/UX Improvements**
+   - Responsive design enhancements
+   - Accessibility improvements
+   - Dark/light theme toggle
+
+## 📄 License
+
+[MIT License](LICENSE)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## Deploy on Vercel
 
@@ -35,198 +182,123 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## Sep 18
+# Development Log
 
-- add shadcn/ui
-- Create teacher page and connect to mongodb
+## Project Timeline
 
-- i will create classrom (2) and user collection (5)
-- i will create page.tsx
+### Phase 1: Initial Setup & Core Features (Sep 18-23)
 
-## Sep 19
+- ✅ Implemented shadcn/ui components
+- ✅ Created basic teacher/student pages
+- ✅ Set up MongoDB database structure
+- ✅ Implemented classroom session functionality
+- ✅ Added real-time code sharing features
+- ✅ Developed user management system
 
-1. [x] check what is in form
-2. [x] select from various programmes
-3. [x]Start Lesson
-4. how to select Programmes?
-5. How to store Weekly courses? -> mdx ?
-6. mobile nav
-7. [x]how to connect to socket?
-8. [] how to connect teachers and students to web socket?
+### Phase 2: Socket Integration & Real-time Features (Oct 18-21)
 
-create dummy frontend for virtual classroom 4. select 1 programme for 1 classroom and start a virtual classroom
+- ✅ Implemented code execution functionality
+- ✅ Added progress tracking
+- ✅ Enhanced session management
+- ✅ Developed weekly task system
+- ✅ Implemented student progress monitoring
 
-## Sep 21
+### Phase 3: Firebase Migration & Enhancement (Nov 22-30)
 
-- [x]both team teacher joined room?
-- [x]check how roles are alloc so that links work correct
-- [x] Send code to students
-- [ ] remove repetitions
-- [x] Fix Generate invite link to be popover
-- [x] Why when student joins they cannot see the starter code ?
+- ✅ Migrated to Firebase
+- ✅ Implemented AuthContext
+- ✅ Created curriculum structure
+- ✅ Enhanced classroom management
+- ✅ Improved student dashboard
+- ✅ Implemented real-time updates
 
-## Sep 22
+## Technical Implementation Details
 
-Common:
+### Socket.IO Event Structure
 
-- [x] add interfaces
-- [x] what to do with student interface ?
+```javascript
+// Core Events
+1. join-room
+2. leave-room
+3. code-update
+4. send-code-to-student
+5. send-code-to-all
+6. get-student-code
+```
 
-Backend:
+## Ongoing Development
 
-- [x] Create new teacher
-- [x] create new student
-- [x] make users collection and add 2 teachers and 2 students there
+### High Priority
 
-## Sep 23
+- [ ] API Route Consolidation
+- [ ] Caching Implementation
+- [ ] Test Case Management
+- [ ] Progress Tracking Enhancement
 
-- [x] add leave room functionality
-- [x] make it possible for teacher to see every students code via card
-- [x] send code to specific student
-- [ ] add submit code button
-- [ ] show toast when end session , why toasts not working ?
-- [ ] how to show teaching content?
+### Medium Priority
 
-- work on showing full programmes
+- [ ] AI Integration
+- [ ] micro:bit Connection
+- [ ] UI/UX Improvements
+- [ ] Extended Curriculum Development
 
-- fix :
-- dont add someone whos is not id db
+### Performance Optimizations
 
-## Scalability questions
+- Implement caching for classroom/curriculum data in individual classrooms
+- Consolidate API calls
+- Add error boundaries
+- Revamp everything to SWR/SWR Mutation implementation
 
-- when will i add students to a classroom? (beginning when creating or with put)
-- page for every classroom w basic info
-- dont hardcode studentID
-- pass the whole student body
+## Learning Curriculum Structure
 
-### 18 October:
+### Week 3-4
 
-1. syntax checking
-2. [x] Run python code
-3. [x] Progress to new tasks
-4. [ ] Add not found page
-5. [x] Remove duplicate session data checking
+- Lists and Loops
+- Basic Data Processing
+- Dictionaries
+- File Handling
 
-6. be able to connect to MicroBit
+### Week 5-6
 
-## 19 October
+- Advanced Functions
+- Error Handling
+- Simple Classes
+- Final Project
 
-6. [ ] no point of run code ?
+## Future Enhancements
 
-1. [ ] how many runs needed?
-1. [ ] Check for many classrooms
-1. [ ] Integrate AI to give them feedback on their code
-1. [ ] Go back in their code
-1. [ ] understand how tasts are completed
+### Technical Improvements
 
-- [x] Failed to start the week. Please try again.
-- [x] Ok, I can shoose week, see the tasks, but students who join the classroom cannot see the tasks.
+- Queuing system for code execution
+- File persistence system
+- Library optimization
+- Enhanced test case system
 
-[x] assignment ids 67139a85da456cc1e6881a18 67139ba3da456cc1e6881a19
-[x] created curricula
+### Infrastructure
 
-- [x] stuck at load sesion data
+- API route consolidation
+- Caching implementation
+- Error handling improvement
+- Performance optimization
 
-## Oct 20
+### Educational Features
 
-- [x] Change the background of the toast
-- [x] How can teacher see the progress -> api send smth to session-view and session view emits smth to socket
-- [ ] Created weekly progress table
-
-## Oct 21
-
-- [x] Remove "Run Code"
-- [x] Add refresh button and use weekly updates ! what can i use it for?
-- [x] Current Progress Report should be based on selectedWeek, not based on last Taught week
-- [x] Why ayazhankadessova has completed?
-- [ ] User API to reun code
-- [x] 2/0 completed ?
-- [x] Send code to all students
-- [ ] When i press on selected student again, remove selected student (back to normal)
-- [ ] Run code via api, not socket connection
-- [ ] be able to check every students' current code
-- [ ] be able to send code to specific student
-- [x] How many tasks did student complete for this week?
-- [x] Remove completed tasks from server.js
-- [x] In weekly progress, we just need to know who completed. (alr completed, no need to add them again!)
-- [ ] In curricula, we will save actual submission -> submissions table.
-- [ ] Integrate AI
-
-## Nov 22
-
-- [x] let teacher login and they can see all classes that she has.
-- [x] cant find GET /classroom/6740320f2cf18e4ef71cdbcc/session 404 in 678ms
-- [x] send code to all students in the classroom
-
-## Nov 23
-
-- [x] change student's views
-- [x] how students join classroom, change that, maybe we show active classroom?
-
-#### Student Dashboard:
-
-- [x] Show name of every classroom ur enrolled
-- [x] Join classroom -> if not yet made by teacher, then show that there is no active session
-- [x] clean up classrooms (remove old ones)
-- [x] Remove Class code from my classrooms list
-- [x] Show Student name no their grade when u create classroom
-
-## Nov 24
-
-- [ ] Ask AI HELP {chat gpt token?}
-- [x] Full Programmes -> get reference from Microsoft -> https://makecode.microbit.org/courses/csintro-educator
-- [x] change task id to int32
-
-## Nov 26 : Revamp everything to Firebase :))) hahahah
-
-- [x] User created with AuthContext
-- [x] Create curricula with 2 weeks
-- [x] create teacher
-- [x] weeklyprogress => "classroomid-week" => {task1: [array of users who completed - no duplicates]}
-- [ ] what should be my function name? test cases?
-- [ ] fix function names mappings
-- [ ] show test cases and let students add their own test cases
-
-## Nov 27
-
-- [x] Teacher dashboard & student dashboard -> fix types
-- [x] Student classrooms & teacher classrooms -> fix types
-- [ ] Why not showing week 2 problems??
-- [ ] add 2 more problems
-- [ ] Run code doesn't work bc function
-- [ ] choose week
-- [ ] how to save progress
-- [ ] no document to update
-- [ ] is it actually checking ?
-- [ ] all interfaces in one place
-- [ ] remove atom stuff
-- [ ] think of how to create a classroom
-- [ ] test case for week 1 ok
-- [ ] add test cases section
-- [ ] test cases for all weeks. Test case boxes like in leetcode
-- [ ] check progress
-- [ ] show last topic for every classroom.
-- [ ] Finally do smth w microbit AHHAHAH
-- [ ] add student progress for every student!
-- [ ] Sessiom view -> every task will go to another link -> new view
-
-## Nov 29
-
-- [x] FileProcessor running -> when it's running no need for run code / submit code [special case]
-- [x] add task completions to weeklyProgress
-- [x] cant send code -> socket actually not seeing anything
-- [x] cant see names of connected students
-- [x] when i select week tasks dont get updated
+- Interactive problem sets
+- Custom test case creation
+- Progress visualization
+- Peer review system
 
 ## Nov 30
 
 ### Easy
 
-- [ ] more firebase operations under `/api`
-- [ ] Dashboard cache
+- [ ] ALL firebase operations under `/api`
+- [x] Dashboard cache
 - [x] Classrooms page cache
+- [ ] Add caching for the individual classroom pages
 - [ ] Explore page is just list of all problems
 - [ ] lesson progress card -> firestore
+- [ ] Add favicon for my app
 - [x] no need to store both username and code of students , just store the usernames
 - [x] Teacher dashboard & student dashboard -> many overlap
 - [x] Student classrooms & teacher classrooms -> many overlap
@@ -239,140 +311,3 @@ Backend:
 - [ ] Make progress bar better
 - [ ] fix topics
 - [ ] UseAuth must be used within AuthProvider after login
-
-## Feedback
-
-Consider implementing a caching mechanism for the classroom and curriculum data to reduce unnecessary API calls.
-If possible, combine the classroom and curriculum data into a single API call to reduce the number of requests.
-Implement error boundaries to handle errors more gracefully at a higher level in your component tree.
-Use a library like React Query or SWR for better management of asynchronous state and caching.
-
-refresh shows progress
-
-- [ ] queuing system to execute code
-- [ ] save as files
-- [ ] how many libraries are there needed ?
-
-```
-db.classrooms.createIndex({ teacherId: 1 })
-db.users.createIndex({ email: 1 }, { unique: true })
-```
-
-- Recoil auth model
-- split js
-- uiw/codemirror
-
-```
-npm install @uiw/react-codemirror @codemirror/lang-python @uiw/codemirror-theme-vscode
-
-```
-
-"Recoil auth state" refers to the practice of storing user authentication information (like login status, user details) within the state management system "Recoil" in a React application, allowing easy access to this data across different components in your app without needing to pass it down manually through props; essentially, it's a way to centrally manage your application's authentication state using Recoil's "atom" mechanism
-
-```
-
-- Workspace: Playground(EditorFooter.tsx, Playground.tsx), ProblemDescription (ProblemDescription.tsx)
-```
-
-## DB:
-
-1. Week 1 can have many 3 problems
-2. Problem : id, title, category, difficulty, likes, dislikes, videoId
-3. Users: id, displayName, email, likedProblems, dislikedProblems, starredProblems, solvedProblems, createdAt, updatedAt
-
-## Local:
-
-1. Problems: id, title, problemStatement, examples(also test cases), constraints, order (no need), startedCode, handlerFunction (test code), startedFunctionName
-
-## Nov 25
-
-1. `npm i assert` -> check if function gives us correct code
-2. send callback function
-3. create new problems
-
-## firestore
-
-1. build -> db
-2. Start in test mode
-
-Week 3:
-
-Lists and loops
-Basic data processing
-
-Week 4:
-
-Dictionaries
-File handling
-
-Week 5:
-
-Functions with multiple parameters
-Error handling
-
-Week 6:
-
-Simple classes
-Final project
-
-List Average Calculator:
-
-List operations
-Looping
-Basic statistics
-Number formatting
-Error handling for edge cases
-
-Data Filter:
-
-Multiple parameters
-List filtering
-Comparison operators
-List comprehension (as an optional advanced approach)
-Maintaining order
-
-## Socket connections
-
-#### Server.js ON
-
-1. `socket.on('join-room', async (classroomId, username, isTeacher)`
-
-- Check and emit session status
-
-```
-// Check and emit session status
-const sessionActive = activeSessions.has(classroomId)
-
-socket.emit('session-status', {
-active: isTeacher || sessionActive,
-message: sessionActive
-? 'Session is active'
-: 'No active session found',
-})
-```
-
-- If student and no active session, reject.
-- Otherwise, add student/teacher, update classroom state
-
-```
-[CLASSROOM STATE] 0UN-CBrCHOQflY7yJnG9v: { teacher: 'nargiz', studentCount: 1, students: [ 'dareka' ] }
-```
-
-- Send only to teacher not whole classroom
-  io.to(classroomId).emit('update-participants', {
-  teacher: classroom.teacher,
-  students: Array.from(classroom.students.values()),
-  })
-
-2. leave-room
-3. code-update -> 'student-code-updated'
-4. `send-code-to-student` -> sends as `teacher-code`
-5. `send-code-to-all` -> sends as `teacher-code`
-6. `get-student-code` -> no need
-
-```
-socket.emit('student-code', {
-            username,
-            code: student.code,
-          })
-```
