@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation'
 
 export function useStartLesson() {
   const [isStarting, setIsStarting] = useState(false)
-  const { toast } = useToast()
   const router = useRouter()
+  const { toast } = useToast()
 
   const startLesson = async (classroomId: string) => {
     setIsStarting(true)
@@ -16,7 +16,8 @@ export function useStartLesson() {
       await updateDoc(classroomRef, {
         activeSession: true,
       })
-      router.push(`/classroom/${classroomId}`)
+      // Use replace instead of push to prevent back navigation issues
+      router.replace(`/classroom/${classroomId}`)
     } catch (error) {
       toast({
         title: 'Error',

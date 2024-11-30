@@ -1,4 +1,3 @@
-// hooks/useTeacherClassrooms.ts
 import useSWR from 'swr'
 import { ClassroomTC } from '@/utils/types/firebase'
 
@@ -14,17 +13,26 @@ export function useTeacherClassrooms(
 ): UseTeacherClassroomsReturn {
   const { data, error, isLoading, mutate } = useSWR<{
     classrooms: ClassroomTC[]
-  }>(`/api/classrooms?userId=${userId}`, async (url: string) => {
-    const res = await fetch(url)
-    if (!res.ok) {
-      throw new Error('Failed to fetch classrooms')
+  }>(
+    `/api/classrooms?userId=${userId}`,
+    async (url) => {
+      const res = await fetch(url)
+      if (!res.ok) {
+        throw new Error('Failed to fetch classrooms')
+      }
+      return res.json()
+    },
+    {
+      revalidateOnFocus: false, // Don't revalidate on window focus
+      revalidateIfStale: false, // Don't revalidate stale data automatically
+      keepPreviousData: true, // Keep showing previous data while loading
+      dedupingInterval: 5000, // Dedupe requests within 5 seconds
     }
-    return res.json()
-  })
+  )
 
   return {
     classrooms: data?.classrooms || [],
-    isLoading,
+    isLoading: isLoading && !data, // Only show loading if we don't have any data
     error: error || null,
     mutate,
   }

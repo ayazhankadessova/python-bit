@@ -55,14 +55,14 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
           <div className='space-y-4'>
             <Button
               className='w-full'
-              onClick={() => router.push('/classrooms')}
+              onClick={() => router.replace('/classrooms')}
             >
               View My Classrooms ({classrooms.length})
             </Button>
             <Button
               variant='outline'
               className='w-full'
-              onClick={() => router.push('/classrooms')}
+              onClick={() => router.replace('/classrooms')}
             >
               Create New Classroom
             </Button>
