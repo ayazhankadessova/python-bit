@@ -7,7 +7,6 @@ import { problems } from '@/utils/problems'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
-import { ShareLink } from '@/components/share-link'
 import { useToast } from '@/hooks/use-toast'
 import { Send, Play, StopCircle, RefreshCw } from 'lucide-react'
 import { WeekSelector } from './WeekSelector'
@@ -48,7 +47,6 @@ export function TeacherSessionView({
     string | null
   >(null)
   const [studentsUsernames, setStudentsUsernames] = useState<string[]>([])
-  // const [students, setStudents] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null)
   const [weekProblems, setWeekProblems] = useState<string[]>([])
