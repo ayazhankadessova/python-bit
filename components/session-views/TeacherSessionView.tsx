@@ -363,11 +363,7 @@ export function TeacherSessionView({
         <div className='space-y-4'>
           <div className='flex justify-between items-center'>
             <h2 className='text-xl font-bold'>Session Control</h2>
-            <Button variant='destructive' onClick={onEndSession}>
-              End Session
-            </Button>
           </div>
-          <ShareLink fullLink={inviteLink} />
           <WeekSelector
             selectedWeek={selectedWeek}
             totalWeeks={totalWeeks}
@@ -376,6 +372,9 @@ export function TeacherSessionView({
               handleStartWeek(weekNumber)
             }}
           />
+          <Button variant='destructive' onClick={onEndSession}>
+            End Session
+          </Button>
           <div className='space-y-2'>
             <h3 className='font-semibold'>Connected Students</h3>
             {studentsUsernames.map((studentUsername) => (
