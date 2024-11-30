@@ -44,8 +44,11 @@ export function TeacherSessionView({
   const { toast } = useToast()
   const [currentProblem, setCurrentProblem] = useState<Problem | null>(null)
   const [teacherCode, setTeacherCode] = useState('')
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
-  const [students, setStudents] = useState<Student[]>([])
+  const [selectedStudentUsername, setSelectedStudentUsername] = useState<
+    string | null
+  >(null)
+  const [studentsUsernames, setStudentsUsernames] = useState<string[]>([])
+  // const [students, setStudents] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null)
   const [weekProblems, setWeekProblems] = useState<string[]>([])
@@ -140,14 +143,14 @@ export function TeacherSessionView({
     }
   }
 
-  const handleStudentSelect = (student: Student | null) => {
-    setSelectedStudent(student)
-    if (!student) {
+  const handleStudentSelect = (studentUsername: string | null) => {
+    setSelectedStudentUsername(studentUsername)
+    if (!studentUsername) {
       setTeacherCode(currentProblem?.starterCode || '')
     } else {
       // Request the student's latest code
       if (socket) {
-        socket.emit('get-student-code', classroomId, student.username)
+        socket.emit('get-student-code', classroomId, studentUsername)
       }
     }
   }
@@ -156,7 +159,7 @@ export function TeacherSessionView({
     const problem = problems[problemId]
     setCurrentProblem(problem)
     // Only set starter code if no student is selected
-    if (!selectedStudent) {
+    if (!selectedStudentUsername) {
       setTeacherCode(problem.starterCode)
     }
   }
@@ -225,15 +228,15 @@ export function TeacherSessionView({
   const handleSendCode = () => {
     if (!socket) return
 
-    if (selectedStudent) {
+    if (selectedStudentUsername) {
       socket.emit('send-code-to-student', {
         classroomId,
-        studentUsername: selectedStudent.username,
+        studentUsername: selectedStudentUsername,
         code: teacherCode,
       })
       toast({
         title: 'Code Sent',
-        description: `Code sent to ${selectedStudent.username}`,
+        description: `Code sent to ${selectedStudentUsername}`,
       })
     } else {
       socket.emit('send-code-to-all', {
@@ -332,18 +335,16 @@ export function TeacherSessionView({
 
     socket.on('update-participants', (data) => {
       console.log('Received update-participants:', data)
-      setStudents(data.students)
+      setStudentsUsernames(data.students)
     })
 
     // Add new listener for student code response
     socket.on('student-code', (data) => {
       console.log('Received student code:', data)
       setTeacherCode(data.code)
-      setStudents((prev) =>
-        prev.map((s) =>
-          s.username === data.username ? { ...s, code: data.code } : s
-        )
-      )
+      // if (selectedStudentUsername == data.username) {
+      //   setTeacherCode(data.code)
+      // }
     })
 
     return () => {
@@ -377,25 +378,25 @@ export function TeacherSessionView({
           />
           <div className='space-y-2'>
             <h3 className='font-semibold'>Connected Students</h3>
-            {students.map((student) => (
+            {studentsUsernames.map((studentUsername) => (
               <Card
-                key={student.username}
+                key={studentUsername}
                 className={`cursor-pointer hover:bg-accent ${
-                  selectedStudent?.username === student.username
+                  selectedStudentUsername === studentUsername
                     ? 'border-primary'
                     : ''
                 }`}
                 onClick={() => {
                   // If clicking the same student, deselect them
-                  if (selectedStudent?.username === student.username) {
+                  if (selectedStudentUsername === studentUsername) {
                     handleStudentSelect(null)
                   } else {
-                    handleStudentSelect(student)
+                    handleStudentSelect(studentUsername)
                   }
                 }}
               >
                 <CardHeader>
-                  <CardTitle className='text-sm'>{student.username}</CardTitle>
+                  <CardTitle className='text-sm'>{studentUsername}</CardTitle>
                 </CardHeader>
               </Card>
             ))}
@@ -431,7 +432,8 @@ export function TeacherSessionView({
                       <CardTitle className='text-sm'>
                         {problems[problemId].title}
                         <span className='text-muted-foreground ml-2'>
-                          {completions.length}/{students.length} completed
+                          {completions.length}/{studentsUsernames.length}{' '}
+                          completed
                         </span>
                       </CardTitle>
                     </CardHeader>
@@ -443,7 +445,7 @@ export function TeacherSessionView({
 
           <div className='flex flex-col gap-4'>
             <CodeMirror
-              value={selectedStudent ? selectedStudent.code || '' : teacherCode}
+              value={teacherCode}
               height='300px'
               theme={vscodeDark}
               extensions={[python()]}
@@ -462,8 +464,8 @@ export function TeacherSessionView({
                 </Button>
                 <Button variant='outline' onClick={handleSendCode}>
                   <Send className='mr-2' />
-                  {selectedStudent
-                    ? `Send to ${selectedStudent.username}`
+                  {selectedStudentUsername
+                    ? `Send to ${selectedStudentUsername}`
                     : 'Send to All'}
                 </Button>
               </div>

@@ -91,7 +91,7 @@ app.prepare().then(async () => {
         // Send update only to teachers using the teacher-specific room
         io.to(`${classroomId}-teacher`).emit('update-participants', {
           teacher: classroom.teacher,
-          students: Array.from(classroom.students.values()),
+          students: Array.from(classroom.students.keys()),
         })
       } catch (error) {
         console.error('[ERROR] Error in join-room:', error)
@@ -107,17 +107,13 @@ app.prepare().then(async () => {
     socket.on('code-update', (data) => {
       const { code, username, classroomId } = data
       console.log(
-        `[CODE UPDATE] Student ${username} updating code in ${classroomId}`
+        `[CODE UPDATE] Student ${username} updating code in ${classroomId} : ${code}`
       )
 
       if (classrooms.has(classroomId)) {
         const classroom = classrooms.get(classroomId)
         if (classroom.students.has(username)) {
           classroom.students.get(username).code = code
-          // io.to(classroomId).emit('student-code-updated', {
-          //   username,
-          //   code,
-          // })
           console.log(`[CODE UPDATE SUCCESS] Code updated for ${username}`)
         } else {
           console.log(`[ERROR] Student ${username} not found in classroom`)
@@ -189,7 +185,9 @@ app.prepare().then(async () => {
             username,
             code: student.code,
           })
-          console.log(`[GET CODE SUCCESS] Code retrieved for ${username}`)
+          console.log(
+            `[GET CODE SUCCESS] Code retrieved for ${username}: ${student.code}`
+          )
         } else {
           console.error(`[ERROR] Student ${username} not found`)
         }
@@ -198,13 +196,24 @@ app.prepare().then(async () => {
       }
     })
 
+    // Also update the 'end-session' handler to be more consistent
     socket.on('end-session', (classroomId) => {
       console.log(`[END SESSION] Ending session for classroom ${classroomId}`)
       if (classrooms.has(classroomId)) {
+        // Clear the session
         activeSessions.delete(classroomId)
-        io.to(classroomId).emit('session-ended')
+
+        // Notify all clients that the session has ended
+        io.to(classroomId).emit('session-ended', {
+          message: 'Teacher ended the session',
+        })
+
+        // Disconnect all sockets in the room
         io.in(classroomId).disconnectSockets(true)
+
+        // Clean up the classroom
         classrooms.delete(classroomId)
+
         console.log(`[END SESSION SUCCESS] Session ended for ${classroomId}`)
       }
     })
@@ -232,6 +241,17 @@ app.prepare().then(async () => {
       if (classroom.teacher === username) {
         console.log(`[LEAVE ROOM] Teacher ${username} left ${classroomId}`)
         classroom.teacher = null
+        // Deactivate session when teacher leaves
+        activeSessions.delete(classroomId)
+
+        // Notify all clients in the room that the session is no longer active
+        io.to(classroomId).emit('session-ended', {
+          message: 'Teacher disconnected, session ended',
+        })
+
+        console.log(
+          `[SESSION ENDED] Session deactivated for ${classroomId} due to teacher disconnect`
+        )
       } else {
         console.log(`[LEAVE ROOM] Student ${username} left ${classroomId}`)
         classroom.students.delete(username)
@@ -241,8 +261,7 @@ app.prepare().then(async () => {
         console.log(`[CLEANUP] Removing empty classroom ${classroomId}`)
         classrooms.delete(classroomId)
       } else {
-        io.to(classroomId).emit('participant-left', username)
-        io.to(classroomId).emit('update-participants', {
+        io.to(`${classroomId}-teacher`).emit('update-participants', {
           teacher: classroom.teacher,
           students: Array.from(classroom.students.values()),
         })
