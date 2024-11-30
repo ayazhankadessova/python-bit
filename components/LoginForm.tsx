@@ -33,13 +33,6 @@ export default function LoginForm() {
   const [signInWithEmailAndPassword, _, loading, error] =
     useSignInWithEmailAndPassword(auth)
 
-  // Redirect if user is already logged in
-  useEffect(() => {
-    if (user) {
-      router.push('/dashboard')
-    }
-  }, [user, router])
-
   const form = useForm<LoginInputs>({
     resolver: zodResolver(loginSchema),
     defaultValues: {

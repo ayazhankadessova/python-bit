@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next server.js",
+    "dev": "nodemon server.js",
     "nodemon": "nodemon server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",

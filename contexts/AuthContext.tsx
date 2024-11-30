@@ -1,3 +1,4 @@
+// @/contexts/AuthContext
 'use client'
 import {
   createContext,
@@ -21,12 +22,14 @@ const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userData, setUserData] = useState<User | null>(null)
-  const [user, loading] = useAuthState(auth)
+  const [user, firebaseLoading] = useAuthState(auth)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) {
         setUserData(null)
+        setIsLoading(false)
         return
       }
 
@@ -34,10 +37,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userDoc = await getDoc(doc(fireStore, 'users', user.uid))
         const data = userDoc.data() as FirebaseUserData
 
-        // Ensure required fields are present, otherwise set to null
         if (!data.email || !data.displayName || !data.role || !data.school) {
           console.error('Missing required user data')
           setUserData(null)
+          setIsLoading(false)
           return
         }
 
@@ -52,17 +55,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           solvedProblems: data.solvedProblems || [],
           starredProblems: data.starredProblems || [],
           classrooms: data.classrooms || [],
+          createdAt: Date.now(),
         })
       } catch (error) {
         console.error('Error fetching user data:', error)
         setUserData(null)
+      } finally {
+        setIsLoading(false)
       }
     }
 
-    if (!loading) {
+    if (!firebaseLoading) {
       fetchUserData()
     }
-  }, [user, loading])
+  }, [user, firebaseLoading])
 
   const signOut = useCallback(async () => {
     try {
@@ -70,17 +76,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await auth.signOut()
     } catch (error) {
       console.error('Error signing out:', error)
-
-      // Only restore user data if we have all required fields
       if (user && userData) {
-        setUserData(userData) // Restore the previous valid state
+        setUserData(userData)
       }
     }
   }, [user, userData])
 
-  const value = {
+  const value: AuthContextType = {
     user: userData,
-    loading: loading || (!loading && user && !userData),
+    loading: isLoading || firebaseLoading,
     signOut,
   }
 
