@@ -9,6 +9,10 @@ import { Loader2, Book, Users, Trophy } from 'lucide-react'
 import { ClassroomTC } from '@/utils/types/firebase'
 import { useAuth } from '@/contexts/AuthContext'
 import { useToast } from '@/hooks/use-toast'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
+import { StatCard } from '@/components/dashboard/StatCard'
+import { ClassroomList } from '@/components/dashboard/ClassroomList'
 
 interface TeacherDashboardProps {
   onSignOut: () => void
@@ -20,6 +24,11 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
   const { toast } = useToast()
   const [classrooms, setClassrooms] = useState<ClassroomTC[]>([])
   const [loading, setLoading] = useState(true)
+  const activeClassrooms = classrooms.filter((c) => c.activeSession)
+  const totalStudents = classrooms.reduce(
+    (acc, classroom) => acc + (classroom.students?.length || 0),
+    0
+  )
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,13 +114,7 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
   }, [user, toast]) // Removed user.uid from dependencies
 
   // Early return if loading
-  if (loading) {
-    return (
-      <div className='flex items-center justify-center min-h-screen'>
-        <Loader2 className='h-8 w-8 animate-spin' />
-      </div>
-    )
-  }
+  if (loading) return <LoadingSpinner />
 
   // Early return if no user
   if (!user) {
@@ -119,35 +122,17 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
     return null
   }
 
-  const activeClassrooms = classrooms.filter((c) => c.activeSession)
-  const totalStudents = classrooms.reduce(
-    (acc, classroom) => acc + (classroom.students?.length || 0),
-    0
-  )
-
   return (
     <div className='container mx-auto p-6'>
-      <div className='mb-8 flex justify-between items-center'>
-        <div>
-          <h1 className='text-4xl font-bold mb-2'>
-            Welcome back, {user.displayName || 'Teacher'}!
-          </h1>
-          <p className='text-gray-600'>Here is your teaching overview</p>
-        </div>
-        <Button variant='outline' onClick={onSignOut}>
-          Sign Out
-        </Button>
-      </div>
+      <DashboardHeader
+        title={`Welcome back, ${user.displayName || 'Teacher'}!`}
+        subtitle='Here is your teaching overview'
+        onSignOut={onSignOut}
+      />
 
       <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <Book className='h-5 w-5' />
-              Quick Actions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-4'>
+        <StatCard icon={Book} title='Quick Actions'>
+          <div className='space-y-4'>
             <Button
               className='w-full'
               onClick={() => router.push('/classrooms')}
@@ -161,80 +146,46 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
             >
               Create New Classroom
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </StatCard>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <Trophy className='h-5 w-5' />
-              Session Status
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='space-y-4'>
-              <div>
-                <p className='text-sm font-medium'>Active Sessions</p>
-                <p className='text-2xl font-bold text-green-600'>
-                  {activeClassrooms.length}/{classrooms.length}
-                </p>
-              </div>
-              {activeClassrooms.length > 0 && (
-                <div className='space-y-2'>
-                  <p className='text-sm font-medium'>Current Active:</p>
-                  {activeClassrooms.map((classroom) => (
-                    <div
-                      key={classroom.id}
-                      className='text-sm text-green-600 flex justify-between items-center'
-                    >
-                      <span>{classroom.name}</span>
-                      <Button
-                        size='sm'
-                        onClick={() =>
-                          router.push(`/classroom/${classroom.id}`)
-                        }
-                      >
-                        Join
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
+        <StatCard icon={Trophy} title='Session Status'>
+          <div className='space-y-4'>
+            <div>
+              <p className='text-sm font-medium'>Active Sessions</p>
+              <p className='text-2xl font-bold text-green-600'>
+                {activeClassrooms.length}/{classrooms.length}
+              </p>
             </div>
-          </CardContent>
-        </Card>
+            {activeClassrooms.length > 0 && (
+              <ClassroomList
+                classrooms={activeClassrooms}
+                onJoinClassroom={(id) => router.push(`/classroom/${id}`)}
+                userRole='teacher'
+              />
+            )}
+          </div>
+        </StatCard>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <Users className='h-5 w-5' />
-              Teaching Stats
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='space-y-4'>
-              <div>
-                <p className='text-sm font-medium'>School</p>
-                <p className='text-2xl font-bold'>{user.school || 'Not Set'}</p>
-              </div>
-              <div>
-                <p className='text-sm font-medium'>Total Classrooms</p>
-                <p className='text-2xl font-bold'>{classrooms.length}</p>
-              </div>
-              <div>
-                <p className='text-sm font-medium'>Total Students</p>
-                <p className='text-2xl font-bold'>{totalStudents}</p>
-                <p className='text-sm text-gray-500'>
-                  Average:{' '}
-                  {classrooms.length
-                    ? Math.round(totalStudents / classrooms.length)
-                    : 0}{' '}
-                  per class
-                </p>
-              </div>
+        <StatCard icon={Users} title='Teaching Stats'>
+          <div className='space-y-4'>
+            <div>
+              <p className='text-sm font-medium'>School</p>
+              <p className='text-2xl font-bold'>{user.school || 'Not Set'}</p>
             </div>
-          </CardContent>
-        </Card>
+            <div>
+              <p className='text-sm font-medium'>Total Students</p>
+              <p className='text-2xl font-bold'>{totalStudents}</p>
+              <p className='text-sm text-gray-500'>
+                Average:{' '}
+                {classrooms.length
+                  ? Math.round(totalStudents / classrooms.length)
+                  : 0}{' '}
+                per class
+              </p>
+            </div>
+          </div>
+        </StatCard>
       </div>
     </div>
   )

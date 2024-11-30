@@ -10,6 +10,10 @@ import { BookOpen, Trophy, Users, Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useToast } from '@/hooks/use-toast'
 import { ClassroomTC } from '@/utils/types/firebase'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
+import { StatCard } from '@/components/dashboard/StatCard'
+import { ClassroomList } from '@/components/dashboard/ClassroomList'
 
 interface StudentDashboardProps {
   onSignOut: () => void
@@ -132,13 +136,7 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
     }
   }
 
-  if (loading) {
-    return (
-      <div className='flex items-center justify-center min-h-screen'>
-        <Loader2 className='h-8 w-8 animate-spin' />
-      </div>
-    )
-  }
+  if (loading) return <LoadingSpinner />
 
   if (!user) {
     router.push('/')
@@ -147,117 +145,52 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
 
   return (
     <div className='container mx-auto p-6'>
-      <div className='mb-8 flex justify-between items-center'>
-        <div>
-          <h1 className='text-4xl font-bold mb-2'>
-            Welcome, {user.displayName || 'Student'}!
-          </h1>
-          <p className='text-gray-600'>Ready to learn Python?</p>
-        </div>
-        <Button variant='outline' onClick={onSignOut}>
-          Sign Out
-        </Button>
-      </div>
+      <DashboardHeader
+        title={`Welcome, ${user.displayName || 'Student'}!`}
+        subtitle='Ready to learn Python?'
+        onSignOut={onSignOut}
+      />
 
       <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        {/* Classes Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <BookOpen className='h-5 w-5' />
-              My Classes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='space-y-4'>
-              {enrolledClassrooms.length > 0 ? (
-                enrolledClassrooms.map((classroom) => {
-                  return (
-                    <Card key={classroom.id} className='p-4'>
-                      <div className='space-y-2'>
-                        <h3 className='font-semibold'>{classroom.name}</h3>
-                        <p className='text-sm text-gray-500'>
-                          Program: {classroom.curriculumName || 'N/A'}
-                        </p>
-                        <div className='flex justify-between items-center'>
-                          <span
-                            className={`text-sm ${
-                              classroom.activeSession
-                                ? 'text-green-500'
-                                : 'text-gray-500'
-                            }`}
-                          >
-                            {classroom.activeSession
-                              ? 'Active Session'
-                              : 'No Active Session'}
-                          </span>
-                          <Button
-                            onClick={() => handleJoinClassroom(classroom.id)}
-                            disabled={!classroom.activeSession}
-                          >
-                            Join Class
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  )
-                })
-              ) : (
-                <p className='text-sm text-gray-500'>No enrolled classes yet</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard icon={BookOpen} title='My Classes'>
+          <ClassroomList
+            classrooms={enrolledClassrooms}
+            onJoinClassroom={(id) => router.push(`/classroom/${id}`)}
+            userRole='student'
+          />
+        </StatCard>
 
-        {/* Progress Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <Trophy className='h-5 w-5' />
-              My Progress
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='space-y-4'>
-              <div>
-                <p className='text-sm font-medium'>Problems Solved</p>
-                <p className='text-2xl font-bold text-green-600'>
-                  {user.solvedProblems?.length || 0}
-                </p>
-                <p className='text-sm text-gray-500'>across all classes</p>
-              </div>
-              <div>
-                <p className='text-sm font-medium'>Active Classes</p>
-                <p className='text-2xl font-bold text-blue-600'>
-                  {enrolledClassrooms.filter((c) => c.activeSession).length}/
-                  {enrolledClassrooms.length}
-                </p>
-              </div>
+        <StatCard icon={Trophy} title='My Progress'>
+          <div className='space-y-4'>
+            <div>
+              <p className='text-sm font-medium'>Problems Solved</p>
+              <p className='text-2xl font-bold text-green-600'>
+                {user.solvedProblems?.length || 0}
+              </p>
+              <p className='text-sm text-gray-500'>across all classes</p>
             </div>
-          </CardContent>
-        </Card>
+            <div>
+              <p className='text-sm font-medium'>Active Classes</p>
+              <p className='text-2xl font-bold text-blue-600'>
+                {enrolledClassrooms.filter((c) => c.activeSession).length}/
+                {enrolledClassrooms.length}
+              </p>
+            </div>
+          </div>
+        </StatCard>
 
-        {/* Info Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <Users className='h-5 w-5' />
-              School Info
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='space-y-4'>
-              <div>
-                <p className='text-sm font-medium'>School</p>
-                <p className='text-2xl font-bold'>{user.school || 'Not set'}</p>
-              </div>
-              <div>
-                <p className='text-sm font-medium'>Email</p>
-                <p className='text-lg truncate'>{user.email || 'Not set'}</p>
-              </div>
+        <StatCard icon={Users} title='School Info'>
+          <div className='space-y-4'>
+            <div>
+              <p className='text-sm font-medium'>School</p>
+              <p className='text-2xl font-bold'>{user.school || 'Not set'}</p>
             </div>
-          </CardContent>
-        </Card>
+            <div>
+              <p className='text-sm font-medium'>Email</p>
+              <p className='text-lg truncate'>{user.email || 'Not set'}</p>
+            </div>
+          </div>
+        </StatCard>
       </div>
     </div>
   )

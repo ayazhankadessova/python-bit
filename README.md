@@ -214,19 +214,21 @@ Backend:
 
 - [x] FileProcessor running -> when it's running no need for run code / submit code [special case]
 - [x] add task completions to weeklyProgress
-- [ ] cant send code -> socket actually not seeing anything
+- [x] cant send code -> socket actually not seeing anything
+- [x] cant see names of connected students
+- [x] when i select week tasks dont get updated
+
+## Nov 30
+
 - [ ] more firebase operations under `/api`
-- [ ] cant see names of connected students
-- [ ] when i select week tasks dont get updated
 - [ ] Work on Week 5
+- [ ] no need to store both username and code of students , just store the usernames
 - [ ] Teacher dashboard & student dashboard -> many overlap
 - [ ] Student classrooms & teacher classrooms -> many overlap
-- [ ] dont update code card after the test casses are passed
+- [ ] dont refresh code card after the test casses are passed
 - [ ] Show which test cases are we running -> students can choose which test cases they want to run
-- [ ] add progress for teacher
-- [ ] week selection -> save
+- [ ] Make progress bar better
 - [ ] fix topics
-- [ ]
 
 - [ ] UseAuth must be used within AuthProvider after login
 
@@ -358,4 +360,21 @@ message: sessionActive
 [CLASSROOM STATE] 0UN-CBrCHOQflY7yJnG9v: { teacher: 'nargiz', studentCount: 1, students: [ 'dareka' ] }
 ```
 
-2.
+- Send only to teacher not whole classroom
+  io.to(classroomId).emit('update-participants', {
+  teacher: classroom.teacher,
+  students: Array.from(classroom.students.values()),
+  })
+
+2. leave-room
+3. code-update -> 'student-code-updated'
+4. `send-code-to-student` -> sends as `teacher-code`
+5. `send-code-to-all` -> sends as `teacher-code`
+6. `get-student-code` -> no need
+
+```
+socket.emit('student-code', {
+            username,
+            code: student.code,
+          })
+```
