@@ -1,24 +1,16 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Search, Plus, Play, Loader2 } from 'lucide-react'
-import { Input } from '@/components/ui/input'
+import { Plus, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
   DialogTrigger,
+  DialogFooter,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
@@ -34,6 +26,12 @@ import {
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { User, ClassroomTC } from '@/utils/types/firebase'
+import { ClassroomHeader } from '@/components/classrooms/ClassroomHeader'
+import { EmptyClassrooms } from '@/components/classrooms/EmptyClassrooms'
+import { ClassroomCard } from '@/components/classrooms/ClassroomCard'
+import { ClassroomGrid } from '@/components/classrooms/ClassroomGrid'
+import { ClassroomSearch } from '@/components/classrooms/ClassroomSearch'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 
 interface StudentClassroomsViewProps {
   user: User
@@ -43,10 +41,10 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
   const { toast } = useToast()
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
-  const [classroomCode, setClassroomCode] = useState('')
-  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [classrooms, setClassrooms] = useState<ClassroomTC[]>([])
+  const [classroomCode, setClassroomCode] = useState('')
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false)
 
   useEffect(() => {
     const fetchClassroomData = async () => {
@@ -115,6 +113,43 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
     fetchClassroomData()
   }, [user, toast])
 
+  const handleStartLesson = async (classroomId: string) => {
+    try {
+      const classroomDoc = await getDoc(
+        doc(fireStore, 'classrooms', classroomId)
+      )
+
+      if (!classroomDoc.exists()) {
+        toast({
+          title: 'Error',
+          description: 'Classroom not found',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      const classroomData = classroomDoc.data()
+
+      if (!classroomData.activeSession) {
+        toast({
+          title: 'No Active Session',
+          description: 'Please wait for the teacher to start the session',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      router.push(`/classroom/${classroomId}`)
+    } catch (error) {
+      console.error('Error starting lesson:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to start lesson',
+        variant: 'destructive',
+      })
+    }
+  }
+
   const handleJoinClassroom = async () => {
     try {
       const classroomQuery = query(
@@ -172,137 +207,56 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
     }
   }
 
-  const handleStartLesson = async (classroomId: string) => {
-    try {
-      const classroomDoc = await getDoc(
-        doc(fireStore, 'classrooms', classroomId)
-      )
-
-      if (!classroomDoc.exists()) {
-        toast({
-          title: 'Error',
-          description: 'Classroom not found',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      const classroomData = classroomDoc.data()
-
-      if (!classroomData.activeSession) {
-        toast({
-          title: 'No Active Session',
-          description: 'Please wait for the teacher to start the session',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      router.push(`/classroom/${classroomId}`)
-    } catch (error) {
-      console.error('Error starting lesson:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to start lesson',
-        variant: 'destructive',
-      })
-    }
-  }
-
   const filteredClassrooms = classrooms.filter((classroom) =>
     classroom?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  if (isLoading) {
-    return (
-      <div className='flex items-center justify-center min-h-screen'>
-        <Loader2 className='h-8 w-8 animate-spin' />
-      </div>
-    )
-  }
+  if (isLoading) return <LoadingSpinner />
 
   return (
     <div className='container mx-auto p-6'>
-      <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-3xl font-bold'>My Enrolled Classrooms</h1>
-        <Button variant='outline' onClick={() => router.push('/dashboard')}>
-          Back to Dashboard
-        </Button>
-      </div>
+      <ClassroomHeader title='My Enrolled Classrooms' />
 
-      <div className='flex justify-between mb-6'>
-        <div className='relative w-64'>
-          <Search className='absolute left-2 top-2.5 h-4 w-4 text-gray-500' />
-          <Input
-            type='text'
-            placeholder='Search classrooms'
-            className='pl-8'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className='mr-2 h-4 w-4' /> Join Classroom
-            </Button>
-          </DialogTrigger>
-          <DialogContent className='bg-white'>
-            <DialogHeader>
-              <DialogTitle>Join Classroom</DialogTitle>
-              <DialogDescription>
-                Enter the classroom code provided by your teacher.
-              </DialogDescription>
-            </DialogHeader>
-            <Input
-              placeholder='Enter classroom code'
-              value={classroomCode}
-              onChange={(e) => setClassroomCode(e.target.value)}
-            />
-            <DialogFooter>
-              <Button onClick={handleJoinClassroom}>Join</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+      <ClassroomSearch
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        actionButton={
+          <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className='mr-2 h-4 w-4' /> Join Classroom
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='bg-white'>
+              <DialogHeader>
+                <DialogTitle>Join Classroom</DialogTitle>
+                <DialogDescription>
+                  Enter the classroom code provided by your teacher.
+                </DialogDescription>
+              </DialogHeader>
+              <Input
+                placeholder='Enter classroom code'
+                value={classroomCode}
+                onChange={(e) => setClassroomCode(e.target.value)}
+              />
+              <DialogFooter>
+                <Button onClick={handleJoinClassroom}>Join</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        }
+      />
 
       {filteredClassrooms.length === 0 ? (
-        <div className='text-center py-10'>
-          <p className='text-gray-500'>
-            No classrooms found. Join a classroom to get started!
-          </p>
-        </div>
+        <EmptyClassrooms userRole='student' />
       ) : (
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {filteredClassrooms.map((classroom) => (
-            <Card key={classroom.id}>
-              <CardHeader>
-                <CardTitle>{classroom.name}</CardTitle>
-                <CardDescription>{classroom.curriculumName}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className='space-y-2'>
-                  <p className='text-sm text-gray-600'>
-                    Last taught: Week {classroom.lastTaughtWeek || 0}
-                  </p>
-                  <p className='text-sm text-gray-600'>
-                    Students: {classroom.students?.length || 0}
-                  </p>
-                  <div
-                    className={`text-sm ${
-                      classroom.activeSession
-                        ? 'text-green-600 font-medium'
-                        : 'text-gray-500'
-                    }`}
-                  >
-                    {classroom.activeSession
-                      ? '● Session Active'
-                      : '○ No Active Session'}
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className='flex justify-between'>
+        <ClassroomGrid
+          classrooms={filteredClassrooms}
+          renderCard={(classroom) => (
+            <ClassroomCard
+              key={classroom.id}
+              classroom={classroom}
+              actionButton={
                 <Button
                   onClick={() => handleStartLesson(classroom.id)}
                   disabled={!classroom.activeSession}
@@ -315,10 +269,10 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
                     'Waiting for teacher'
                   )}
                 </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+              }
+            />
+          )}
+        />
       )}
     </div>
   )

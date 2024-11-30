@@ -1,16 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Search, Plus, Play, Loader2 } from 'lucide-react'
-import { Input } from '@/components/ui/input'
+import { Plus, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -19,12 +10,18 @@ import {
   DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { CreateClassroomForm } from './CreateClassroomForm'
 import { useToast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { User, ClassroomTC } from '@/utils/types/firebase'
+import { ClassroomHeader } from '@/components/classrooms/ClassroomHeader'
+import { EmptyClassrooms } from '@/components/classrooms/EmptyClassrooms'
+import { ClassroomCard } from '@/components/classrooms/ClassroomCard'
+import { ClassroomGrid } from '@/components/classrooms/ClassroomGrid'
+import { ClassroomSearch } from '@/components/classrooms/ClassroomSearch'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { CreateClassroomForm } from '@/components/classrooms/CreateClassroomForm'
 
 interface TeacherClassroomsViewProps {
   user: User
@@ -133,100 +130,49 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
     classroom?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  if (isLoading) {
-    return (
-      <div className='flex items-center justify-center min-h-screen'>
-        <Loader2 className='h-8 w-8 animate-spin' />
-      </div>
-    )
-  }
+  if (isLoading) return <LoadingSpinner />
 
   return (
     <div className='container mx-auto p-6'>
-      <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-3xl font-bold'>My Classrooms</h1>
-        <Button variant='outline' onClick={() => router.push('/dashboard')}>
-          Back to Dashboard
-        </Button>
-      </div>
+      <ClassroomHeader title='My Classrooms' />
 
-      <div className='flex justify-between mb-6'>
-        <div className='relative w-64'>
-          <Search className='absolute left-2 top-2.5 h-4 w-4 text-gray-500' />
-          <Input
-            type='text'
-            placeholder='Search classrooms'
-            className='pl-8'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className='mr-2 h-4 w-4' /> Create New Classroom
-            </Button>
-          </DialogTrigger>
-          <DialogContent className='bg-white'>
-            <DialogHeader>
-              <DialogTitle>Create New Classroom</DialogTitle>
-              <DialogDescription>
-                Fill in the details to create a new classroom.
-              </DialogDescription>
-            </DialogHeader>
-            <CreateClassroomForm
-              teacherId={user.uid}
-              teacherSchool={user.school!}
-            />
-          </DialogContent>
-        </Dialog>
-      </div>
+      <ClassroomSearch
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        actionButton={
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className='mr-2 h-4 w-4' /> Create New Classroom
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='bg-white'>
+              <DialogHeader>
+                <DialogTitle>Create New Classroom</DialogTitle>
+                <DialogDescription>
+                  Fill in the details to create a new classroom.
+                </DialogDescription>
+              </DialogHeader>
+              <CreateClassroomForm
+                teacherId={user.uid}
+                teacherSchool={user.school!}
+              />
+            </DialogContent>
+          </Dialog>
+        }
+      />
 
       {filteredClassrooms.length === 0 ? (
-        <div className='text-center py-10'>
-          <p className='text-gray-500'>
-            No classrooms found. Create your first classroom to get started!
-          </p>
-        </div>
+        <EmptyClassrooms userRole='teacher' />
       ) : (
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {filteredClassrooms.map((classroom) => (
-            <Card key={classroom.id}>
-              <CardHeader>
-                <CardTitle>{classroom.name}</CardTitle>
-                <CardDescription>{classroom.curriculum?.name}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className='space-y-2'>
-                  <p className='text-sm text-gray-600'>
-                    Classroom Code: {classroom.classCode}
-                  </p>
-                  <p className='text-sm text-gray-600'>
-                    Last taught: Week {classroom.lastTaughtWeek || 0}
-                  </p>
-                  <p className='text-sm text-gray-600'>
-                    Students: {classroom.students?.length || 0}
-                  </p>
-                  <div
-                    className={`text-sm ${
-                      classroom.activeSession
-                        ? 'text-green-600 font-medium'
-                        : 'text-gray-500'
-                    }`}
-                  >
-                    {classroom.activeSession
-                      ? '● Session Active'
-                      : '○ No Active Session'}
-                  </div>
-                  {classroom.curriculum?.weeks && (
-                    <p className='text-sm text-blue-600'>
-                      Total Weeks: {classroom.curriculum.weeks.length}
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-              <CardFooter className='flex justify-between'>
+        <ClassroomGrid
+          classrooms={filteredClassrooms}
+          renderCard={(classroom) => (
+            <ClassroomCard
+              key={classroom.id}
+              classroom={classroom}
+              showClassCode={true}
+              actionButton={
                 <Button
                   onClick={() => handleStartLesson(classroom.id)}
                   variant={classroom.activeSession ? 'default' : 'secondary'}
@@ -236,10 +182,10 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
                     ? 'Continue Session'
                     : 'Start Session'}
                 </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+              }
+            />
+          )}
+        />
       )}
     </div>
   )
