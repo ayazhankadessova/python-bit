@@ -23,19 +23,6 @@ export function PostItem({ post }: PostItemProps) {
     <article className='flex-1 flex flex-col gap-2 border-border border-b py-3'>
       <div className='flex flex-col-reverse sm:flex-row justify-between'>
         <div className='flex-1'>
-          <div className='flex justify-between'>
-            <div className='flex items-center'>
-              {/* <Avatar className='h-5 w-10 mr-2'>
-                <AvatarImage src='/gitroll.png' />
-              </Avatar> */}
-              <div>
-                <p className='text-sm font-bold'>GitRoll</p>
-                <time className='text-sm' suppressHydrationWarning>
-                  {formatDate(date)}
-                </time>
-              </div>
-            </div>
-          </div>
           <div>
             <h2 className='text-2xl font-bold'>
               <Link href={'/' + slug}>{title}</Link>
@@ -52,8 +39,8 @@ export function PostItem({ post }: PostItemProps) {
           <Image
             src={image}
             alt=''
-            className='rounded-lg sm:w-[12rem] xl:w-full p-4'
-            width={500}
+            className='rounded-lg sm:w-[8rem] xl:w-full p-1'
+            width={300}
             height={100}
           />
         </div>

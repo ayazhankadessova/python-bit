@@ -316,8 +316,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## 25 dec
 
-- [ ] Add full python course mdx
+- [x] Add full python course mdx
 - [ ] Add this to every lesson
+- [x] l1
+- [ ] l2
+- [ ] l3
+- [ ] l4
+- [ ] l5
 ```
 <PythonCodeEditor 
   initialCode={`# Write your code here
@@ -325,6 +330,16 @@ print("Hello, World!")`}
   expectedOutput="Hello, World!"
 />
 ```
+- [ ] Add quiz custom elements
+- [ ] next tutorial
+- [ ] back button
+
+- is logged in ? exerices number, tutorial_id 
+- execute code , is_exercise if yes then upd in firestore
+- show is completed for ever lesson
+- progress for every lesson
+- what to store on firestore (lesson id , total exercises count)
+- for user, create progress_tut collection and store their tut progress
 - [ ] integrate codemirror to mdx courses
 - [ ] How can i track completion? For every classroom, show list of lessons and how many completed. Completed = Did exercise
 - [ ] Header 
