@@ -311,6 +311,14 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## 25 dec
 
 - [ ] Add full python course mdx
+- [ ] Add this to every lesson
+```
+<PythonCodeEditor 
+  initialCode={`# Write your code here
+print("Hello, World!")`}
+  expectedOutput="Hello, World!"
+/>
+```
 - [ ] integrate codemirror to mdx courses
 - [ ] How can i track completion? For every classroom, show list of lessons and how many completed. Completed = Did exercise
 - [ ] Header 
