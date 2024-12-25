@@ -27,6 +27,12 @@ A real-time interactive coding platform that bridges block-based programming to 
   - Task completion tracking
   - Weekly performance analytics
 
+## Credits 
+
+- Python Tutorial Modified from: 
+  * https://www.learnpython.org/en/Welcome 
+  * https://www.geeksforgeeks.org/python-for-kids/#control
+
 ## 🛠 Tech Stack
 
 - **Frontend**: Next.js 14, React
