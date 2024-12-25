@@ -37,3 +37,7 @@
 .subheading-anchor {
   @apply no-underline hover:italic;
 }
+
+.listitem {
+    @apply text-base md:text-lg !leading-loose border-0 p-0;
+}

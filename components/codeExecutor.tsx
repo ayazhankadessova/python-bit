@@ -41,6 +41,12 @@ const PythonCodeEditor = ({
     }
   }
 
+  // Calculate dynamic height based on code lines
+  const calculateHeight = () => {
+    const lineCount = code.split('\n').length
+    return Math.max(150, Math.min(lineCount * 20 + 50, 500)) // Max height of 500px
+  }
+
   const runCode = async () => {
     setIsExecuting(true)
     setError(null)
@@ -139,7 +145,7 @@ const PythonCodeEditor = ({
       <div className={`${isDarkTheme ? 'bg-zinc-950' : 'bg-gray-50'} p-4`}>
         <CodeMirror
           value={code}
-          height='200px'
+          height={`${calculateHeight()}px`}
           theme={getTheme()}
           extensions={[python()]}
           onChange={(value) => setCode(value)}
@@ -163,13 +169,13 @@ const PythonCodeEditor = ({
       {/* Output Section */}
       <div className={`${isDarkTheme ? 'bg-zinc-900' : 'bg-white'} px-4 py-2 `}>
         {/* <div className='flex items-center gap-2 mb-3'> */}
-          <h3
-            className={`mt-3 font-medium ${
-              isDarkTheme ? 'text-zinc-200' : 'text-zinc-800'
-            }`}
-          >
-            Output
-          </h3>
+        <h3
+          className={`mt-3 font-medium ${
+            isDarkTheme ? 'text-zinc-200' : 'text-zinc-800'
+          }`}
+        >
+          Output
+        </h3>
         {/* </div> */}
 
         {error ? (
@@ -196,7 +202,9 @@ const PythonCodeEditor = ({
                 : 'bg-red-50 text-red-600 dark:bg-red-950/20 dark:text-red-400'
             }`}
           >
-            {isCorrect ? '✅ Correct!' : '❌ Try again! \nExpected Output: ' + expectedOutput}
+            {isCorrect
+              ? '✅ Correct!'
+              : '❌ Try again! \nExpected Output: ' + expectedOutput}
           </div>
         )}
       </div>

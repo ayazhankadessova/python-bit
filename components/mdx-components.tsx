@@ -18,9 +18,12 @@ const useMDXComponent = (code: string) => {
 
 const components = {
   Image,
-  //   Callout,
   PythonCodeEditor,
-//   CodeMirror,
+  li: ({ children }) => (
+    <li className='text-lg mb-2'>
+      {children}
+    </li>
+  ),
 }
 
 interface MdxProps {
