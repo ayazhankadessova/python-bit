@@ -16,7 +16,7 @@ interface TeacherDashboardProps {
 export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
   const router = useRouter()
   const { user } = useAuth()
-  const { classrooms, isLoading, error, mutate } = useTeacherClassrooms(
+  const { classrooms, isLoading, error} = useTeacherClassrooms(
     user!.uid
   )
   const activeClassrooms = classrooms.filter((c) => c.activeSession)
@@ -69,7 +69,7 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
           </div>
         </StatCard>
 
-        <StatCard icon={Trophy} title='Session Status'>
+        <StatCard icon={Trophy} title='Real-time Problem Solving'>
           <div className='space-y-4'>
             <div>
               <p className='text-sm font-medium'>Active Sessions</p>

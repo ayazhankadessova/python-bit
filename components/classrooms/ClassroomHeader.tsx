@@ -10,7 +10,7 @@ export function ClassroomHeader({ title }: ClassroomHeaderProps) {
   return (
     <div className='flex justify-between items-center mb-6'>
       <h1 className='text-3xl font-bold'>{title}</h1>
-      <Button variant='outline' onClick={() => router.push('/dashboard')}>
+      <Button variant='outline' onClick={() => router.replace('/dashboard')}>
         Back to Dashboard
       </Button>
     </div>

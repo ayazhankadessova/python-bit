@@ -8,6 +8,7 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 
 export default function DashboardPage() {
   const { user, loading, signOut } = useAuth()
+  console.log(user, loading, signOut)
 
   if (loading) {
     return (

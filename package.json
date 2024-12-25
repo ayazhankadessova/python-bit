@@ -22,6 +22,7 @@
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.2",
+    "@tailwindcss/typography": "^0.5.15",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.7",
     "@uiw/codemirror-theme-vscode": "^4.23.6",
@@ -47,7 +48,10 @@
     "react-hook-form": "^7.53.2",
     "react-split": "^2.0.14",
     "react-toastify": "^10.0.6",
-    "recoil": "^0.7.7",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-pretty-code": "^0.14.0",
+    "rehype-slug": "^6.0.0",
+    "shiki": "^1.24.4",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "split.js": "^1.6.5",
@@ -69,6 +73,7 @@
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "velite": "^0.2.2"
   }
 }

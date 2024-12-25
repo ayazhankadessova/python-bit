@@ -1,4 +1,3 @@
-import assert from 'assert'
 import { Problem } from '../types/problem'
 
 export const helloWorldHandler = (userCode: string) => {

@@ -307,3 +307,26 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [ ] Make progress bar better
 - [ ] fix topics
 - [ ] UseAuth must be used within AuthProvider after login
+
+## 25 dec
+
+- [ ] Header 
+- [ ] Footer 
+- [ ] Classes
+- [ ] Add projectss
+- [ ] Custom Pagination
+-  For teacher, add panel to monitor each classroom
+## What I have
+- go thru every week and check what works and what not 
+- Student create their own accounts -> no need
+
+## What I need 
+- markdown based sessions for every week.
+- make them and just add them to firebase
+- students can either see them or what their teacher chose
+- Create a template where teachers can create their own courses 
+- Self paced learning -> add problems there 
+- Teachers create students' accounts
+- Every student has managed_by field 
+- Easier 
+- Detect if students are active

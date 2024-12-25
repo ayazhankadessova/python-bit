@@ -48,14 +48,14 @@ const dialogsInfo: DialogsInfo = {
     href: '/classrooms',
     toggle: false,
   },
+  Tutorials: {
+    title: 'Tutorials',
+    href: '/blog',
+    toggle: false,
+  },
   Projects: {
     title: 'Projects',
     href: '/projects',
-    toggle: false,
-  },
-  Explore: {
-    title: 'Explore',
-    href: '/explore',
     toggle: false,
   },
 }
