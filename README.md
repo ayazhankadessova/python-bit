@@ -316,17 +316,20 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## 25 dec
 
+- [x] MDX w/ velite
 - [x] Add full python course mdx
-- [ ] Add this to every lesson
 - [x] l1
-- [ ] l2
-- [ ] l3
-- [ ] l4
-- [ ] l5
-- [ ] why is my ```code theme not githubdark
-- [ ] Add quiz custom elements
-- [ ] next tutorial
+- [x] l2
+- [x] l3
 - [x] back button
+- [x] Share button
+
+## Dec 26 
+
+- [ ] Header fix 
+- [ ] Footer fix
+- [ ] next tutorial Button
+- [ ] Add 5 projects w/ tags
 
 - is logged in ? exerices number, tutorial_id 
 - execute code , is_exercise if yes then upd in firestore
@@ -334,15 +337,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - progress for every lesson
 - what to store on firestore (lesson id , total exercises count)
 - for user, create progress_tut collection and store their tut progress
-- [ ] integrate codemirror to mdx courses
 - [ ] How can i track completion? For every classroom, show list of lessons and how many completed. Completed = Did exercise
-- [ ] Header 
-- [ ] Footer 
-
 - [ ] Classes
-- [ ] Add projectss
-- [ ] Custom Pagination
--  For teacher, add panel to monitor each classroom
+- [ ] For teacher, add panel to monitor each classroom
+
+## BackLog
+- [ ] Add quiz custom elements
+- [ ] Pagination in Tutorials page
+
+- [ ] Add PythonCodeEditor integration to Lessons4-...
+- [ ] why is my ```code theme not githubdark
+
 ## What I have
 - go thru every week and check what works and what not 
 - Student create their own accounts -> no need
