@@ -323,16 +323,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [ ] l3
 - [ ] l4
 - [ ] l5
-```
-<PythonCodeEditor 
-  initialCode={`# Write your code here
-print("Hello, World!")`}
-  expectedOutput="Hello, World!"
-/>
-```
+- [ ] why is my ```code theme not githubdark
 - [ ] Add quiz custom elements
 - [ ] next tutorial
-- [ ] back button
+- [x] back button
 
 - is logged in ? exerices number, tutorial_id 
 - execute code , is_exercise if yes then upd in firestore

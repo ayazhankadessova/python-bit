@@ -1,9 +1,9 @@
 import { posts } from '#site/content'
 import { notFound } from 'next/navigation'
 import { MDXContent } from '@/components/mdx-components'
-// import { SharePost } from '@/components/share-post'
+import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
-// import BackButton from '@/components/backbutton'
+import BackButton from '@/components/ui/backbutton'
 
 interface PostPageProps {
   params: {
@@ -38,9 +38,9 @@ export default async function PostPage({ params }: PostPageProps) {
 
   return (
     <div className='container max-w-xl lg:max-w-[850px] mx-auto px-4 py-6 md:px-6'>
-      <div className='flex items-start justify-between'>
-        {/* <BackButton /> */}
-        {/* <SharePost fullLink={fullLinkGenerated} /> */}
+      <div className='flex items-start justify-between mb-4'>
+        <BackButton />
+        <SharePost fullLink={fullLinkGenerated} />
       </div>
       <article className='prose prose-img:rounded-xl max-w-none mt-2'>
         <h1 className='mb-2'>{post.title}</h1>
