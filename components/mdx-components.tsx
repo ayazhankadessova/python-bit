@@ -1,7 +1,13 @@
+"use client"
+
 import Image from 'next/image'
 import * as runtime from 'react/jsx-runtime'
 import React, { memo } from 'react'
 // import { Callout } from './callout'
+import CodeMirror from '@uiw/react-codemirror'
+import  PythonCodeEditor  from './codeExecutor'
+import { vscodeDark } from '@uiw/codemirror-theme-vscode'
+import { python } from '@codemirror/lang-python'
 
 const useMDXComponent = (code: string) => {
   const fn = new Function(code)
@@ -12,7 +18,9 @@ const useMDXComponent = (code: string) => {
 
 const components = {
   Image,
-//   Callout,
+  //   Callout,
+  PythonCodeEditor,
+//   CodeMirror,
 }
 
 interface MdxProps {
