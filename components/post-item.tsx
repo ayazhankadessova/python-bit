@@ -39,7 +39,7 @@ export function PostItem({ post }: PostItemProps) {
           <Image
             src={image}
             alt=''
-            className='rounded-lg sm:w-[8rem] xl:w-full p-1'
+            className='rounded-lg sm:w-[9rem] xl:w-full p-1'
             width={300}
             height={100}
           />

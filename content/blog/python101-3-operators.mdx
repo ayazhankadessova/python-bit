@@ -1,7 +1,7 @@
 ---
-title: Python Operators
+title: 3. Python Operators
 description: Master the magical tools of Python!
-date: 1734297004
+date: 1734297009
 tags: ['technology', 'Github']
 published: true
 image: https://picsum.photos/id/236/200
@@ -30,38 +30,40 @@ Are you ready to power up your coding skills? Let's jump in! 🚀
 
 Just like your calculator (but way cooler), Python can do math with special symbols:
 
-```python showLineNumbers
-# Let's power up our game character!
+<PythonCodeEditor
+  initialCode={`# Let's power up our game character!
 initial_health = 100
 bonus_health = 50
 
 # Addition (+): Powering up!
 total_health = initial_health + bonus_health
-print(f"Total Health: {total_health}")  # 150 HP! 💪
+print(f"Total Health: {total_health}") # 150 HP! 💪
 
 # Multiplication (*): Multi-kill bonus!
 score = 25 * 3
-print(f"Score: {score}")  # Triple kill! 🎯
+print(f"Score: {score}") # Triple kill! 🎯
 
 # Division (/): Sharing loot with friends
-treasure = 100 / 4  # Sharing with 4 players
-print(f"Each player gets: {treasure} coins") 
+treasure = 100 / 4 # Sharing with 4 players
+print(f"Each player gets: {treasure} coins")
 
 # Power-up (**): Level multiplier!
-damage = 2 ** 3  # Power of 3!
-print(f"Super attack damage: {damage}") 
+damage = 2 ** 3 # Power of 3!
+print(f"Super attack damage: {damage}")
 
 # Remainder (%): Checking for leftover loot
-leftover_gems = 100 % 3  # Dividing gems between 3 players
-print(f"Leftover gems: {leftover_gems}")
-```
+leftover_gems = 100 % 3 # Dividing gems between 3 players
+print(f"Leftover gems: {leftover_gems}")`}
+  exercise_number={1}
+  tutorial_id="python101-3-operators"
+/>
 
 ## String Operators: Word Magic! ✨
 
 Remember our strings from last time? We can do magic with them too!
 
-```python showLineNumbers
-# Combining hero names (+ operator)
+<PythonCodeEditor
+  initialCode={`# Combining hero names (+ operator)
 hero_first = "Super"
 hero_last = "Coder"
 hero_name = hero_first + " " + hero_last
@@ -70,14 +72,17 @@ print(f"Your hero name: {hero_name}")
 # Making a crowd cheer (* operator)
 crowd_cheer = "Hip Hip Hooray! " * 3
 print(f"The crowd goes: {crowd_cheer}")
-```
+`}
+  exercise_number={2}
+  tutorial_id="python101-3-operators"
+/>
 
 ## List Operators: Inventory Management! 🎒
 
 Remember our lists? Let's use them with operators!
 
-```python showLineNumbers
-# Combining inventory from two treasure chests
+<PythonCodeEditor
+  initialCode={`# Combining inventory from two treasure chests
 chest_1 = ["sword", "shield"]
 chest_2 = ["potion", "map"]
 full_inventory = chest_1 + chest_2
@@ -86,14 +91,17 @@ print(f"You found: {full_inventory}")
 # Duplicating power-ups
 power_ups = ["⭐"] * 3
 print(f"Power-ups collected: {power_ups}")  # ⭐⭐⭐
-```
+`}
+  exercise_number={3}
+  tutorial_id="python101-3-operators"
+/>
 
 ## Comparison Operators: The Decision Makers! 🤔
 
 These operators help your game make important decisions:
 
-```python showLineNumbers
-# Equal to (==)
+<PythonCodeEditor
+  initialCode={`# Equal to (==)
 secret_password = "PYTHON123"
 player_input = "PYTHON123"
 is_correct = secret_password == player_input
@@ -110,14 +118,17 @@ max_players = 4
 current_players = 3
 can_join = current_players <= max_players
 print("Can another player join?", can_join)  # True!
-```
+`}
+  exercise_number={4}
+  tutorial_id="python101-3-operators"
+/>
 
 ## Logical Operators: The Brain Power! 🧠
 
 These help you combine multiple conditions:
 
-```python showLineNumbers
-# AND operator (both conditions must be True)
+<PythonCodeEditor
+  initialCode={`# AND operator (both conditions must be True)
 has_sword = True
 has_shield = True
 ready_for_battle = has_sword and has_shield
@@ -133,75 +144,93 @@ print("Can attack?", can_attack)
 is_game_over = False
 is_playing = not is_game_over
 print("Still playing?", is_playing)
-```
+`}
+  exercise_number={5}
+  tutorial_id="python101-3-operators"
+/>
 
 ## 🎮 Mini-Game: The Operator Academy!
 
 Let's create a simple game using our new operator powers!
 
-```python showLineNumbers
-# Your character stats
-player_name = "CodingChampion"  # Change this to your name!
-base_health = 100
-armor = 50
-magic_bonus = 25
+<PythonCodeEditor
+  initialCode={`# Let's power up our game character!
+initial_health = 100
+bonus_health = 50
 
-# 1. Calculate total defense (base_health + armor)
-total_defense = base_health + armor
+# Addition (+): Add initial health and bonus health
 
-# 2. Apply magic bonus (multiply total_defense by 1.5)
-final_stats = total_defense * 1.5
+total_health = ...
+print(f"Total Health: {total_health}") # 150 HP! 💪
 
-# 3. Create a power-up message
-power_up_msg = "POWER UP! " * 3
+# Multiplication (*): Multiply by 3
+score = 25 * ...
+print(f"Score: {score}") # Triple kill! 🎯
 
-# 4. Check if ready for boss battle
-min_stats_needed = 200
-ready_for_boss = final_stats >= min_stats_needed
+# Division (/): Sharing loot with 4 friends
+treasure = 100 / ... 
+print(f"Each player gets: {treasure} coins")
 
-# Display your character card
-print("====================")
-print("🎮 CHARACTER CARD 🎮")
-print("====================")
-print(f"Name: {player_name}")
-print(f"Defense: {final_stats}")
-print(power_up_msg)
-print(f"Ready for boss: {ready_for_boss}")
-print("====================")
-```
+# Power-up (**): # Fill in the base 2 and exponent 3
+damage = _ ** _
+print(f"Super attack damage: {damage}")
+
+# Remainder (%): Checking for leftover loot, show remainder of 100 divided by 3
+leftover_gems = 100 _ ...
+print(f"Leftover gems: {leftover_gems}")`}
+  expectedOutput={`Total Health: 150
+  Score: 75
+  Each player gets: 25.0 coins
+  Super attack damage: 8
+  Leftover gems: 1`}
+  exercise_number={6}
+  tutorial_id="python101-2-operators"
+/>
 
 ## 🌟 Super Challenges!
 
 1. **The Score Calculator:**
-```python showLineNumbers
-# Calculate the final score!
+
+- Create a formula that:
+1. Multiplies kills by multiplier
+2. Adds the bonus
+3. Prints "High Score!" if the result is over 100. Else: "Try Again!"
+
+<PythonCodeEditor
+  initialCode={`# Calculate the final score!
 kills = 10
 multiplier = 3
 bonus = 50
-# Create a formula that:
-# 1. Multiplies kills by multiplier
-# 2. Adds the bonus
-# 3. Prints "HIGH SCORE!" if the result is over 100
-# Your code here!
-```
+
+# Your code here!`}
+  expectedOutput={`High Score!`}
+  exercise_number={7}
+  tutorial_id="python101-2-operators"
+/>
 
 2. **The Inventory Master:**
-```python showLineNumbers
-# Create the ultimate inventory!
+
+1. Combine the inventories
+2. Duplicate the result 2 times
+3. Check if "sword" is in the inventory using 'in'
+
+<PythonCodeEditor
+  initialCode={`# Create the ultimate inventory!
 starter_items = ["sword"]
 found_items = ["shield", "potion"]
-# 1. Combine the inventories
-# 2. Duplicate the result 2 times
-# 3. Check if "sword" is in the inventory using 'in'
-# Your code here!
-```
+# Your code here!`}
+  expectedOutput={`['sword', 'shield', 'potion', 'sword', 'shield', 'potion', 'sword', 'shield', 'potion']
+True`}
+  exercise_number={8}
+  tutorial_id="python101-2-collections"
+/>
 
 ## 🎯 Debug Mission: Spot the Bugs!
 
 Can you find what's wrong in this code?
 
-```python showLineNumbers
-# Bug 1: Why doesn't this work?
+<PythonCodeEditor
+  initialCode={`# Bug 1: Why doesn't this work?
 player_health = "100" + 50
 
 # Bug 2: Why is this always False?
@@ -213,7 +242,18 @@ is_high_score = score = high_score
 has_sword = True
 has_shield = True
 has_power = has_sword or has_shield and False
-```
+
+# Test
+print(player_health)
+print(is_high_score)
+print(has_power)`}
+  
+  exercise_number={9}
+  expectedOutput={`150
+  True
+  False`}
+  tutorial_id="python101-2-collections"
+/>
 
 Remember:
 - `+` adds numbers or combines strings/lists
@@ -228,20 +268,23 @@ Need help with the challenges? Just ask! You're doing great! 🌟
 
 Create a simple game score calculator:
 
-```python showLineNumbers
-# Here's what we want to do:
-# 1. Start with base_score
-# 2. Add bonus points if player has power_up
-# 3. Multiply score if it's a critical_hit
-# 4. Check if it's a new high score!
+1. Start with base_score
+2. Add 100 bonus points if player has power_up
+3. Double the score if it's a critical_hit
+4. Check if it's a new high score!
 
+<PythonCodeEditor
+ initialCode={`# Here's what we want to do:
 base_score = 50
 has_power_up = True
 is_critical_hit = True
 current_high_score = 200
-
-# Your code here!
-```
+# Your code here!`}
+ expectedOutput={`300
+ New High Score: True`}
+ exercise_number={7}
+ tutorial_id="python101-2-operators"
+/>
 
 Remember: Every great coder started exactly where you are! Keep practicing your operator powers, and soon you'll be a Python master! 💪
 
