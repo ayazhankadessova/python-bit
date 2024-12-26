@@ -167,31 +167,21 @@ const PythonCodeEditor = ({
       </div>
 
       {/* Output Section */}
-      <div className={`${isDarkTheme ? 'bg-zinc-900' : 'bg-white'} px-4 py-2 `}>
-        {/* <div className='flex items-center gap-2 mb-3'> */}
-        <h3
-          className={`mt-3 font-medium ${
-            isDarkTheme ? 'text-zinc-200' : 'text-zinc-800'
-          }`}
-        >
-          Output
-        </h3>
-        {/* </div> */}
-
+      <div className={`${isDarkTheme ? 'bg-zinc-900' : 'bg-white'} p-4 `}>
         {error ? (
-          <pre className='font-mono text-sm text-red-500 whitespace-pre-wrap'>
+          <div className='p-2 rounded text-red-500 break-words whitespace-pre-wrap max-h-[300px] overflow-y-auto'>
             {error}
-          </pre>
+          </div>
         ) : (
-          <pre
-            className={`font-mono text-sm ${
+          <div
+            className={`p-2 rounded ${
               isDarkTheme ? 'bg-zinc-700' : 'bg-zinc-100'
             } ${
               isDarkTheme ? 'text-zinc-200' : 'text-zinc-800'
             } whitespace-pre-wrap`}
           >
             {output || 'No output yet...'}
-          </pre>
+          </div>
         )}
 
         {expectedOutput && isCorrect !== null && !error && (
