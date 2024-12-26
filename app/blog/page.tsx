@@ -63,7 +63,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
   }
 
   return (
-    <div className='container max-w-4xl py-2 lg:py-3 px-0'>
+    <div className='container max-w-4xl py-2 lg:py-3 px-2'>
       <div className='mb-6 pr-20 mr-20'>
         <Input
           type='text'
