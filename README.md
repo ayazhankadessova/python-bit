@@ -326,10 +326,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Dec 26 
 
-- [ ] Header fix 
+- [x] Header fix 
 - [ ] Footer fix
 - [ ] next tutorial Button
 - [ ] Add 5 projects w/ tags
+- [ ] Add better imgs
 
 - is logged in ? exerices number, tutorial_id 
 - execute code , is_exercise if yes then upd in firestore
