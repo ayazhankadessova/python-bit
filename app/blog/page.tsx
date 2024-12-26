@@ -46,7 +46,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
       : sortPostsByTitle(publishedPosts)
 
   const currentPage = Number(searchParams?.page) || 1
-  const currentPerPage = Number(searchParams?.perPage) || 10
+  const currentPerPage = Number(searchParams?.perPage) || 5
   const totalPages = Math.ceil(publishedPosts.length / currentPerPage)
 
   const displayPosts = sortedPosts.slice(
@@ -101,7 +101,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
       ) : (
         <p>No articles yet...</p>
       )}
-      {/* <CustomPagination totalPages={totalPages} className='mt-4' /> */}
+      <CustomPagination totalPages={totalPages} className='mt-4' />
     </div>
   )
 }
