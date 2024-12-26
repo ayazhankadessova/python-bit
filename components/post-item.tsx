@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { cn, formatDate } from '@/lib/utils'
-// import { Tag } from './tag'
+import { Tag } from './ui/tag'
 // import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
@@ -87,9 +87,9 @@ export function PostItem({ post, user }: PostItemProps) {
           )}
           <div className='max-w-none text-muted-foreground'>{description}</div>
           <div className='flex gap-2 mt-2'>
-            {/* {tags?.map((tag) => (
+            {tags?.map((tag) => (
               <Tag tag={tag} key={tag} />
-            ))} */}
+            ))}
           </div>
         </div>
         <div>

@@ -6,7 +6,7 @@ import { PostItem } from '@/components/post-item'
 import {
   sortPosts,
   filterPostsBySearchTerm,
-  sortPostsByTitle,
+  sortPostsByTime,
 } from '@/lib/utils'
 import '@/styles/mdx-style.css'
 import { CustomPagination } from '@/components/pagination-query'
@@ -31,7 +31,7 @@ interface BlogPageProps {
 
 const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
   const [searchText, setSearchText] = useState('')
-  const [sortMethod, setSortMethod] = useState('createdAt')
+  const [sortMethod, setSortMethod] = useState('Difficulty')
   const { user, loading, signOut } = useAuth()
   console.log("user from blog page:" , user)
 
@@ -41,9 +41,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
   )
 
   const sortedPosts =
-    sortMethod === 'createdAt'
+    sortMethod === 'Difficulty'
       ? sortPosts(publishedPosts)
-      : sortPostsByTitle(publishedPosts)
+      : sortPostsByTime(publishedPosts)
 
   const currentPage = Number(searchParams?.page) || 1
   const currentPerPage = Number(searchParams?.perPage) || 5
@@ -83,8 +83,8 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Sort By</SelectLabel>
-              <SelectItem value='createdAt'>Created At</SelectItem>
-              <SelectItem value='title'>Title</SelectItem>
+              <SelectItem value='Difficulty'>Easier first</SelectItem>
+              <SelectItem value='createdAt'>New first</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

@@ -17,13 +17,11 @@ export function formatDate(input: number): string {
 }
 
 export function sortPosts(posts: Array<Post>) {
-  return posts.sort((a, b) => b.date - a.date)
+  return posts.sort((a, b) => a.order - b.order)
 }
 
-export function sortPostsByTitle(posts: Array<Post>): Array<Post> {
-  return posts.sort((a, b) =>
-    a.title.toLowerCase().localeCompare(b.title.toLowerCase())
-  )
+export function sortPostsByTime(posts: Array<Post>): Array<Post> {
+  return posts.sort((a, b) => b.date - a.date)
 }
 
 export function filterPostsBySearchTerm(

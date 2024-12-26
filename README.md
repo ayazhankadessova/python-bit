@@ -328,10 +328,22 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - [x] Header fix 
 - [x] Footer fix
+- [ ] add which tab ur one
 - [ ] add caching to progress checkers
 - [ ] next tutorial Button
 - [ ] Add 5 projects w/ tags
 - [ ] Add better imgs
+- [ ] Meme creation tools
+Modern Features to Include:
+
+
+Achievements/badges system
+Social sharing options
+Project showcases
+Peer reviews
+AI-powered hints
+Real-time collaboration
+Customizable themes/avatars
 
 for every classroom, teachers will want to see progress
 we will leyt them choose classroom and show
@@ -354,8 +366,9 @@ tutrials data or every tutorials
 
 ## BackLog
 - [ ] Add quiz custom elements
-- [ ] Pagination in Tutorials page
-
+- [ ] Pagination in Tutorials page should be more sophisticated (per page), show page numbers
+- [ ] Background -> picture not just white/dark.
+- [ ] Fix session view ui, make it more engaging for kids (Raise hand needed?)
 - [ ] Add PythonCodeEditor integration to Lessons4-...
 - [ ] why is my ```code theme not githubdark
 
