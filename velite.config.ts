@@ -37,12 +37,12 @@ const projects = defineCollection({
       title: s.string().max(99),
       description: s.string().max(999).optional(),
       date: s.number(),
-      published: s.boolean().default(true),
+      theme: s.string().max(99),
+      difficulty: s.string().max(99),
+      estimatedTime: s.string().max(99),
       tags: s.array(s.string()).optional(),
-      body: s.mdx(),
       image: s.string().max(99),
-      exercises: s.number(),
-      firestoreId: s.string().max(99),
+      published: s.boolean().default(true),
     })
     .transform(computedFields),
 })

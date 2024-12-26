@@ -108,6 +108,8 @@
 
 // export default BlogPage
 
+// projects/page.tsx
+"use client"
 import React from 'react'
 import {
   Card,
@@ -128,11 +130,13 @@ import {
   Trophy,
   Scroll,
 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 const ProjectThemes = () => {
+
   const themes = [
     {
-      title: 'Gaming Universe 🎮',
+      title: 'Gaming Universe',
       description: 'Create games and game-related projects',
       projects: [
         'Aura Points Calculator - Track and calculate character energy levels',
@@ -144,7 +148,7 @@ const ProjectThemes = () => {
       estimatedTime: '2-3 hours',
     },
     {
-      title: 'Anime & Manga World ⚔️',
+      title: 'Anime & Manga World',
       description: 'Projects inspired by your favorite anime',
       projects: [
         'Character Power Level System',
@@ -156,7 +160,7 @@ const ProjectThemes = () => {
       estimatedTime: '3-4 hours',
     },
     {
-      title: 'Nature & Science 🌳',
+      title: 'Nature & Science',
       description: 'Explore the natural world through code',
       projects: [
         'Ecosystem Simulator',
@@ -168,7 +172,7 @@ const ProjectThemes = () => {
       estimatedTime: '4-5 hours',
     },
     {
-      title: 'Pet Companion 🐱',
+      title: 'Pet Companion',
       description: 'Projects for animal lovers',
       projects: [
         'Virtual Pet Simulator',
@@ -180,7 +184,7 @@ const ProjectThemes = () => {
       estimatedTime: '2-3 hours',
     },
     {
-      title: 'Music & Sound 🎵',
+      title: 'Music & Sound',
       description: 'Create music-related applications',
       projects: ['Playlist Generator', 'Beat Maker', 'Music Theory Helper'],
       icon: <Music className='w-8 h-8' />,
@@ -188,7 +192,7 @@ const ProjectThemes = () => {
       estimatedTime: '3-4 hours',
     },
     {
-      title: 'Fashion & Style 👕',
+      title: 'Fashion & Style',
       description: 'Design fashion-related tools',
       projects: ['Outfit Coordinator', 'Style Quiz', 'Virtual Wardrobe'],
       icon: <Shirt className='w-8 h-8' />,
@@ -196,7 +200,7 @@ const ProjectThemes = () => {
       estimatedTime: '2-3 hours',
     },
     {
-      title: 'Sports Analytics ⚽',
+      title: 'Sports Analytics',
       description: 'Analyze sports data and statistics',
       projects: [
         'Team Performance Tracker',
@@ -208,7 +212,7 @@ const ProjectThemes = () => {
       estimatedTime: '4-5 hours',
     },
     {
-      title: 'Story Creator 📜',
+      title: 'Story Creator',
       description: 'Build interactive storytelling tools',
       projects: [
         'Choose Your Own Adventure Game',
@@ -220,6 +224,7 @@ const ProjectThemes = () => {
       estimatedTime: '3-4 hours',
     },
   ]
+  const router = useRouter()
 
   return (
     <div className='container mx-auto p-4'>
@@ -248,7 +253,18 @@ const ProjectThemes = () => {
                   <li key={idx}>{project}</li>
                 ))}
               </ul>
-              <Button className='w-full mt-4'>Start Project</Button>
+              <Button
+                className='w-full mt-4'
+                onClick={() =>
+                  router.push(
+                    `/projects/${theme.title
+                      .toLowerCase()
+                      .replace(/\s+/g, '-')}`
+                  )
+                }
+              >
+                Go to Theme
+              </Button>
             </CardContent>
           </Card>
         ))}
