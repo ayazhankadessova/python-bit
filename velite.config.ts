@@ -27,6 +27,25 @@ const posts = defineCollection({
     .transform(computedFields),
 })
 
+const projects = defineCollection({
+  name: 'Projects',
+  pattern: 'projects/**/*.mdx',
+  schema: s
+    .object({
+      slug: s.path(),
+      title: s.string().max(99),
+      description: s.string().max(999).optional(),
+      date: s.number(),
+      published: s.boolean().default(true),
+      tags: s.array(s.string()).optional(),
+      body: s.mdx(),
+      image: s.string().max(99),
+      exercises: s.number(),
+      firestoreId: s.string().max(99),
+    })
+    .transform(computedFields),
+})
+
 export default defineConfig({
   root: 'content',
   output: {
@@ -36,7 +55,7 @@ export default defineConfig({
     name: '[name]-[hash:6].[ext]',
     clean: true,
   },
-  collections: { posts },
+  collections: { posts, projects },
   mdx: {
     rehypePlugins: [
       rehypeSlug,
