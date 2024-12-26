@@ -4,9 +4,13 @@ import { useAuth } from '@/contexts/AuthContext'
 import { TeacherClassroomsView } from '@/components/classrooms/TeacherClassroomsView'
 import { StudentClassroomsView } from '@/components/classrooms/StudentClassroomsView'
 import { Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 const ClassroomPage = () => {
   const { user, loading } = useAuth()
+
+  // to do: go home
+  const router = useRouter()
 
   if (loading) {
     return (
@@ -16,10 +20,14 @@ const ClassroomPage = () => {
     )
   }
 
-  return user?.role === 'teacher' ? (
-    <TeacherClassroomsView user={user} />
-  ) : (
-    <StudentClassroomsView user={user!} />
+  return (
+    <>
+      {!user ? <div>Please Login to View This Page.</div> : user.role === 'teacher' ? (
+        <TeacherClassroomsView user={user} />
+      ) : (
+        <StudentClassroomsView user={user} />
+      )}
+    </>
   )
 }
 

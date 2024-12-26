@@ -9,6 +9,23 @@ import {
 } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { Select } from '@/components/ui/select'
+import { useAuth } from '@/contexts/AuthContext'
+import { User } from '@/utils/types/firebase'
+import { handleExerciseCompletion } from './session-views/helpers'
+
+
+interface TutorialProgress {
+  exerciseId: string
+  completed: boolean
+  timestamp: number
+}
+
+interface UserTutorialProgress {
+  [tutorialId: string]: {
+    [exerciseNumber: number]: TutorialProgress
+  }
+}
+
 
 interface CodeEditorProps {
   initialCode: string
@@ -23,6 +40,7 @@ const PythonCodeEditor = ({
   exercise_number = 1,
   tutorial_id = 'default',
 }: CodeEditorProps) => {
+  const user = useAuth()
   const [code, setCode] = useState(initialCode)
   const [output, setOutput] = useState('')
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
@@ -73,8 +91,16 @@ const PythonCodeEditor = ({
       const executionOutput = data.output.trim()
       setOutput(executionOutput)
 
-      if (expectedOutput) {
-        setIsCorrect(executionOutput === expectedOutput.trim())
+      if (expectedOutput && executionOutput === expectedOutput.trim()) {
+        setIsCorrect(true)
+        // Update Firebase
+
+        if (user) {
+          await handleExerciseCompletion(user.user!, tutorial_id, exercise_number)
+        }
+        
+      } else {
+        setIsCorrect(false)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
@@ -201,5 +227,7 @@ const PythonCodeEditor = ({
     </div>
   )
 }
+
+
 
 export default PythonCodeEditor

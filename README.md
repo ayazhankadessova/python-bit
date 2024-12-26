@@ -327,11 +327,21 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Dec 26 
 
 - [x] Header fix 
-- [ ] Footer fix
+- [x] Footer fix
+- [ ] add caching to progress checkers
 - [ ] next tutorial Button
 - [ ] Add 5 projects w/ tags
 - [ ] Add better imgs
 
+for every classroom, teachers will want to see progress
+we will leyt them choose classroom and show
+
+lesson 
+
+list of students and their progress
+for every student -> go to their "tutorials progress" -> set of completed exercises
+we will see the total progress by 
+tutrials data or every tutorials
 - is logged in ? exerices number, tutorial_id 
 - execute code , is_exercise if yes then upd in firestore
 - show is completed for ever lesson
@@ -363,3 +373,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Every student has managed_by field 
 - Easier 
 - Detect if students are active
+import { useAuth } from '@/contexts/AuthContext'
+
+  const { user, loading, signOut } = useAuth()

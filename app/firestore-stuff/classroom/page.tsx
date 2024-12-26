@@ -163,7 +163,6 @@ export default function CreateClassroomPage() {
         lastTaughtWeek: 0,
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        weeklyProgressIds: {},
         school: user.school,
       })
 

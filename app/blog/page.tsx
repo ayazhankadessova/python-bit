@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface BlogPageProps {
   searchParams: {
@@ -29,9 +30,10 @@ interface BlogPageProps {
 }
 
 const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
-  // export default function BlogPage({ searchParams }: BlogPageProps) {
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('createdAt')
+  const { user, loading, signOut } = useAuth()
+  console.log("user from blog page:" , user)
 
   const publishedPosts = filterPostsBySearchTerm(
     posts.filter((post) => post.published),
@@ -92,7 +94,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
         <ul className='flex flex-col'>
           {displayPosts.map((post) => (
             <li key={post.slug}>
-              <PostItem post={post} />
+              <PostItem post={post} user={user} />
             </li>
           ))}
         </ul>

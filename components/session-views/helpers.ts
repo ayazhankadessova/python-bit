@@ -1,5 +1,7 @@
-import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore'
+import { doc, getDoc, updateDoc, arrayUnion, setDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
+import { User } from '@/utils/types/firebase'
+
 
 // Shared helper function to update weekly progress
 export async function updateWeeklyProgress(
@@ -86,4 +88,44 @@ export async function handleTaskCompletion({
     console.error('Error handling task completion:', error)
     throw error
   }
+}
+
+export async function handleExerciseCompletion(
+  user: User,
+  tutorialId: string,
+  exerciseNumber: number
+){
+  if (!user) return
+
+  const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
+
+  await setDoc(
+    progressRef,
+    {
+      [`exercises.${exerciseNumber}`]: {
+        completed: true,
+        timestamp: Date.now(),
+      },
+    },
+    { merge: true }
+  )
+}
+
+export async function getTutorialProgress(
+  userId: string,
+  tutorialId: string,
+  count: number
+) {
+  const tutorialRef = doc(fireStore, 'users', userId, 'tutorials', tutorialId)
+  const docSnap = await getDoc(tutorialRef)
+
+  if (!docSnap.exists()) return 0
+
+  const data = docSnap.data()
+  const exercises = Object.entries(data || {})
+    .filter(([key]) => key.startsWith('exercises.'))
+    .map(([_, value]) => value)
+
+  const completedExercises = exercises.filter((ex: any) => ex.completed).length
+  return (completedExercises / count) * 100
 }

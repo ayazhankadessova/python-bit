@@ -89,9 +89,6 @@ export interface Classroom {
   lastTaughtWeek: number
   createdAt: number
   updatedAt: number
-  weeklyProgressIds: {
-    [weekNumber: number]: string // Maps week numbers to their progress docs
-  }
 }
 
 interface StudentClassroom {
