@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import React from 'react'
-// import MobileNav from './mobile-nav'
+import MobileNav from './ui/mobile-nav'
 import { MainNav } from './main-nav'
 import {
   NavigationMenu,
@@ -14,7 +14,7 @@ import {
 import headerNavLinks from '@/config/headerNavLinks'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-// import { ThemeToggle } from './theme-toggle'
+import { ThemeToggle } from './ui/theme-toggle'
 import { ChevronDown } from 'lucide-react'
 
 export function SiteHeader() {
@@ -25,7 +25,7 @@ export function SiteHeader() {
     <header className={headerClass}>
       <MainNav />
 
-      <div className='hidden min-[750px]:block ml-6'>
+      <div className='hidden min-[850px]:block ml-6'>
         <NavigationMenu className='hidden max-w-30 sm:inline-block'>
           <NavigationMenuList>
             {Object.values(headerNavLinks).map((dialog) => (
@@ -66,10 +66,14 @@ export function SiteHeader() {
         </NavigationMenu>
       </div>
 
-      <div className='min-[750px]:hidden'>{/* <MobileNav /> */}</div>
+      <div className='min-[850px]:hidden'>
+        <MobileNav />
+      </div>
 
-      <div className='hidden min-[750px]:inline-flex items-end'>
-        <div>{/* <ThemeToggle /> */}</div>
+      <div className='hidden min-[850px]:inline-flex items-end'>
+        <div>
+          <ThemeToggle />
+        </div>
         <Link
           href=''
           className={cn(

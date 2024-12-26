@@ -43,9 +43,11 @@ export default async function PostPage({ params }: PostPageProps) {
         <SharePost fullLink={fullLinkGenerated} />
       </div>
       <article className='prose prose-img:rounded-xl max-w-none mt-2'>
-        <h1 className='mb-2'>{post.title}</h1>
+        <h1 className='mb-2 text-foreground dark:text-foreground'>
+          {post.title}
+        </h1>
         {post.description ? (
-          <p className='text-xl mt-0 text-muted-foreground'>
+          <p className='text-xl mt-0  text-muted-foreground dark:text-muted-foreground'>
             {post.description}
           </p>
         ) : null}
