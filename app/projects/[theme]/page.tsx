@@ -14,8 +14,6 @@ import {
 } from '@/components/ui/select'
 import { projects } from '#site/content'
 import { sortPosts, filterPostsBySearchTerm } from '@/lib/utils'
-import { PostItem } from '@/components/post-item'
-import { CustomPagination } from '@/components/pagination-query'
 import {
   Card,
   CardContent,
@@ -25,7 +23,7 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-
+import { useRouter } from 'next/navigation'
 
 interface ThemePageProps {
   params: {
@@ -40,6 +38,7 @@ interface ThemePageProps {
 const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('createdAt')
+  const router = useRouter()
 
   // Filter projects by theme
   const themeProjects = projects.filter(
@@ -47,23 +46,29 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   )
 
   // Filter by search
-//   const filteredProjects = filterPostsBySearchTerm(themeProjects, searchText)
+  // const filteredProjects = filterPostsBySearchTerm(themeProjects, searchText)
 
   // Sort projects
-//   const sortedProjects =
-//     sortMethod === 'createdAt'
-//       ? sortPosts(themeProjects)
-//       : filteredProjects.sort((a, b) => a.title.localeCompare(b.title))
+  const sortedProjects =
+    sortMethod === 'createdAt'
+      ? [...themeProjects].sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        )
+      : [...themeProjects].sort((a, b) => a.title.localeCompare(b.title))
 
   // Pagination
   const currentPage = Number(searchParams?.page) || 1
   const currentPerPage = Number(searchParams?.perPage) || 5
-  const totalPages = Math.ceil(themeProjects.length / currentPerPage)
+  const totalPages = Math.ceil(sortedProjects.length / currentPerPage)
 
-  const displayProjects = themeProjects.slice(
+  const displayProjects = sortedProjects.slice(
     currentPerPage * (currentPage - 1),
     currentPerPage * currentPage
   )
+
+  const handleProjectClick = (slug: string) => {
+    router.push(`/projects/${params.theme}/${slug}`)
+  }
 
   return (
     <div className='container max-w-4xl py-6 px-4'>
@@ -97,12 +102,14 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
 
         {displayProjects.length > 0 ? (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {displayProjects.map((project, index) => (
-              <Card key={index} className='hover:shadow-lg transition-shadow'>
+            {displayProjects.map((project) => (
+              <Card
+                key={project.slugAsParams}
+                className='hover:shadow-lg transition-shadow'
+              >
                 <CardHeader>
                   <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-4'>
-                      {/* {theme.icon} */}
                       <CardTitle>{project.title}</CardTitle>
                     </div>
                   </div>
@@ -115,13 +122,7 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
                   </div>
                   <Button
                     className='w-full mt-4'
-                    // onClick={() =>
-                    //   router.push(
-                    //     `/projects/${theme.title
-                    //       .toLowerCase()
-                    //       .replace(/\s+/g, '-')}`
-                    //   )
-                    // }
+                    onClick={() => handleProjectClick(project.slugAsParams)}
                   >
                     Start Project
                   </Button>
@@ -130,17 +131,6 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
             ))}
           </div>
         ) : (
-          //   <>
-          //     <ul className='space-y-6'>
-          //       {displayProjects.map((project) => (
-          //         <li key={project.slug}>
-          //           {/* <PostItem post={project} /> */}
-          //           <p>{project.title}</p>
-          //         </li>
-          //       ))}
-          //     </ul>
-          //     <CustomPagination totalPages={totalPages} className='mt-6' />
-          //   </>
           <p className='text-center text-muted-foreground'>
             No projects found for this theme...
           </p>
