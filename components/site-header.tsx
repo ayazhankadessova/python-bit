@@ -84,16 +84,14 @@ export function SiteHeader() {
         <MainNav />
       </div>
 
-      <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
+      <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
         <Input type='search' placeholder='Search' />
         <MobileNav />
       </div>
 
-      <div className='hidden min-[850px]:inline-flex items-end'>
+      <div className='hidden min-[850px]:inline-flex items-center items-end'>
         <Input type='search' placeholder='Search' />
-        <div>
-          <ThemeToggle />
-        </div>
+        <ThemeToggle />
       </div>
     </header>
   )
