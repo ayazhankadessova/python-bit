@@ -16,8 +16,13 @@ interface DialogsInfo {
 }
 
 const dialogsInfo: DialogsInfo = {
+  Classrooms: {
+    title: 'Classrooms',
+    href: '/classrooms',
+    toggle: false,
+  },
   Products: {
-    title: 'Teaching Content',
+    title: 'Materials',
     href: '/teaching-content',
     dropdown: [
       {
@@ -42,11 +47,6 @@ const dialogsInfo: DialogsInfo = {
       },
     ],
     toggle: true,
-  },
-  Classrooms: {
-    title: 'Classrooms',
-    href: '/classrooms',
-    toggle: false,
   },
   Tutorials: {
     title: 'Tutorials',

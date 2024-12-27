@@ -329,6 +329,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Header fix 
 - [x] Footer fix
 - [x] Added tags to python101 lessons
+
+## Dec 27
+
+- [x] Search btn 
+- [x] Active tab 
+- [x] Logo diff 
 - [ ] add at least 5 projects
 - [ ] add which tab ur one
 - [ ] add caching to progress checkers
@@ -367,6 +373,8 @@ tutrials data or every tutorials
 - [ ] For teacher, add panel to monitor each classroom
 
 ## BackLog
+- [ ] Search Button Functionality
+- [ ] logo
 - [ ] Add quiz custom elements
 - [ ] Pagination in Tutorials page should be more sophisticated (per page), show page numbers
 - [ ] Background -> picture not just white/dark.

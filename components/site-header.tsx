@@ -12,11 +12,12 @@ import {
   NavigationMenuContent,
 } from '@/components/ui/navigation-menu'
 import headerNavLinks from '@/config/headerNavLinks'
-import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from './ui/theme-toggle'
 import { ChevronDown } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { Input } from '@/components/ui/input'
+
 
 export function SiteHeader() {
   const pathname = usePathname()
@@ -25,10 +26,9 @@ export function SiteHeader() {
 
   return (
     <header className={headerClass}>
-      <MainNav />
-
-      <div className='hidden min-[850px]:block ml-6'>
-        <NavigationMenu className='hidden max-w-30 sm:inline-block'>
+      <div className='hidden min-[850px]:flex items-center gap-4'>
+        <MainNav />
+        <NavigationMenu className='hidden sm:inline-flex'>
           <NavigationMenuList>
             {Object.values(headerNavLinks).map((dialog) => (
               <NavigationMenuItem key={dialog.title}>
@@ -80,23 +80,20 @@ export function SiteHeader() {
         </NavigationMenu>
       </div>
 
-      <div className='min-[850px]:hidden'>
+      <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
+        <MainNav />
+      </div>
+
+      <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
+        <Input type='search' placeholder='Search' />
         <MobileNav />
       </div>
 
       <div className='hidden min-[850px]:inline-flex items-end'>
+        <Input type='search' placeholder='Search' />
         <div>
           <ThemeToggle />
         </div>
-        <Link
-          href=''
-          className={cn(
-            buttonVariants({ variant: 'default', size: 'sm' }),
-            'group justify-center rounded-md bg-primary text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50'
-          )}
-        >
-          Contact Us
-        </Link>
       </div>
     </header>
   )
