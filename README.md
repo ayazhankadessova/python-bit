@@ -329,6 +329,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Header fix 
 - [x] Footer fix
 - [x] Added tags to python101 lessons
+- [ ] add at least 5 projects
 - [ ] add which tab ur one
 - [ ] add caching to progress checkers
 - [ ] next tutorial Button

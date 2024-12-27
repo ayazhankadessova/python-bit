@@ -16,8 +16,10 @@ import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from './ui/theme-toggle'
 import { ChevronDown } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 export function SiteHeader() {
+  const pathname = usePathname()
   const headerClass =
     'container flex max-w-screen-2xl px-2 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-background'
 
@@ -32,7 +34,13 @@ export function SiteHeader() {
               <NavigationMenuItem key={dialog.title}>
                 {dialog.toggle ? (
                   <>
-                    <NavigationMenuTrigger>
+                    <NavigationMenuTrigger
+                      className={cn(
+                        pathname === dialog.href &&
+                          'bg-accent text-accent-foreground',
+                        'transition-colors'
+                      )}
+                    >
                       {dialog.title}
                       <ChevronDown
                         className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
@@ -55,7 +63,13 @@ export function SiteHeader() {
                   </>
                 ) : (
                   <Link href={dialog.href}>
-                    <NavigationMenuTrigger>
+                    <NavigationMenuTrigger
+                      className={cn(
+                        pathname === dialog.href &&
+                          'bg-accent text-accent-foreground',
+                        'transition-colors'
+                      )}
+                    >
                       {dialog.title}
                     </NavigationMenuTrigger>
                   </Link>
@@ -90,15 +104,19 @@ export function SiteHeader() {
 
 const ListItem = React.forwardRef<
   React.ElementRef<'a'>,
-  React.ComponentPropsWithoutRef<'a'>
->(({ className, title, children, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<'a'> & { href?: string }
+>(({ className, title, children, href, ...props }, ref) => {
+  const pathname = usePathname()
+  
   return (
     <li>
       <NavigationMenuLink asChild>
         <a
           ref={ref}
+          href={href}
           className={cn(
             'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+            pathname === href && 'bg-accent text-accent-foreground',
             className
           )}
           {...props}
