@@ -335,6 +335,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Search btn 
 - [x] Active tab 
 - [x] Logo diff 
+
+## Dec 28
+- [ ] exercise type to types file
+- [ ] resize python code editor
+- [ ] Shows themes and projects on the same page for better nav: https://neetcode.io/practice
 - [ ] add at least 5 projects
 - [ ] add which tab ur one
 - [ ] add caching to progress checkers

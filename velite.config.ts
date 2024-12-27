@@ -44,6 +44,8 @@ const projects = defineCollection({
       image: s.string().max(99),
       published: s.boolean().default(true),
       body: s.mdx(),
+      starterCode: s.string().optional(),
+      testCode: s.string().optional(),
     })
     .transform(computedFields),
 })

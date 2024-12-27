@@ -29,10 +29,12 @@ interface UserTutorialProgress {
 
 
 interface CodeEditorProps {
-  initialCode: string
+  initialCode?: string
   expectedOutput?: string
   exercise_number?: number
   tutorial_id?: string
+  testCode?: string        // New prop for test code
+  isProject?: boolean  
 }
 
 const PythonCodeEditor = ({
@@ -40,6 +42,8 @@ const PythonCodeEditor = ({
   expectedOutput,
   exercise_number = 1,
   tutorial_id = 'default',
+  testCode,
+  isProject = false,
 }: CodeEditorProps) => {
   const user = useAuth()
   const [code, setCode] = useState(initialCode)
@@ -48,6 +52,7 @@ const PythonCodeEditor = ({
   const [isExecuting, setIsExecuting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [theme, setTheme] = useState<'light' | 'dark' | 'vscode'>('vscode')
+  const [showTests, setShowTests] = useState(false)
 
   const getTheme = () => {
     switch (theme) {
@@ -72,13 +77,20 @@ const PythonCodeEditor = ({
     setOutput('')
 
     try {
+      let codeToExecute = code
+
+      // If this is a project and we're running tests, combine the code with test code
+      if (isProject && testCode) {
+        codeToExecute = `${code}\n\n${testCode}`
+      }
+
       const response = await fetch('/api/simple-execute-code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          code,
+          code: codeToExecute,
           exercise_number,
           tutorial_id,
         }),
@@ -90,18 +102,22 @@ const PythonCodeEditor = ({
       }
 
       const executionOutput = data.output.trim()
+      console.log(executionOutput)
       setOutput(executionOutput)
 
-      if (expectedOutput && executionOutput === expectedOutput.trim()) {
-        setIsCorrect(true)
-        // Update Firebase
+      // If this is a project, check if all tests passed
+      if (isProject && showTests) {
+        setIsCorrect(
+          !executionOutput.includes('AssertionError') &&
+            !executionOutput.includes('Error') &&
+            executionOutput.includes('All tests completed!')
+        )
+      } else if (expectedOutput) {
+        setIsCorrect(executionOutput === expectedOutput.trim())
+      }
 
-        if (user) {
-          await handleExerciseCompletion(user.user!, tutorial_id, exercise_number)
-        }
-        
-      } else {
-        setIsCorrect(false)
+      if (isCorrect && user) {
+        await handleExerciseCompletion(user.user!, tutorial_id, exercise_number)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
@@ -115,7 +131,6 @@ const PythonCodeEditor = ({
 
   return (
     <div className='flex flex-col h-full'>
-      {/* Header */}
       {/* Header */}
       <div
         className={`w-full px-4 py-3 flex justify-between items-center flex-none ${
@@ -220,6 +235,16 @@ const PythonCodeEditor = ({
             )}
             {isExecuting ? 'Running...' : 'Run Code'}
           </Button>
+
+          {isProject && (
+            <Button
+              onClick={() => setShowTests(!showTests)}
+              variant={showTests ? 'secondary' : 'outline'}
+              className={`${showTests ? 'bg-purple-100 text-purple-700' : ''}`}
+            >
+              {showTests ? 'Hide Tests' : 'Run Tests'}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -245,7 +270,21 @@ const PythonCodeEditor = ({
           </div>
         )}
 
-        {expectedOutput && isCorrect !== null && !error && (
+        {isProject && showTests && isCorrect !== null && !error && (
+          <div
+            className={`mt-4 p-2 rounded ${
+              isCorrect
+                ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400'
+                : 'bg-red-50 text-red-600 dark:bg-red-950/20 dark:text-red-400'
+            }`}
+          >
+            {isCorrect
+              ? '✅ All tests passed!'
+              : '❌ Some tests failed. Check the output above for details.'}
+          </div>
+        )}
+
+        {!showTests && expectedOutput && isCorrect !== null && !error && (
           <div
             className={`mt-4 p-2 rounded ${
               isCorrect
@@ -260,121 +299,7 @@ const PythonCodeEditor = ({
         )}
       </div>
     </div>
-    // <div
-    //   className={`h-full rounded-lg overflow-hidden border ${
-    //     isDarkTheme ? 'border-zinc-800' : 'border-zinc-200'
-    //   }`}
-    // >
-    //   {/* Header with Exercise Info and Theme Selector */}
-    //   <div
-    //     className={`px-4 py-3 flex justify-between items-center ${
-    //       isDarkTheme ? 'bg-zinc-900' : 'bg-white'
-    //     } border-b ${isDarkTheme ? 'border-zinc-800' : 'border-zinc-200'}`}
-    //   >
-    //     <div className='flex items-center gap-2'>
-    //       <Code2
-    //         className={`w-4 h-4 ${
-    //           isDarkTheme ? 'text-zinc-400' : 'text-zinc-600'
-    //         }`}
-    //       />
-    //       <span
-    //         className={`text-sm ${
-    //           isDarkTheme ? 'text-zinc-400' : 'text-zinc-600'
-    //         }`}
-    //       >
-    //         Exercise {exercise_number}{' '}
-    //         {tutorial_id !== 'default' && `• ${tutorial_id}`}
-    //       </span>
-    //     </div>
-    //     <div className='flex items-center gap-2'>
-    //       <Button
-    //         variant='ghost'
-    //         size='sm'
-    //         onClick={() => setTheme('light')}
-    //         className={theme === 'light' ? 'text-amber-500' : ''}
-    //       >
-    //         <Sun className='w-4 h-4' />
-    //       </Button>
-    //       <Button
-    //         variant='ghost'
-    //         size='sm'
-    //         onClick={() => setTheme('dark')}
-    //         className={theme === 'dark' ? 'text-blue-500' : ''}
-    //       >
-    //         <Moon className='w-4 h-4' />
-    //       </Button>
-    //       <Button
-    //         variant='ghost'
-    //         size='sm'
-    //         onClick={() => setTheme('vscode')}
-    //         className={theme === 'vscode' ? 'text-purple-500' : ''}
-    //       >
-    //         <Code2 className='w-4 h-4' />
-    //       </Button>
-    //     </div>
-    //   </div>
-
-    //   {/* Code Editor */}
-    //   <div className={`${isDarkTheme ? 'bg-zinc-950' : 'bg-gray-50'} p-4`}>
-    //     <CodeMirror
-    //       value={code}
-    //       height="100%"
-    //       theme={getTheme()}
-    //       extensions={[python()]}
-    //       onChange={(value) => setCode(value)}
-    //     />
-    //     <div className='mt-4'>
-    //       <Button
-    //         onClick={runCode}
-    //         className='bg-emerald-600 hover:bg-emerald-700 text-white'
-    //         disabled={isExecuting}
-    //       >
-    //         {isExecuting ? (
-    //           <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-    //         ) : (
-    //           <Play className='w-4 h-4 mr-2' />
-    //         )}
-    //         {isExecuting ? 'Running...' : 'Run Code'}
-    //       </Button>
-    //     </div>
-    //   </div>
-
-    //   {/* Output Section */}
-    //   <div className={`${isDarkTheme ? 'bg-zinc-900' : 'bg-white'} p-4 `}>
-    //     {error ? (
-    //       <div className='p-2 rounded text-red-500 break-words whitespace-pre-wrap max-h-[300px] overflow-y-auto'>
-    //         {error}
-    //       </div>
-    //     ) : (
-    //       <div
-    //         className={`p-2 rounded ${
-    //           isDarkTheme ? 'bg-zinc-700' : 'bg-zinc-100'
-    //         } ${
-    //           isDarkTheme ? 'text-zinc-200' : 'text-zinc-800'
-    //         } whitespace-pre-wrap`}
-    //       >
-    //         {output || 'No output yet...'}
-    //       </div>
-    //     )}
-
-    //     {expectedOutput && isCorrect !== null && !error && (
-    //       <div
-    //         className={`mt-4 p-2 rounded ${
-    //           isCorrect
-    //             ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400'
-    //             : 'bg-red-50 text-red-600 dark:bg-red-950/20 dark:text-red-400'
-    //         }`}
-    //       >
-    //         {isCorrect
-    //           ? '✅ Correct!'
-    //           : '❌ Try again! \nExpected Output: ' + expectedOutput}
-    //       </div>
-    //     )}
-    //   </div>
-    // </div>
   )
 }
-
-
 
 export default PythonCodeEditor
