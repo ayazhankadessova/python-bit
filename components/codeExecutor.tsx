@@ -51,7 +51,8 @@ const PythonCodeEditor = ({
   const [isExecuting, setIsExecuting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [theme, setTheme] = useState<'light' | 'dark' | 'vscode'>('vscode')
-  const [showTests, setShowTests] = useState(false)
+  const [isRunning, setIsRunning] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const getTheme = () => {
     switch (theme) {
@@ -70,18 +71,22 @@ const PythonCodeEditor = ({
     return Math.max(150, Math.min(lineCount * 20 + 50, 500)) // Max height of 500px
   }
 
-  const runCode = async () => {
+  const executeCode = async (isSubmission: boolean) => {
     setIsExecuting(true)
     setError(null)
     setOutput('')
+    setIsCorrect(null)
+
+    if (isSubmission) {
+      setIsSubmitting(true)
+    } else {
+      setIsRunning(true)
+    }
 
     try {
-      let codeToExecute = code
-
-      // If this is a project and we're running tests, combine the code with test code
-      if (isProject && testCode) {
-        codeToExecute = `${code}\n\n${testCode}`
-      }
+      // Only include test code if this is a submission
+      let codeToExecute =
+        isSubmission && isProject ? `${code}\n\n${testCode}` : code
 
       const response = await fetch('/api/simple-execute-code', {
         method: 'POST',
@@ -101,28 +106,42 @@ const PythonCodeEditor = ({
       }
 
       const executionOutput = data.output.trim()
-      console.log(executionOutput)
       setOutput(executionOutput)
 
-      // If this is a project, check if all tests passed
-      if (isProject && showTests) {
-        setIsCorrect(
-          !executionOutput.includes('AssertionError') &&
-            !executionOutput.includes('Error') &&
-            executionOutput.includes('All tests completed!')
-        )
-      } else if (expectedOutput) {
-        setIsCorrect(executionOutput === expectedOutput.trim())
-      }
+      // Only check correctness if this is a submission
+      if (isSubmission) {
+        if (isProject) {
+          setIsCorrect(
+            !executionOutput.includes('AssertionError') &&
+              !executionOutput.includes('Error')
+          )
+        } else if (expectedOutput) {
+          setIsCorrect(executionOutput === expectedOutput.trim())
+        }
 
-      if (isCorrect && user) {
-        await handleExerciseCompletion(user.user!, tutorial_id, exercise_number)
+        // Handle exercise completion if correct
+        if (isCorrect && user) {
+          await handleExerciseCompletion(
+            user.user!,
+            tutorial_id,
+            exercise_number
+          )
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
-      setIsCorrect(false)
+      if (isSubmission) {
+        setIsCorrect(false)
+      }
     } finally {
       setIsExecuting(false)
+    
+      if (isSubmission) {
+        setIsSubmitting(false)
+      } else {
+        setIsRunning(false)
+      }
+
     }
   }
 
@@ -221,13 +240,13 @@ const PythonCodeEditor = ({
             }}
           />
         </div>
-        <div className='p-4 border-t border-zinc-800'>
+        <div className='p-4 border-t border-zinc-800 flex gap-2'>
           <Button
-            onClick={runCode}
+            onClick={() => executeCode(false)}
             className='bg-emerald-600 hover:bg-emerald-700 text-white'
             disabled={isExecuting}
           >
-            {isExecuting ? (
+            {isRunning? (
               <Loader2 className='w-4 h-4 mr-2 animate-spin' />
             ) : (
               <Play className='w-4 h-4 mr-2' />
@@ -235,19 +254,23 @@ const PythonCodeEditor = ({
             {isExecuting ? 'Running...' : 'Run Code'}
           </Button>
 
-          {isProject && (
-            <Button
-              onClick={() => setShowTests(!showTests)}
-              variant={showTests ? 'secondary' : 'outline'}
-              className={`${showTests ? 'bg-purple-100 text-purple-700' : ''}`}
-            >
-              {showTests ? 'Hide Tests' : 'Run Tests'}
-            </Button>
-          )}
+          <Button
+            onClick={() => executeCode(true)}
+            className='bg-blue-600 hover:bg-blue-700 text-white'
+            disabled={isExecuting}
+          >
+            {isSubmitting ? (
+              <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+            ) : (
+              <Play className='w-4 h-4 mr-2' />
+            )}
+            Submit
+          </Button>
         </div>
       </div>
 
       {/* Output Section - fixed height */}
+
       <div
         className={`${
           isDarkTheme ? 'bg-zinc-900' : 'bg-white'
@@ -261,15 +284,14 @@ const PythonCodeEditor = ({
           <div
             className={`p-2 rounded ${
               isDarkTheme ? 'bg-zinc-700' : 'bg-zinc-100'
-            } ${
-              isDarkTheme ? 'text-zinc-200' : 'text-zinc-800'
-            } whitespace-pre-wrap`}
+            } 
+        ${isDarkTheme ? 'text-zinc-200' : 'text-zinc-800'} whitespace-pre-wrap`}
           >
             {output || 'No output yet...'}
           </div>
         )}
 
-        {isProject && showTests && isCorrect !== null && !error && (
+        {isCorrect !== null && !error && (
           <div
             className={`mt-4 p-2 rounded ${
               isCorrect
@@ -279,20 +301,8 @@ const PythonCodeEditor = ({
           >
             {isCorrect
               ? '✅ All tests passed!'
-              : '❌ Some tests failed. Check the output above for details.'}
-          </div>
-        )}
-
-        {!showTests && expectedOutput && isCorrect !== null && !error && (
-          <div
-            className={`mt-4 p-2 rounded ${
-              isCorrect
-                ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400'
-                : 'bg-red-50 text-red-600 dark:bg-red-950/20 dark:text-red-400'
-            }`}
-          >
-            {isCorrect
-              ? '✅ Correct!'
+              : isProject
+              ? '❌ Some tests failed. Check the output above for details.'
               : '❌ Try again! \nExpected Output: ' + expectedOutput}
           </div>
         )}

@@ -7,7 +7,7 @@ export const themes = [
     projects: [
       'Aura Points Calculator',
       'Pokemon Battle Simulator',
-      'Minecraft Resource Calculator',
+      'Minecraft Resource',
     ],
     icon: <Gamepad2 className='w-8 h-8' />,
     difficulty: 'Beginner',
