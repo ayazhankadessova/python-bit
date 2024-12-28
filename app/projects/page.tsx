@@ -1,113 +1,3 @@
-// 'use client'
-
-// import React, { useState } from 'react'
-// import { projects } from '#site/content'
-// import { PostItem } from '@/components/post-item'
-// import {
-//   sortPosts,
-//   filterPostsBySearchTerm,
-//   sortPostsByTitle,
-// } from '@/lib/utils'
-// import '@/styles/mdx-style.css'
-// import { CustomPagination } from '@/components/pagination-query'
-// import { Input } from '@/components/ui/input'
-// import {
-//   Select,
-//   SelectContent,
-//   SelectGroup,
-//   SelectItem,
-//   SelectLabel,
-//   SelectTrigger,
-//   SelectValue,
-// } from '@/components/ui/select'
-// import { useAuth } from '@/contexts/AuthContext'
-
-// interface BlogPageProps {
-//   searchParams: {
-//     page?: string
-//     perPage?: string
-//   }
-// }
-
-// const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
-//   const [searchText, setSearchText] = useState('')
-//   const [sortMethod, setSortMethod] = useState('createdAt')
-//   const { user, loading, signOut } = useAuth()
-//   console.log('user from blog page:', user)
-
-// //   const publishedPosts = filterPostsBySearchTerm(
-// //     posts.filter((post) => post.published),
-// //     searchText
-// //   )
-
-// //   const sortedPosts =
-// //     sortMethod === 'createdAt'
-// //       ? sortPosts(publishedPosts)
-// //       : sortPostsByTitle(publishedPosts)
-
-//   const currentPage = Number(searchParams?.page) || 1
-//   const currentPerPage = Number(searchParams?.perPage) || 5
-// //   const totalPages = Math.ceil(publishedPosts.length / currentPerPage)
-
-//   const displayPosts = projects.slice(
-//     currentPerPage * (currentPage - 1),
-//     currentPerPage * currentPage
-//   )
-
-//   const handleSearchTextChange = (
-//     event: React.ChangeEvent<HTMLInputElement>
-//   ) => {
-//     setSearchText(event.target.value)
-//   }
-
-//   const handleSortMethodChange = (value: string) => {
-//     setSortMethod(value)
-//   }
-
-//   return (
-//     <div className='container max-w-4xl py-2 lg:py-3 px-2'>
-//       <div className='mb-6 pr-20 mr-20'>
-//         <Input
-//           type='text'
-//           placeholder='Search'
-//           value={searchText}
-//           onChange={handleSearchTextChange}
-//         />
-//       </div>
-//       <div className='flex justify-between'>
-//         <h1 className='font-black text-3xl lg:text-4xl'>Tutorials</h1>
-//         <Select onValueChange={handleSortMethodChange} value={sortMethod}>
-//           <SelectTrigger className='w-[180px]'>
-//             <SelectValue placeholder='Sort By' />
-//           </SelectTrigger>
-//           <SelectContent>
-//             <SelectGroup>
-//               <SelectLabel>Sort By</SelectLabel>
-//               <SelectItem value='createdAt'>Created At</SelectItem>
-//               <SelectItem value='title'>Title</SelectItem>
-//             </SelectGroup>
-//           </SelectContent>
-//         </Select>
-//       </div>
-//       <hr className='mt-4' />
-//       {displayPosts?.length > 0 ? (
-//         <ul className='flex flex-col'>
-//           {displayPosts.map((post) => (
-//             <li key={post.slug}>
-//               <PostItem post={post} user={user} />
-//             </li>
-//           ))}
-//         </ul>
-//       ) : (
-//         <p>No articles yet...</p>
-//       )}
-//       {/* <CustomPagination totalPages={totalPages} className='mt-4' /> */}
-//     </div>
-//   )
-// }
-
-// export default BlogPage
-
 // projects/page.tsx
 "use client"
 import React from 'react'
@@ -139,9 +29,9 @@ const ProjectThemes = () => {
       title: 'Gaming Universe',
       description: 'Create games and game-related projects',
       projects: [
-        'Aura Points Calculator - Track and calculate character energy levels',
-        'Pokemon Battle Simulator - Build your dream team',
-        'Minecraft Resource Calculator - Plan your builds',
+        'Aura Points Calculator',
+        'Pokemon Battle Simulator',
+        'Minecraft Resource Calculator',
       ],
       icon: <Gamepad2 className='w-8 h-8' />,
       difficulty: 'Beginner',
@@ -220,7 +110,7 @@ const ProjectThemes = () => {
         {themes.map((theme, index) => (
           <Card
             key={index}
-            className='hover:shadow-lg transition-shadow overflow-hidden'
+            className='hover:shadow-lg transition-shadow overflow-hidden flex flex-col'
           >
             <ThemeImage
               src={theme.image}
@@ -247,8 +137,9 @@ const ProjectThemes = () => {
                   <li key={idx}>{project}</li>
                 ))}
               </ul>
-              <Button
-                className='w-full mt-4'
+            </CardContent>
+            <Button
+                className='mt-auto mb-6 mx-6'
                 onClick={() =>
                   router.push(
                     `/projects/${theme.title
@@ -259,7 +150,6 @@ const ProjectThemes = () => {
               >
                 Go to Theme
               </Button>
-            </CardContent>
           </Card>
         ))}
       </div>
