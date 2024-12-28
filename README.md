@@ -341,10 +341,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] exercise type to types file
 - [x] project images added
 - [x] fix "Go to Theme ad card" end
+- [x] themes moved to config
 - [ ] check images caching
+- [x] Run / Submit Btns 
 - [ ] resize python code editor
 - [ ] accent to curr tab if togglable
-- [ ] Shows themes and projects on the same page for better nav: https://neetcode.io/practice
 - [ ] add at least 4 projects
 - [ ] if solved project, add to firestore
 - [ ] store code 
