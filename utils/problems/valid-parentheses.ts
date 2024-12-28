@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { Problem } from '../types/problem'
+import { Problem } from '@/types/utils'
 
 export const validParenthesesHandler = (fn: any) => {
   try {

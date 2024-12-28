@@ -1,4 +1,4 @@
-import { Problem } from '../types/problem'
+import { Problem } from '@/types/utils'
 
 const validateCode = (userCode: string): boolean => {
   try {

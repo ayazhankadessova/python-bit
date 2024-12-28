@@ -1,4 +1,4 @@
-import { Problem } from '../types/problem'
+import { Problem } from '@/types/utils'
 
 export const sayHelloHandler = (userCode: string) => {
   try {

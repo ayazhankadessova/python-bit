@@ -1,7 +1,7 @@
 // @/utils/problems/index.ts
 import { helloWorld } from './hello-world'
 import { sayHelloProblem } from './say-hello'
-import { Problem } from '../types/problem'
+import { Problem } from '@/types/utils'
 import { calculateAgeProblem } from './age-calculator'
 import { temperatureConverterProblem } from './temperature-converter'
 import { reverseStringProblem } from './reverse-string'
