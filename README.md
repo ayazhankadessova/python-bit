@@ -340,7 +340,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Dec 28
 - [x] exercise type to types file
 - [x] project images added
-- [ ] fix "Go to Theme ad card" end
+- [x] fix "Go to Theme ad card" end
 - [ ] check images caching
 - [ ] resize python code editor
 - [ ] accent to curr tab if togglable
