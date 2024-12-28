@@ -130,9 +130,7 @@ export async function getTutorialProgress(
   if (!docSnap.exists()) return 0
 
   const data = docSnap.data() as TutorialData
-  const exercises = Object.entries(data?.exercises || {}).map(
-    ([_, value]) => value as ExerciseProgress
-  )
+  const exercises = Object.values(data?.exercises || {})
 
   const completedExercises = exercises.filter((ex) => ex.completed).length
   return (completedExercises / count) * 100
