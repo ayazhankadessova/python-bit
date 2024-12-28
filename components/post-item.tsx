@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { Tag } from './ui/tag'
-// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { User } from '@/types/firebase'

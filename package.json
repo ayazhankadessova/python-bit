@@ -42,7 +42,7 @@
     "lucide-react": "^0.441.0",
     "mongodb": "^6.9.0",
     "nanoid": "^5.0.8",
-    "next": "14.2.12",
+    "next": "^14.2.22",
     "next-auth": "^4.24.10",
     "next-themes": "^0.3.0",
     "react": "^18",
