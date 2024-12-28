@@ -1,10 +1,9 @@
 import Link from 'next/link'
-import { cn, formatDate } from '@/lib/utils'
 import { Tag } from './ui/tag'
 // import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { User } from '@/utils/types/firebase'
+import { User } from '@/types/firebase'
 import { getTutorialProgress } from '@/components/session-views/helpers'
 import { CheckCircle } from 'lucide-react'
 

@@ -12,7 +12,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog'
-import { User } from '@/utils/types/firebase'
+import { User } from '@/types/firebase'
 import { ClassroomHeader } from '@/components/classrooms/ClassroomHeader'
 import { EmptyClassrooms } from '@/components/classrooms/EmptyClassrooms'
 import { ClassroomCard } from '@/components/classrooms/ClassroomCard'

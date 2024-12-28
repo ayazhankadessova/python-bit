@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { projects } from '#site/content'
-import { sortPosts, filterPostsBySearchTerm } from '@/lib/utils'
+import { sortPosts, filterPostsBySearchTerm } from '@/utils/posts'
 import {
   Card,
   CardContent,

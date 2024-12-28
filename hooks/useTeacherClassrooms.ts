@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { ClassroomTC } from '@/utils/types/firebase'
+import { ClassroomTC } from '@/types/firebase'
 
 interface UseTeacherClassroomsReturn {
   classrooms: ClassroomTC[]

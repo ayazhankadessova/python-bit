@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { User } from '@/utils/types/firebase'
+import { User } from '@/types/firebase'
 
 interface UserStatsProps {
   user: User

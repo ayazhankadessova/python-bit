@@ -1,4 +1,4 @@
-import { ClassroomTC } from '@/utils/types/firebase'
+import { ClassroomTC } from '@/types/firebase'
 
 interface ClassroomGridProps {
   classrooms: ClassroomTC[]

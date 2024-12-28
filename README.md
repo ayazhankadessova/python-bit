@@ -335,12 +335,16 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Search btn 
 - [x] Active tab 
 - [x] Logo diff 
+- [x] Exercise 1 in projects
 
 ## Dec 28
 - [ ] exercise type to types file
 - [ ] resize python code editor
 - [ ] Shows themes and projects on the same page for better nav: https://neetcode.io/practice
-- [ ] add at least 5 projects
+- [ ] add at least 4 projects
+- [ ] if solved project, add to firestore
+- [ ] store code 
+- [ ] add share if completed project
 - [ ] add which tab ur one
 - [ ] add caching to progress checkers
 - [ ] next tutorial Button
@@ -386,6 +390,7 @@ tutrials data or every tutorials
 - [ ] Fix session view ui, make it more engaging for kids (Raise hand needed?)
 - [ ] Add PythonCodeEditor integration to Lessons4-...
 - [ ] why is my ```code theme not githubdark
+- [ ] Clean up types
 
 ## What I have
 - go thru every week and check what works and what not 

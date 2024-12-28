@@ -10,7 +10,7 @@ import {
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, fireStore } from '@/firebase/firebase'
 import { doc, getDoc } from 'firebase/firestore'
-import { FirebaseUserData, User } from '@/utils/types/firebase'
+import { FirebaseUserData, User } from '@/types/firebase'
 
 interface AuthContextType {
   user: User | null

@@ -1,7 +1,7 @@
 // // app/problems/[pid]/page.tsx
 
 // import { problems } from '@/utils/problems'
-// import { Problem } from '@/utils/types/problem'
+// import { Problem } from '@/types/utils'
 // import React from 'react'
 
 // type ProblemPageProps = {

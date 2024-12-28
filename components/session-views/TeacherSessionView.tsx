@@ -12,8 +12,8 @@ import { Send, Play, StopCircle, RefreshCw } from 'lucide-react'
 import { WeekSelector } from './WeekSelector'
 import { fireStore } from '@/firebase/firebase'
 import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore'
-import { Week } from '@/utils/types/firebase'
-import { Problem } from '@/utils/types/problem'
+import { Week } from '@/types/firebase'
+import { Problem } from '@/types/utils'
 
 interface TeacherSessionViewProps {
   classroomId: string

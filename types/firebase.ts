@@ -1,5 +1,3 @@
-// types/firebase.ts
-
 // Firebase Types
 
 // Firebase Types - Some fields might be missing in the raw data

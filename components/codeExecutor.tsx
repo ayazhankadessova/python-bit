@@ -11,7 +11,6 @@ import {
 import { python } from '@codemirror/lang-python'
 import { Select } from '@/components/ui/select'
 import { useAuth } from '@/contexts/AuthContext'
-import { User } from '@/utils/types/firebase'
 import { handleExerciseCompletion } from './session-views/helpers'
 
 

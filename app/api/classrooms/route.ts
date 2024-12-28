@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { fireStore } from '@/firebase/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 import { unstable_cache } from 'next/cache'
-import { ClassroomTC } from '@/utils/types/firebase'
+import { ClassroomTC } from '@/types/firebase'
 
 interface ClassroomsResponse {
   classrooms: ClassroomTC[]

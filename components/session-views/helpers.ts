@@ -1,6 +1,6 @@
 import { doc, getDoc, updateDoc, arrayUnion, setDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
-import { User } from '@/utils/types/firebase'
+import { User } from '@/types/firebase'
 
 
 // Shared helper function to update weekly progress

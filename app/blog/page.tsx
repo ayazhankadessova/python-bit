@@ -7,7 +7,7 @@ import {
   sortPosts,
   filterPostsBySearchTerm,
   sortPostsByTime,
-} from '@/lib/utils'
+} from '@/utils/posts'
 import '@/styles/mdx-style.css'
 import { CustomPagination } from '@/components/pagination-query'
 import { Input } from '@/components/ui/input'
