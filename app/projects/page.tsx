@@ -125,12 +125,12 @@ import {
   Trees,
   Swords,
   Cat,
-  Music,
   Shirt,
   Trophy,
-  Scroll,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { ThemeImage } from '@/components/ThemeImage'
+
 
 const ProjectThemes = () => {
 
@@ -146,30 +146,7 @@ const ProjectThemes = () => {
       icon: <Gamepad2 className='w-8 h-8' />,
       difficulty: 'Beginner',
       estimatedTime: '2-3 hours',
-    },
-    {
-      title: 'Anime & Manga World',
-      description: 'Projects inspired by your favorite anime',
-      projects: [
-        'Character Power Level System',
-        'Anime Quiz Game',
-        'Manga Collection Tracker',
-      ],
-      icon: <Swords className='w-8 h-8' />,
-      difficulty: 'Intermediate',
-      estimatedTime: '3-4 hours',
-    },
-    {
-      title: 'Nature & Science',
-      description: 'Explore the natural world through code',
-      projects: [
-        'Ecosystem Simulator',
-        'Weather Prediction Tool',
-        'Plant Growth Calculator',
-      ],
-      icon: <Trees className='w-8 h-8' />,
-      difficulty: 'Advanced',
-      estimatedTime: '4-5 hours',
+      image: 'gaming.webp',
     },
     {
       title: 'Pet Companion',
@@ -182,22 +159,7 @@ const ProjectThemes = () => {
       icon: <Cat className='w-8 h-8' />,
       difficulty: 'Beginner',
       estimatedTime: '2-3 hours',
-    },
-    {
-      title: 'Music & Sound',
-      description: 'Create music-related applications',
-      projects: ['Playlist Generator', 'Beat Maker', 'Music Theory Helper'],
-      icon: <Music className='w-8 h-8' />,
-      difficulty: 'Intermediate',
-      estimatedTime: '3-4 hours',
-    },
-    {
-      title: 'Fashion & Style',
-      description: 'Design fashion-related tools',
-      projects: ['Outfit Coordinator', 'Style Quiz', 'Virtual Wardrobe'],
-      icon: <Shirt className='w-8 h-8' />,
-      difficulty: 'Beginner',
-      estimatedTime: '2-3 hours',
+      image: 'animals.webp',
     },
     {
       title: 'Sports Analytics',
@@ -210,30 +172,61 @@ const ProjectThemes = () => {
       icon: <Trophy className='w-8 h-8' />,
       difficulty: 'Advanced',
       estimatedTime: '4-5 hours',
+      image: 'sports.webp',
     },
     {
-      title: 'Story Creator',
-      description: 'Build interactive storytelling tools',
+      title: 'Fashion & Style',
+      description: 'Design fashion-related tools',
+      projects: ['Outfit Coordinator', 'Style Quiz', 'Virtual Wardrobe'],
+      icon: <Shirt className='w-8 h-8' />,
+      difficulty: 'Beginner',
+      estimatedTime: '2-3 hours',
+      image: 'fashion.webp',
+    },
+    {
+      title: 'Nature & Science',
+      description: 'Explore the natural world through code',
       projects: [
-        'Choose Your Own Adventure Game',
-        'Character Name Generator',
-        'Story Plot Generator',
+        'Ecosystem Simulator',
+        'Weather Prediction Tool',
+        'Plant Growth Calculator',
       ],
-      icon: <Scroll className='w-8 h-8' />,
+      icon: <Trees className='w-8 h-8' />,
+      difficulty: 'Advanced',
+      estimatedTime: '4-5 hours',
+      image: 'nature.webp',
+    },
+    {
+      title: 'Anime & Manga World',
+      description: 'Projects inspired by your favorite anime',
+      projects: [
+        'Character Power Level System',
+        'Anime Quiz Game',
+        'Manga Collection Tracker',
+      ],
+      icon: <Swords className='w-8 h-8' />,
       difficulty: 'Intermediate',
       estimatedTime: '3-4 hours',
+      image: 'anime.webp',
     },
   ]
   const router = useRouter()
 
   return (
     <div className='container mx-auto p-4'>
-      <h1 className='text-4xl font-bold text-center mb-8'>
-        Choose Your Project Adventure!
-      </h1>
+      <h1 className='text-4xl font-bold text-center mb-8'>Projects</h1>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {themes.map((theme, index) => (
-          <Card key={index} className='hover:shadow-lg transition-shadow'>
+          <Card
+            key={index}
+            className='hover:shadow-lg transition-shadow overflow-hidden'
+          >
+            <ThemeImage
+              src={theme.image}
+              alt={theme.title}
+              width={300}
+              height={150}
+            />
             <CardHeader>
               <div className='flex items-center justify-between'>
                 <div className='flex items-center gap-4'>

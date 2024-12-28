@@ -338,8 +338,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Exercise 1 in projects
 
 ## Dec 28
-- [ ] exercise type to types file
+- [x] exercise type to types file
+- [x] project images added
+- [ ] check images caching
+- [ ] fix "Go to Theme ad card" end
 - [ ] resize python code editor
+- [ ] accent to curr tab if togglable
 - [ ] Shows themes and projects on the same page for better nav: https://neetcode.io/practice
 - [ ] add at least 4 projects
 - [ ] if solved project, add to firestore
