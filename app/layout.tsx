@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { SiteHeader } from '@/components/site-header'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/toaster'
-import { AuthProvider } from '@/contexts/AuthContext'
+// import { AuthProvider } from '@/contexts/AuthContext'
 import { AuthModalProvider } from '@/contexts/AuthModalContext'
 import { BlogFooter } from '@/components/ui/footer'
 
@@ -27,14 +27,14 @@ export default function RootLayout({
       >
         <Providers>
           <div className='relative flex min-h-dvh flex-col bg-background px-4'>
-            <AuthProvider>
+            {/* <AuthProvider> */}
               <AuthModalProvider>
                 <SiteHeader />
                 <main className='flex-1'>{children}</main>
                 <Toaster />
                 <BlogFooter />
               </AuthModalProvider>
-            </AuthProvider>
+            {/* </AuthProvider> */}
           </div>
         </Providers>
       </body>
