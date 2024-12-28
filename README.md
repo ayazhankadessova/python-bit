@@ -342,6 +342,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] project images added
 - [x] fix "Go to Theme ad card" end
 - [x] themes moved to config
+- [ ] add footer icons
 - [ ] remove underline in tailwind md
 - [ ] Go thru every page and make it have same padding or do we do it from layout?
 - [ ] check images caching

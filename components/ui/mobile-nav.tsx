@@ -1,11 +1,11 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { Sheet, SheetContent, SheetTrigger } from './sheet'
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-  clearAllBodyScrollLocks,
-} from 'body-scroll-lock'
+// import {
+//   disableBodyScroll,
+//   enableBodyScroll,
+//   clearAllBodyScrollLocks,
+// } from 'body-scroll-lock'
 
 import { Button } from './button'
 import { Menu } from 'lucide-react'
@@ -18,23 +18,23 @@ import { ThemeToggle } from './theme-toggle'
 const  MobileNav = () => {
   const [open, setOpen] = useState(false)
 
-  const navRef = useRef(null)
+  // const navRef = useRef(null)
 
   const onToggleNav = () => {
     setOpen((status) => {
-      if (status) {
-        enableBodyScroll(navRef.current!)
-      } else {
-        // Prevent scrolling
-        disableBodyScroll(navRef.current!)
-      }
+      // if (status) {
+      //   // enableBodyScroll(navRef.current!)
+      // } else {
+      //   // Prevent scrolling
+      //   // disableBodyScroll(navRef.current!)
+      // }
       return !status
     })
   }
 
-  useEffect(() => {
-    return clearAllBodyScrollLocks
-  })
+  // useEffect(() => {
+  //   return clearAllBodyScrollLocks
+  // })
 
   return (
     <Sheet open={open} onOpenChange={onToggleNav}>
