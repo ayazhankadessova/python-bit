@@ -339,7 +339,8 @@ const CurriculumForm = () => {
                       selected={week.assignmentIds}
                       options={problems}
                       onChange={(values) =>
-                        handleWeekChange(index, 'assignmentIds', values)
+                        // TODO 
+                        handleWeekChange(index, 'assignmentIds', values[0])
                       }
                     />
                     <p className='text-sm text-gray-500 mt-1'>
