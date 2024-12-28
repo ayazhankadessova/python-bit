@@ -121,3 +121,15 @@ interface CurriculumInputs {
   description: string
   weeks: Week[]
 }
+
+export interface TutorialProgress {
+  exerciseId: string
+  completed: boolean
+  timestamp: number
+}
+
+export interface UserTutorialProgress {
+  [tutorialId: string]: {
+    [exerciseNumber: number]: TutorialProgress
+  }
+}

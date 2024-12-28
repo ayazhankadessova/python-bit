@@ -9,32 +9,10 @@ import {
   vscodeLight,
 } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
-import { Select } from '@/components/ui/select'
 import { useAuth } from '@/contexts/AuthContext'
 import { handleExerciseCompletion } from './session-views/helpers'
+import {CodeEditorProps} from "@/types/props"
 
-
-interface TutorialProgress {
-  exerciseId: string
-  completed: boolean
-  timestamp: number
-}
-
-interface UserTutorialProgress {
-  [tutorialId: string]: {
-    [exerciseNumber: number]: TutorialProgress
-  }
-}
-
-
-interface CodeEditorProps {
-  initialCode?: string
-  expectedOutput?: string
-  exercise_number?: number
-  tutorial_id?: string
-  testCode?: string        // New prop for test code
-  isProject?: boolean  
-}
 
 const PythonCodeEditor = ({
   initialCode,
@@ -63,12 +41,6 @@ const PythonCodeEditor = ({
       default:
         return vscodeLight
     }
-  }
-
-  // Calculate dynamic height based on code lines
-  const calculateHeight = () => {
-    const lineCount = code.split('\n').length
-    return Math.max(150, Math.min(lineCount * 20 + 50, 500)) // Max height of 500px
   }
 
   const executeCode = async (isSubmission: boolean) => {
@@ -270,7 +242,6 @@ const PythonCodeEditor = ({
       </div>
 
       {/* Output Section - fixed height */}
-
       <div
         className={`${
           isDarkTheme ? 'bg-zinc-900' : 'bg-white'
