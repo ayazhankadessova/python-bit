@@ -37,8 +37,8 @@ export function SiteHeader() {
                     <NavigationMenuTrigger
                       className={cn(
                         pathname === dialog.href &&
-                          'bg-accent text-accent-foreground',
-                        'transition-colors'
+                          'bg-accent text-accent-foreground font-bold',
+                        'transition-colors text-base lg:text-lg'
                       )}
                     >
                       {dialog.title}
@@ -66,8 +66,8 @@ export function SiteHeader() {
                     <NavigationMenuTrigger
                       className={cn(
                         pathname === dialog.href &&
-                          'bg-accent text-accent-foreground',
-                        'transition-colors'
+                          'bg-accent text-accent-foreground font-bold',
+                        'transition-colors lg:text-lg'
                       )}
                     >
                       {dialog.title}
@@ -111,12 +111,12 @@ const ListItem = React.forwardRef<
           href={href}
           className={cn(
             'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-            pathname === href && 'bg-accent text-accent-foreground',
+            pathname === href && 'bg-accent text-accent-foreground font-bold', 'text-base',
             className
           )}
           {...props}
         >
-          <div className='text-sm font-medium leading-none'>{title}</div>
+          <div className='text-base font-medium leading-none'>{title}</div>
           <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>
             {children}
           </p>

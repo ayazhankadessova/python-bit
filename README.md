@@ -389,6 +389,7 @@ tutrials data or every tutorials
 - [ ] Search Button Functionality
 - [ ] logo
 - [ ] Add quiz custom elements
+- [ ] fix page paddings & nav font bigger
 - [ ] Pagination in Tutorials page should be more sophisticated (per page), show page numbers
 - [ ] Background -> picture not just white/dark.
 - [ ] Fix session view ui, make it more engaging for kids (Raise hand needed?)
