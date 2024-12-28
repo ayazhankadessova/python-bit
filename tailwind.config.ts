@@ -3,7 +3,7 @@ import type { Config } from 'tailwindcss'
 import { fontFamily } from 'tailwindcss/defaultTheme'
 
 // convert to import 
-import tailwindMdBase from '@geoffcodesthings/tailwind-md-base'
+// import tailwindMdBase from '@geoffcodesthings/tailwind-md-base'
 
 const config = {
   darkMode: ['class'],
@@ -87,7 +87,7 @@ const config = {
   plugins: [
     require('tailwindcss-animate'),
     require('@tailwindcss/typography'),
-    tailwindMdBase(),
+    // tailwindMdBase(),
   ],
 } satisfies Config
 
