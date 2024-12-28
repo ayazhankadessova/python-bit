@@ -4,7 +4,6 @@ import { useAuth } from '@/contexts/AuthContext'
 import { TeacherClassroomsView } from '@/components/classrooms/TeacherClassroomsView'
 import { StudentClassroomsView } from '@/components/classrooms/StudentClassroomsView'
 import { Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 
 const ClassroomPage = () => {
   const { user, loading } = useAuth()

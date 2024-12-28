@@ -6,17 +6,6 @@ import { siteConfig } from '@/config/site'
 import BackButton from '@/components/ui/backbutton'
 import PythonCodeEditor from '@/components/codeExecutor'
 import { getExerciseById } from '@/utils/exercise'
-import type { Exercise } from '@utils/types/exercise'
-
-// // In your component
-// const exercise = getExerciseById('aura-points')
-// if (exercise) {
-//   ;<PythonCodeEditor
-//     initialCode={exercise.starterCode}
-//     testCode={exercise.testCode}
-//     isProject={true}
-//   />
-// }
 
 interface PostPageProps {
   params: {
@@ -85,12 +74,6 @@ export default async function PostPage({ params }: PostPageProps) {
         {/* Right side - Code editor */}
         <div className='w-1/2 overflow-hidden bg-background'>
           {' '}
-          {/* Changed to overflow-hidden */}
-          {/* <PythonCodeEditor
-            initialCode='# Start typing your code here'
-            exercise_number={1}
-            tutorial_id={post.slugAsParams}
-          /> */}
           {exercise && (
             <PythonCodeEditor
               initialCode={exercise?.starterCode}
@@ -98,13 +81,6 @@ export default async function PostPage({ params }: PostPageProps) {
               isProject={true}
             />
           )}
-          {/* <PythonCodeEditor
-            initialCode={post.starterCode}
-            testCode={post.testCode}
-            isProject={true}
-            tutorial_id={post.slugAsParams}
-            exercise_number={1}
-          /> */}
         </div>
       </div>
     </div>

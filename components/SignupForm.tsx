@@ -24,7 +24,6 @@ import { auth, fireStore } from '@/firebase/firebase'
 import { useRouter } from 'next/navigation'
 import { doc, setDoc } from 'firebase/firestore'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
-import { useAuth } from '@/contexts/AuthContext'
 
 const signUpSchema = z.object({
   email: z.string().email('Invalid email address'),

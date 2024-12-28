@@ -3,21 +3,13 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 interface ThemeImageProps {
-  src: string
-  alt: string
-  width: number
-  height: number
-  priority?: boolean
+  readonly src: string
 }
 
 export function ThemeImage({
   src,
-  alt,
-  width,
-  height,
-  priority = false,
 }: ThemeImageProps) {
-  const [isLoading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
 
   return (
       <div className='overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 relative block h-[220px] w-full'>
@@ -26,7 +18,7 @@ export function ThemeImage({
           alt='image'
           fill
           style={{ objectFit: 'cover' }}
-          onLoad={() => setLoading(false)}
+          onLoad={() => setIsLoading(false)}
           className={`
           duration-700 ease-in-out
           ${

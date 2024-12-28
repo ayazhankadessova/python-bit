@@ -16,7 +16,6 @@ import { useToast } from '@/hooks/use-toast'
 import { auth } from '@/firebase/firebase'
 import { useRouter } from 'next/navigation'
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
-import { useAuth } from '@/contexts/AuthContext'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
