@@ -31,9 +31,6 @@ const ProjectThemes = () => {
           >
             <ThemeImage
               src={theme.image}
-              alt={theme.title}
-              width={300}
-              height={150}
             />
             <CardHeader>
               <div className='flex items-center justify-between'>

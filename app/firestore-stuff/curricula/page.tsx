@@ -339,7 +339,7 @@ const CurriculumForm = () => {
                       selected={week.assignmentIds}
                       options={problems}
                       onChange={(values) =>
-                        // TODO 
+                        // TODO
                         handleWeekChange(index, 'assignmentIds', values[0])
                       }
                     />
