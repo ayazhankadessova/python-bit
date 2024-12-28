@@ -61,7 +61,7 @@ async function _fetchClassroomData(userId: string) {
     )
     return { classrooms: validClassrooms }
   } catch (error) {
-    return { classrooms: [], error: error }
+    return { classrooms: [], error: 'Failed to fetch classroom data' + error }
   }
 }
 
@@ -81,7 +81,13 @@ export async function GET(req: Request) {
   )()
 
   if (result.error) {
-    return new Response(result.error, { status: 500 })
+    // Convert error to string
+    return new Response(JSON.stringify({ error: result.error }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
   }
 
   return NextResponse.json<ClassroomsResponse>(result)
