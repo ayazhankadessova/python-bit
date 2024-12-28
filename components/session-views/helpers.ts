@@ -1,7 +1,18 @@
 import { doc, getDoc, updateDoc, arrayUnion, setDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { User } from '@/types/firebase'
+import { Socket } from 'socket.io-client'
 
+interface ExerciseProgress {
+  completed: boolean
+  timestamp: number
+}
+
+interface TutorialData {
+  exercises: {
+    [exerciseNumber: string]: ExerciseProgress
+  }
+}
 
 // Shared helper function to update weekly progress
 export async function updateWeeklyProgress(
@@ -58,7 +69,7 @@ export async function handleTaskCompletion({
   userId: string
   classroomId: string
   selectedWeek: number
-  socket: any
+  socket: Socket | null
   userName?: string
   onUpdateCompletedProblems: (taskId: string) => void
 }) {
@@ -94,11 +105,9 @@ export async function handleExerciseCompletion(
   user: User,
   tutorialId: string,
   exerciseNumber: number
-){
+) {
   if (!user) return
-
   const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
-
   await setDoc(
     progressRef,
     {
@@ -118,14 +127,13 @@ export async function getTutorialProgress(
 ) {
   const tutorialRef = doc(fireStore, 'users', userId, 'tutorials', tutorialId)
   const docSnap = await getDoc(tutorialRef)
-
   if (!docSnap.exists()) return 0
 
-  const data = docSnap.data()
-  const exercises = Object.entries(data || {})
-    .filter(([key]) => key.startsWith('exercises.'))
-    .map(([_, value]) => value)
+  const data = docSnap.data() as TutorialData
+  const exercises = Object.entries(data?.exercises || {}).map(
+    ([_, value]) => value as ExerciseProgress
+  )
 
-  const completedExercises = exercises.filter((ex: any) => ex.completed).length
+  const completedExercises = exercises.filter((ex) => ex.completed).length
   return (completedExercises / count) * 100
 }

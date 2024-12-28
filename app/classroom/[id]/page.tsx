@@ -80,7 +80,7 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
 
         setClassroom(classroomData)
 
-        setUserRole(user?.role!)
+        setUserRole(user?.role)
       } catch (error) {
         console.error('Error fetching classroom:', error)
         setError('Failed to load classroom data')
@@ -274,7 +274,7 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
           <CardContent className='pt-6 text-center'>
             <h2 className='text-xl font-semibold mb-4'>No Active Session</h2>
             <p className='text-gray-600 mb-6'>
-              The teacher hasn't started the session yet.
+              The teacher has not started the session yet.
             </p>
             <div className='space-y-3'>
               <Button
