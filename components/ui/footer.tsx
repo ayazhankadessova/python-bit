@@ -1,5 +1,5 @@
 import { siteConfig } from '@/config/site'
-import { Icons } from './icons'
+// import { Icons } from './icons'
 import Link from 'next/link'
 
 export function BlogFooter() {
@@ -9,7 +9,7 @@ export function BlogFooter() {
         <div className='mb-3 flex gap-8'>
           <a target='_blank' rel='noreferrer' href={siteConfig.socials.discord}>
             <span className='sr-only'>Discord</span>
-            <Icons.discord className='h-8 w-8' />
+            {/* <Icons.discord className='h-8 w-8' /> */}
           </a>
           <a
             target='_blank'
@@ -17,19 +17,19 @@ export function BlogFooter() {
             href={siteConfig.socials.linkedin}
           >
             <span className='sr-only'>Linkedin</span>
-            <Icons.linkedin className='h-6 w-6' />
+            {/* <Icons.linkedin className='h-6 w-6' /> */}
           </a>
           <a target='_blank' rel='noreferrer' href={siteConfig.socials.twitter}>
             <span className='sr-only'>Twitter</span>
-            <Icons.twitter className='h-6 w-6' />
+            {/* <Icons.twitter className='h-6 w-6' /> */}
           </a>
           <a target='_blank' rel='noreferrer' href={siteConfig.socials.youtube}>
             <span className='sr-only'>YouTube</span>
-            <Icons.youtube className='h-10 w-10' />
+            {/* <Icons.youtube className='h-10 w-10' /> */}
           </a>
           <a target='_blank' rel='noreferrer' href={siteConfig.socials.medium}>
             <span className='sr-only'>Medium</span>
-            <Icons.medium className='h-10 w-10' />
+            {/* <Icons.medium className='h-10 w-10' /> */}
           </a>
         </div>
         <p className='mt-2 text-sm font-light'>
