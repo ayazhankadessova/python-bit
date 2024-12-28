@@ -29,11 +29,6 @@ interface WeeklyProgress {
   lastUpdated?: string
 }
 
-interface Student {
-  username: string
-  code: string
-}
-
 export function TeacherSessionView({
   classroomId,
   onEndSession,
@@ -58,7 +53,7 @@ export function TeacherSessionView({
   const [isRunning, setIsRunning] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const joinedRoom = useRef(false)
-  const inviteLink = `${process.env.NEXT_PUBLIC_BASE_URL}/join/${classroomId}`
+  // const inviteLink = `${process.env.NEXT_PUBLIC_BASE_URL}/join/${classroomId}`
 
   const updateWeekProblems = async (weekNumber: number) => {
     try {
@@ -287,7 +282,7 @@ export function TeacherSessionView({
           setSelectedWeek(classroomData.lastTaughtWeek || 1)
 
           const weekData = curriculumData.weeks.find(
-            (w: any) => w.weekNumber === (classroomData.lastTaughtWeek || 1)
+            (w: Week) => w.weekNumber === (classroomData.lastTaughtWeek || 1)
           )
           if (weekData) {
             setWeekProblems(weekData.assignmentIds)

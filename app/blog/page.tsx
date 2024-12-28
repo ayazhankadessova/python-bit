@@ -32,7 +32,7 @@ interface BlogPageProps {
 const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('Difficulty')
-  const { user, loading, signOut } = useAuth()
+  const { user } = useAuth()
   console.log("user from blog page:" , user)
 
   const publishedPosts = filterPostsBySearchTerm(

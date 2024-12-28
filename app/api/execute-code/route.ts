@@ -5,7 +5,7 @@ import { spawn } from 'child_process'
 interface ExecuteCodeRequest {
   code: string
   functionName?: string
-  input?: any
+  input?: string
 }
 
 export async function POST(req: Request) {
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       // If a function name is provided, add code to call it
       executionCode = `
 ${code}
-result = ${functionName}(${input !== undefined ? input : ''})
+result = ${functionName}(${input ?? ''})
 print(result)
 `
     }

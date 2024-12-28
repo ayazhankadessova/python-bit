@@ -1,5 +1,4 @@
 // components/auth/Login.tsx
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -29,9 +28,11 @@ type LoginInputs = z.infer<typeof loginSchema>
 export default function LoginForm() {
   const router = useRouter()
   const { toast } = useToast()
-  const { user } = useAuth()
-  const [signInWithEmailAndPassword, _, loading, error] =
+  // const { user } = useAuth()
+  const [signInWithEmailAndPassword, _, loading] =
     useSignInWithEmailAndPassword(auth)
+
+  console.log(_)
 
   const form = useForm<LoginInputs>({
     resolver: zodResolver(loginSchema),
@@ -53,10 +54,11 @@ export default function LoginForm() {
       })
 
       router.push('/dashboard')
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error signing in:', error)
       toast({
         title: 'Error',
-        description: error.message || 'Failed to sign in',
+        description: 'Failed to sign in',
         variant: 'destructive',
       })
     }

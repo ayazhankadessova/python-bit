@@ -61,7 +61,7 @@ async function _fetchClassroomData(userId: string) {
     )
     return { classrooms: validClassrooms }
   } catch (error) {
-    return { classrooms: [], error: 'Failed to fetch classroom data' }
+    return { classrooms: [], error: error }
   }
 }
 

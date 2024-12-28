@@ -1,7 +1,7 @@
 // components.StudentDashboard.tsx
 'use client'
 import { useRouter } from 'next/navigation'
-import { BookOpen, Trophy, Users, Loader2 } from 'lucide-react'
+import { BookOpen, Trophy, Users} from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
@@ -16,7 +16,7 @@ interface StudentDashboardProps {
 export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
   const { user } = useAuth()
   const router = useRouter()
-  const { classrooms, isLoading, error, mutate } = useTeacherClassrooms(
+  const { classrooms, isLoading, error } = useTeacherClassrooms(
     user!.uid
   )
 

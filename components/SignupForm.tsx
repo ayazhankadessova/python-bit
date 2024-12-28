@@ -39,9 +39,10 @@ type SignUpValues = z.infer<typeof signUpSchema>
 const Signup = () => {
   const { toast } = useToast()
   const router = useRouter()
-  const { user } = useAuth()
-  const [createUserWithEmailAndPassword, _, loading, error] =
+  // const { user } = useAuth()
+  const [createUserWithEmailAndPassword, _, loading] =
     useCreateUserWithEmailAndPassword(auth)
+  console.log(_)
 
   const form = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
@@ -83,10 +84,10 @@ const Signup = () => {
         variant: 'success',
       })
       router.push('/dashboard')
-    } catch (error: any) {
+    } catch (error) {
       toast({
-        title: 'Error',
-        description: error.message || 'Account not Created.',
+        title: 'Error' + error,
+        description: 'Account not Created.',
         variant: 'destructive',
       })
     }

@@ -4,11 +4,11 @@ import React from 'react'
 // import { slug } from 'github-slugger'
 
 interface TagProps {
-  tag: string
-  current?: boolean
-  count?: number
+  readonly tag: string
+  // current?: boolean
+  readonly count?: number
 }
-export function Tag({ tag, current, count }: TagProps) {
+export function Tag({ tag, count }: TagProps) {
   return (
     <Link
       className={badgeVariants({

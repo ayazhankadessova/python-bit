@@ -10,7 +10,7 @@ const ClassroomPage = () => {
   const { user, loading } = useAuth()
 
   // to do: go home
-  const router = useRouter()
+  // const router = useRouter()
 
   if (loading) {
     return (

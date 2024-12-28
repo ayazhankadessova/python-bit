@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { projects } from '#site/content'
-import { sortPosts, filterPostsBySearchTerm } from '@/utils/posts'
 import {
   Card,
   CardContent,
@@ -59,7 +58,7 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   // Pagination
   const currentPage = Number(searchParams?.page) || 1
   const currentPerPage = Number(searchParams?.perPage) || 5
-  const totalPages = Math.ceil(sortedProjects.length / currentPerPage)
+  // const totalPages = Math.ceil(sortedProjects.length / currentPerPage)
 
   const displayProjects = sortedProjects.slice(
     currentPerPage * (currentPage - 1),

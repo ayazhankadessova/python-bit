@@ -57,7 +57,7 @@ const PythonCodeEditor = ({
 
     try {
       // Only include test code if this is a submission
-      let codeToExecute =
+      const codeToExecute =
         isSubmission && isProject ? `${code}\n\n${testCode}` : code
 
       const response = await fetch('/api/simple-execute-code', {

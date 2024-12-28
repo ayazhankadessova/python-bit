@@ -184,7 +184,7 @@ const CurriculumForm = () => {
     }))
   }
 
-  const handleWeekChange = (index: number, field: keyof Week, value: any) => {
+  const handleWeekChange = (index: number, field: keyof Week, value: string) => {
     setInputs((prev) => ({
       ...prev,
       weeks: prev.weeks.map((week, i) =>

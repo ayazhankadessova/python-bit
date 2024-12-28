@@ -48,10 +48,10 @@ export default function ResetPassword() {
         variant: 'success',
       })
       onClose()
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Error',
-        description: error.message || 'Failed to send reset email',
+        description:'Failed to send reset email' + error,
         variant: 'destructive',
       })
     }

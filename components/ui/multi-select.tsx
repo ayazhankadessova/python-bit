@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Check, ChevronDown } from 'lucide-react'
 import * as SelectPrimitive from '@radix-ui/react-select'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 
 const MultiSelect = SelectPrimitive.Root
 

@@ -26,7 +26,6 @@ export function PostItem({ post, user }: PostItemProps) {
     slug,
     title,
     description,
-    date,
     tags,
     image,
     exercises,

@@ -1,5 +1,5 @@
 // export default FileProcessorTest
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useToast } from '@/hooks/use-toast'
@@ -8,8 +8,8 @@ import { handleTaskCompletion } from './helpers'
 
 interface TestResult {
   success: boolean
-  output?: any
-  expected?: any
+  output?: string
+  expected?: string
   error?: string
 }
 
@@ -17,7 +17,7 @@ interface TestCase {
   name: string
   fileContent: string
   fileName: string
-  expected: any
+  expected: { lines: number; words: number; chars: number } | {error: string}
 }
 
 interface FileProcessorTestProps {

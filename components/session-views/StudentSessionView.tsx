@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/dialog'
 import FileProcessorTest from './FileProcessorTest'
 import { handleTaskCompletion } from './helpers'
+import {Week} from "@/types/firebase"
 
 interface StudentSessionViewProps {
   classroomId: string
@@ -46,12 +47,6 @@ export function StudentSessionView({
   const [output, setOutput] = useState('')
   const joinedRoom = useRef(false)
   const [isRunning, setIsRunning] = useState(false)
-  const [testResults, setTestResults] = useState<
-    {
-      passed: boolean
-      message: string
-    }[]
-  >([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,7 +85,7 @@ export function StudentSessionView({
         if (curriculumDoc.exists()) {
           const curriculumData = curriculumDoc.data()
           const weekData = curriculumData.weeks.find(
-            (w: any) => w.weekNumber === classroomData.lastTaughtWeek
+            (w: Week) => w.weekNumber === classroomData.lastTaughtWeek
           )
           if (weekData) {
             setWeekProblems(weekData.assignmentIds)

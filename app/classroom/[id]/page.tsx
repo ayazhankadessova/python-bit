@@ -95,7 +95,7 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
     if (!user || !userRole || !classroom) return
 
     let statusCheckTimeout: NodeJS.Timeout
-    let connectionAttemptTimeout: NodeJS.Timeout
+    const connectionAttemptTimeout: NodeJS.Timeout
 
     const connectSocket = async () => {
       try {
@@ -158,6 +158,7 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
         clearTimeout(statusCheckTimeout)
         setError('Connection failed. Please try again.')
         setIsCheckingSession(false)
+        console.log(error)
       }
     }
 
