@@ -1,6 +1,5 @@
 'use client'
 import { useAuthModal } from '@/contexts/AuthModalContext'
-import { IoClose } from 'react-icons/io5'
 import Login from './LoginForm'
 import Signup from './SignupForm'
 import ResetPassword from '@/components/auth/ResetPassword'
@@ -27,7 +26,7 @@ const AuthModal: React.FC = () => {
                 className='bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white text-white'
                 onClick={onClose}
               >
-                <IoClose />
+                x
               </button>
             </div>
 
