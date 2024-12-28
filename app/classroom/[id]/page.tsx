@@ -95,7 +95,7 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
     if (!user || !userRole || !classroom) return
 
     let statusCheckTimeout: NodeJS.Timeout
-    const connectionAttemptTimeout: NodeJS.Timeout
+    let connectionAttemptTimeout: NodeJS.Timeout | null = null
 
     const connectSocket = async () => {
       try {
