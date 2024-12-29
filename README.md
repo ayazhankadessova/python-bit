@@ -342,17 +342,31 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] project images added
 - [x] fix "Go to Theme ad card" end
 - [x] themes moved to config
-- [ ] handle Exercises completion
+- [x] Run / Submit Btns 
+
+## Dec 29: 
+
+- Work on `Tutorials` page till 4pm 
+- [ ] Students need to run ever cell to complete exercise, so think of a logic
+
+## Backend
+- [ ] rate Limiter 
+- [ ] add caching to all routes
+- [ ] add error handling to all routes
+- [ ] add validation to all routes
+
+## Front 
+- [ ] Students need to run ever cell to complete exercise, so think of a logic
+- [ ] handle Exercises completion check
 - [ ] add footer icons
 - [ ] remove underline in tailwind md
 - [ ] Go thru every page and make it have same padding or do we do it from layout?
 - [ ] check images caching
-- [x] Run / Submit Btns 
 - [ ] resize python code editor
-- [ ] accent to curr tab if togglable
+- [ ] accent to curr tab if togglable , accent to pages when I am in sub pages
 - [ ] add at least 4 projects
 - [ ] if solved project, add to firestore
-- [ ] store code 
+- [ ] store code  ?? 
 - [ ] add share if completed project
 - [ ] add which tab ur one
 - [ ] add caching to progress checkers
@@ -360,6 +374,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [ ] Add 5 projects w/ tags
 - [ ] Add better imgs
 - [ ] Meme creation tools
+
+
+## Project Test cases
+
+- [ ] Add test cases to 2-3 projects
 Modern Features to Include:
 
 

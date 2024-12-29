@@ -4,7 +4,7 @@ export async function POST(request: NextRequest) {
   try {
     const flaskApiUrl =
       process.env.FLASK_API_URL ||
-      'https://flask-hello-world-hazel-gamma-78.vercel.app/api/execute'
+      'https://flask-hello-world-hazel-gamma-78.vercel.app/execute'
 
     // Forward the request to Flask backend
     const flaskResponse = await fetch(flaskApiUrl, {
