@@ -84,7 +84,7 @@ export function SiteHeader() {
         <MainNav />
       </div>
 
-      <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
+      <div className='min-[850px]:hidden flex items-center justify-between gap-2 '>
         <Input type='search' placeholder='Search' />
         <MobileNav />
       </div>

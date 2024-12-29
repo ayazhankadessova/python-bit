@@ -44,7 +44,10 @@ const  MobileNav = () => {
           <Menu className='h-[1.1rem] w-[1.2rem]' />
         </Button>
       </SheetTrigger>
-      <SheetContent side='right'>
+      <SheetContent
+        side='right'
+        className='bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]'
+      >
         <MobileLink
           onOpenChange={onToggleNav}
           href='/'
@@ -79,7 +82,7 @@ function MobileLink({
   children,
   className,
   ...props
-}: MobileLinkProps) {
+}: Readonly<MobileLinkProps>) {
   const router = useRouter()
   return (
     <Link
