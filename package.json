@@ -48,6 +48,7 @@
     "react-dom": "^18",
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.53.2",
+    "react-resizable-panels": "^2.1.7",
     "react-split": "^2.0.14",
     "react-toastify": "^10.0.6",
     "rehype-autolink-headings": "^7.1.0",
