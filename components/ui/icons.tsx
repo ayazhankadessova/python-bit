@@ -76,7 +76,7 @@ export const Icons = {
       <circle cx='4' cy='4' r='2' />
     </svg>
   ),
-  discord: () => (
+  Discord: () => (
     <svg
       xmlns='http://www.w3.org/2000/svg'
       width='24'

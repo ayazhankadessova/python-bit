@@ -350,7 +350,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [ ] Students need to run ever cell to complete exercise, so think of a logic
 
 ## Backend
-- [ ] rate Limiter 
+- [x] rate Limiter 
 - [ ] add caching to all routes
 - [ ] add error handling to all routes
 - [ ] add validation to all routes
@@ -359,6 +359,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [ ] Students need to run ever cell to complete exercise, so think of a logic
 - [ ] handle Exercises completion check
 - [ ] add footer icons
+- [ ] add home , make Tutorials page default
 - [ ] remove underline in tailwind md
 - [ ] Go thru every page and make it have same padding or do we do it from layout?
 - [ ] check images caching
