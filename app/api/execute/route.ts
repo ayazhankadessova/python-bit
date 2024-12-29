@@ -17,11 +17,22 @@ export async function POST(request: NextRequest) {
 
     const data = await flaskResponse.json()
 
+    // Handle rate limit responses
+    if (flaskResponse.status === 429 || data.error === 'Rate limit exceeded') {
+      return NextResponse.json(
+        {
+          error: 'Rate limit exceeded',
+          message: data.message || '1 per 1 minute',
+        },
+      )
+    }
+
     // Return the response from Flask
     return NextResponse.json(data, {
       status: flaskResponse.status,
     })
   } catch (error) {
+    console.error('Error executing code:', error)
     return NextResponse.json(
       {
         error: 'Failed to execute code',

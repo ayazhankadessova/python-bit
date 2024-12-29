@@ -73,6 +73,12 @@ const PythonCodeEditor = ({
 
       const data = await response.json()
 
+      // Handle rate limiting
+      if (data.error === 'Rate limit exceeded') {
+        setError('Rate limit exceeded. Please wait 1 minute.')
+        return 
+      }
+
       // Handle different response structures
       const executionOutput = data.output ? data.output.trim() : ''
 
@@ -101,16 +107,6 @@ const PythonCodeEditor = ({
             )
           }
         }
-
-        // Handle exercise completion if correct
-        // if (isCorrect && user) {
-        //   console.log("sending to fb!")
-        //   await handleExerciseCompletion(
-        //     user.user!,
-        //     tutorial_id,
-        //     exercise_number
-        //   )
-        // }
       }
 
       // Handle any errors from the backend
