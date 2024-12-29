@@ -10,7 +10,6 @@ export function BlogFooter() {
           <a target='_blank' rel='noreferrer' href={siteConfig.socials.discord}>
             <span className='sr-only'>Discord</span>
             <Icons.Discord />
-            {/* <Linkedin /> */}
           </a>
           <a
             target='_blank'
@@ -18,14 +17,19 @@ export function BlogFooter() {
             href={siteConfig.socials.linkedin}
           >
             <span className='sr-only'>Linkedin</span>
-            {/* <Linkedin className='w-4 h-4' /> */}
+            <Icons.Linkedin />
           </a>
           <a target='_blank' rel='noreferrer' href={siteConfig.socials.youtube}>
             <span className='sr-only'>YouTube</span>
-            {/* <Youtube className='w-4 h-4' /> */}
+            <Icons.Youtube />
           </a>
-          <a target='_blank' rel='noreferrer' href={siteConfig.socials.youtube}>
-            <span className='sr-only'>YouTube</span>
+          <a target='_blank' rel='noreferrer' href={siteConfig.socials.twitter}>
+            <span className='sr-only'>Twitter</span>
+            <Icons.Twitter />
+          </a>
+          <a target='_blank' rel='noreferrer' href={siteConfig.socials.discord}>
+            <span className='sr-only'>Medium</span>
+            <Icons.Medium />
           </a>
         </div>
         <p className='mt-2 text-sm font-light'>
