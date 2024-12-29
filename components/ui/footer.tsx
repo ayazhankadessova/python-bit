@@ -1,5 +1,5 @@
 import { siteConfig } from '@/config/site'
-// import { Icons } from './icons'
+import { Icons } from './icons'
 import Link from 'next/link'
 
 export function BlogFooter() {
@@ -9,7 +9,7 @@ export function BlogFooter() {
         <div className='mb-3 flex gap-8'>
           <a target='_blank' rel='noreferrer' href={siteConfig.socials.discord}>
             <span className='sr-only'>Discord</span>
-            {/* <Icons.discord className='h-8 w-8' /> */}
+            <Icons.Discord />
           </a>
           <a
             target='_blank'
@@ -17,23 +17,23 @@ export function BlogFooter() {
             href={siteConfig.socials.linkedin}
           >
             <span className='sr-only'>Linkedin</span>
-            {/* <Icons.linkedin className='h-6 w-6' /> */}
-          </a>
-          <a target='_blank' rel='noreferrer' href={siteConfig.socials.twitter}>
-            <span className='sr-only'>Twitter</span>
-            {/* <Icons.twitter className='h-6 w-6' /> */}
+            <Icons.Linkedin />
           </a>
           <a target='_blank' rel='noreferrer' href={siteConfig.socials.youtube}>
             <span className='sr-only'>YouTube</span>
-            {/* <Icons.youtube className='h-10 w-10' /> */}
+            <Icons.Youtube />
           </a>
-          <a target='_blank' rel='noreferrer' href={siteConfig.socials.medium}>
+          <a target='_blank' rel='noreferrer' href={siteConfig.socials.twitter}>
+            <span className='sr-only'>Twitter</span>
+            <Icons.Twitter />
+          </a>
+          <a target='_blank' rel='noreferrer' href={siteConfig.socials.discord}>
             <span className='sr-only'>Medium</span>
-            {/* <Icons.medium className='h-10 w-10' /> */}
+            <Icons.Medium />
           </a>
         </div>
         <p className='mt-2 text-sm font-light'>
-          © 2024 PythonBit, all rights reserved
+          © 2025 PythonBit, all rights reserved
         </p>
         <div className='mt-2 flex gap-x-4 gap-y-2 text-xs text-muted-foreground items-center justify-center underline flex-wrap lg:gap-x-6'>
           <Link href='/terms-of-use' className='mr-2'>
