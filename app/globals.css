@@ -4,7 +4,11 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* White to teal-200 gradient */
+    --background-start: 0 0% 100%; /* white */
+    --background-end: 168 55% 90%; /* teal-200 */
+    /* --background: 0 0% 100%; */
+    
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -32,7 +36,10 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    /* Dark mode gradient - darker teal tones */
+    --background-start: 0 0% 10%; /* dark start */
+    --background-end: 168 55% 24%; /* darker teal */
+    /* --background: 222.2 84% 4.9%; */
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
@@ -64,6 +71,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] text-foreground;
   }
 }

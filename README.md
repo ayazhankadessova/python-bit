@@ -359,7 +359,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [ ] Students need to run ever cell to complete exercise, so think of a logic
 - [ ] handle Exercises completion check
 - [x] add footer icons
-- [ ] siteConfig fix!
+- [x] siteConfig fix!
+- [x] bg gradient
 - [ ] resize python code editor
 - [ ] add home , make Tutorials page default
 - [ ] remove underline in tailwind md
@@ -412,6 +413,7 @@ tutrials data or every tutorials
 - [ ] For teacher, add panel to monitor each classroom
 
 ## BackLog
+- [ ] GitHub, Logo icons
 - [ ] Dont send expectedOutput and testCases, they should be in Backend
 - [ ] Search Button Functionality
 - [ ] logo

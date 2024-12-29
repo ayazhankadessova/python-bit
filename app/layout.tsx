@@ -26,16 +26,18 @@ export default function RootLayout({
         )}
       >
         <Providers>
-          <div className='relative flex min-h-dvh flex-col bg-background px-4'>
-            <AuthProvider>
-              <AuthModalProvider>
-                <SiteHeader />
+          {/* <div className='relative flex min-h-dvh flex-col bg-background px-4'> */}
+          <AuthProvider>
+            <AuthModalProvider>
+              <SiteHeader />
+              <div className='relative flex min-h-dvh flex-col bg-background px-4'>
                 <main className='flex-1'>{children}</main>
-                <Toaster />
-                <BlogFooter />
-              </AuthModalProvider>
-            </AuthProvider>
-          </div>
+              </div>
+              <Toaster />
+              <BlogFooter />
+            </AuthModalProvider>
+          </AuthProvider>
+          {/* </div> */}
         </Providers>
       </body>
     </html>

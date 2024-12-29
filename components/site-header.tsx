@@ -22,7 +22,7 @@ import { Input } from '@/components/ui/input'
 export function SiteHeader() {
   const pathname = usePathname()
   const headerClass =
-    'container flex max-w-screen-2xl px-2 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-background'
+    'container flex max-w-screen-2xl px-6 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0'
 
   return (
     <header className={headerClass}>
@@ -36,9 +36,9 @@ export function SiteHeader() {
                   <>
                     <NavigationMenuTrigger
                       className={cn(
+                        'transition-colors lg:text-lg relative',
                         pathname === dialog.href &&
-                          'bg-accent text-accent-foreground font-bold',
-                        'transition-colors text-base lg:text-lg'
+                          'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary'
                       )}
                     >
                       {dialog.title}
@@ -65,9 +65,9 @@ export function SiteHeader() {
                   <Link href={dialog.href}>
                     <NavigationMenuTrigger
                       className={cn(
+                        'transition-colors lg:text-lg relative',
                         pathname === dialog.href &&
-                          'bg-accent text-accent-foreground font-bold',
-                        'transition-colors lg:text-lg'
+                          'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary '
                       )}
                     >
                       {dialog.title}

@@ -25,6 +25,15 @@ const config = {
       },
     },
     extend: {
+      backgroundImage: {
+        'gradient-custom':
+          'linear-gradient(to right, var(--tw-gradient-stops))',
+      },
+      gradientColorStops: {
+        'gradient-1': '#60A5FA', // blue-400
+        'gradient-2': '#14B8A6', // teal-500
+        'gradient-3': '#4ADE80', // green-400
+      },
       fontFamily: {
         mono: ['var(--font-mono)', ...fontFamily.mono],
       },
