@@ -1,18 +1,13 @@
-// export default PythonCodeEditor
-"use client"
+'use client'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Play, Loader2, Sun, Moon, Code2 } from 'lucide-react'
 import CodeMirror from '@uiw/react-codemirror'
-import {
-  vscodeDark,
-  vscodeLight,
-} from '@uiw/codemirror-theme-vscode'
+import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { useAuth } from '@/contexts/AuthContext'
 import { handleExerciseCompletion } from './session-views/helpers'
-import {CodeEditorProps} from "@/types/props"
-
+import { CodeEditorProps } from '@/types/props'
 
 const PythonCodeEditor = ({
   initialCode,
@@ -60,60 +55,83 @@ const PythonCodeEditor = ({
       const codeToExecute =
         isSubmission && isProject ? `${code}\n\n${testCode}` : code
 
-      const response = await fetch('/api/simple-execute-code', {
+      // Prepare the request payload
+      const requestPayload = {
+        code: codeToExecute,
+        exercise_number,
+        tutorial_id,
+      }
+
+      // Fetch from Flask backend
+      const response = await fetch('/api/execute', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          code: codeToExecute,
-          exercise_number,
-          tutorial_id,
-        }),
+        body: JSON.stringify(requestPayload),
       })
 
       const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to execute code')
-      }
 
-      const executionOutput = data.output.trim()
+      // Handle different response structures
+      const executionOutput = data.output ? data.output.trim() : ''
+
+      // Set output
       setOutput(executionOutput)
 
       // Only check correctness if this is a submission
       if (isSubmission) {
+        // Determine correctness based on project or expected output
         if (isProject) {
+          // For projects, check if there are no errors
           setIsCorrect(
             !executionOutput.includes('AssertionError') &&
-              !executionOutput.includes('Error')
+              !executionOutput.includes('Error') &&
+              !data.error
           )
         } else if (expectedOutput) {
+          // For specific exercises, compare with expected output
           setIsCorrect(executionOutput === expectedOutput.trim())
+          if (executionOutput === expectedOutput.trim() && user) {
+            console.log('sending to fb!')
+            await handleExerciseCompletion(
+              user.user!,
+              tutorial_id,
+              exercise_number
+            )
+          }
         }
 
         // Handle exercise completion if correct
-        if (isCorrect && user) {
-          await handleExerciseCompletion(
-            user.user!,
-            tutorial_id,
-            exercise_number
-          )
-        }
+        // if (isCorrect && user) {
+        //   console.log("sending to fb!")
+        //   await handleExerciseCompletion(
+        //     user.user!,
+        //     tutorial_id,
+        //     exercise_number
+        //   )
+        // }
+      }
+
+      // Handle any errors from the backend
+      if (data.error) {
+        setError(executionOutput)
       }
     } catch (err) {
+      // Handle network or parsing errors
       setError(err instanceof Error ? err.message : 'An error occurred')
       if (isSubmission) {
         setIsCorrect(false)
       }
     } finally {
+      // Reset executing states
       setIsExecuting(false)
-    
+
       if (isSubmission) {
         setIsSubmitting(false)
       } else {
         setIsRunning(false)
       }
-
     }
   }
 
@@ -218,7 +236,7 @@ const PythonCodeEditor = ({
             className='bg-emerald-600 hover:bg-emerald-700 text-white'
             disabled={isExecuting}
           >
-            {isRunning? (
+            {isRunning ? (
               <Loader2 className='w-4 h-4 mr-2 animate-spin' />
             ) : (
               <Play className='w-4 h-4 mr-2' />
@@ -226,18 +244,20 @@ const PythonCodeEditor = ({
             {isExecuting ? 'Running...' : 'Run Code'}
           </Button>
 
-          <Button
-            onClick={() => executeCode(true)}
-            className='bg-blue-600 hover:bg-blue-700 text-white'
-            disabled={isExecuting}
-          >
-            {isSubmitting ? (
-              <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-            ) : (
-              <Play className='w-4 h-4 mr-2' />
-            )}
-            Submit
-          </Button>
+          {(expectedOutput || isProject) && (
+            <Button
+              onClick={() => executeCode(true)}
+              className='bg-blue-600 hover:bg-blue-700 text-white'
+              disabled={isExecuting}
+            >
+              {isSubmitting ? (
+                <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+              ) : (
+                <Play className='w-4 h-4 mr-2' />
+              )}
+              Submit
+            </Button>
+          )}
         </div>
       </div>
 

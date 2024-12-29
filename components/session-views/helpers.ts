@@ -9,8 +9,8 @@ interface ExerciseProgress {
 }
 
 interface TutorialData {
-  exercises: {
-    [exerciseNumber: string]: ExerciseProgress
+  exercises?: {
+    [exerciseNumber: number]: ExerciseProgress
   }
 }
 
@@ -107,13 +107,17 @@ export async function handleExerciseCompletion(
   exerciseNumber: number
 ) {
   if (!user) return
+
   const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
+
   await setDoc(
     progressRef,
     {
-      [`exercises.${exerciseNumber}`]: {
-        completed: true,
-        timestamp: Date.now(),
+      exercises: {
+        [exerciseNumber]: {
+          completed: true,
+          timestamp: Date.now(),
+        },
       },
     },
     { merge: true }
@@ -127,11 +131,18 @@ export async function getTutorialProgress(
 ) {
   const tutorialRef = doc(fireStore, 'users', userId, 'tutorials', tutorialId)
   const docSnap = await getDoc(tutorialRef)
+
   if (!docSnap.exists()) return 0
 
   const data = docSnap.data() as TutorialData
-  const exercises = Object.values(data?.exercises || {})
+  console.log('Raw data:', JSON.stringify(data, null, 2))
 
-  const completedExercises = exercises.filter((ex) => ex.completed).length
+  // Correctly parse exercises
+  const exercises = data.exercises || {}
+
+  const completedExercises = Object.values(exercises).filter(
+    (exercise) => exercise?.completed
+  ).length
+
   return (completedExercises / count) * 100
 }
