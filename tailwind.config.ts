@@ -25,15 +25,6 @@ const config = {
       },
     },
     extend: {
-      backgroundImage: {
-        'gradient-custom':
-          'linear-gradient(to right, var(--tw-gradient-stops))',
-      },
-      gradientColorStops: {
-        'gradient-1': '#60A5FA', // blue-400
-        'gradient-2': '#14B8A6', // teal-500
-        'gradient-3': '#4ADE80', // green-400
-      },
       fontFamily: {
         mono: ['var(--font-mono)', ...fontFamily.mono],
       },
@@ -41,7 +32,12 @@ const config = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
+        background: {
+          DEFAULT:
+            'linear-gradient(to right, hsl(var(--background-start)), hsl(var(--background-end)))',
+          start: 'hsl(var(--background-start))',
+          end: 'hsl(var(--background-end))',
+        },
         foreground: 'hsl(var(--foreground))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',

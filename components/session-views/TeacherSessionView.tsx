@@ -352,7 +352,7 @@ export function TeacherSessionView({
   return (
     <div className='h-screen flex'>
       {/* Part 1: Students and Session Management */}
-      <div className='w-1/4 border-r bg-background p-4 flex flex-col'>
+      <div className='w-1/4 border-r bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] p-4 flex flex-col'>
         <div className='space-y-4'>
           <div className='flex justify-between items-center'>
             <h2 className='text-xl font-bold'>Session Control</h2>
@@ -473,7 +473,7 @@ export function TeacherSessionView({
       </div>
 
       {/* Part 3: Problem Selection and Details */}
-      <div className='w-1/4 border-l bg-background p-4'>
+      <div className='w-1/4 border-l bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] p-4'>
         <h2 className='text-xl font-bold mb-4'>Week Problems</h2>
         <div className='space-y-2'>
           {weekProblems.map((problemId) => {

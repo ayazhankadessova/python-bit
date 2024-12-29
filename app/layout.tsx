@@ -21,16 +21,16 @@ export default function RootLayout({
     <html lang='en' className='scroll-smooth'>
       <body
         className={cn(
-          'min-h-screen bg-background font-mono antialiased',
+          'min-h-screen font-mono antialiased',
           inter.variable
         )}
       >
         <Providers>
-          {/* <div className='relative flex min-h-dvh flex-col bg-background px-4'> */}
+          {/* <div className='relative flex min-h-dvh flex-col bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] px-4'> */}
           <AuthProvider>
             <AuthModalProvider>
               <SiteHeader />
-              <div className='relative flex min-h-dvh flex-col bg-background px-4'>
+              <div className='relative flex min-h-dvh flex-col px-4'>
                 <main className='flex-1'>{children}</main>
               </div>
               <Toaster />

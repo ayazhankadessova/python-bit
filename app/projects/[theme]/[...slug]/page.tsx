@@ -72,7 +72,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
         </div>
         {/* Right side - Code editor */}
-        <div className='w-1/2 overflow-hidden bg-background'>
+        <div className='w-1/2 overflow-hidden'>
           {' '}
           {exercise && (
             <PythonCodeEditor

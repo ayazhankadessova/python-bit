@@ -270,7 +270,7 @@ export function StudentSessionView({
 
   return (
     <div className='h-screen flex'>
-      <div className='w-1/4 border-r p-4 bg-background overflow-y-auto'>
+      <div className='w-1/4 border-r p-4 bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] overflow-y-auto'>
         <h2 className='text-xl font-bold mb-4'>Week {selectedWeek} Problems</h2>
         <div className='space-y-2'>
           {weekProblems.map((problemId) => {
