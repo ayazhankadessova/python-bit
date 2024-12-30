@@ -357,25 +357,23 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Front 
 - [ ] Students need to run ever cell to complete exercise, so think of a logic
-- [ ] handle Exercises completion check
+- [x] handle Exercises completion check
 - [x] add footer icons
 - [x] siteConfig fix!
 - [x] bg gradient
-- [ ] resize python code editor
+- [x] resize python code editor
 - [ ] add home , make Tutorials page default
 - [ ] remove underline in tailwind md
 - [ ] Go thru every page and make it have same padding or do we do it from layout?
-- [ ] check images caching
 - [ ] accent to curr tab if togglable , accent to pages when I am in sub pages
 - [ ] add at least 4 projects
 - [ ] if solved project, add to firestore
 - [ ] store code  ?? 
 - [ ] add share if completed project
-- [ ] add which tab ur one
 - [ ] add caching to progress checkers
 - [ ] next tutorial Button
 - [ ] Add 5 projects w/ tags
-- [ ] Add better imgs
+- [x] Add better imgs
 - [ ] Meme creation tools
 
 
