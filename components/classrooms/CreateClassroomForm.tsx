@@ -239,7 +239,7 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
             <FormItem>
               <FormLabel>Students from {teacherSchool}</FormLabel>
               <FormControl>
-                <div className='flex flex-wrap gap-2 max-h-60 overflow-y-auto p-2 border rounded-md bg-background'>
+                <div className='flex flex-wrap gap-2 max-h-60 overflow-y-auto p-2 border rounded-md bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]'>
                   {students.length === 0 ? (
                     <p className='text-sm text-muted-foreground p-2'>
                       No students available from {teacherSchool}

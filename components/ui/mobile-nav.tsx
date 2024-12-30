@@ -1,11 +1,11 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Sheet, SheetContent, SheetTrigger } from './sheet'
-// import {
-//   disableBodyScroll,
-//   enableBodyScroll,
-//   clearAllBodyScrollLocks,
-// } from 'body-scroll-lock'
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+  clearAllBodyScrollLocks,
+} from 'body-scroll-lock'
 
 import { Button } from './button'
 import { Menu } from 'lucide-react'
@@ -18,23 +18,23 @@ import { ThemeToggle } from './theme-toggle'
 const  MobileNav = () => {
   const [open, setOpen] = useState(false)
 
-  // const navRef = useRef(null)
+  const navRef = useRef(null)
 
   const onToggleNav = () => {
     setOpen((status) => {
-      // if (status) {
-      //   // enableBodyScroll(navRef.current!)
-      // } else {
-      //   // Prevent scrolling
-      //   // disableBodyScroll(navRef.current!)
-      // }
+      if (status) {
+        enableBodyScroll(navRef.current!)
+      } else {
+        // Prevent scrolling
+        disableBodyScroll(navRef.current!)
+      }
       return !status
     })
   }
 
-  // useEffect(() => {
-  //   return clearAllBodyScrollLocks
-  // })
+  useEffect(() => {
+    return clearAllBodyScrollLocks
+  })
 
   return (
     <Sheet open={open} onOpenChange={onToggleNav}>
@@ -44,7 +44,10 @@ const  MobileNav = () => {
           <Menu className='h-[1.1rem] w-[1.2rem]' />
         </Button>
       </SheetTrigger>
-      <SheetContent side='right'>
+      <SheetContent
+        side='right'
+        className='bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]'
+      >
         <MobileLink
           onOpenChange={onToggleNav}
           href='/'
@@ -79,7 +82,7 @@ function MobileLink({
   children,
   className,
   ...props
-}: MobileLinkProps) {
+}: Readonly<MobileLinkProps>) {
   const router = useRouter()
   return (
     <Link

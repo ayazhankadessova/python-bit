@@ -4,15 +4,15 @@ export const siteConfig = {
   description:
     'PythonBit shows the real coding skills of developers✨Talk is cheap. Show me the code.',
   socials: {
-    discord: 'https://discord.com/invite/EEw3u9PVqA',
+    discord: 'https://github.com/ayazhankadessova/python-bit',
     linkedin: 'https://www.linkedin.com/company/PythonBit/',
-    twitter: 'https://x.com/gitroll_io',
-    youtube: 'https://www.youtube.com/watch?v=hI5cjgtdLr0',
-    medium: 'https://PythonBit.medium.com',
-    contactUs: 'https://PythonBit.io/contact',
+    twitter: 'https://x.com/?lang=en',
+    youtube: 'https://www.youtube.com/@ayazhankadessova330',
+    medium: 'https://github.com/ayazhankadessova/python-bit',
+    contactUs: 'mailto:kadessovaayazhan@gmail.com',
   },
   stickyNav: true,
-  author: 'PythonBit',
+  author: 'Ayazhan Kadessova',
 }
 
 export type SiteConfig = typeof siteConfig

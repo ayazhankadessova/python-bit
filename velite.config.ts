@@ -21,7 +21,7 @@ const posts = defineCollection({
       published: s.boolean().default(true),
       tags: s.array(s.string()).optional(),
       body: s.mdx(),
-      image: s.string().max(99),
+      image: s.string().max(99).optional(),
       exercises: s.number(),
       firestoreId: s.string().max(99),
     })

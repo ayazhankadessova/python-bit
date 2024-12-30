@@ -4,7 +4,7 @@ import { MDXContent } from '@/components/mdx-components'
 import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
 import BackButton from '@/components/ui/backbutton'
-import PythonCodeEditor from '@/components/codeExecutor'
+import PythonResizableCodeEditor from '@/components/code-resizable-executor'
 import { getExerciseById } from '@/utils/exercise'
 
 interface PostPageProps {
@@ -72,10 +72,10 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
         </div>
         {/* Right side - Code editor */}
-        <div className='w-1/2 overflow-hidden bg-background'>
+        <div className='w-1/2 overflow-hidden'>
           {' '}
           {exercise && (
-            <PythonCodeEditor
+            <PythonResizableCodeEditor
               initialCode={exercise?.starterCode}
               testCode={exercise?.testCode}
               isProject={true}

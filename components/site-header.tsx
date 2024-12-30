@@ -22,7 +22,7 @@ import { Input } from '@/components/ui/input'
 export function SiteHeader() {
   const pathname = usePathname()
   const headerClass =
-    'container flex max-w-screen-2xl px-2 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-background'
+    'container flex max-w-screen-2xl px-6 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-popover mb-4'
 
   return (
     <header className={headerClass}>
@@ -36,9 +36,14 @@ export function SiteHeader() {
                   <>
                     <NavigationMenuTrigger
                       className={cn(
-                        pathname === dialog.href &&
-                          'bg-accent text-accent-foreground font-bold',
-                        'transition-colors text-base lg:text-lg'
+                        'transition-colors lg:text-lg relative',
+                        (pathname === dialog.href ||
+                          dialog.dropdown?.some(
+                            (item) => pathname === item.href
+                          )) && [
+                          'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary',
+                          'bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]',
+                        ]
                       )}
                     >
                       {dialog.title}
@@ -65,9 +70,11 @@ export function SiteHeader() {
                   <Link href={dialog.href}>
                     <NavigationMenuTrigger
                       className={cn(
-                        pathname === dialog.href &&
-                          'bg-accent text-accent-foreground font-bold',
-                        'transition-colors lg:text-lg'
+                        'transition-colors lg:text-lg relative',
+                        pathname === dialog.href && [
+                          'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary',
+                          'bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]',
+                        ]
                       )}
                     >
                       {dialog.title}
@@ -84,7 +91,7 @@ export function SiteHeader() {
         <MainNav />
       </div>
 
-      <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
+      <div className='min-[850px]:hidden flex items-center justify-between gap-2 '>
         <Input type='search' placeholder='Search' />
         <MobileNav />
       </div>
@@ -111,7 +118,10 @@ const ListItem = React.forwardRef<
           href={href}
           className={cn(
             'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-            pathname === href && 'bg-accent text-accent-foreground font-bold', 'text-base',
+            pathname === href && [
+                          'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary',
+                          'bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]',
+                        ],
             className
           )}
           {...props}

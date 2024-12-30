@@ -32,7 +32,12 @@ const config = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
+        background: {
+          DEFAULT:
+            'linear-gradient(to right, hsl(var(--background-start)), hsl(var(--background-end)))',
+          start: 'hsl(var(--background-start))',
+          end: 'hsl(var(--background-end))',
+        },
         foreground: 'hsl(var(--foreground))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
