@@ -83,7 +83,7 @@ export function PostItem({ post, user }: PostItemProps) {
             alt={title}
             width={300}
             height={100}
-            onLoadingComplete={() => setIsLoading(false)}
+            onLoad={() => setIsLoading(false)}
             className={`
               rounded-lg sm:w-[9rem] xl:w-full p-1
               duration-700 ease-in-out
