@@ -81,14 +81,22 @@ export function PostItem({ post, user }: PostItemProps) {
             <Image
               src={`/tutorials/${firestoreId}.webp`}
               alt={title}
-              width={300}
-              height={100}
+              width={500} // Increased base width for better quality
+              height={300} // Adjusted height to maintain aspect ratio
               onLoad={() => setIsLoading(false)}
               className={`
-                sm:w-[9rem] xl:w-full
+                w-full        // Full width on mobile
+                sm:w-[9rem]   // Specific width on small screens
+                md:w-[12rem]  // Slightly larger on medium screens
+                lg:w-[15rem]  // Larger on large screens
+                xl:w-[18rem]  // Largest on extra large screens
+                2xl:w-[20rem] // Even larger for 2xl screens
+                object-cover  // Ensures image covers area without distortion
+                rounded-lg    // Matching your existing rounded corners
                 transition-all duration-700 ease-in-out
                 ${isLoading ? 'opacity-0' : 'opacity-100'}
               `}
+              priority={false} 
             />
           </div>
         </div>

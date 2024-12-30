@@ -1,11 +1,16 @@
-"use client"
+'use client'
 import React from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from '@/components/ui/card'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, PlayCircle, BookOpen, Users2 } from 'lucide-react'
-// import AuthModal from '@/components/AuthModal'
+import { Loader2, PlayCircle, BookOpen, Users2, ArrowRight } from 'lucide-react'
 import { useAuthModal } from '@/contexts/AuthModalContext'
 
 export default function HomePage() {
@@ -27,7 +32,7 @@ export default function HomePage() {
       <section className='container mx-auto px-4 py-12 md:py-24'>
         <div className='flex flex-col items-center text-center max-w-3xl mx-auto space-y-6'>
           <h1 className='text-4xl md:text-6xl font-bold tracking-tight'>
-            PythonBit
+            PythonBit ()
           </h1>
           <p className='text-xl md:text-2xl text-muted-foreground'>
             Learn Python through guided tutorials and real-time classrooms
@@ -52,43 +57,74 @@ export default function HomePage() {
       {/* Features Section */}
       <section className='container mx-auto px-4 py-12'>
         <div className='grid md:grid-cols-3 gap-8'>
-          <Card>
+          <Card className='flex flex-col'>
             <CardHeader>
               <PlayCircle className='h-10 w-10 text-primary mb-2' />
               <CardTitle>Interactive Learning</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className='flex-grow'>
               <p>
-                Master Python programming through hands-on practice. Write code
-                and see results instantly in our interactive environment.
+                Master Python programming through hands-on practice. Create fun
+                projects and see results instantly in our interactive
+                environment.
               </p>
             </CardContent>
+            <CardFooter className='pt-6'>
+              <Button
+                className='w-full group'
+                onClick={() => router.push('/projects')}
+                variant='softBlue'
+              >
+                Make Projects
+                <ArrowRight className='ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1' />
+              </Button>
+            </CardFooter>
           </Card>
 
-          <Card>
+          <Card className='flex flex-col'>
             <CardHeader>
               <Users2 className='h-10 w-10 text-primary mb-2' />
               <CardTitle>Virtual Classrooms</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className='flex-grow'>
               <p>
                 Join or create virtual classrooms for real-time Python learning
                 with teachers and peers.
               </p>
             </CardContent>
+            <CardFooter className='pt-6'>
+              <Button
+                className='w-full group'
+                onClick={() => router.push('/classrooms')}
+                variant='softBlue'
+              >
+                Enter Classroom
+                <ArrowRight className='ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1' />
+              </Button>
+            </CardFooter>
           </Card>
 
-          <Card>
+          <Card className='flex flex-col'>
             <CardHeader>
               <BookOpen className='h-10 w-10 text-primary mb-2' />
               <CardTitle>Guided Tutorials</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className='flex-grow'>
               <p>
                 Step-by-step tutorials designed to take you from beginner to
                 confident Python programmer.
               </p>
             </CardContent>
+            <CardFooter className='pt-6'>
+              <Button
+                className='w-full group'
+                onClick={() => router.push('/blog')}
+                variant='softBlue'
+              >
+                Start Learning
+                <ArrowRight className='ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1' />
+              </Button>
+            </CardFooter>
           </Card>
         </div>
       </section>
@@ -104,7 +140,7 @@ export default function HomePage() {
             >
               Go to Dashboard
             </Button>
-            <Button variant='secondary' onClick={signOut} className='w-full'>
+            <Button variant='softBlue' onClick={signOut} className='w-full'>
               Sign Out
             </Button>
           </div>
@@ -119,7 +155,7 @@ export default function HomePage() {
               </Button>
               <Button
                 size='lg'
-                variant='outline'
+                variant='softBlue'
                 onClick={() => onOpen('login')}
               >
                 Sign In
@@ -128,8 +164,6 @@ export default function HomePage() {
           </div>
         )}
       </section>
-
-      {/* <AuthModal /> */}
     </div>
   )
 }

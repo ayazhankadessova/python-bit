@@ -18,6 +18,9 @@ import {
 import headerNavLinks from '@/config/headerNavLinks'
 import { ChevronDown } from 'lucide-react'
 
+const activeStyles =
+  'bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-blue-900 dark:from-blue-800 dark:via-blue-700 dark:to-blue-800 dark:text-white shadow-sm border text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary dark:from-blue-900/70 dark:via-blue-800/70 dark:to-blue-900/70 dark:text-white dark:border-blue-700/20 dark:hover:from-blue-800/70 dark:hover:via-blue-700/70 dark:hover:to-blue-800/70'
+
 export function SiteHeader() {
   const pathname = usePathname()
   const headerClass =
@@ -36,14 +39,12 @@ export function SiteHeader() {
                   <>
                     <NavigationMenuTrigger
                       className={cn(
-                        'transition-colors lg:text-lg relative',
+                        'transition-all duration-200 lg:text-lg relative rounded-md',
                         (pathname === dialog.href ||
                           dialog.dropdown?.some(
                             (item) => pathname === item.href
-                          )) && [
-                          'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary',
-                          'bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]',
-                        ]
+                          )) &&
+                          activeStyles
                       )}
                     >
                       {dialog.title}
@@ -70,11 +71,8 @@ export function SiteHeader() {
                   <Link href={dialog.href}>
                     <NavigationMenuTrigger
                       className={cn(
-                        'transition-colors lg:text-lg relative',
-                        pathname === dialog.href && [
-                          'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary',
-                          'bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]',
-                        ]
+                        'transition-all duration-200 lg:text-lg relative rounded-md hover:bg-accent/50',
+                        pathname === dialog.href && activeStyles
                       )}
                     >
                       {dialog.title}
@@ -121,11 +119,8 @@ const ListItem = React.forwardRef<
           ref={ref}
           href={href}
           className={cn(
-            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-            pathname === href && [
-              'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary',
-              'bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]',
-            ],
+            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+            pathname === href && activeStyles,
             className
           )}
           {...props}
