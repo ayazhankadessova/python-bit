@@ -29,7 +29,7 @@ export default function HomePage() {
   return (
     <div className='min-h-screen bg-background'>
       {/* Hero Section */}
-      <section className='container mx-auto px-4 py-12 md:py-24'>
+      <section className='container mx-auto px-4 py-12 md:py-18'>
         <div className='flex flex-col items-center text-center max-w-3xl mx-auto space-y-6'>
           <h1 className='text-4xl md:text-6xl font-bold tracking-tight'>
             PythonBit ()
@@ -44,8 +44,8 @@ export default function HomePage() {
               </Button>
               <Button
                 size='lg'
-                variant='outline'
-                onClick={() => router.push('/tutorials')}
+                variant='softBlue'
+                onClick={() => router.push('/blog')}
               >
                 Try Tutorial
               </Button>
