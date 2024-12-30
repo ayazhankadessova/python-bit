@@ -13,33 +13,21 @@ interface PostItemProps {
     description?: string
     date: number
     tags?: Array<string>
-    image: string
     exercises: number
     firestoreId: string
-
   }
-  user: User | null 
+  user: User | null
 }
 
 export function PostItem({ post, user }: PostItemProps) {
-  const {
-    slug,
-    title,
-    description,
-    tags,
-    image,
-    exercises,
-    firestoreId,
-  } = post
+  const { slug, title, description, tags, exercises, firestoreId } = post
+
   const [progress, setProgress] = useState<number>(0)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     if (user) {
-      getTutorialProgress(
-        user.uid,
-        firestoreId,
-        exercises
-      ).then(setProgress)
+      getTutorialProgress(user.uid, firestoreId, exercises).then(setProgress)
     }
   }, [user])
 
@@ -89,13 +77,22 @@ export function PostItem({ post, user }: PostItemProps) {
             ))}
           </div>
         </div>
-        <div>
+        <div className='mb-4 sm:mb-0'>
           <Image
-            src={image}
-            alt=''
-            className='rounded-lg sm:w-[9rem] xl:w-full p-1'
+            src={`/tutorials/${firestoreId}.webp`}
+            alt={title}
             width={300}
             height={100}
+            onLoadingComplete={() => setIsLoading(false)}
+            className={`
+              rounded-lg sm:w-[9rem] xl:w-full p-1
+              duration-700 ease-in-out
+              ${
+                isLoading
+                  ? 'scale-110 blur-md grayscale'
+                  : 'scale-100 blur-0 grayscale-0'
+              }
+            `}
           />
         </div>
       </div>
