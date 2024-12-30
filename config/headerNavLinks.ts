@@ -16,6 +16,11 @@ interface DialogsInfo {
 }
 
 const dialogsInfo: DialogsInfo = {
+  Home: {
+    title: 'Home',
+    href: '/',
+    toggle: false,
+  },
   Classrooms: {
     title: 'Classrooms',
     href: '/classrooms',
