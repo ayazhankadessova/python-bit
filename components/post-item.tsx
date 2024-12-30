@@ -89,7 +89,7 @@ export function PostItem({ post, user }: PostItemProps) {
               duration-700 ease-in-out
               ${
                 isLoading
-                  ? 'scale-110 blur-md grayscale'
+                  ? 'scale-110 blur-xl grayscale'
                   : 'scale-100 blur-0 grayscale-0'
               }
             `}
