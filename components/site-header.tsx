@@ -1,8 +1,12 @@
-'use client'
-import Link from 'next/link'
 import React from 'react'
-import MobileNav from './ui/mobile-nav'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { MainNav } from './main-nav'
+import MobileNav from './ui/mobile-nav'
+import { UserMenu } from '@/components/user/user-menu'
+import { Input } from '@/components/ui/input'
+import { ThemeToggle } from './ui/theme-toggle'
+import { cn } from '@/lib/utils'
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -12,12 +16,7 @@ import {
   NavigationMenuContent,
 } from '@/components/ui/navigation-menu'
 import headerNavLinks from '@/config/headerNavLinks'
-import { cn } from '@/lib/utils'
-import { ThemeToggle } from './ui/theme-toggle'
 import { ChevronDown } from 'lucide-react'
-import { usePathname } from 'next/navigation'
-import { Input } from '@/components/ui/input'
-
 
 export function SiteHeader() {
   const pathname = usePathname()
@@ -26,6 +25,7 @@ export function SiteHeader() {
 
   return (
     <header className={headerClass}>
+      {/* Desktop Navigation */}
       <div className='hidden min-[850px]:flex items-center gap-4'>
         <MainNav />
         <NavigationMenu className='hidden sm:inline-flex'>
@@ -87,17 +87,21 @@ export function SiteHeader() {
         </NavigationMenu>
       </div>
 
+      {/* Mobile Navigation */}
       <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
         <MainNav />
       </div>
 
-      <div className='min-[850px]:hidden flex items-center justify-between gap-2 '>
+      <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
         <Input type='search' placeholder='Search' />
+        <UserMenu />
         <MobileNav />
       </div>
 
-      <div className='hidden min-[850px]:inline-flex items-center items-end'>
-        <Input type='search' placeholder='Search' />
+      {/* Desktop Right Section */}
+      <div className='hidden min-[850px]:flex items-center gap-4'>
+        <Input type='search' placeholder='Search' className='w-64' />
+        <UserMenu />
         <ThemeToggle />
       </div>
     </header>
@@ -109,7 +113,7 @@ const ListItem = React.forwardRef<
   React.ComponentPropsWithoutRef<'a'> & { href?: string }
 >(({ className, title, children, href, ...props }, ref) => {
   const pathname = usePathname()
-  
+
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -119,9 +123,9 @@ const ListItem = React.forwardRef<
           className={cn(
             'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
             pathname === href && [
-                          'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary',
-                          'bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]',
-                        ],
+              'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary',
+              'bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]',
+            ],
             className
           )}
           {...props}
