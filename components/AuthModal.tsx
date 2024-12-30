@@ -1,36 +1,55 @@
 'use client'
+
+import { useEffect } from 'react'
 import { useAuthModal } from '@/contexts/AuthModalContext'
 import Login from './LoginForm'
 import Signup from './SignupForm'
 import ResetPassword from '@/components/auth/ResetPassword'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 
-const AuthModal: React.FC = () => {
+const AuthModal = () => {
   const { isOpen, type, onClose } = useAuthModal()
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
+
+  // Close modal on escape key press
+  useEffect(() => {
+    const closeOnEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [onClose])
 
   if (!isOpen) return null
 
   return (
-    <div
-      className='absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60'
-      onClick={onClose}
-    >
-      <div
-        className='w-full sm:w-[450px] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex justify-center items-center'
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className='relative w-full h-full mx-auto flex items-center justify-center'>
-          <div className='bg-white rounded-lg shadow relative w-full bg-gradient-to-b from-brand-orange to-slate-900 mx-6'>
-            <div className='flex justify-end p-2'>
-              <button
-                type='button'
-                className='bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white text-white'
-                onClick={onClose}
-              >
-                x
-              </button>
-            </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className='sm:max-w-[425px] gap-0 p-0 bg-background border-none'>
+        <div className='flex flex-col w-full'>
+          {/* Header */}
+          <div className='flex justify-between items-center p-4 border-b'>
+            <h2 className='text-xl font-semibold'>
+              {type === 'login'
+                ? 'Login'
+                : type === 'register'
+                ? 'Sign Up'
+                : 'Reset Password'}
+            </h2>
+          </div>
 
-            {/* Auth Forms */}
+          {/* Content */}
+          <div className='px-4 py-6 overflow-y-auto max-h-[80vh]'>
             {type === 'login' ? (
               <Login />
             ) : type === 'register' ? (
@@ -40,8 +59,8 @@ const AuthModal: React.FC = () => {
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 
