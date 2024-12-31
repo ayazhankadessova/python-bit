@@ -9,6 +9,8 @@ import { Toaster } from '@/components/ui/toaster'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { AuthModalProvider } from '@/contexts/AuthModalContext'
 import { BlogFooter } from '@/components/ui/footer'
+import AuthModal from '@/components/AuthModal'
+
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-mono' })
 
@@ -33,6 +35,7 @@ export default function RootLayout({
               <div className='relative flex min-h-dvh flex-col px-4'>
                 <main className='flex-1'>{children}</main>
               </div>
+              <AuthModal />
               <Toaster />
               <BlogFooter />
             </AuthModalProvider>

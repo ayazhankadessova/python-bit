@@ -21,7 +21,6 @@ interface PostItemProps {
 
 export function PostItem({ post, user }: PostItemProps) {
   const { slug, title, description, tags, exercises, firestoreId } = post
-
   const [progress, setProgress] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -29,7 +28,7 @@ export function PostItem({ post, user }: PostItemProps) {
     if (user) {
       getTutorialProgress(user.uid, firestoreId, exercises).then(setProgress)
     }
-  }, [user])
+  }, [user, firestoreId, exercises])
 
   return (
     <article className='flex-1 flex flex-col gap-2 border-border border-b py-3'>
@@ -38,7 +37,7 @@ export function PostItem({ post, user }: PostItemProps) {
           {user && (
             <div className='flex items-center gap-2'>
               {progress === 100 ? (
-                <CheckCircle color='green' />
+                <CheckCircle className='text-green-500' />
               ) : (
                 <div className='relative h-6 w-6 mt-1'>
                   <svg className='h-6 w-6' viewBox='0 0 36 36'>
@@ -77,25 +76,33 @@ export function PostItem({ post, user }: PostItemProps) {
             ))}
           </div>
         </div>
-        <div className='mb-4 sm:mb-0'>
-          <Image
-            src={`/tutorials/${firestoreId}.webp`}
-            alt={title}
-            width={300}
-            height={100}
-            onLoad={() => setIsLoading(false)}
-            className={`
-              rounded-lg sm:w-[9rem] xl:w-full p-1
-              duration-700 ease-in-out
-              ${
-                isLoading
-                  ? 'scale-110 blur-xl grayscale'
-                  : 'scale-100 blur-0 grayscale-0'
-              }
-            `}
-          />
+        <div className='mb-4 sm:mb-0 overflow-hidden rounded-lg bg-muted'>
+          <div className={`relative ${isLoading ? 'animate-pulse' : ''}`}>
+            <Image
+              src={`/tutorials/${firestoreId}.webp`}
+              alt={title}
+              width={500} // Increased base width for better quality
+              height={300} // Adjusted height to maintain aspect ratio
+              onLoad={() => setIsLoading(false)}
+              className={`
+                w-full        // Full width on mobile
+                sm:w-[9rem]   // Specific width on small screens
+                md:w-[12rem]  // Slightly larger on medium screens
+                lg:w-[15rem]  // Larger on large screens
+                xl:w-[18rem]  // Largest on extra large screens
+                2xl:w-[20rem] // Even larger for 2xl screens
+                object-cover  // Ensures image covers area without distortion
+                rounded-lg    // Matching your existing rounded corners
+                transition-all duration-700 ease-in-out
+                ${isLoading ? 'opacity-0' : 'opacity-100'}
+              `}
+              priority={false} 
+            />
+          </div>
         </div>
       </div>
     </article>
   )
 }
+
+export default PostItem

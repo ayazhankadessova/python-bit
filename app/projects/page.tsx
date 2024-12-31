@@ -54,6 +54,7 @@ const ProjectThemes = () => {
             </CardContent>
             <Button
                 className='mt-auto mb-6 mx-6'
+                variant= 'softBlue'
                 onClick={() =>
                   router.push(
                     `/projects/${theme.title

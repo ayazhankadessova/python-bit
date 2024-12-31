@@ -1,35 +1,43 @@
 'use client'
-import React, {useEffect} from 'react'
+
+import React from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+  CardDescription,
+} from '@/components/ui/card'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2 } from 'lucide-react'
-import AuthModal from '@/components/AuthModal'
+import {
+  Loader2,
+  PlayCircle,
+  BookOpen,
+  Users2,
+  ArrowRight,
+  GraduationCap,
+  Code,
+  BookMarked,
+} from 'lucide-react'
 import { useAuthModal } from '@/contexts/AuthModalContext'
-import { RoleBadge } from '@/components/user/RoleBadge'
-import { UserStats } from '@/components/user/UserStats'
+import Image from 'next/image'
+import { posts } from '#site/content'
+import {
+  sortPostsByTime,
+} from '@/utils/posts'
+import { themes } from '@/config/themes'
+import { Badge } from '@/components/ui/badge'
+import { ThemeImage } from '@/components/theme-image'
+
 
 export default function HomePage() {
   const { user, loading, signOut } = useAuth()
   const router = useRouter()
-  const { onOpen } = useAuthModal()
-
-  // Remove browser extension attributes on client-side mount
-  useEffect(() => {
-    const removeExtensionAttributes = () => {
-      document.body.removeAttribute('data-new-gr-c-s-check-loaded')
-      document.body.removeAttribute('data-gr-ext-installed')
-      document.documentElement.removeAttribute('data-new-gr-c-s-check-loaded')
-      document.documentElement.removeAttribute('data-gr-ext-installed')
-    }
-
-    removeExtensionAttributes()
-  }, [])
-
-  const handleAuth = (type: 'login' | 'register' | 'forgotPassword') => {
-    onOpen(type)
-  }
+  const { onOpen } = useAuthModal()  
+  const sortedPosts =sortPostsByTime(posts)
 
   if (loading) {
     return (
@@ -40,77 +48,354 @@ export default function HomePage() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-background to-muted'>
-      <div className='container mx-auto px-4 py-16'>
-        <div className='max-w-md mx-auto'>
-          <div className='text-center mb-8'>
-            <h1 className='text-4xl font-bold mb-4'>Welcome to PythonBit</h1>
-            <p className='text-xl text-muted-foreground'>
-              Your platform for teaching Python with micro:bit
-            </p>
+    <div className='min-h-screen bg-background'>
+      {/* Hero Section */}
+      <section className='container mx-auto px-4 pt-12 pb-6 md:pt-18 md:pb-4'>
+        <div className='flex flex-col items-center text-center max-w-3xl mx-auto space-y-6'>
+          <h1 className='text-4xl md:text-6xl font-bold tracking-tight'>
+            PythonBit ()
+          </h1>
+          <p className='text-xl md:text-2xl text-muted-foreground'>
+            Learn Python through guided tutorials and real-time classrooms
+          </p>
+          {!user && (
+            <div className='flex gap-4 mt-8'>
+              <Button size='lg' onClick={() => onOpen('register')}>
+                Get Started Free
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Latest Tutorials Section */}
+      <section className='container mx-auto px-4 py-14 md:py-18'>
+        <div className='max-w-6xl mx-auto'>
+          <div className='flex justify-between items-center mb-8'>
+            <div>
+              <h2 className='text-3xl font-bold'>Latest Tutorials</h2>
+              <p className='text-muted-foreground mt-2'>
+                Start your Python journey with our latest content
+              </p>
+            </div>
+            <Button variant='softBlue' onClick={() => router.push('/blog')}>
+              View All Tutorials
+              <ArrowRight className='ml-2 h-4 w-4' />
+            </Button>
           </div>
 
-          {user ? (
-            <div className='space-y-4'>
-              <div className='text-center'>
-                <div className='flex items-center justify-center gap-2 mb-2'>
-                  <span className='font-medium'>
-                    {user.displayName || user.email}
-                  </span>
-                  <RoleBadge role={user.role || 'student'} />
+          <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {sortedPosts.slice(0, 3).map((post) => (
+              <Card key={post.slug} className='flex flex-col overflow-hidden'>
+                <div className='relative w-full aspect-[2/1]'>
+                  <Image
+                    src={`/tutorials/${post.firestoreId}.webp`}
+                    alt={post.title}
+                    fill
+                    className='object-cover'
+                    sizes='(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className='line-clamp-2'>{post.title}</CardTitle>
+                </CardHeader>
+                <CardContent className='flex-grow'>
+                  <p className='text-muted-foreground line-clamp-2'>
+                    {post.description}
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button
+                    variant='softBlue'
+                    className='w-full'
+                    onClick={() => router.push(`/${post.slug}`)}
+                  >
+                    Start Tutorial
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Integrated Features Section */}
+      <section className='container mx-auto px-4 py-16 md:py-20'>
+        <div className='max-w-6xl mx-auto'>
+          <h2 className='text-3xl font-bold text-center mb-6'>
+            Learning Together
+          </h2>
+          <p className='text-muted-foreground text-center mb-12 text-lg'>
+            Features for students and teachers to make Python learning engaging
+          </p>
+
+          <div className='grid md:grid-cols-2 gap-12'>
+            {/* Grid Container for Feature Rows */}
+            <div className='grid grid-rows-3 gap-8 content-start'>
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg shadow-md shadow-blue-200'>
+                  <PlayCircle className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Interactive Learning
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Create fun projects and see results instantly in our
+                      interactive environment.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() => router.push('/projects')}
+                  >
+                    Explore Projects
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
                 </div>
               </div>
 
-              <UserStats user={user} />
-
-              <Button
-                variant='default'
-                onClick={() => router.push('/dashboard')}
-                className='w-full mt-4'
-              >
-                Go to Dashboard
-              </Button>
-              <Button variant='outline' onClick={signOut} className='w-full'>
-                Sign Out
-              </Button>
-            </div>
-          ) : (
-            <>
-              <Card className='mb-6'>
-                <CardContent className='pt-6'>
-                  <div className='flex gap-4'>
-                    <Button
-                      variant='default'
-                      className='flex-1'
-                      onClick={() => handleAuth('login')}
-                    >
-                      Login
-                    </Button>
-                    <Button
-                      variant='outline'
-                      className='flex-1'
-                      onClick={() => handleAuth('register')}
-                    >
-                      Sign Up
-                    </Button>
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg shadow-md shadow-blue-200'>
+                  <Users2 className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Virtual Classrooms
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Learn real-time with teachers and peers.
+                    </p>
                   </div>
                   <Button
-                    variant='ghost'
-                    className='w-full mt-4'
-                    onClick={() => handleAuth('forgotPassword')}
+                    className='group'
+                    variant='softBlue'
+                    onClick={() => router.push('/classrooms')}
                   >
-                    Forgot Password?
+                    Join Classroom
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
                   </Button>
-                </CardContent>
-              </Card>
-              <div className='text-center text-sm text-muted-foreground'>
-                <p>Sign in to access all features and start learning!</p>
+                </div>
               </div>
-            </>
-          )}
+
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
+                  <BookOpen className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Guided Tutorials
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Step-by-step tutorials to become a confident Python
+                      programmer.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() => router.push('/blog')}
+                  >
+                    Start Learning
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className='grid grid-rows-3 gap-8 content-start'>
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
+                  <GraduationCap className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Create Virtual Classrooms
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Set up interactive learning environments and track
+                      progress in real-time.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() => router.push('/classrooms')}
+                  >
+                    Create Classroom
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </div>
+              </div>
+
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
+                  <Code className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Real-time Code Sharing
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Share code snippets and provide instant feedback to
+                      students.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() => router.push('/classrooms')}
+                  >
+                    Learn More
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </div>
+              </div>
+
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
+                  <BookMarked className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Teaching Resources
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Access our curated collection of lesson plans and
+                      curriculum guides.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() =>
+                      router.push('/teaching-content/learning-topics')
+                    }
+                  >
+                    View Resources
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <AuthModal />
+      </section>
+
+      {/* Project Themes Section */}
+      <section className='container mx-auto px-4 py-16 md:py-20'>
+        <div className='max-w-6xl mx-auto'>
+          <div className='flex justify-between items-center mb-8'>
+            <div>
+              <h2 className='text-3xl font-bold'>Project Themes</h2>
+              <p className='text-muted-foreground mt-2'>
+                Build exciting projects based on your interests
+              </p>
+            </div>
+            <Button variant='softBlue' onClick={() => router.push('/projects')}>
+              View All Projects
+              <ArrowRight className='ml-2 h-4 w-4' />
+            </Button>
+          </div>
+
+          <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {themes.slice(0, 3).map((theme, index) => (
+              <Card
+                key={index}
+                className='flex flex-col hover:shadow-lg transition-shadow'
+              >
+                <div className='relative w-full h-48 overflow-hidden'>
+                  <ThemeImage
+                    src={theme.image}
+                    // alt={theme.title}
+                    // fill
+                    // className='object-cover rounded-t-lg'
+                  />
+                </div>
+                <CardHeader>
+                  <div className='flex items-center gap-3 mb-2'>
+                    {theme.icon}
+                    <CardTitle>{theme.title}</CardTitle>
+                  </div>
+                  <CardDescription>{theme.description}</CardDescription>
+                </CardHeader>
+                <CardContent className='flex-grow'>
+                  <div className='flex gap-2 mb-4'>
+                    <Badge variant='outline'>{theme.difficulty}</Badge>
+                    <Badge variant='outline'>{theme.estimatedTime}</Badge>
+                  </div>
+                  <ul className='list-disc ml-4 space-y-1'>
+                    {theme.projects.slice(0, 3).map((project, idx) => (
+                      <li key={idx} className='text-sm text-muted-foreground'>
+                        {project}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+                <CardFooter className='pt-2'>
+                  <Button
+                    className='w-full group'
+                    variant='softBlue'
+                    onClick={() =>
+                      router.push(
+                        `/projects/${theme.title
+                          .toLowerCase()
+                          .replace(/\s+/g, '-')}`
+                      )
+                    }
+                  >
+                    Explore Theme
+                    <ArrowRight className='ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className='container mx-auto px-4 py-16 md:py-20 text-center'>
+        {user ? (
+          <div className='space-y-4 max-w-md mx-auto'>
+            <Button
+              size='lg'
+              onClick={() => router.push('/dashboard')}
+              className='w-full'
+            >
+              Go to Dashboard
+            </Button>
+            <Button variant='softBlue' onClick={signOut} className='w-full'>
+              Sign Out
+            </Button>
+          </div>
+        ) : (
+          <div className='max-w-xl mx-auto'>
+            <h2 className='text-3xl font-bold mb-6'>
+              Ready to start learning?
+            </h2>
+            <div className='flex gap-4 justify-center'>
+              <Button size='lg' onClick={() => onOpen('register')}>
+                Get Started Free
+              </Button>
+              <Button
+                size='lg'
+                variant='softBlue'
+                onClick={() => onOpen('login')}
+              >
+                Sign In
+              </Button>
+            </div>
+          </div>
+        )}
+      </section>
     </div>
   )
 }
