@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import { MainNav } from './main-nav'
 import MobileNav from './ui/mobile-nav'
 import { UserMenu } from '@/components/user/user-menu'
+// import { Input } from '@/components/ui/input'
 import { ThemeToggle } from './ui/theme-toggle'
 import { cn } from '@/lib/utils'
 import {
@@ -92,7 +93,7 @@ export function SiteHeader() {
 
       <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
         <ResponsiveSearch />
-        <UserMenu />
+        {/* <UserMenu /> */}
         <MobileNav />
       </div>
 
