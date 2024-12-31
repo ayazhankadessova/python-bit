@@ -85,16 +85,17 @@ export default function HomePage() {
           </div>
 
           <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {/* Show 3 latest tutorials */}
             {sortedPosts.slice(0, 3).map((post) => (
-              <Card key={post.slug} className='flex flex-col'>
-                <Image
-                  src={`/tutorials/${post.firestoreId}.webp`}
-                  alt={post.title}
-                  width={400}
-                  height={200}
-                  className='rounded-t-lg object-cover h-48'
-                />
+              <Card key={post.slug} className='flex flex-col overflow-hidden'>
+                <div className='relative w-full aspect-[2/1]'>
+                  <Image
+                    src={`/tutorials/${post.firestoreId}.webp`}
+                    alt={post.title}
+                    fill
+                    className='object-cover'
+                    sizes='(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'
+                  />
+                </div>
                 <CardHeader>
                   <CardTitle className='line-clamp-2'>{post.title}</CardTitle>
                 </CardHeader>
@@ -249,9 +250,7 @@ export default function HomePage() {
                   <Button
                     className='group'
                     variant='softBlue'
-                    onClick={() =>
-                      router.push('/classrooms')
-                    }
+                    onClick={() => router.push('/classrooms')}
                   >
                     Learn More
                     <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />

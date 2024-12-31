@@ -4,7 +4,7 @@ import Link from 'next/link'
 export function MainNav() {
   return (
     <Link href='/' className='flex items-center space-x-2 rounded-lg'>
-      <div className='relative w-[100px] sm:w-[120px] md:w-[140px]'>
+      <div className='relative w-[120px] sm:w-[140px] md:w-[160px]'>
         <Image
           src='/pythonbit-teal-yellow.png'
           alt='PythonBit Logo'
