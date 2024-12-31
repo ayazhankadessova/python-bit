@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation'
 import { MainNav } from './main-nav'
 import MobileNav from './ui/mobile-nav'
 import { UserMenu } from '@/components/user/user-menu'
-import { Input } from '@/components/ui/input'
 import { ThemeToggle } from './ui/theme-toggle'
 import { cn } from '@/lib/utils'
 import {
