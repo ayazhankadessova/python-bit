@@ -19,7 +19,6 @@ import {
   Users2,
   ArrowRight,
   GraduationCap,
-  Lightbulb,
   Code,
   BookMarked,
 } from 'lucide-react'
