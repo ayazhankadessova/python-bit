@@ -99,7 +99,7 @@ export function SiteHeader() {
       {/* Desktop Right Section */}
       <div className='hidden min-[950px]:flex items-center gap-4'>
         <ResponsiveSearch />
-        <UserMenu />
+        {/* <UserMenu /> */}
         <ThemeToggle />
       </div>
     </header>
