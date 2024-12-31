@@ -24,7 +24,7 @@ const activeStyles =
 export function SiteHeader() {
   const pathname = usePathname()
   const headerClass =
-    'flex pr-8 pl-2 h-20 z-10 flex-row justify-between gap-2 items-center sticky top-0 bg-popover/80 backdrop-blur mb-4'
+    'flex pr-8 pl-4 h-20 z-10 flex-row justify-between gap-2 items-center sticky top-0 bg-popover/80 backdrop-blur mb-4'
 
   return (
     <header className={headerClass}>
