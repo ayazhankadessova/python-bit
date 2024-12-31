@@ -23,7 +23,7 @@ export function ResponsiveSearch() {
           <Button
             variant='ghost'
             size='icon'
-            className='hidden min-[950px]:flex xl:hidden'
+            className='hidden min-[850px]:flex xl:hidden'
           >
             <Search className='h-5 w-5' />
             <span className='sr-only'>Search</span>
@@ -42,7 +42,7 @@ export function ResponsiveSearch() {
       <Input
         type='search'
         placeholder='Search'
-        className='min-[950px]:hidden w-[140px] sm:w-[200px]'
+        className='min-[850px]:hidden w-[140px] sm:w-[200px]'
       />
     </>
   )

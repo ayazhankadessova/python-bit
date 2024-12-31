@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import { MainNav } from './main-nav'
 import MobileNav from './ui/mobile-nav'
 import { UserMenu } from '@/components/user/user-menu'
+// import { Input } from '@/components/ui/input'
 import { ThemeToggle } from './ui/theme-toggle'
 import { cn } from '@/lib/utils'
 import {
@@ -24,14 +25,14 @@ const activeStyles =
 export function SiteHeader() {
   const pathname = usePathname()
   const headerClass =
-    'flex pr-8 pl-4 h-20 z-10 flex-row justify-between gap-2 items-center sticky top-0 bg-popover/80 backdrop-blur mb-4'
+    'container flex max-w-screen-2xl px-6 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-popover mb-4 mr-4'
 
   return (
     <header className={headerClass}>
       {/* Desktop Navigation */}
-      <div className='hidden min-[950px]:flex items-center gap-4'>
+      <div className='hidden min-[850px]:flex items-center gap-4'>
         <MainNav />
-        <NavigationMenu className='hidden min-[950px]:inline-flex'>
+        <NavigationMenu className='hidden min-[850px]:inline-flex'>
           <NavigationMenuList className='flex gap-0'>
             {Object.values(headerNavLinks).map((dialog) => (
               <NavigationMenuItem key={dialog.title}>
@@ -86,18 +87,19 @@ export function SiteHeader() {
       </div>
 
       {/* Mobile Navigation */}
-      <div className='min-[950px]:hidden flex items-center justify-between gap-4'>
+      <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
         <MainNav />
       </div>
 
-      <div className='min-[950px]:hidden flex items-center justify-between gap-2'>
+      <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
         <ResponsiveSearch />
-        <UserMenu />
+        {/* <UserMenu /> */}
+        {/* <ThemeToggle /> */}
         <MobileNav />
       </div>
 
       {/* Desktop Right Section */}
-      <div className='hidden min-[950px]:flex items-center gap-4'>
+      <div className='hidden min-[850px]:flex items-center gap-4'>
         <ResponsiveSearch />
         <UserMenu />
         <ThemeToggle />
