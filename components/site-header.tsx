@@ -29,9 +29,9 @@ export function SiteHeader() {
   return (
     <header className={headerClass}>
       {/* Desktop Navigation */}
-      <div className='hidden min-[950px]:flex items-center gap-4'>
+      <div className='hidden min-[850px]:flex items-center gap-4'>
         <MainNav />
-        <NavigationMenu className='hidden min-[950px]:inline-flex'>
+        <NavigationMenu className='hidden min-[850px]:inline-flex'>
           <NavigationMenuList className='flex gap-0'>
             {Object.values(headerNavLinks).map((dialog) => (
               <NavigationMenuItem key={dialog.title}>
@@ -86,20 +86,20 @@ export function SiteHeader() {
       </div>
 
       {/* Mobile Navigation */}
-      <div className='min-[950px]:hidden flex items-center justify-between gap-4'>
+      <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
         <MainNav />
       </div>
 
-      <div className='min-[950px]:hidden flex items-center justify-between gap-2'>
+      <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
         <ResponsiveSearch />
         <UserMenu />
         <MobileNav />
       </div>
 
       {/* Desktop Right Section */}
-      <div className='hidden min-[950px]:flex items-center gap-4'>
+      <div className='hidden min-[850px]:flex items-center gap-4'>
         <ResponsiveSearch />
-        {/* <UserMenu /> */}
+        <UserMenu />
         <ThemeToggle />
       </div>
     </header>
