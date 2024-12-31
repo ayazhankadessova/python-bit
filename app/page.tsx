@@ -1,4 +1,5 @@
 'use client'
+
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -7,16 +8,37 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
+  CardDescription,
 } from '@/components/ui/card'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, PlayCircle, BookOpen, Users2, ArrowRight } from 'lucide-react'
+import {
+  Loader2,
+  PlayCircle,
+  BookOpen,
+  Users2,
+  ArrowRight,
+  GraduationCap,
+  Lightbulb,
+  Code,
+  BookMarked,
+} from 'lucide-react'
 import { useAuthModal } from '@/contexts/AuthModalContext'
+import Image from 'next/image'
+import { posts } from '#site/content'
+import {
+  sortPostsByTime,
+} from '@/utils/posts'
+import { themes } from '@/config/themes'
+import { Badge } from '@/components/ui/badge'
+import { ThemeImage } from '@/components/theme-image'
+
 
 export default function HomePage() {
   const { user, loading, signOut } = useAuth()
   const router = useRouter()
-  const { onOpen } = useAuthModal()
+  const { onOpen } = useAuthModal()  
+  const sortedPosts =sortPostsByTime(posts)
 
   if (loading) {
     return (
@@ -29,7 +51,7 @@ export default function HomePage() {
   return (
     <div className='min-h-screen bg-background'>
       {/* Hero Section */}
-      <section className='container mx-auto px-4 py-12 md:py-18'>
+      <section className='container mx-auto px-4 pt-12 pb-6 md:pt-18 md:pb-4'>
         <div className='flex flex-col items-center text-center max-w-3xl mx-auto space-y-6'>
           <h1 className='text-4xl md:text-6xl font-bold tracking-tight'>
             PythonBit ()
@@ -42,95 +64,307 @@ export default function HomePage() {
               <Button size='lg' onClick={() => onOpen('register')}>
                 Get Started Free
               </Button>
-              <Button
-                size='lg'
-                variant='softBlue'
-                onClick={() => router.push('/blog')}
-              >
-                Try Tutorial
-              </Button>
             </div>
           )}
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className='container mx-auto px-4 py-12'>
-        <div className='grid md:grid-cols-3 gap-8'>
-          <Card className='flex flex-col'>
-            <CardHeader>
-              <PlayCircle className='h-10 w-10 text-primary mb-2' />
-              <CardTitle>Interactive Learning</CardTitle>
-            </CardHeader>
-            <CardContent className='flex-grow'>
-              <p>
-                Master Python programming through hands-on practice. Create fun
-                projects and see results instantly in our interactive
-                environment.
+      {/* Latest Tutorials Section */}
+      <section className='container mx-auto px-4 py-14 md:py-18'>
+        <div className='max-w-6xl mx-auto'>
+          <div className='flex justify-between items-center mb-8'>
+            <div>
+              <h2 className='text-3xl font-bold'>Latest Tutorials</h2>
+              <p className='text-muted-foreground mt-2'>
+                Start your Python journey with our latest content
               </p>
-            </CardContent>
-            <CardFooter className='pt-6'>
-              <Button
-                className='w-full group'
-                onClick={() => router.push('/projects')}
-                variant='softBlue'
-              >
-                Make Projects
-                <ArrowRight className='ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1' />
-              </Button>
-            </CardFooter>
-          </Card>
+            </div>
+            <Button variant='softBlue' onClick={() => router.push('/blog')}>
+              View All Tutorials
+              <ArrowRight className='ml-2 h-4 w-4' />
+            </Button>
+          </div>
 
-          <Card className='flex flex-col'>
-            <CardHeader>
-              <Users2 className='h-10 w-10 text-primary mb-2' />
-              <CardTitle>Virtual Classrooms</CardTitle>
-            </CardHeader>
-            <CardContent className='flex-grow'>
-              <p>
-                Join or create virtual classrooms for real-time Python learning
-                with teachers and peers.
-              </p>
-            </CardContent>
-            <CardFooter className='pt-6'>
-              <Button
-                className='w-full group'
-                onClick={() => router.push('/classrooms')}
-                variant='softBlue'
-              >
-                Enter Classroom
-                <ArrowRight className='ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1' />
-              </Button>
-            </CardFooter>
-          </Card>
+          <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {/* Show 3 latest tutorials */}
+            {sortedPosts.slice(0, 3).map((post) => (
+              <Card key={post.slug} className='flex flex-col'>
+                <Image
+                  src={`/tutorials/${post.firestoreId}.webp`}
+                  alt={post.title}
+                  width={400}
+                  height={200}
+                  className='rounded-t-lg object-cover h-48'
+                />
+                <CardHeader>
+                  <CardTitle className='line-clamp-2'>{post.title}</CardTitle>
+                </CardHeader>
+                <CardContent className='flex-grow'>
+                  <p className='text-muted-foreground line-clamp-2'>
+                    {post.description}
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button
+                    variant='softBlue'
+                    className='w-full'
+                    onClick={() => router.push(`/${post.slug}`)}
+                  >
+                    Start Tutorial
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          <Card className='flex flex-col'>
-            <CardHeader>
-              <BookOpen className='h-10 w-10 text-primary mb-2' />
-              <CardTitle>Guided Tutorials</CardTitle>
-            </CardHeader>
-            <CardContent className='flex-grow'>
-              <p>
-                Step-by-step tutorials designed to take you from beginner to
-                confident Python programmer.
+      {/* Integrated Features Section */}
+      <section className='container mx-auto px-4 py-16 md:py-20'>
+        <div className='max-w-6xl mx-auto'>
+          <h2 className='text-3xl font-bold text-center mb-6'>
+            Learning Together
+          </h2>
+          <p className='text-muted-foreground text-center mb-12 text-lg'>
+            Features for students and teachers to make Python learning engaging
+          </p>
+
+          <div className='grid md:grid-cols-2 gap-12'>
+            {/* Grid Container for Feature Rows */}
+            <div className='grid grid-rows-3 gap-8 content-start'>
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg shadow-md shadow-blue-200'>
+                  <PlayCircle className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Interactive Learning
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Create fun projects and see results instantly in our
+                      interactive environment.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() => router.push('/projects')}
+                  >
+                    Explore Projects
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </div>
+              </div>
+
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg shadow-md shadow-blue-200'>
+                  <Users2 className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Virtual Classrooms
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Learn real-time with teachers and peers.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() => router.push('/classrooms')}
+                  >
+                    Join Classroom
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </div>
+              </div>
+
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
+                  <BookOpen className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Guided Tutorials
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Step-by-step tutorials to become a confident Python
+                      programmer.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() => router.push('/blog')}
+                  >
+                    Start Learning
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className='grid grid-rows-3 gap-8 content-start'>
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
+                  <GraduationCap className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Create Virtual Classrooms
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Set up interactive learning environments and track
+                      progress in real-time.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() => router.push('/classrooms')}
+                  >
+                    Create Classroom
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </div>
+              </div>
+
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
+                  <Code className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Real-time Code Sharing
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Share code snippets and provide instant feedback to
+                      students.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() =>
+                      router.push('/classrooms')
+                    }
+                  >
+                    Learn More
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </div>
+              </div>
+
+              <div className='flex gap-6 items-start'>
+                <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
+                  <BookMarked className='h-6 w-6 text-primary' />
+                </div>
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='text-xl font-semibold mb-2'>
+                      Teaching Resources
+                    </h4>
+                    <p className='text-muted-foreground'>
+                      Access our curated collection of lesson plans and
+                      curriculum guides.
+                    </p>
+                  </div>
+                  <Button
+                    className='group'
+                    variant='softBlue'
+                    onClick={() =>
+                      router.push('/teaching-content/learning-topics')
+                    }
+                  >
+                    View Resources
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Project Themes Section */}
+      <section className='container mx-auto px-4 py-16 md:py-20'>
+        <div className='max-w-6xl mx-auto'>
+          <div className='flex justify-between items-center mb-8'>
+            <div>
+              <h2 className='text-3xl font-bold'>Project Themes</h2>
+              <p className='text-muted-foreground mt-2'>
+                Build exciting projects based on your interests
               </p>
-            </CardContent>
-            <CardFooter className='pt-6'>
-              <Button
-                className='w-full group'
-                onClick={() => router.push('/blog')}
-                variant='softBlue'
+            </div>
+            <Button variant='softBlue' onClick={() => router.push('/projects')}>
+              View All Projects
+              <ArrowRight className='ml-2 h-4 w-4' />
+            </Button>
+          </div>
+
+          <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {themes.slice(0, 3).map((theme, index) => (
+              <Card
+                key={index}
+                className='flex flex-col hover:shadow-lg transition-shadow'
               >
-                Start Learning
-                <ArrowRight className='ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1' />
-              </Button>
-            </CardFooter>
-          </Card>
+                <div className='relative w-full h-48 overflow-hidden'>
+                  <ThemeImage
+                    src={theme.image}
+                    // alt={theme.title}
+                    // fill
+                    // className='object-cover rounded-t-lg'
+                  />
+                </div>
+                <CardHeader>
+                  <div className='flex items-center gap-3 mb-2'>
+                    {theme.icon}
+                    <CardTitle>{theme.title}</CardTitle>
+                  </div>
+                  <CardDescription>{theme.description}</CardDescription>
+                </CardHeader>
+                <CardContent className='flex-grow'>
+                  <div className='flex gap-2 mb-4'>
+                    <Badge variant='outline'>{theme.difficulty}</Badge>
+                    <Badge variant='outline'>{theme.estimatedTime}</Badge>
+                  </div>
+                  <ul className='list-disc ml-4 space-y-1'>
+                    {theme.projects.slice(0, 3).map((project, idx) => (
+                      <li key={idx} className='text-sm text-muted-foreground'>
+                        {project}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+                <CardFooter className='pt-2'>
+                  <Button
+                    className='w-full group'
+                    variant='softBlue'
+                    onClick={() =>
+                      router.push(
+                        `/projects/${theme.title
+                          .toLowerCase()
+                          .replace(/\s+/g, '-')}`
+                      )
+                    }
+                  >
+                    Explore Theme
+                    <ArrowRight className='ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Call to Action */}
-      <section className='container mx-auto px-4 py-12 text-center'>
+      <section className='container mx-auto px-4 py-16 md:py-20 text-center'>
         {user ? (
           <div className='space-y-4 max-w-md mx-auto'>
             <Button
@@ -151,7 +385,7 @@ export default function HomePage() {
             </h2>
             <div className='flex gap-4 justify-center'>
               <Button size='lg' onClick={() => onOpen('register')}>
-                Create Free Account
+                Get Started Free
               </Button>
               <Button
                 size='lg'

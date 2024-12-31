@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/navigation-menu'
 import headerNavLinks from '@/config/headerNavLinks'
 import { ChevronDown } from 'lucide-react'
+import { ResponsiveSearch } from '@/components/ui/responsive-search' // Add this import
 
 const activeStyles =
   'bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-blue-900 dark:from-blue-800 dark:via-blue-700 dark:to-blue-800 dark:text-white shadow-sm border text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary dark:from-blue-900/70 dark:via-blue-800/70 dark:to-blue-900/70 dark:text-white dark:border-blue-700/20 dark:hover:from-blue-800/70 dark:hover:via-blue-700/70 dark:hover:to-blue-800/70'
@@ -24,15 +25,15 @@ const activeStyles =
 export function SiteHeader() {
   const pathname = usePathname()
   const headerClass =
-    'container flex max-w-screen-2xl px-6 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-popover mb-4'
+    'flex px-6 h-20 z-10 flex-row justify-between gap-2 items-center sticky top-0 bg-popover/80 backdrop-blur mb-4'
 
   return (
     <header className={headerClass}>
       {/* Desktop Navigation */}
-      <div className='hidden min-[850px]:flex items-center gap-4'>
+      <div className='hidden min-[950px]:flex items-center gap-4'>
         <MainNav />
-        <NavigationMenu className='hidden sm:inline-flex'>
-          <NavigationMenuList>
+        <NavigationMenu className='hidden min-[950px]:inline-flex'>
+          <NavigationMenuList className='flex gap-0'>
             {Object.values(headerNavLinks).map((dialog) => (
               <NavigationMenuItem key={dialog.title}>
                 {dialog.toggle ? (
@@ -86,19 +87,19 @@ export function SiteHeader() {
       </div>
 
       {/* Mobile Navigation */}
-      <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
+      <div className='min-[950px]:hidden flex items-center justify-between gap-4'>
         <MainNav />
       </div>
 
-      <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
-        <Input type='search' placeholder='Search' />
+      <div className='min-[950px]:hidden flex items-center justify-between gap-2'>
+        <ResponsiveSearch />
         <UserMenu />
         <MobileNav />
       </div>
 
       {/* Desktop Right Section */}
-      <div className='hidden min-[850px]:flex items-center gap-4'>
-        <Input type='search' placeholder='Search' className='w-64' />
+      <div className='hidden min-[950px]:flex items-center gap-4'>
+        <ResponsiveSearch />
         <UserMenu />
         <ThemeToggle />
       </div>

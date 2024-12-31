@@ -1,14 +1,19 @@
-'use client'
-import { siteConfig } from '@/config/site'
+import Image from 'next/image'
 import Link from 'next/link'
-// Initialize the font you want to use
 
 export function MainNav() {
   return (
-    <nav className='flex items-center ml-0 min-[750px]:ml-0'>
-      <Link href='/'>
-        <h4 className='text-md'>{siteConfig.name + " ()"} </h4>
-      </Link>
-    </nav>
+    <Link href='/' className='flex items-center space-x-2 rounded-lg'>
+      <div className='relative w-[100px] sm:w-[120px] md:w-[140px]'>
+        <Image
+          src='/pythonbit-teal-yellow.png'
+          alt='PythonBit Logo'
+          width={140}
+          height={30}
+          className='h-auto w-full transition-all duration-200'
+          priority
+        />
+      </div>
+    </Link>
   )
 }
