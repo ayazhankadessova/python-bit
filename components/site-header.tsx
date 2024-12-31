@@ -25,7 +25,7 @@ const activeStyles =
 export function SiteHeader() {
   const pathname = usePathname()
   const headerClass =
-    'container flex max-w-screen-2xl px-6 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-popover mb-4'
+    'px-6 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-popover mb-4'
 
   return (
     <header className={headerClass}>
@@ -91,7 +91,7 @@ export function SiteHeader() {
         <MainNav />
       </div>
 
-      <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
+      <div className='min-[850px]:hidden flex items-center justify-between gap-2 ml-2'>
         <ResponsiveSearch />
         {/* <UserMenu /> */}
         <MobileNav />
