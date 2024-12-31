@@ -94,6 +94,7 @@ export function SiteHeader() {
       <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
         <ResponsiveSearch />
         {/* <UserMenu /> */}
+        {/* <ThemeToggle /> */}
         <MobileNav />
       </div>
 
