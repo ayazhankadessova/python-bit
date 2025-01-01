@@ -385,8 +385,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - [ ] Add test cases to 2-3 projects
 Modern Features to Include:
-
-
 Achievements/badges system
 Social sharing options
 Project showcases
@@ -445,3 +443,9 @@ tutrials data or every tutorials
 import { useAuth } from '@/contexts/AuthContext'
 
   const { user, loading, signOut } = useAuth()
+
+
+
+## Pages 
+
+1. `container mx-auto px-8 py-8`

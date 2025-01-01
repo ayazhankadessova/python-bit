@@ -41,7 +41,7 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   return (
-    <div className='flex flex-col h-screen'>
+    <div className='flex flex-col h-screen container mx-auto px-8 py-8'>
       {/* Navigation bar */}
       <div className='flex-none px-4 py-4 border-b'>
         <div className='flex items-start justify-between'>

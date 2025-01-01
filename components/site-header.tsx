@@ -35,7 +35,7 @@ export function SiteHeader() {
 
   // flex flex-col gap-4 items-center justify-center pb-8 container
   const headerClass =
-    'container flex px-6 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-popover mb-4'
+    'container mx-auto flex px-6 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-popover mb-4'
 
   return (
     <header className={headerClass}>

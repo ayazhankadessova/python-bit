@@ -48,7 +48,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className='min-h-screen bg-background'>
+    <div className='min-h-screen bg-background px-8'>
       {/* Hero Section */}
       <section className='container mx-auto px-4 pt-12 pb-6 md:pt-18 md:pb-4'>
         <div className='flex flex-col items-center text-center max-w-3xl mx-auto space-y-6'>
@@ -70,7 +70,6 @@ export default function HomePage() {
 
       {/* Latest Tutorials Section */}
       <section className='container mx-auto px-4 py-14 md:py-18'>
-        <div className='max-w-6xl mx-auto'>
           <div className='flex justify-between items-center mb-8'>
             <div>
               <h2 className='text-3xl font-bold'>Latest Tutorials</h2>
@@ -116,12 +115,11 @@ export default function HomePage() {
               </Card>
             ))}
           </div>
-        </div>
       </section>
 
       {/* Integrated Features Section */}
       <section className='container mx-auto px-4 py-16 md:py-20'>
-        <div className='max-w-6xl mx-auto'>
+        {/* <div className='max-w-6xl mx-auto'> */}
           <h2 className='text-3xl font-bold text-center mb-6'>
             Learning Together
           </h2>
@@ -286,12 +284,12 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </div>
+        {/* </div> */}
       </section>
 
       {/* Project Themes Section */}
       <section className='container mx-auto px-4 py-16 md:py-20'>
-        <div className='max-w-6xl mx-auto'>
+        {/* <div className='max-w-6xl mx-auto'> */}
           <div className='flex justify-between items-center mb-8'>
             <div>
               <h2 className='text-3xl font-bold'>Project Themes</h2>
@@ -357,7 +355,7 @@ export default function HomePage() {
                 </CardFooter>
               </Card>
             ))}
-          </div>
+          {/* </div> */}
         </div>
       </section>
 
