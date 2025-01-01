@@ -5,7 +5,7 @@ date: 1734297010
 order: 3
 tags: ['python101', 'beginner', 'lists', 'tuples', 'dictionaries', 'sets']
 published: true
-exercises: 3
+exercises: 6
 firestoreId: python101-3-collections
 ---
 
@@ -13,6 +13,19 @@ firestoreId: python101-3-collections
 
 Hey coding champions! Ready to learn about Python's amazing ways to store and organize stuff? It's like having different types of super-powered containers for your data! 🎮
 
+* 1. [Lists: Your Digital Backpack 🎒](#Lists:YourDigitalBackpack)
+	* 1.1. [🍎 Quick Challenge: Fruit Basket Organizer!](#QuickChallenge:FruitBasketOrganizer)
+* 2. [Tuples: The Unbreakable Container 🔒](#Tuples:TheUnbreakableContainer)
+	* 2.1. [🗺️ Quick Tuple Challenge: Geocaching Coordinates!](#QuickTupleChallenge:GeocachingCoordinates)
+* 3. [Dictionaries: Your Personal Game Guide 🗺️](#Dictionaries:YourPersonalGameGuide)
+	* 3.1. [ 🎮 Quick Challenge: Video Game Inventory System!](#QuickChallenge:VideoGameInventorySystem)
+* 4. [Sets: Your Sticker Collection 🌟](#Sets:YourStickerCollection)
+	* 4.1. [🏆 Quick Challenge: Battle Royale Loadout!](#QuickChallenge:BattleRoyaleLoadout)
+	* 4.2. [🎮 Time for a Mini-Game: Collection Master!](#TimeforaMini-Game:CollectionMaster)
+	* 4.3. [🎯 Debug Mission: Spot the Bugs!](#DebugMission:SpottheBugs)
+* 5. [🌈 Remember:](#Remember:)
+
+<div id='Lists:YourDigitalBackpack'></div>
 ## 1. Lists: Your Digital Backpack 🎒
 
 Imagine you're packing for an epic adventure. A list in Python is like your backpack - you can put anything in it, take stuff out, add more things, and even change what's inside!
@@ -33,9 +46,10 @@ print("First item:", my_backpack[0])  # Remember, Python starts counting at 0!
   tutorial_id="python101-3-collections"
 />
 
-## 🍎 Quick Challenge: Fruit Basket Organizer!
+<div id='QuickChallenge:FruitBasketOrganizer'></div>
+###  1.1. 🍎 Quick Challenge: Fruit Basket Organizer!
 
-### Challenge: 
+- Challenge: 
 1. Follow the order to add "apple", "banana", "orange"
 2. Use .append() to add fruits one by one
 3. Use .extend() to add multiple fruits at once
@@ -50,7 +64,8 @@ fruit_basket = []
   tutorial_id="python101-3-collections"
 />
 
-## 2. Tuples: The Unbreakable Container 🔒
+<div id='Tuples:TheUnbreakableContainer'></div>
+##  2. Tuples: The Unbreakable Container 🔒
 
 Think of tuples like your favorite LEGO set - once it's built, you can't change the pieces! They're perfect for things that shouldn't change, like the days of the week or your birthday.
 
@@ -68,11 +83,10 @@ print("My birthday is on:", my_birthday[0], my_birthday[1])`}
   tutorial_id="python101-3-collections"
 />
 
-## 🗺️ Quick Tuple Challenge: Geocaching Coordinates! 
+<div id='QuickTupleChallenge:GeocachingCoordinates'></div>
+###  2.1. 🗺️ Quick Tuple Challenge: Geocaching Coordinates! 
 
-### Challenge:
-
-- Create a tuple to represent a secret geocache location
+- Challenge: Create a tuple to represent a secret geocache location
 
 1. Make a tuple with 3 elements: (latitude, longitude, depth) => (37.7749, -122.4194, 10)
 2. Print out latitude
@@ -91,7 +105,8 @@ print("My birthday is on:", my_birthday[0], my_birthday[1])`}
   tutorial_id="python101-3-collections"
 />
 
-## 3. Dictionaries: Your Personal Game Guide 🗺️
+<div id='Dictionaries:YourPersonalGameGuide'></div>
+##  3. Dictionaries: Your Personal Game Guide 🗺️
 
 Dictionaries are like your game cheat sheet - each item (key) has its own special information (value). It's perfect for storing character stats or game settings!
 
@@ -115,9 +130,10 @@ print("Updated powers:", player["powers"])`}
   tutorial_id="python101-3-collections"
 />
 
-## 🎮 Quick Challenge: Video Game Inventory System!
+<div id='QuickChallenge:VideoGameInventorySystem'></div>
+###  3.1. 🎮 Quick Challenge: Video Game Inventory System!
 
-### Challenge:
+- Challenge:
 1. Build an inventory with these 3 items
 ```
 "health_potion": 5,
@@ -149,7 +165,8 @@ Health Potions: 7`}
   tutorial_id="python101-3-collections"
 />
 
-## 4. Sets: Your Sticker Collection 🌟
+<div id='Sets:YourStickerCollection'></div>
+##  4. Sets: Your Sticker Collection 🌟
 
 Sets are like your sticker collection - you can't have duplicates! If you try to add the same sticker twice, it only keeps one copy.
 
@@ -165,9 +182,10 @@ print("Added a torch:", minecraft_items)`}
   tutorial_id="python101-3-collections"
 />
 
-## 🏆 Quick Challenge: Battle Royale Loadout! 
+<div id='QuickChallenge:BattleRoyaleLoadout'></div>
+###  4.1. 🏆 Quick Challenge: Battle Royale Loadout! 
 
-### Challenge:
+- Challenge:
 
 1. Create a set of weapons `"assault rifle", "shotgun", "sniper", "grenades"`
 2. Try to add a duplicate weapon
@@ -195,7 +213,8 @@ print("Total Unique Weapons:", len(...))
   tutorial_id="python101-3-collections"
 />
 
-## 🎮 Time for a Mini-Game: Collection Master!
+<div id='TimeforaMini-Game:CollectionMaster'></div>
+###  4.2. 🎮 Time for a Mini-Game: Collection Master!
 
 Let's create a simple game inventory system using all our new powers!
 
@@ -246,7 +265,7 @@ print("Total Achievements:", ...)
   tutorial_id="python101-3-collections"
 />
 
-## 🎯 Debug Mission: Spot the Bugs!
+###  4.3. <div id='DebugMission:SpottheBugs'></div>🎯 Debug Mission: Spot the Bugs!
 
 Can you find and fix the problems in this code?
 
@@ -268,13 +287,13 @@ print("Length of my set:", len(my_set))
   tutorial_id="python101-3-collections"
 />
 
-## 🌈 Remember:
+<div id='Remember:'></div>
+##  5. 🌈 Remember:
 
 - Lists are like your backpack (can change anytime)
 - Tuples are like LEGO sets (can't change after building)
 - Dictionaries are like game guides (each thing has its info)
 - Sets are like sticker collections (no duplicates allowed!)
 
-### Ready to become a Python Collection Master? Let's code! 💪
-
-### Need a hint? Just ask! We're in this adventure together! 🚀
+Ready to become a Python Collection Master? Let's code! 💪
+Need a hint? Just ask! We're in this adventure together! 🚀
