@@ -16,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import '@/styles/mdx-style.css'
 
 interface QueryPaginationProps {
   readonly totalPages: number

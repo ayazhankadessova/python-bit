@@ -2,18 +2,13 @@ import type { Config } from 'tailwindcss'
 
 import { fontFamily } from 'tailwindcss/defaultTheme'
 
-// convert to import 
-// import tailwindMdBase from '@geoffcodesthings/tailwind-md-base'
-
 const config = {
   darkMode: ['class'],
   content: [
-    './pages/**/*.{ts,tsx, mdx, md}',
-    './components/**/*.{ts,tsx, mdx, md}',
-    './app/**/*.{ts,tsx, mdx, md}',
-    './src/**/*.{ts,tsx, mdx, md}',
-    './content/blog/*.mdx',
-    './content/blog/**/*.mdx',
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
   ],
   prefix: '',
   theme: {

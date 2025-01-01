@@ -8,7 +8,6 @@
     --background-start: 0 0% 100%; /* white */
     --background-end: 168 55% 90%; /* teal-200 */
     /* --background: 0 0% 100%; */
-    
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -73,9 +72,4 @@
   body {
     @apply bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] text-foreground;
   }
-
-  h1 a, h2 a, h3 a {
-    @apply no-underline hover:italic;
-    text-decoration: none !important;
-  } 
 }

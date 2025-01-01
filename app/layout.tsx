@@ -11,7 +11,6 @@ import { AuthModalProvider } from '@/contexts/AuthModalContext'
 import { BlogFooter } from '@/components/ui/footer'
 import AuthModal from '@/components/AuthModal'
 
-
 const inter = Inter({ subsets: ['latin'], variable: '--font-mono' })
 
 export default function RootLayout({
