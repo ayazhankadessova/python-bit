@@ -919,8 +919,7 @@ def test_fashion_style():
 
 if __name__ == "__main__":
     test_fashion_style()`,
-  },
-  solution: `from typing import List, Dict
+    solution: `from typing import List, Dict
 from enum import Enum
 
 class ClothingType(Enum):
@@ -1040,4 +1039,238 @@ class StyleQuiz:
                 "Sneakers"
             ]
         }`,
+  },
+  ecosystemExplorer: {
+    id: 'ecosystem-simulator',
+    title: 'Ecosystem Explorer',
+    description:
+      'Create a digital ecosystem where weather, plants, and animals interact!',
+    date: 1234567890,
+    theme: 'nature-and-science',
+    difficulty: 'advanced',
+    estimatedTime: '4-5 hours',
+    tags: ['python', 'science', 'advanced', 'simulation'],
+    image: 'https://picsum.photos/id/237/200',
+    published: true,
+    starterCode: `from typing import List, Dict
+from enum import Enum
+import random
+
+class Weather(Enum):
+    SUNNY = "sunny"
+    RAINY = "rainy"
+    CLOUDY = "cloudy"
+    STORMY = "stormy"
+
+class Species(Enum):
+    PLANT = "plant"
+    HERBIVORE = "herbivore"
+    CARNIVORE = "carnivore"
+
+class Organism:
+    def __init__(self, name: str, species: Species, energy: int):
+        # TODO: Initialize organism attributes
+        pass
+    
+    def update(self, weather: Weather, available_food: int) -> int:
+        # TODO: Update organism state based on conditions
+        pass
+
+class Plant(Organism):
+    def grow(self, sunlight: int, water: int) -> int:
+        # TODO: Calculate growth based on conditions
+        pass
+    
+    def produce_oxygen(self) -> float:
+        # TODO: Calculate oxygen production
+        pass
+
+class Animal(Organism):
+    def __init__(self, name: str, species: Species, energy: int, diet: Species):
+        # TODO: Initialize animal with diet preference
+        pass
+    
+    def hunt(self, prey_list: List[Organism]) -> bool:
+        # TODO: Attempt to find food
+        pass
+    
+    def reproduce(self, energy_threshold: int) -> bool:
+        # TODO: Check if enough energy to reproduce
+        pass
+
+class Environment:
+    def __init__(self, size: int):
+        # TODO: Create environment grid
+        pass
+    
+    def add_organism(self, organism: Organism, x: int, y: int):
+        # TODO: Place organism in environment
+        pass
+    
+    def simulate_day(self) -> Dict:
+        # TODO: Run one day of simulation
+        pass
+    
+    def get_stats(self) -> Dict:
+        # TODO: Calculate environmental statistics
+        pass`,
+    testCode: `
+def test_ecosystem():
+    try:
+        print("🌍 Starting Ecosystem Tests...\\n")
+        
+        # Test 1: Organism Creation
+        print("Test 1: Organism Creation")
+        plant = Plant("Oak Tree", Species.PLANT, energy=100)
+        herbivore = Animal("Rabbit", Species.HERBIVORE, energy=100, diet=Species.PLANT)
+        carnivore = Animal("Fox", Species.CARNIVORE, energy=100, diet=Species.HERBIVORE)
+        
+        assert plant.species == Species.PLANT, "❌ Species not set correctly"
+        assert herbivore.diet == Species.PLANT, "❌ Diet not set correctly"
+        print("✅ Organisms created successfully!\\n")
+
+        # Test 2: Environment Setup
+        print("Test 2: Environment Setup")
+        env = Environment(size=10)
+        env.add_organism(plant, x=0, y=0)
+        env.add_organism(herbivore, x=1, y=1)
+        
+        stats = env.get_stats()
+        assert stats["total_organisms"] == 2, "❌ Organism count incorrect"
+        assert stats["by_species"][Species.PLANT] == 1, "❌ Species tracking incorrect"
+        print("✅ Environment working!\\n")
+
+        # Test 3: Simulation
+        print("Test 3: Daily Simulation")
+        day_results = env.simulate_day()
+        assert "weather" in day_results, "❌ Weather not simulated"
+        assert "births" in day_results, "❌ Population changes not tracked"
+        print("✅ Simulation working!\\n")
+
+        # Test 4: Interactions
+        print("Test 4: Organism Interactions")
+        growth = plant.grow(sunlight=80, water=60)
+        assert growth >= 0, "❌ Invalid growth calculation"
+        
+        hunt_success = carnivore.hunt([herbivore])
+        assert isinstance(hunt_success, bool), "❌ Hunt result invalid"
+        print("✅ Interactions working!\\n")
+
+        print("🎉 All tests passed! Your ecosystem is thriving!")
+        return True
+
+    except AssertionError as e:
+        print(f"\\n❌ Test failed: {str(e)}")
+        return False
+    except Exception as e:
+        print(f"\\n❌ Error occurred: {str(e)}")
+        return False
+
+if __name__ == "__main__":
+    test_ecosystem()`,
+    solution: `from typing import List, Dict
+from enum import Enum
+import random
+
+class Weather(Enum):
+    SUNNY = "sunny"
+    RAINY = "rainy"
+    CLOUDY = "cloudy"
+    STORMY = "stormy"
+
+class Species(Enum):
+    PLANT = "plant"
+    HERBIVORE = "herbivore"
+    CARNIVORE = "carnivore"
+
+class Organism:
+    def __init__(self, name: str, species: Species, energy: int):
+        self.name = name
+        self.species = species
+        self.energy = energy
+        self.alive = True
+        
+    def update(self, weather: Weather, available_food: int) -> int:
+        if not self.alive:
+            return 0
+        self.energy -= 5  # Basic energy loss
+        if self.energy <= 0:
+            self.alive = False
+        return self.energy
+
+class Plant(Organism):
+    def __init__(self, name: str, species: Species, energy: int):
+        super().__init__(name, species, energy)
+        self.size = 1
+        
+    def grow(self, sunlight: int, water: int) -> int:
+        if not self.alive:
+            return 0
+        growth = (sunlight + water) // 20  # Simple growth calculation
+        self.size += max(0, growth)
+        return growth
+    
+    def produce_oxygen(self) -> float:
+        return self.size * 0.1 if self.alive else 0
+
+class Animal(Organism):
+    def __init__(self, name: str, species: Species, energy: int, diet: Species):
+        super().__init__(name, species, energy)
+        self.diet = diet
+        
+    def hunt(self, prey_list: List[Organism]) -> bool:
+        if not self.alive:
+            return False
+        for prey in prey_list:
+            if prey.species == self.diet and prey.alive:
+                self.energy += 20
+                prey.alive = False
+                return True
+        return False
+    
+    def reproduce(self, energy_threshold: int) -> bool:
+        return self.alive and self.energy > energy_threshold
+
+class Environment:
+    def __init__(self, size: int):
+        self.size = size
+        self.grid = [[None for _ in range(size)] for _ in range(size)]
+        self.organisms = []
+        self.weather = Weather.SUNNY
+        
+    def add_organism(self, organism: Organism, x: int, y: int):
+        if 0 <= x < self.size and 0 <= y < self.size:
+            self.grid[y][x] = organism
+            self.organisms.append(organism)
+    
+    def simulate_day(self) -> Dict:
+        self.weather = random.choice(list(Weather))
+        births = 0
+        deaths = 0
+        
+        for org in self.organisms:
+            if org.alive:
+                org.update(self.weather, len(self.organisms))
+                if isinstance(org, Animal) and org.reproduce(80):
+                    births += 1
+                if not org.alive:
+                    deaths += 1
+        
+        return {
+            "weather": self.weather,
+            "births": births,
+            "deaths": deaths
+        }
+    
+    def get_stats(self) -> Dict:
+        by_species = {species: 0 for species in Species}
+        for org in self.organisms:
+            if org.alive:
+                by_species[org.species] += 1
+                
+        return {
+            "total_organisms": sum(1 for org in self.organisms if org.alive),
+            "by_species": by_species
+        }`,
+  },
 }

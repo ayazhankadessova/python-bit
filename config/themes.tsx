@@ -50,7 +50,7 @@ export const themes = [
     image: 'fashion.webp',
   },
   {
-    title: 'Nature & Science',
+    title: 'Nature And Science',
     description: 'Explore the natural world through code',
     projects: [
       'Ecosystem Simulator',
