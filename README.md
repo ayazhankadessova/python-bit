@@ -370,7 +370,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Jan 1
 
 - [ ] padding to project page 
-- [ ] add at least 4 projects
+- [x] add at least 4 projects
 - [ ] if solved project, add to firestore
 - [ ] store code  ?? 
 - [ ] add share if completed project
