@@ -41,7 +41,7 @@ export const themes = [
     image: 'sports.webp',
   },
   {
-    title: 'Fashion & Style',
+    title: 'Fashion And Style',
     description: 'Design fashion-related tools',
     projects: ['Outfit Coordinator', 'Style Quiz', 'Virtual Wardrobe'],
     icon: <Shirt className='w-8 h-8' />,

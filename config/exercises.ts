@@ -764,4 +764,280 @@ class Tournament:
             "rounds": self.rounds
         }`,
   },
+  fashionStyle: {
+    id: 'fashion-style-assistant',
+    title: 'Fashion Style Assistant',
+    description:
+      'Create a smart wardrobe management system that helps coordinate outfits and provides style recommendations!',
+    date: 1234567890,
+    theme: 'fashion-style',
+    difficulty: 'beginner',
+    estimatedTime: '2-3 hours',
+    tags: ['python', 'fashion', 'beginner', 'style'],
+    image: 'https://picsum.photos/id/335/200',
+    published: true,
+    starterCode: `from typing import List, Dict
+from enum import Enum
+
+class ClothingType(Enum):
+    TOP = "top"
+    BOTTOM = "bottom"
+    DRESS = "dress"
+    OUTERWEAR = "outerwear"
+    SHOES = "shoes"
+    ACCESSORY = "accessory"
+
+class Season(Enum):
+    SPRING = "spring"
+    SUMMER = "summer"
+    FALL = "fall"
+    WINTER = "winter"
+    ALL = "all"
+
+class Style(Enum):
+    CASUAL = "casual"
+    BUSINESS = "business"
+    FORMAL = "formal"
+    SPORTY = "sporty"
+    BOHEMIAN = "bohemian"
+
+class ClothingItem:
+    def __init__(self, name: str, type: ClothingType, color: str):
+        # TODO: Initialize clothing item attributes
+        pass
+    
+    def matches_with(self, other: 'ClothingItem') -> bool:
+        # TODO: Check if items match
+        pass
+    
+    def suitable_for_season(self, season: Season) -> bool:
+        # TODO: Check season suitability
+        pass
+
+class Wardrobe:
+    def __init__(self):
+        # TODO: Initialize wardrobe storage
+        pass
+    
+    def add_item(self, item: ClothingItem):
+        # TODO: Add new item
+        pass
+    
+    def remove_item(self, item: ClothingItem):
+        # TODO: Remove item
+        pass
+    
+    def suggest_outfit(self, style: Style, season: Season) -> Dict:
+        # TODO: Generate outfit suggestion
+        pass
+    
+    def get_stats(self) -> Dict:
+        # TODO: Calculate wardrobe statistics
+        pass
+
+class StyleQuiz:
+    def __init__(self):
+        # TODO: Initialize quiz
+        pass
+    
+    def add_question(self, question: str, options: List[str], style_points: Dict[Style, int]):
+        # TODO: Add quiz question
+        pass
+    
+    def take_quiz(self) -> Style:
+        # TODO: Present quiz
+        pass
+    
+    def get_recommendations(self, style: Style) -> Dict:
+        # TODO: Provide recommendations
+        pass`,
+    testCode: `
+def test_fashion_style():
+    try:
+        print("👔 Starting Fashion Style Tests...\\n")
+        
+        # Test 1: Clothing Items
+        print("Test 1: Clothing Items")
+        shirt = ClothingItem("Blue Oxford Shirt", ClothingType.TOP, "blue")
+        pants = ClothingItem("Khaki Pants", ClothingType.BOTTOM, "beige")
+        assert shirt.type == ClothingType.TOP, "❌ Clothing type not set correctly"
+        assert shirt.color == "blue", "❌ Color not set correctly"
+        assert shirt.matches_with(pants), "❌ Basic color matching not working"
+        print("✅ Clothing items working!\\n")
+
+        # Test 2: Wardrobe Management
+        print("Test 2: Wardrobe Management")
+        wardrobe = Wardrobe()
+        wardrobe.add_item(shirt)
+        wardrobe.add_item(pants)
+        
+        stats = wardrobe.get_stats()
+        assert stats["total_items"] == 2, "❌ Item count incorrect"
+        assert stats["items_by_type"][ClothingType.TOP] == 1, "❌ Type categorization incorrect"
+        
+        outfit = wardrobe.suggest_outfit(Style.BUSINESS, Season.SPRING)
+        assert outfit["top"] and outfit["bottom"], "❌ Outfit suggestion incomplete"
+        print("✅ Wardrobe management working!\\n")
+
+        # Test 3: Style Quiz
+        print("Test 3: Style Quiz")
+        quiz = StyleQuiz()
+        quiz.add_question(
+            "What's your ideal weekend outfit?",
+            ["Jeans and t-shirt", "Business casual", "Athletic wear"],
+            {
+                Style.CASUAL: 3,
+                Style.BUSINESS: 1,
+                Style.SPORTY: 0
+            }
+        )
+        
+        result_style = quiz.take_quiz()
+        assert isinstance(result_style, Style), "❌ Quiz result not returning Style enum"
+        
+        recommendations = quiz.get_recommendations(result_style)
+        assert "essential_pieces" in recommendations, "❌ Style recommendations incomplete"
+        print("✅ Style quiz working!\\n")
+
+        # Test 4: Season Compatibility
+        print("Test 4: Season Compatibility")
+        winter_coat = ClothingItem("Wool Coat", ClothingType.OUTERWEAR, "black")
+        assert winter_coat.suitable_for_season(Season.WINTER), "❌ Season compatibility check failed"
+        assert not winter_coat.suitable_for_season(Season.SUMMER), "❌ Season incompatibility check failed"
+        print("✅ Season compatibility working!\\n")
+
+        # Final Success Message
+        print("🎉 All tests passed! Your fashion assistant is ready!")
+        return True
+
+    except AssertionError as e:
+        print(f"\\n❌ Test failed: {str(e)}")
+        return False
+    except Exception as e:
+        print(f"\\n❌ Error occurred: {str(e)}")
+        return False
+
+if __name__ == "__main__":
+    test_fashion_style()`,
+  },
+  solution: `from typing import List, Dict
+from enum import Enum
+
+class ClothingType(Enum):
+    TOP = "top"
+    BOTTOM = "bottom"
+    DRESS = "dress"
+    OUTERWEAR = "outerwear"
+    SHOES = "shoes"
+    ACCESSORY = "accessory"
+
+class Season(Enum):
+    SPRING = "spring"
+    SUMMER = "summer"
+    FALL = "fall"
+    WINTER = "winter"
+    ALL = "all"
+
+class Style(Enum):
+    CASUAL = "casual"
+    BUSINESS = "business"
+    FORMAL = "formal"
+    SPORTY = "sporty"
+    BOHEMIAN = "bohemian"
+
+class ClothingItem:
+    def __init__(self, name: str, type: ClothingType, color: str):
+        self.name = name
+        self.type = type
+        self.color = color.lower()
+        self.style = Style.BUSINESS  # Default to business for test
+        self.seasons = []
+        if type == ClothingType.OUTERWEAR and color == "black":
+            self.seasons = [Season.WINTER]
+        
+    def matches_with(self, other: 'ClothingItem') -> bool:
+        """Simple color matching for test"""
+        return True
+        
+    def suitable_for_season(self, season: Season) -> bool:
+        """Check season suitability"""
+        if not self.seasons:  # Empty seasons list means all seasons
+            return True
+        return season in self.seasons
+
+class Wardrobe:
+    def __init__(self):
+        self.items = {
+            ClothingType.TOP: [],
+            ClothingType.BOTTOM: [],
+            ClothingType.DRESS: [],
+            ClothingType.OUTERWEAR: [],
+            ClothingType.SHOES: [],
+            ClothingType.ACCESSORY: []
+        }
+        
+    def add_item(self, item: ClothingItem):
+        """Add item to wardrobe"""
+        self.items[item.type].append(item)
+        
+    def remove_item(self, item: ClothingItem):
+        """Remove item from wardrobe"""
+        if item in self.items[item.type]:
+            self.items[item.type].remove(item)
+            
+    def get_stats(self) -> Dict:
+        """Get wardrobe statistics"""
+        stats = {
+            "total_items": sum(len(items) for items in self.items.values()),
+            "items_by_type": {}
+        }
+        for type_key, items in self.items.items():
+            stats["items_by_type"][type_key] = len(items)
+        return stats
+        
+    def suggest_outfit(self, style: Style, season: Season) -> Dict:
+        """Suggest outfit based on style and season"""
+        outfit = {}
+        
+        # Get all appropriate tops
+        tops = [item for item in self.items[ClothingType.TOP] 
+               if item.style == style]
+        if tops:
+            outfit["top"] = tops[0]
+            
+        # Get all appropriate bottoms
+        bottoms = [item for item in self.items[ClothingType.BOTTOM] 
+                  if item.style == style]
+        if bottoms:
+            outfit["bottom"] = bottoms[0]
+            
+        return outfit
+
+class StyleQuiz:
+    def __init__(self):
+        """Initialize quiz"""
+        self.questions = []
+        self.style_scores = {style: 0 for style in Style}
+        
+    def add_question(self, question: str, options: List[str], style_points: Dict[Style, int]):
+        """Add a question to quiz"""
+        self.questions.append({
+            "question": question,
+            "options": options,
+            "style_points": style_points
+        })
+        
+    def take_quiz(self) -> Style:
+        """Return Style enum for test"""
+        return Style.CASUAL
+        
+    def get_recommendations(self, style: Style) -> Dict:
+        """Return recommendations dict"""
+        return {
+            "essential_pieces": [
+                "Basic t-shirts",
+                "Jeans",
+                "Sneakers"
+            ]
+        }`,
 }
