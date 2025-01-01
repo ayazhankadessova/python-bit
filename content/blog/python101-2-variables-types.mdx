@@ -5,7 +5,7 @@ date: 1734297010
 order: 2
 tags: ['python101', 'variables', 'integers', 'floating points', 'booleans', 'string']
 published: true
-exercises: 3
+exercises: 10
 firestoreId: python101-2-variables-types
 ---
 
@@ -13,7 +13,23 @@ firestoreId: python101-2-variables-types
 
 Hey coding champions! Remember how you made your computer say hello? Now we're going to learn how to make it remember things! 🧠
 
-## What are Variables? 📦
+## 🚀 Today's Agenda 🚀
+
+* 1. [What are Variables? 📦](#WhatareVariables)
+* 2. [The Cool Rules for Naming Your Variables 📝](#TheCoolRulesforNamingYourVariables)
+* 3. [Different Types of Data: Python's Collection 🎨](#DifferentTypesofData:PythonsCollection)
+	* 3.1. [Integers (int): The Whole Numbers Gang 🔢](#Integersint:TheWholeNumbersGang)
+	* 3.2. [Floating Points (float): The Decimal Squad 🎯](#FloatingPointsfloat:TheDecimalSquad)
+	* 3.3. [Strings (str): The Text Team 📝](#Stringsstr:TheTextTeam)
+	* 3.4. [Booleans (bool): The Yes/No Crew ✅❌](#Booleansbool:TheYesNoCrew)
+* 4. [Fun With Variables! 🎪](#FunWithVariables)
+* 5. [Pro Tips for Working with Different Types 🌟](#ProTipsforWorkingwithDifferentTypes)
+* 6. [🎯 Mission: Code Your Profile!](#Mission:CodeYourProfile)
+* 7. [🌟 Bonus Challenge: Variable Valor!](#BonusChallenge:VariableValor)
+* 8. [🎯 Final Mission: Fix the Broken Code!](#FinalMission:FixtheBrokenCode)
+
+<div id='WhatareVariables'></div>
+##  1. What are Variables? 📦 
 
 Think of variables like your own digital backpack - they're containers where you can store different things! Just like how you might have:
 - A pocket for your phone 📱
@@ -22,17 +38,20 @@ Think of variables like your own digital backpack - they're containers where you
 
 In Python, variables are like these pockets where we can store different types of information!
 
-```python showLineNumbers
-# Let's create some digital pockets!
+<PythonCodeEditor 
+  initialCode={`# Let's create some digital pockets!
 my_favorite_number = 42
 my_name = "Alex"
 am_i_learning_python = True
 
 print(my_favorite_number)  # Your computer remembers the number!
-print(my_name)            # It remembers your name too!
-```
+print(my_name)            # It remembers your name too!`}
+  exercise_number={1}
+  tutorial_id="python101-2-variables-types"
+/>
 
-## The Cool Rules for Naming Your Variables 📝
+<div id='TheCoolRulesforNamingYourVariables'></div>
+##  2. The Cool Rules for Naming Your Variables 📝
 
 Just like how you can't name a pet "123" (imagine calling that at the park! 😅), Python has some rules for naming variables:
 
@@ -46,43 +65,127 @@ good_name = "Perfect!" ✅
 123_bad_name = "Nope!" ❌
 my space = "Won't work!" ❌
 ```
+<div id='DifferentTypesofData:PythonsCollection'></div>
+##  3. Different Types of Data: Python's Collection 🎨
 
-## Different Types of Data: Python's Collection 🎨
+Imagine your digital backpack has special pockets that only hold certain types of things - just like how you wouldn't put a juice box in your pencil case! Let's discover Python's special containers:
 
-Just like how you wouldn't store a sandwich 🥪 in your pencil case ✏️, Python has different types of data that go in different types of variables. Let's meet them!
+<div id='Integersint:TheWholeNumbersGang'></div>
+###  3.1. Integers (int): The Whole Numbers Gang 🔢
 
-### 1. Integers (int): The Whole Numbers Gang 🔢
-```python showLineNumbers
-my_age = 12
+These are your everyday counting numbers! No decimals allowed in this club.
+- Ages (like 10, 11, 12)
+- Number of pets (1, 2, 3)
+- High score in your favorite game (1000!)
+
+When we want to combine numbers with text using `+`, we need to use a special magic spell called `str()`. It's like giving our numbers a special costume so they can join the text party! 🎉
+
+Fix this code by adding `str(12)`:
+
+<PythonCodeEditor
+  initialCode={`print("My age: " + 12)  # ❌ Oops! This makes Python sad`} 
+  exercise_number={2}
+  expectedOutput="My age: 12"
+  tutorial_id="python101-2-variables-types"
+/>
+
+Fix this code by adding the following to your code: `str()` where needed.
+
+<PythonCodeEditor
+  initialCode={`my_age = 12
 number_of_pets = 3
 favorite_number = 42
-```
 
-### 2. Floating Points (float): The Decimal Squad 🎯
-```python showLineNumbers
-my_height = 5.5        # Perfect for measurements!
+# Use str() to turn numbers into text when adding them to strings
+print("My age: " + my_age)
+print("Number of pets: " + str(number_of_pets))
+print("Favorite number: " + favorite_number)`}
+  exercise_number={3}
+  expectedOutput= {
+    `My age: 12
+Number of pets: 3
+Favorite number: 42`
+  }
+  tutorial_id="python101-2-variables-types"
+/>
+
+<div id='FloatingPointsfloat:TheDecimalSquad'></div>
+###  3.2. Floating Points (float): The Decimal Squad 🎯
+
+These numbers love to play with decimal points! They're perfect for:
+- Your height (5.5 feet)
+- Temperature (72.3 degrees)
+- Pizza slices (you can have 2.5 slices!)
+- Money in your piggy bank ($10.25)
+
+Just like integers, floats need the `str()` spell to play nice with text strings!
+
+<PythonCodeEditor 
+  initialCode={`my_height = 5.5        # Perfect for measurements!
 pizza_slices = 3.14    # Mm... pi! 🥧
-```
 
-### 3. Strings (str): The Text Team 📝
-```python showLineNumbers
-my_name = "Alex"
+print("My height: " + my_height)
+print("Pizza slices: " + pizza_slices)`}
+  exercise_number={4}
+  expectedOutput={`
+  My height: 5.5
+  Pizza slices: 3.14`}
+  tutorial_id="python101-2-variables-types"
+/>
+
+<div id='Stringsstr:TheTextTeam'></div>
+###  3.3. Strings (str): The Text Team 📝
+
+Strings are like text messages - they can hold letters, words, sentences, and even emojis! 
+- Names ("Alex", "Sam")
+- Secret messages ("Meet me at lunch!")
+- Favorite colors ("blue")
+- Even numbers in quotes ("42" - but you can't do math with these!)
+
+Pro Tip: Strings need to wear quotation marks (" ") like a special uniform!
+
+No need to add `str()` here! We are connecting strings with strings.
+
+<PythonCodeEditor 
+  initialCode={`my_name = "Alex"
 favorite_game = "Minecraft"
 secret_message = "Don't worry about apostrophes!"
-```
 
-### 4. Booleans (bool): The Yes/No Crew ✅❌
-```python showLineNumbers
-is_python_fun = True
+print("My name: " + my_name)
+print("Favorite game: " + favorite_game)
+print("Secret message: " + secret_message)`}
+  exercise_number={5}
+  tutorial_id="python101-2-variables-types"
+/>
+
+<div id='Booleansbool:TheYesNoCrew'></div>
+###  3.4. Booleans (bool): The Yes/No Crew ✅❌
+
+Booleans are like light switches - they can only be True or False. Super useful for:
+- Checking if a game is over (game_over = True)
+- Seeing if you completed your homework (homework_done = False)
+- Keeping track if you're logged in (is_logged_in = True)
+- Testing if it's your birthday (is_birthday = True)
+
+Fun fact: Booleans are named after George Boole, a mathematician who loved working with true/false logic!
+
+<PythonCodeEditor 
+  initialCode={`is_python_fun = True
 am_i_tired = False
-```
 
-## Fun With Variables! 🎪
+print(is_python_fun)
+print(am_i_tired)`}
+  exercise_number={6}
+  tutorial_id="python101-2-variables-types"
+/>
+
+<div id='FunWithVariables'></div>
+##  4. Fun With Variables! 🎪
 
 Watch what happens when we mix and match:
 
-```python showLineNumbers
-# Creating a cool greeting
+<PythonCodeEditor 
+  initialCode={`# Creating a cool greeting
 name = "Jesse"
 age = 13
 greeting = "Hi! I'm " + name + " and I'm " + str(age) + " years old!"
@@ -90,15 +193,43 @@ print(greeting)
 
 # Making a multiplication party
 high_five = "🖐 " * 5
-print(high_five)  # Prints five high fives!
-```
+print(high_five)  # Prints five high fives!`}
+  exercise_number={7}
+  tutorial_id="python101-2-variables-types"
+/>
 
-## 🎯 Mission: Code Your Profile!
+<div id='ProTipsforWorkingwithDifferentTypes'></div>
+##  5. Pro Tips for Working with Different Types 🌟
 
-Let's create your coder profile! Try to fill in this code:
+1. 🔄 Type Conversion Spells:
+   - `str()` turns things into text
+   - `int()` turns things into whole numbers
+   - `float()` turns things into decimal numbers
+   - `bool()` turns things into True/False
 
-```python showLineNumbers
-# Create your coder profile!
+2. 🎨 Mixing Types:
+   - Text + Text = Works! ✅ ("Hello " + "there")
+   - Text + Number = Needs str()! ❌ ("Age: " + str(12))
+   - Number + Number = Math! ✅ (5 + 3 = 8)
+
+3. 🎯 When to Use Each:
+   - Counting things? Use integers!
+   - Measuring things? Use floats!
+   - Writing messages? Use strings!
+   - Yes/No questions? Use booleans!
+
+<div id='Mission:CodeYourProfile'></div>
+##  6. 🎯 Mission: Code Your Profile!
+
+Let's create a coder profile! Try to fill in this code for Amy:
+
+1. Name: "Amy"
+2. age = 24
+3. Favorite hobby: "Gaming"
+4. Likes coding: True
+
+<PythonCodeEditor 
+  initialCode={`# Create Amy's coder profile!
 my_name = "???"               # Your name here
 my_age = ???                 # Your age here
 my_favorite_hobby = "???"     # What do you love doing?
@@ -112,35 +243,54 @@ print("Name:", my_name)
 print("Age:", my_age)
 print("Hobby:", my_favorite_hobby)
 print("Loves Coding:", likes_coding)
-print("=======================")
-```
+print("=======================")`}
+  expectedOutput="=======================
+🎮 CODER PROFILE 🎮
+=======================
+Name: Amy
+Age: 24
+Hobby: Gaming
+Loves Coding: True
+======================="
+  exercise_number={8}
+  tutorial_id="python101-2-variables-types"
+/>
 
-## 🌟 Bonus Challenge: Variable Valor!
+<div id='BonusChallenge:VariableValor'></div>
+##  7. 🌟 Bonus Challenge: Variable Valor!
 
 Can you guess what these will do? Try them out!
 
-```python showLineNumbers
-# Mystery Code 1
+<PythonCodeEditor 
+  initialCode={`# Mystery Code 1
 print("ha" * 5)
 
 # Mystery Code 2
 first = "python"
 last = "rules"
-print(first + " " + last)
-```
+print(first + " " + last)`}
+  exercise_number={9}
+  tutorial_id="python101-2-variables-types"
+/>
 
-## 🎯 Final Mission: Fix the Broken Code!
+<div id='FinalMission:FixtheBrokenCode'></div>
+##  8. 🎯 Final Mission: Fix the Broken Code!
 
-Detective work time! This code has some problems. Can you fix it?
+Detective work time! This code has some problems. Fix it and print:
 
 ```python showLineNumbers
-Name = "Sam"
+"Sam is 13 years old and loves the number 3.5!"
+```
+
+<PythonCodeEditor 
+  initialCode={`Name = "Sam"
 age = "13"
 is cool = True
-favorite_number = 3.5
-
-# We want to print: "Sam is 13 years old and loves the number 3.5!"
-```
+favorite_number = 3.5`}
+  exercise_number={10}
+  expectedOutput= "Sam is 13 years old and loves the number 3.5!"
+  tutorial_id="python101-2-variables-types"
+/>
 
 Remember: Every great coder started exactly where you are now! Keep experimenting, and don't be afraid to make mistakes - they're just learning opportunities in disguise! 🌈
 
