@@ -4,6 +4,7 @@ import { MDXContent } from '@/components/mdx-components'
 import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
 import BackButton from '@/components/ui/backbutton'
+import '@/styles/mdx-style.css'
 
 interface PostPageProps {
   params: {
@@ -37,12 +38,12 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   return (
-    <div className='container max-w-xl lg:max-w-[850px] mx-auto px-4 py-6 md:px-6'>
+    <div className='container mx-auto px-6 py-8 max-w-5xl'>
       <div className='flex items-start justify-between mb-4'>
         <BackButton />
         <SharePost fullLink={fullLinkGenerated} />
       </div>
-      <article className='prose prose-img:rounded-xl max-w-none mt-2'>
+      <article className='prose prose-img:rounded-xl max-w-none mt-2 prose dark:prose-invert'>
         <h1 className='mb-2 text-foreground dark:text-foreground'>
           {post.title}
         </h1>

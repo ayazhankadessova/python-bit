@@ -70,7 +70,7 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   }
 
   return (
-    <div className='container max-w-4xl py-6 px-4'>
+    <div className='container mx-auto px-8 py-8'>
       <h1 className='font-bold text-4xl mb-6 capitalize'>
         {params.theme.replace('-', ' ')} Projects
       </h1>

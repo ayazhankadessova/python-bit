@@ -1,3 +1,5 @@
+// /tutorials
+
 'use client'
 
 import React, { useState } from 'react'
@@ -8,7 +10,6 @@ import {
   filterPostsBySearchTerm,
   sortPostsByTime,
 } from '@/utils/posts'
-import '@/styles/mdx-style.css'
 import { CustomPagination } from '@/components/pagination-query'
 import { Input } from '@/components/ui/input'
 import {
@@ -65,8 +66,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
   }
 
   return (
-    <div className='container max-w-4xl py-2 lg:py-3 px-1'>
-      <div className='mb-6 pr-20 mr-20'>
+    <div className='container mx-auto px-8 py-8'>
+      {/* Search Bar Section */}
+      <div className='mb-6'>
         <Input
           type='text'
           placeholder='Search'
@@ -74,7 +76,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
           onChange={handleSearchTextChange}
         />
       </div>
-      <div className='flex justify-between'>
+
+      {/* Header Section */}
+      <div className='flex justify-between items-center mb-4'>
         <h1 className='font-black text-3xl lg:text-4xl'>Tutorials</h1>
         <Select onValueChange={handleSortMethodChange} value={sortMethod}>
           <SelectTrigger className='w-[180px]'>
@@ -89,9 +93,12 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
           </SelectContent>
         </Select>
       </div>
-      <hr className='mt-4' />
+
+      <hr className='my-4' />
+
+      {/* Posts List */}
       {displayPosts?.length > 0 ? (
-        <ul className='flex flex-col'>
+        <ul className='flex flex-col space-y-4'>
           {displayPosts.map((post) => (
             <li key={post.slug}>
               <PostItem post={post} user={user} />
@@ -101,7 +108,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
       ) : (
         <p>No articles yet...</p>
       )}
-      <CustomPagination totalPages={totalPages} className='mt-4' />
+
+      {/* Pagination */}
+      <CustomPagination totalPages={totalPages} className='mt-8' />
     </div>
   )
 }

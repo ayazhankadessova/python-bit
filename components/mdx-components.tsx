@@ -14,7 +14,9 @@ const useMDXComponent = (code: string) => {
 const components = {
   Image,
   PythonCodeEditor,
-  li: ({ children }: { children: React.ReactNode }) => <li className='text-lg mb-2'>{children}</li>,
+  li: ({ children }: { children: React.ReactNode }) => (
+    <li className='text-lg mb-2'>{children}</li>
+  ),
 }
 
 interface MdxProps {
@@ -24,10 +26,8 @@ interface MdxProps {
 export const MDXContent = memo(({ code }: MdxProps) => {
   const Component = useMDXComponent(code)
   return (
-    <article className='prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert max-w-none'>
       <Component components={components} />
-    </article>
   )
 })
 
-MDXContent.displayName = 'MyComponent'
+MDXContent.displayName = 'MDXContent'

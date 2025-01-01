@@ -1,0 +1,173 @@
+---
+title: Ecosystem Simulator
+id: "ecosystem-simulator"
+description: "Create ecosystem with animals and plants!"
+date: 1234567890
+theme: "nature-and-science"
+difficulty: "beginner"
+estimatedTime: "2-3 hours"
+tags: ["python", "nature", "science"]
+image: https://picsum.photos/id/236/200
+published: true
+---
+
+## Ecosystem Simulator
+Welcome young scientists! Let's build a digital ecosystem where plants, herbivores, and carnivores interact. You'll learn about food chains, population dynamics, and how different species depend on each other.
+
+## Project Overview
+You'll create a simulation that:
+- Models different species (plants, rabbits, foxes)
+- Shows how populations change over time
+- Demonstrates food chain relationships
+- Visualizes ecosystem health
+- Includes weather effects on the ecosystem
+
+## Prerequisites
+- Basic Python knowledge
+- Understanding of lists and dictionaries
+- Simple math operations
+
+## Getting Started 
+Here's your starter code with fun TODOs:
+
+```python
+from typing import Dict, List
+import random
+
+class Species:
+    def __init__(self, name: str, population: int):
+        # TODO: Set up the species with its starting population
+        # 🌟 Hint: Store name and population
+        pass
+    
+    def update_population(self, food_available: int, weather_condition: str) -> None:
+        # TODO: Change population based on food and weather
+        # 🌟 Hint: Good weather = more babies!
+        pass
+
+class Plant(Species):
+    def grow(self, sunlight: int, water: int) -> int:
+        # TODO: Calculate how much the plants grow
+        # 🌟 Hint: More sunlight + water = more growth
+        pass
+
+class Animal(Species):
+    def __init__(self, name: str, population: int, food_type: str):
+        # TODO: Set up the animal with what it eats
+        # 🌟 Hint: Remember its favorite food!
+        pass
+    
+    def hunt(self, available_food: int) -> int:
+        # TODO: Figure out how much food the animal catches
+        # 🌟 Hint: Not every hunt is successful
+        pass
+
+class Ecosystem:
+    def __init__(self):
+        # TODO: Create your ecosystem with different species
+        # 🌟 Hint: Start with plants, rabbits, and foxes
+        pass
+    
+    def simulate_day(self, weather: str) -> Dict:
+        # TODO: Run one day in your ecosystem
+        # 🌟 Hint: First grow plants, then feed animals
+        pass
+    
+    def get_population_stats(self) -> Dict:
+        # TODO: Count how many of each species exist
+        # 🌟 Hint: Make a dictionary of species names and numbers
+        pass
+```
+
+## How Your Simulation Works
+
+### The Food Chain
+Think about who eats who:
+- Plants need sunlight and water 🌱
+- Rabbits eat plants 🐰
+- Foxes hunt rabbits 🦊
+
+### Weather Effects
+Different weather changes your ecosystem:
+- Sunny: Plants grow more! 🌞
+- Rainy: More water for plants 🌧️
+- Cloudy: Less plant growth ☁️
+
+### Population Changes
+Remember:
+- Animals need enough food to survive
+- Good conditions mean more babies
+- Not enough food means population goes down
+
+## Fun Challenges
+1. Add more animal species 
+2. Create seasonal changes
+3. Add different types of plants
+4. Make natural disasters
+5. Track ecosystem history
+
+## Testing Your Code
+Try this test file to check your work:
+
+```python
+def test_ecosystem():
+    print("🌿 Testing Ecosystem Simulator...")
+    
+    try:
+        # Test 1: Creating Species
+        print("\nTest 1: Making new species")
+        grass = Plant("Grass", 100)
+        rabbit = Animal("Rabbit", 30, "plant")
+        assert hasattr(grass, "population"), "❌ Species needs a population!"
+        print("✅ Species created successfully!")
+        
+        # Test 2: Plant Growth
+        print("\nTest 2: Growing plants")
+        growth = grass.grow(sunlight=10, water=5)
+        assert isinstance(growth, int), "❌ Growth must be a number!"
+        assert growth >= 0, "❌ Growth can't be negative!"
+        print("✅ Plants are growing!")
+        
+        # Test 3: Animal Hunting
+        print("\nTest 3: Animal hunting")
+        caught = rabbit.hunt(available_food=50)
+        assert isinstance(caught, int), "❌ Caught food must be a number!"
+        assert caught <= 50, "❌ Can't catch more food than available!"
+        print("✅ Animals can hunt!")
+        
+        # Test 4: Ecosystem Simulation
+        print("\nTest 4: Running ecosystem")
+        eco = Ecosystem()
+        day_results = eco.simulate_day("sunny")
+        assert isinstance(day_results, dict), "❌ Day results should be a dictionary!"
+        print("✅ Ecosystem is running!")
+        
+        print("\n🎉 All tests passed! Your ecosystem is alive!")
+        return True
+        
+    except AssertionError as e:
+        print(f"\n❌ Test failed: {str(e)}")
+        return False
+    except Exception as e:
+        print(f"\n❌ Error occurred: {str(e)}")
+        return False
+
+if __name__ == "__main__":
+    test_ecosystem()
+```
+
+## Tips for Success
+- Start small with just a few species
+- Test each part as you build it
+- Add comments to explain your code
+- Think about real ecosystems
+- Have fun experimenting!
+
+Remember: A healthy ecosystem needs balance - if one species has too many or too few members, it affects everything else!
+
+## Extra Ideas
+- Add animal movement
+- Create food preferences 
+- Make species compete
+- Add different habitats
+- Track endangered species

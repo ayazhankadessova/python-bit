@@ -33,7 +33,7 @@ export async function generateStaticParams(): Promise<
 export default async function PostPage({ params }: PostPageProps) {
   const post = await getPostFromParams(params)
   const fullLinkGenerated = `${siteConfig.url}/blog/${params?.slug?.join('/')}`
-  const exercise = getExerciseById('aura-points')
+  const exercise = getExerciseById(post!.id)
 
 
   if (!post || !post.published) {
@@ -57,7 +57,7 @@ export default async function PostPage({ params }: PostPageProps) {
         {/* Left side - Tutorial content */}
         <div className='w-1/2 overflow-y-auto border-r p-6'>
           <div className='max-w-3xl mx-auto'>
-            <article className='prose prose-img:rounded-xl'>
+            <article className='prose prose-img:rounded-xl prose dark:prose-invert'>
               <h1 className='mb-2 text-foreground dark:text-foreground'>
                 {post.title}
               </h1>

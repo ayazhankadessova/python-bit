@@ -362,11 +362,15 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] siteConfig fix!
 - [x] bg gradient
 - [x] resize python code editor
-- [ ] add home , make Tutorials page default
-- [ ] remove underline in tailwind md
-- [ ] Go thru every page and make it have same padding or do we do it from layout?
-- [ ] accent to curr tab if togglable , accent to pages when I am in sub pages
-- [ ] add at least 4 projects
+- [x] add home page
+- [x] remove underline in tailwind md
+- [x] accent to curr tab if togglable , accent to pages when I am in sub pages
+
+
+## Jan 1
+
+- [ ] padding to project page 
+- [x] add at least 4 projects
 - [ ] if solved project, add to firestore
 - [ ] store code  ?? 
 - [ ] add share if completed project
@@ -376,13 +380,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Add better imgs
 - [ ] Meme creation tools
 
+#
+
 
 ## Project Test cases
 
 - [ ] Add test cases to 2-3 projects
 Modern Features to Include:
-
-
 Achievements/badges system
 Social sharing options
 Project showcases
@@ -441,3 +445,10 @@ tutrials data or every tutorials
 import { useAuth } from '@/contexts/AuthContext'
 
   const { user, loading, signOut } = useAuth()
+
+
+
+## Pages 
+
+1. `container mx-auto px-8 py-8`
+2. add toc to tutorials

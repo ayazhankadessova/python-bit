@@ -1,0 +1,241 @@
+---
+title: Fashion Style Assistant
+id: "fashion-style-assistant"
+description: "Create a smart wardrobe management system that helps coordinate outfits and provides style recommendations!"
+date: 1234567890
+theme: "fashion-and-style"
+difficulty: "beginner"
+estimatedTime: "2-3 hours"
+tags: ["python", "fashion", "beginner", "style"]
+image: https://picsum.photos/id/335/200
+published: true
+---
+
+Welcome fashion enthusiasts! In this project, we'll create an intelligent fashion assistant that helps users manage their wardrobe, coordinate outfits, and discover their personal style.
+
+## Project Overview
+You'll build a system that:
+- Manages a virtual wardrobe
+- Suggests outfit combinations
+- Conducts style preference quizzes
+- Provides fashion recommendations
+- Tracks favorite outfits
+
+## Prerequisites
+- Basic Python knowledge
+- Understanding of classes and methods
+- Familiarity with dictionaries and lists
+
+## Getting Started
+Let's create our core classes! Here's your starter code with TODOs:
+
+```python
+from typing import List, Dict
+from enum import Enum
+
+class ClothingType(Enum):
+    TOP = "top"
+    BOTTOM = "bottom"
+    DRESS = "dress"
+    OUTERWEAR = "outerwear"
+    SHOES = "shoes"
+    ACCESSORY = "accessory"
+
+class Season(Enum):
+    SPRING = "spring"
+    SUMMER = "summer"
+    FALL = "fall"
+    WINTER = "winter"
+    ALL = "all"
+
+class Style(Enum):
+    CASUAL = "casual"
+    BUSINESS = "business"
+    FORMAL = "formal"
+    SPORTY = "sporty"
+    BOHEMIAN = "bohemian"
+
+class ClothingItem:
+    def __init__(self, name: str, type: ClothingType, color: str):
+        # TODO: Initialize clothing item attributes
+        # Consider: style, season, occasions, brand
+        pass
+    
+    def matches_with(self, other: 'ClothingItem') -> bool:
+        # TODO: Check if two items match based on color and style
+        # Hint: Consider color theory and style compatibility
+        pass
+    
+    def suitable_for_season(self, season: Season) -> bool:
+        # TODO: Check if item is suitable for given season
+        pass
+
+class Wardrobe:
+    def __init__(self):
+        # TODO: Initialize wardrobe storage
+        # Group items by type for easier access
+        pass
+    
+    def add_item(self, item: ClothingItem):
+        # TODO: Add new item to wardrobe
+        # Organize by type and maintain counts
+        pass
+    
+    def remove_item(self, item: ClothingItem):
+        # TODO: Remove item from wardrobe
+        pass
+    
+    def suggest_outfit(self, style: Style, season: Season) -> Dict:
+        # TODO: Generate outfit suggestion based on style and season
+        # Include: top, bottom, shoes, accessories
+        pass
+    
+    def get_stats(self) -> Dict:
+        # TODO: Calculate wardrobe statistics
+        # Count by type, style, color, etc.
+        pass
+
+class StyleQuiz:
+    def __init__(self):
+        # TODO: Initialize quiz questions and scoring
+        pass
+    
+    def add_question(self, question: str, options: List[str], style_points: Dict[Style, int]):
+        # TODO: Add quiz question with style points
+        pass
+    
+    def take_quiz(self) -> Style:
+        # TODO: Present questions and calculate dominant style
+        pass
+    
+    def get_recommendations(self, style: Style) -> Dict:
+        # TODO: Provide style-specific recommendations
+        pass
+```
+
+## Key Concepts to Implement
+
+### Color Matching
+Consider basic color theory:
+- Complementary colors
+- Monochromatic looks
+- Seasonal color palettes
+
+Example color matching logic:
+```python
+def are_colors_compatible(color1: str, color2: str) -> bool:
+    # Define color families and relationships
+    complementary_pairs = {
+        "blue": ["orange", "coral"],
+        "purple": ["yellow", "gold"],
+        "red": ["green", "mint"]
+    }
+    
+    # Consider neutrals
+    neutrals = ["black", "white", "gray", "beige"]
+    
+    # Implement matching logic
+    pass
+```
+
+### Outfit Generation
+Think about outfit composition rules:
+- Style consistency
+- Color harmony
+- Season appropriateness
+- Occasion suitability
+
+Example suggestion system:
+```python
+def create_outfit_base(style: Style, season: Season) -> Dict:
+    # Start with essential pieces
+    # Build around a key item
+    # Add complementary pieces
+    # Consider layering for season
+    pass
+```
+
+### Style Quiz System
+Plan quiz structure:
+- Multiple choice questions
+- Style point system
+- Results analysis
+- Recommendations
+
+Example quiz question:
+```python
+question_template = {
+    "text": "What's your ideal weekend outfit?",
+    "options": [
+        "Jeans and t-shirt",
+        "Sundress and sandals",
+        "Athletic wear",
+        "Bohemian maxi dress"
+    ],
+    "style_points": {
+        Style.CASUAL: [3, 0, 0, 0],
+        Style.BOHEMIAN: [0, 1, 0, 3],
+        Style.SPORTY: [0, 0, 3, 0]
+    }
+}
+```
+
+## Data Structures
+
+### Clothing Item Structure
+```python
+clothing_item = {
+    "name": str,
+    "type": ClothingType,
+    "color": str,
+    "style": Style,
+    "seasons": List[Season],
+    "occasions": List[str],
+    "brand": str,
+    "favorite": bool
+}
+```
+
+### Wardrobe Organization
+```python
+wardrobe_structure = {
+    "tops": List[ClothingItem],
+    "bottoms": List[ClothingItem],
+    "dresses": List[ClothingItem],
+    "outerwear": List[ClothingItem],
+    "shoes": List[ClothingItem],
+    "accessories": List[ClothingItem]
+}
+```
+
+### Style Profile
+```python
+style_profile = {
+    "primary_style": Style,
+    "secondary_style": Style,
+    "preferred_colors": List[str],
+    "avoided_colors": List[str],
+    "favorite_outfits": List[Dict]
+}
+```
+
+## Challenge Tasks
+1. Implement advanced color matching
+2. Add outfit history tracking
+3. Create style boards
+4. Add seasonal wardrobe transitions
+5. Implement outfit rating system
+
+## Tips for Success
+- Start with basic matching rules
+- Use enums for consistent categories
+- Handle invalid combinations gracefully
+- Consider user preferences
+- Document style rules
+
+## Extension Ideas
+- Add image support
+- Create packing lists
+- Track outfit frequency
+- Add weather integration
+- Include care instructions

@@ -11,7 +11,6 @@ import { AuthModalProvider } from '@/contexts/AuthModalContext'
 import { BlogFooter } from '@/components/ui/footer'
 import AuthModal from '@/components/AuthModal'
 
-
 const inter = Inter({ subsets: ['latin'], variable: '--font-mono' })
 
 export default function RootLayout({
@@ -22,16 +21,15 @@ export default function RootLayout({
   return (
     <html lang='en' className='scroll-smooth'>
       <body
-        className={cn(
-          'min-h-screen font-mono antialiased',
-          inter.variable
-        )}
+        className={cn('min-h-screen font-mono antialiased', inter.variable)}
       >
         <Providers>
           {/* <div className='relative flex min-h-dvh flex-col bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] px-4'> */}
           <AuthProvider>
             <AuthModalProvider>
-              <SiteHeader />
+              <div className='bg-popover'>
+                <SiteHeader />
+              </div>
               <div className='relative flex min-h-dvh flex-col px-4'>
                 <main className='flex-1'>{children}</main>
               </div>
