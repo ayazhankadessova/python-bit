@@ -478,4 +478,290 @@ if __name__ == "__main__":
     # Get species information
     print("\nDog Care Tips:", encyclopedia.get_care_tips("dog"))`,
   },
+  sportsAnalytics: {
+    id: 'sports-analytics-system',
+    title: 'Sports Analytics System',
+    description:
+      'Build a comprehensive sports analytics platform to track team performance, calculate player statistics, and manage tournaments!',
+    date: 1234567890,
+    theme: 'sports-analytics',
+    difficulty: 'advanced',
+    estimatedTime: '4-5 hours',
+    tags: ['python', 'sports', 'advanced', 'analytics', 'statistics'],
+    image: 'https://picsum.photos/id/235/200',
+    published: true,
+    starterCode: `from typing import List, Dict, Optional
+import math
+import random
+
+class Player:
+    def __init__(self, name: str, position: str):
+        # TODO: Initialize player attributes
+        pass
+    
+    def add_game_stats(self, minutes: int, points: int, assists: int, rebounds: int):
+        # TODO: Add stats from a new game
+        pass
+    
+    def calculate_efficiency(self) -> float:
+        # TODO: Calculate player efficiency rating
+        pass
+    
+    def get_stats_summary(self) -> Dict:
+        # TODO: Return player's current stats
+        pass
+
+class Team:
+    def __init__(self, name: str, division: str):
+        # TODO: Initialize team attributes
+        pass
+    
+    def add_player(self, player: Player):
+        # TODO: Add player to team
+        pass
+    
+    def record_game(self, points_scored: int, points_allowed: int, won: bool):
+        # TODO: Update team statistics
+        pass
+    
+    def calculate_win_percentage(self) -> float:
+        # TODO: Calculate win percentage
+        pass
+    
+    def get_team_stats(self) -> Dict:
+        # TODO: Return team statistics
+        pass
+
+class Tournament:
+    def __init__(self, name: str, num_teams: int):
+        # TODO: Initialize tournament attributes
+        pass
+    
+    def add_team(self, team: Team):
+        # TODO: Add team to tournament
+        pass
+    
+    def generate_bracket(self):
+        # TODO: Generate tournament bracket
+        pass
+    
+    def simulate_round(self):
+        # TODO: Simulate tournament round
+        pass
+    
+    def get_bracket_state(self) -> Dict:
+        # TODO: Return current bracket
+        pass`,
+    testCode: `
+def test_sports_analytics():
+    try:
+        print("🏀 Starting Sports Analytics Tests...\\n")
+        
+        # Test 1: Player Management
+        print("Test 1: Player Management")
+        player = Player("John Doe", "Forward")
+        player.add_game_stats(32, 20, 5, 8)
+        stats = player.get_stats_summary()
+        
+        assert stats["minutes_per_game"] == 32, "❌ Minutes calculation incorrect"
+        assert stats["points_per_game"] == 20, "❌ Points calculation incorrect"
+        assert stats["assists_per_game"] == 5, "❌ Assists calculation incorrect"
+        assert stats["rebounds_per_game"] == 8, "❌ Rebounds calculation incorrect"
+        assert "efficiency" in stats, "❌ Efficiency rating not calculated"
+        print("✅ Player management working!\\n")
+
+        # Test 2: Team Management
+        print("Test 2: Team Management")
+        team = Team("Rockets", "West")
+        team.add_player(player)
+        team.record_game(98, 95, True)
+        team.record_game(88, 92, False)
+        
+        stats = team.get_team_stats()
+        assert stats["wins"] == 1, "❌ Win count incorrect"
+        assert stats["losses"] == 1, "❌ Loss count incorrect"
+        assert stats["points_for"] == 186, "❌ Points for calculation incorrect"
+        assert stats["points_against"] == 187, "❌ Points against calculation incorrect"
+        assert abs(team.calculate_win_percentage() - 0.5) < 0.001, "❌ Win percentage calculation incorrect"
+        print("✅ Team management working!\\n")
+
+        # Test 3: Tournament System
+        print("Test 3: Tournament System")
+        tournament = Tournament("Summer Championship", 8)
+        
+        # Add teams
+        for i in range(8):
+            new_team = Team(f"Team {i+1}", "Division A")
+            for j in range(5):
+                new_player = Player(f"Player {j+1}", "Forward")
+                new_team.add_player(new_player)
+            tournament.add_team(new_team)
+        
+        # Generate and verify bracket
+        tournament.generate_bracket()
+        bracket = tournament.get_bracket_state()
+        
+        assert len(bracket["rounds"]) == 3, "❌ Incorrect number of rounds for 8 teams"
+        assert len(bracket["rounds"][0]["matches"]) == 4, "❌ Incorrect number of first round matches"
+        
+        # Simulate a round
+        tournament.simulate_round()
+        new_bracket = tournament.get_bracket_state()
+        assert any(match["winner"] for match in new_bracket["rounds"][0]["matches"]), "❌ Round simulation not working"
+        print("✅ Tournament system working!\\n")
+
+        # Test 4: Advanced Statistics
+        print("Test 4: Advanced Statistics")
+        efficiency = player.calculate_efficiency()
+        assert isinstance(efficiency, float), "❌ Efficiency rating not calculated correctly"
+        assert efficiency > 0, "❌ Invalid efficiency rating"
+        print("✅ Advanced statistics working!\\n")
+
+        # Final Success Message
+        print("🎉 All tests passed! Your sports analytics system is ready!")
+        return True
+
+    except AssertionError as e:
+        print(f"\\n❌ Test failed: {str(e)}")
+        return False
+    except Exception as e:
+        print(f"\\n❌ Error occurred: {str(e)}")
+        return False
+
+if __name__ == "__main__":
+    test_sports_analytics()`,
+    solution: `from typing import List, Dict, Optional
+import math
+import random
+from datetime import datetime
+
+class Player:
+    def __init__(self, name: str, position: str):
+        self.name = name
+        self.position = position
+        self.games_played = 0
+        self.total_minutes = 0
+        self.total_points = 0
+        self.total_assists = 0
+        self.total_rebounds = 0
+        
+    def add_game_stats(self, minutes: int, points: int, assists: int, rebounds: int):
+        self.games_played += 1
+        self.total_minutes += minutes
+        self.total_points += points
+        self.total_assists += assists
+        self.total_rebounds += rebounds
+    
+    def calculate_efficiency(self) -> float:
+        if self.games_played == 0:
+            return 0.0
+        base_efficiency = (
+            self.total_points + 
+            self.total_assists * 1.5 + 
+            self.total_rebounds * 1.2
+        )
+        minutes_factor = self.total_minutes / (self.games_played * 48)
+        return round(base_efficiency * minutes_factor / self.games_played, 2)
+    
+    def get_stats_summary(self) -> Dict:
+        if self.games_played == 0:
+            return {
+                "minutes_per_game": 0,
+                "points_per_game": 0,
+                "assists_per_game": 0,
+                "rebounds_per_game": 0,
+                "efficiency": 0
+            }
+        
+        return {
+            "minutes_per_game": self.total_minutes / self.games_played,
+            "points_per_game": self.total_points / self.games_played,
+            "assists_per_game": self.total_assists / self.games_played,
+            "rebounds_per_game": self.total_rebounds / self.games_played,
+            "efficiency": self.calculate_efficiency()
+        }
+
+class Team:
+    def __init__(self, name: str, division: str):
+        self.name = name
+        self.division = division
+        self.players = []
+        self.wins = 0
+        self.losses = 0
+        self.points_for = 0
+        self.points_against = 0
+        
+    def add_player(self, player: Player):
+        if not isinstance(player, Player):
+            raise TypeError("Must add a Player object")
+        self.players.append(player)
+        
+    def record_game(self, points_scored: int, points_allowed: int, won: bool):
+        self.points_for += points_scored
+        self.points_against += points_allowed
+        if won:
+            self.wins += 1
+        else:
+            self.losses += 1
+        
+    def calculate_win_percentage(self) -> float:
+        total_games = self.wins + self.losses
+        if total_games == 0:
+            return 0.0
+        return round(self.wins / total_games, 3)
+        
+    def get_team_stats(self) -> Dict:
+        return {
+            "wins": self.wins,
+            "losses": self.losses,
+            "points_for": self.points_for,
+            "points_against": self.points_against,
+            "win_percentage": self.calculate_win_percentage()
+        }
+
+class Tournament:
+    def __init__(self, name: str, num_teams: int):
+        if not math.log2(num_teams).is_integer():
+            raise ValueError("Number of teams must be a power of 2")
+        self.name = name
+        self.num_teams = num_teams
+        self.teams = []
+        self.rounds = []
+        
+    def add_team(self, team: Team):
+        if len(self.teams) >= self.num_teams:
+            raise ValueError("Tournament is full")
+        self.teams.append(team)
+        
+    def generate_bracket(self):
+        if len(self.teams) != self.num_teams:
+            raise ValueError(f"Need exactly {self.num_teams} teams")
+            
+        num_rounds = int(math.log2(self.num_teams))
+        self.rounds = [{"round_number": i + 1, "matches": []} for i in range(num_rounds)]
+        
+        # Generate first round matches
+        first_round = self.rounds[0]
+        for i in range(0, self.num_teams, 2):
+            first_round["matches"].append({
+                "team1": self.teams[i],
+                "team2": self.teams[i + 1],
+                "winner": None
+            })
+    
+    def simulate_round(self):
+        current_round = next((r for r in self.rounds if not all(m["winner"] for m in r["matches"])), None)
+        if not current_round:
+            return
+            
+        for match in current_round["matches"]:
+            if not match["winner"]:
+                # Simple simulation - random winner
+                match["winner"] = random.choice([match["team1"], match["team2"]])
+    
+    def get_bracket_state(self) -> Dict:
+        return {
+            "rounds": self.rounds
+        }`,
+  },
 }

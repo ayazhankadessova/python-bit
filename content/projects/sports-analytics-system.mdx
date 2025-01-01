@@ -1,0 +1,243 @@
+---
+title: Sports Analytics System
+id: "sports-analytics-system"
+description: "Build a comprehensive sports analytics platform to track team performance, calculate player statistics, and manage tournaments!"
+date: 1234567890
+theme: "sports-analytics"
+difficulty: "advanced"
+estimatedTime: "4-5 hours"
+tags: ["python", "sports", "advanced", "analytics", "statistics"]
+image: https://picsum.photos/id/235/200
+published: true
+---
+
+Welcome sports enthusiasts and data analysts! In this advanced project, we'll create a powerful sports analytics system that combines statistical analysis with tournament management.
+
+## Project Overview
+You'll build a system that:
+- Tracks comprehensive team statistics
+- Calculates advanced player metrics
+- Generates and manages tournament brackets
+- Provides performance predictions
+- Visualizes statistical trends
+
+## Prerequisites
+- Strong Python knowledge
+- Understanding of statistical concepts
+- Experience with data structures
+- Basic knowledge of sports metrics
+
+## Getting Started
+Let's create our core classes! Here's your starter code with TODOs:
+
+```python
+from typing import List, Dict, Optional
+import math
+import random
+
+class Player:
+    def __init__(self, name: str, position: str):
+        # TODO: Initialize player attributes
+        # Consider: games_played, minutes, points, assists, rebounds
+        pass
+    
+    def add_game_stats(self, minutes: int, points: int, assists: int, rebounds: int):
+        # TODO: Add stats from a new game
+        # Remember to update averages
+        pass
+    
+    def calculate_efficiency(self) -> float:
+        # TODO: Calculate player efficiency rating
+        # Hint: Consider points, assists, rebounds in formula
+        pass
+    
+    def get_stats_summary(self) -> Dict:
+        # TODO: Return dictionary of player's current stats
+        pass
+
+class Team:
+    def __init__(self, name: str, division: str):
+        # TODO: Initialize team attributes
+        # Track: players, wins, losses, points_for, points_against
+        pass
+    
+    def add_player(self, player: Player):
+        # TODO: Add player to team
+        # Validate player data first
+        pass
+    
+    def record_game(self, points_scored: int, points_allowed: int, won: bool):
+        # TODO: Update team statistics after game
+        # Update win/loss record and points
+        pass
+    
+    def calculate_win_percentage(self) -> float:
+        # TODO: Calculate team's win percentage
+        pass
+    
+    def get_team_stats(self) -> Dict:
+        # TODO: Return comprehensive team statistics
+        pass
+
+class Tournament:
+    def __init__(self, name: str, num_teams: int):
+        # TODO: Initialize tournament attributes
+        # Consider: teams, bracket structure, rounds
+        pass
+    
+    def add_team(self, team: Team):
+        # TODO: Add team to tournament
+        # Validate team eligibility
+        pass
+    
+    def generate_bracket(self):
+        # TODO: Generate tournament bracket
+        # Hint: Use seeding based on team stats
+        pass
+    
+    def simulate_round(self):
+        # TODO: Simulate one round of tournament
+        # Consider team stats in win probability
+        pass
+    
+    def get_bracket_state(self) -> Dict:
+        # TODO: Return current tournament bracket
+        pass
+```
+
+## Implementation Guide
+
+### Player Analytics
+Consider these metrics for player analysis:
+- Points per game
+- Assists per game
+- Rebounds per game
+- Minutes per game
+- Efficiency rating (custom formula)
+- Shooting percentages
+
+Sample efficiency formula:
+```python
+def calculate_efficiency(self) -> float:
+    # Common efficiency formula:
+    # (Points + Rebounds + Assists) * Minutes_Played / Games_Played
+    # Add your own modifiers for advanced analysis
+    pass
+```
+
+### Team Performance Metrics
+Track these team statistics:
+- Win/Loss record
+- Points per game
+- Points allowed
+- Point differential
+- Home/Away performance
+- Winning streaks
+
+Example win percentage calculation:
+```python
+def calculate_win_percentage(self) -> float:
+    # Consider edge cases:
+    # - No games played
+    # - Division by zero prevention
+    # - Rounding considerations
+    pass
+```
+
+### Tournament System
+Implement these tournament features:
+- Seeding system
+- Bracket generation
+- Round simulation
+- Advancement tracking
+- Championship path
+
+Bracket generation tips:
+```python
+def generate_bracket(self):
+    # For a 8-team tournament:
+    # Round 1: 1v8, 2v7, 3v6, 4v5
+    # Consider:
+    # - Power of 2 validation
+    # - Seeding based on record
+    # - Bye weeks for uneven numbers
+    pass
+```
+
+## Data Structures
+
+### Player Stats Structure
+```python
+player_stats = {
+    "games_played": int,
+    "minutes": {
+        "total": int,
+        "average": float
+    },
+    "points": {
+        "total": int,
+        "average": float
+    },
+    "efficiency": float
+}
+```
+
+### Team Stats Structure
+```python
+team_stats = {
+    "record": {
+        "wins": int,
+        "losses": int
+    },
+    "points": {
+        "scored": int,
+        "allowed": int,
+        "differential": float
+    },
+    "streaks": {
+        "current": int,
+        "longest": int
+    }
+}
+```
+
+### Tournament Bracket Structure
+```python
+bracket = {
+    "rounds": [
+        {
+            "round_number": int,
+            "matches": [
+                {
+                    "team1": Team,
+                    "team2": Team,
+                    "winner": Optional[Team]
+                }
+            ]
+        }
+    ]
+}
+```
+
+## Challenge Tasks
+1. Implement advanced statistical analysis
+2. Add player comparison system
+3. Create season simulator
+4. Add playoff predictions
+5. Implement historical data tracking
+
+## Tips for Success
+- Validate all input data
+- Handle edge cases gracefully
+- Use type hints for clarity
+- Document your statistical formulas
+- Consider performance optimization
+
+## Extension Ideas
+- Add visualization tools
+- Implement team rankings
+- Create prediction models
+- Add player development tracking
+- Include injury management system
+
+Remember: Good sports analytics combines accurate data tracking with meaningful statistical analysis!
