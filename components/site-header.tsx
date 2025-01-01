@@ -22,6 +22,14 @@ import { ResponsiveSearch } from '@/components/ui/responsive-search' // Add this
 const activeStyles =
   'bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-blue-900 dark:from-blue-800 dark:via-blue-700 dark:to-blue-800 dark:text-white shadow-sm border text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary dark:from-blue-900/70 dark:via-blue-800/70 dark:to-blue-900/70 dark:text-white dark:border-blue-700/20 dark:hover:from-blue-800/70 dark:hover:via-blue-700/70 dark:hover:to-blue-800/70'
 
+  const isPathActive = (currentPath: string, href: string) => {
+  if (href === '/') return currentPath === href
+  // Split both paths and compare the first segment
+  const currentSegment = currentPath.split('/')[1]
+  const hrefSegment = href.split('/')[1]
+  return currentSegment === hrefSegment
+}
+
 export function SiteHeader() {
   const pathname = usePathname()
 
@@ -43,9 +51,9 @@ export function SiteHeader() {
                     <NavigationMenuTrigger
                       className={cn(
                         'transition-all duration-200 lg:text-lg relative rounded-md',
-                        (pathname === dialog.href ||
-                          dialog.dropdown?.some(
-                            (item) => pathname === item.href
+                        (isPathActive(pathname, dialog.href) ||
+                          dialog.dropdown?.some((item) =>
+                            isPathActive(pathname, item.href)
                           )) &&
                           activeStyles
                       )}
@@ -75,7 +83,7 @@ export function SiteHeader() {
                     <NavigationMenuTrigger
                       className={cn(
                         'transition-all duration-200 lg:text-lg relative rounded-md hover:bg-accent/50',
-                        pathname === dialog.href && activeStyles
+                        isPathActive(pathname, dialog.href) && activeStyles
                       )}
                     >
                       {dialog.title}
@@ -124,7 +132,7 @@ const ListItem = React.forwardRef<
           href={href}
           className={cn(
             'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-            pathname === href && activeStyles,
+            isPathActive(pathname, href ?? '') && activeStyles,
             className
           )}
           {...props}

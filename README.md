@@ -362,10 +362,14 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] siteConfig fix!
 - [x] bg gradient
 - [x] resize python code editor
-- [ ] add home , make Tutorials page default
-- [ ] remove underline in tailwind md
-- [ ] Go thru every page and make it have same padding or do we do it from layout?
-- [ ] accent to curr tab if togglable , accent to pages when I am in sub pages
+- [x] add home page
+- [x] remove underline in tailwind md
+- [x] accent to curr tab if togglable , accent to pages when I am in sub pages
+
+
+## Jan 1
+
+- [ ] padding to project page 
 - [ ] add at least 4 projects
 - [ ] if solved project, add to firestore
 - [ ] store code  ?? 
