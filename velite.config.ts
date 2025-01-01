@@ -34,6 +34,7 @@ const projects = defineCollection({
   schema: s
     .object({
       slug: s.path(),
+      id: s.string().max(99),
       title: s.string().max(99),
       description: s.string().max(999).optional(),
       date: s.number(),

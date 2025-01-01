@@ -380,6 +380,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Add better imgs
 - [ ] Meme creation tools
 
+#
+
 
 ## Project Test cases
 
@@ -449,3 +451,4 @@ import { useAuth } from '@/contexts/AuthContext'
 ## Pages 
 
 1. `container mx-auto px-8 py-8`
+2. add toc to tutorials

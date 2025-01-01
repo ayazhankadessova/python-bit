@@ -8,7 +8,7 @@ export type ExerciseCollection = {
 // config/exercises.ts
 export const EXERCISES: ExerciseCollection = {
   auraPts: {
-    id: 'aura-points',
+    id: 'aura-points-calculator',
     title: 'Aura Points Calculator',
     description:
       'Create the system to track and calculate character energy levels!',
@@ -177,5 +177,305 @@ if __name__ == "__main__":
             f"[{bar}] {percentage:.1%}"
         ]
         print("\n".join(output))`,
+  },
+  petCompanion: {
+    id: 'virtual-pet-companion',
+    title: 'Virtual Pet Companion',
+    description:
+      'Create a fun and educational virtual pet system that simulates pet care and animal facts!',
+    date: 1234567890,
+    theme: 'pet-companion',
+    difficulty: 'beginner',
+    estimatedTime: '2-3 hours',
+    tags: ['python', 'pets', 'beginner', 'simulator'],
+    image: 'https://picsum.photos/id/237/200',
+    published: true,
+    starterCode: `class Pet:
+    def __init__(self, name, species):
+        # TODO: Initialize pet attributes
+        pass
+        
+    def feed(self, food_amount):
+        # TODO: Implement feeding mechanics
+        pass
+    
+    def play(self, play_time):
+        # TODO: Implement play mechanics
+        pass
+    
+    def rest(self, rest_time):
+        # TODO: Implement rest mechanics
+        pass
+    
+    def get_status(self):
+        # TODO: Return pet status
+        pass
+
+class AnimalEncyclopedia:
+    def __init__(self):
+        # TODO: Initialize encyclopedia
+        pass
+    
+    def add_species(self, species, facts):
+        # TODO: Add new species
+        pass
+    
+    def get_species_info(self, species):
+        # TODO: Get species information
+        pass`,
+    testCode: `
+def test_pet_companion():
+    try:
+        print("🐾 Starting Virtual Pet Tests...\\n")
+        
+        # Test 1: Pet Creation
+        print("Test 1: Pet Creation")
+        pet = Pet("Buddy", "dog")
+        assert hasattr(pet, 'name'), "❌ Pet name not initialized"
+        assert hasattr(pet, 'species'), "❌ Pet species not initialized"
+        assert hasattr(pet, 'hunger'), "❌ Pet hunger not initialized"
+        assert hasattr(pet, 'happiness'), "❌ Pet happiness not initialized"
+        assert hasattr(pet, 'energy'), "❌ Pet energy not initialized"
+        print("✅ Pet creation successful!\\n")
+
+        # Test 2: Feeding System
+        print("Test 2: Feeding System")
+        initial_hunger = pet.hunger
+        pet.feed(30)
+        assert pet.hunger < initial_hunger, "❌ Feeding not decreasing hunger"
+        assert pet.hunger >= 0, "❌ Hunger went below 0"
+        assert pet.hunger <= 100, "❌ Hunger exceeded 100"
+        print("✅ Feeding system working!\\n")
+
+        # Test 3: Play System
+        print("Test 3: Play System")
+        initial_energy = pet.energy
+        initial_happiness = pet.happiness
+        pet.play(20)
+        assert pet.energy < initial_energy, "❌ Playing not decreasing energy"
+        assert pet.happiness > initial_happiness, "❌ Playing not increasing happiness"
+        print("✅ Play system working!\\n")
+
+        # Test 4: Rest System
+        print("Test 4: Rest System")
+        initial_energy = pet.energy
+        pet.rest(30)
+        assert pet.energy > initial_energy, "❌ Rest not increasing energy"
+        assert pet.energy <= 100, "❌ Energy exceeded maximum"
+        print("✅ Rest system working!\\n")
+
+        # Test 5: Encyclopedia
+        print("Test 5: Encyclopedia")
+        encyclopedia = AnimalEncyclopedia()
+        test_facts = {
+            "diet": ["omnivore"],
+            "lifespan": "10-13 years",
+            "habitat": "domestic"
+        }
+        encyclopedia.add_species("dog", test_facts)
+        info = encyclopedia.get_species_info("dog")
+        assert info == test_facts, "❌ Encyclopedia not storing/retrieving data correctly"
+        print("✅ Encyclopedia working!\\n")
+
+        # Final Success Message
+        print("🎉 All tests passed! Your virtual pet is ready for action!")
+        return True
+
+    except AssertionError as e:
+        print(f"\\n❌ Test failed: {str(e)}")
+        return False
+    except Exception as e:
+        print(f"\\n❌ Error occurred: {str(e)}")
+        return False
+
+if __name__ == "__main__":
+    test_pet_companion()`,
+    solution: `class Pet:
+    def __init__(self, name, species):
+        """Initialize a new pet with default status values"""
+        self.name = name
+        self.species = species
+        self.hunger = 50  # Start at 50% hunger
+        self.happiness = 75  # Start fairly happy
+        self.energy = 100  # Start with full energy
+        self.last_meal_time = None
+        
+    def feed(self, food_amount):
+        """Feed the pet to reduce hunger and increase happiness"""
+        if not 0 <= food_amount <= 100:
+            raise ValueError("Food amount must be between 0 and 100")
+            
+        # Calculate hunger reduction (more food = more hunger reduction)
+        hunger_reduction = min(food_amount / 2, self.hunger)
+        self.hunger = max(0, self.hunger - hunger_reduction)
+        
+        # Being fed makes pet happy
+        happiness_boost = food_amount / 4
+        self.happiness = min(100, self.happiness + happiness_boost)
+        
+        return {
+            "message": f"{self.name} has been fed!",
+            "hunger_reduced": hunger_reduction,
+            "happiness_gained": happiness_boost
+        }
+    
+    def play(self, play_time):
+        """Play with pet to increase happiness but consume energy"""
+        if not 0 <= play_time <= 60:  # Limit play sessions to 1 hour
+            raise ValueError("Play time must be between 0 and 60 minutes")
+            
+        # Playing consumes energy
+        energy_cost = play_time / 2
+        if self.energy < energy_cost:
+            return {"message": f"{self.name} is too tired to play!"}
+            
+        self.energy = max(0, self.energy - energy_cost)
+        
+        # Playing makes pet happy but also hungry
+        happiness_boost = play_time
+        hunger_increase = play_time / 3
+        
+        self.happiness = min(100, self.happiness + happiness_boost)
+        self.hunger = min(100, self.hunger + hunger_increase)
+        
+        return {
+            "message": f"{self.name} had fun playing!",
+            "energy_spent": energy_cost,
+            "happiness_gained": happiness_boost,
+            "hunger_increased": hunger_increase
+        }
+    
+    def rest(self, rest_time):
+        """Let pet rest to recover energy"""
+        if not 0 <= rest_time <= 480:  # Max 8 hours of rest
+            raise ValueError("Rest time must be between 0 and 480 minutes")
+            
+        # Calculate energy recovery
+        energy_recovery = rest_time / 4
+        self.energy = min(100, self.energy + energy_recovery)
+        
+        # Resting makes pet slightly less happy but reduces hunger slightly
+        happiness_reduction = rest_time / 8
+        self.happiness = max(0, self.happiness - happiness_reduction)
+        
+        return {
+            "message": f"{self.name} took a nice rest!",
+            "energy_recovered": energy_recovery,
+            "happiness_reduced": happiness_reduction
+        }
+    
+    def get_status(self):
+        """Return current pet status"""
+        status_levels = {
+            "0-20": "Critical",
+            "21-40": "Low",
+            "41-60": "Moderate",
+            "61-80": "Good",
+            "81-100": "Excellent"
+        }
+        
+        def get_level(value):
+            for range_str, level in status_levels.items():
+                start, end = map(int, range_str.split("-"))
+                if start <= value <= end:
+                    return level
+            return "Unknown"
+            
+        return {
+            "name": self.name,
+            "species": self.species,
+            "hunger": {
+                "value": self.hunger,
+                "level": get_level(self.hunger)
+            },
+            "happiness": {
+                "value": self.happiness,
+                "level": get_level(self.happiness)
+            },
+            "energy": {
+                "value": self.energy,
+                "level": get_level(self.energy)
+            }
+        }
+
+
+class AnimalEncyclopedia:
+    def __init__(self):
+        """Initialize encyclopedia with basic species information"""
+        self.species_data = {
+            "dog": {
+                "diet": ["omnivore"],
+                "lifespan": "10-13 years",
+                "habitat": "domestic",
+                "care_tips": [
+                    "Regular exercise needed",
+                    "Social interaction important",
+                    "Regular vet check-ups"
+                ]
+            },
+            "cat": {
+                "diet": ["carnivore"],
+                "lifespan": "12-18 years",
+                "habitat": "domestic",
+                "care_tips": [
+                    "Clean litter box daily",
+                    "Provide scratching posts",
+                    "Regular grooming"
+                ]
+            }
+        }
+    
+    def add_species(self, species, facts):
+        """Add or update species information"""
+        if not isinstance(facts, dict):
+            raise ValueError("Facts must be provided as a dictionary")
+            
+        required_keys = {"diet", "lifespan", "habitat"}
+        if not all(key in facts for key in required_keys):
+            raise ValueError(f"Facts must include all required information: {required_keys}")
+            
+        self.species_data[species.lower()] = facts
+        return {"message": f"Added/updated information for {species}"}
+    
+    def get_species_info(self, species):
+        """Retrieve information about a species"""
+        species = species.lower()
+        if species not in self.species_data:
+            raise KeyError(f"No information available for {species}")
+            
+        return self.species_data[species]
+    
+    def get_all_species(self):
+        """Get list of all species in encyclopedia"""
+        return list(self.species_data.keys())
+    
+    def get_care_tips(self, species):
+        """Get specific care tips for a species"""
+        species = species.lower()
+        if species not in self.species_data:
+            raise KeyError(f"No information available for {species}")
+            
+        return self.species_data[species].get("care_tips", [])
+
+
+# Example usage:
+if __name__ == "__main__":
+    # Create a pet
+    buddy = Pet("Buddy", "dog")
+    
+    # Create encyclopedia
+    encyclopedia = AnimalEncyclopedia()
+    
+    # Example interactions
+    print("Initial Status:", buddy.get_status())
+    
+    buddy.feed(30)
+    buddy.play(15)
+    buddy.rest(60)
+    
+    print("Final Status:", buddy.get_status())
+    
+    # Get species information
+    print("\nDog Care Tips:", encyclopedia.get_care_tips("dog"))`,
   },
 }

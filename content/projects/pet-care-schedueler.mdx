@@ -1,0 +1,160 @@
+---
+title: Virtual Pet Companion
+id: "virtual-pet-companion"
+description: "Create a fun and educational virtual pet system that simulates pet care and animal facts!"
+date: 1234567890
+theme: "pet-companion"
+difficulty: "beginner"
+estimatedTime: "2-3 hours"
+tags: ["python", "pets", "beginner", "simulator"]
+image: https://picsum.photos/id/237/200
+published: true
+---
+
+Welcome animal lovers! In this project, we'll create an interactive virtual pet system that combines pet care with educational content about different animal species.
+
+## Project Overview
+You'll build a system that:
+- Creates virtual pets with unique characteristics
+- Tracks pet needs (hunger, happiness, energy)
+- Provides pet care activities
+- Includes an encyclopedia of animal facts
+- Saves pet status and progress
+
+## Prerequisites
+- Basic Python knowledge
+- Understanding of classes and methods
+- Familiarity with dictionaries and file handling
+
+## Getting Started
+Let's create the foundation for our Pet class! Here's your starter code with TODOs:
+
+```python
+class Pet:
+    def __init__(self, name, species):
+        # TODO: Initialize pet attributes (name, species, hunger, happiness, energy)
+        # Hint: Set initial values for hunger, happiness, and energy (0-100)
+        pass
+        
+    def feed(self, food_amount):
+        # TODO: Increase pet's fullness and happiness based on food_amount
+        # Hint: Don't let values go above 100
+        pass
+    
+    def play(self, play_time):
+        # TODO: Increase happiness but decrease energy
+        # Hint: Consider how play_time affects the values
+        pass
+    
+    def rest(self, rest_time):
+        # TODO: Increase energy but decrease happiness slightly
+        # Hint: Balance the energy gain with happiness loss
+        pass
+    
+    def get_status(self):
+        # TODO: Return a dictionary with the pet's current stats
+        # Hint: Include all important pet attributes
+        pass
+
+class AnimalEncyclopedia:
+    def __init__(self):
+        # TODO: Initialize the encyclopedia with some basic animal facts
+        # Hint: Use a dictionary to store species information
+        pass
+    
+    def add_species(self, species, facts):
+        # TODO: Add a new species and its facts to the encyclopedia
+        pass
+    
+    def get_species_info(self, species):
+        # TODO: Return facts about the specified species
+        # Hint: Handle cases where species isn't found
+        pass
+```
+
+## Key Concepts to Implement
+
+### Pet Status Management
+Think about how to realistically simulate pet needs:
+- Hunger increases over time
+- Energy decreases with activity
+- Happiness affected by multiple factors
+- All values should stay within 0-100
+
+### Encyclopedia Features
+Consider what information to include:
+- Habitat
+- Diet
+- Lifespan
+- Fun facts
+- Care requirements
+
+### Save System
+Plan how to store:
+- Current pet status
+- Encyclopedia entries
+- Care history
+
+## Hints for Implementation
+
+### Pet Status Calculations
+```python
+# Example of balancing status changes
+def play(self, play_time):
+    # Convert play_time to appropriate status changes
+    # For example: 10 minutes of play might:
+    # - Increase happiness by play_time * 2
+    # - Decrease energy by play_time
+    # - Increase hunger by play_time / 2
+    pass
+```
+
+### Activity Validation
+```python
+# Example of validating activities
+def feed(self, food_amount):
+    # Check if food_amount is reasonable
+    # Update hunger status
+    # Consider adding different food types
+    pass
+```
+
+### Species Information
+```python
+# Example species data structure
+species_info = {
+    "dog": {
+        "diet": ["omnivore"],
+        "lifespan": "10-13 years",
+        "habitat": "domestic",
+        "care_tips": [
+            "Regular exercise needed",
+            "Social interaction important",
+            "Regular vet check-ups"
+        ]
+    }
+}
+```
+
+## Challenge Tasks
+1. Add different food types with varying effects
+2. Implement pet moods based on status combinations
+3. Create daily care schedules
+4. Add growth stages for pets
+5. Include pet-specific behaviors
+
+## Tips for Success
+- Keep status changes balanced
+- Use descriptive variable names
+- Add comments explaining your logic
+- Handle edge cases gracefully
+- Test with different scenarios
+
+Remember: A happy pet means managing all needs together - not just maxing out one stat!
+
+## Extension Ideas
+- Add pet personalities
+- Include medical care
+- Create pet interactions
+- Add achievements system
+- Implement weather effects
