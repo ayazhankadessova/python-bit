@@ -15,7 +15,6 @@ const PythonCodeEditor = ({
   expectedOutput,
   exercise_number = 1,
   tutorial_id = 'default',
-  testCode,
   isProject = false,
 }: CodeEditorProps) => {
   const user = useAuth()
