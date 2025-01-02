@@ -39,6 +39,98 @@ const PythonCodeEditor = ({
     }
   }
 
+  // const executeCode = async (isSubmission: boolean) => {
+  //   setIsExecuting(true)
+  //   setError(null)
+  //   setOutput('')
+  //   setIsCorrect(null)
+
+  //   if (isSubmission) {
+  //     setIsSubmitting(true)
+  //   } else {
+  //     setIsRunning(true)
+  //   }
+
+  //   try {
+  //     // Only include test code if this is a submission
+  //     const codeToExecute =
+  //       isSubmission && isProject ? `${code}\n\n${testCode}` : code
+
+  //     // Prepare the request payload
+  //     const requestPayload = {
+  //       code: codeToExecute,
+  //       exercise_number,
+  //       tutorial_id,
+  //     }
+
+  //     // Fetch from Flask backend
+  //     const response = await fetch('/api/execute', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(requestPayload),
+  //     })
+
+  //     const data = await response.json()
+
+  //     // Handle rate limiting
+  //     if (data.error === 'Rate limit exceeded') {
+  //       setError('Rate limit exceeded. Please wait 1 minute.')
+  //       return 
+  //     }
+
+  //     // Handle different response structures
+  //     const executionOutput = data.output ? data.output.trim() : ''
+
+  //     // Set output
+  //     setOutput(executionOutput)
+
+  //     // Only check correctness if this is a submission
+  //     if (isSubmission) {
+  //       // Determine correctness based on project or expected output
+  //       if (isProject) {
+  //         // For projects, check if there are no errors
+  //         setIsCorrect(
+  //           !executionOutput.includes('AssertionError') &&
+  //             !executionOutput.includes('Error') &&
+  //             !data.error
+  //         )
+  //       } else if (expectedOutput) {
+  //         // For specific exercises, compare with expected output
+  //         setIsCorrect(executionOutput === expectedOutput.trim())
+  //         if (executionOutput === expectedOutput.trim() && user) {
+  //           console.log('sending to fb!')
+  //           await handleExerciseCompletion(
+  //             user.user!,
+  //             tutorial_id,
+  //             exercise_number
+  //           )
+  //         }
+  //       }
+  //     }
+
+  //     // Handle any errors from the backend
+  //     if (data.error) {
+  //       setError(executionOutput)
+  //     }
+  //   } catch (err) {
+  //     // Handle network or parsing errors
+  //     setError(err instanceof Error ? err.message : 'An error occurred')
+  //     if (isSubmission) {
+  //       setIsCorrect(false)
+  //     }
+  //   } finally {
+  //     // Reset executing states
+  //     setIsExecuting(false)
+
+  //     if (isSubmission) {
+  //       setIsSubmitting(false)
+  //     } else {
+  //       setIsRunning(false)
+  //     }
+  //   }
+  // }
   const executeCode = async (isSubmission: boolean) => {
     setIsExecuting(true)
     setError(null)
@@ -52,19 +144,16 @@ const PythonCodeEditor = ({
     }
 
     try {
-      // Only include test code if this is a submission
-      const codeToExecute =
-        isSubmission && isProject ? `${code}\n\n${testCode}` : code
-
-      // Prepare the request payload
       const requestPayload = {
-        code: codeToExecute,
+        code: code,
         exercise_number,
         tutorial_id,
       }
 
-      // Fetch from Flask backend
-      const response = await fetch('/api/execute', {
+      // Choose endpoint based on submission type
+      const endpoint = isSubmission ? '/api/py/test-exercise' : '/api/py/execute'
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,53 +166,40 @@ const PythonCodeEditor = ({
       // Handle rate limiting
       if (data.error === 'Rate limit exceeded') {
         setError('Rate limit exceeded. Please wait 1 minute.')
-        return 
+        return
       }
 
-      // Handle different response structures
-      const executionOutput = data.output ? data.output.trim() : ''
-
-      // Set output
-      setOutput(executionOutput)
-
-      // Only check correctness if this is a submission
-      if (isSubmission) {
-        // Determine correctness based on project or expected output
-        if (isProject) {
-          // For projects, check if there are no errors
-          setIsCorrect(
-            !executionOutput.includes('AssertionError') &&
-              !executionOutput.includes('Error') &&
-              !data.error
-          )
-        } else if (expectedOutput) {
-          // For specific exercises, compare with expected output
-          setIsCorrect(executionOutput === expectedOutput.trim())
-          if (executionOutput === expectedOutput.trim() && user) {
-            console.log('sending to fb!')
-            await handleExerciseCompletion(
-              user.user!,
-              tutorial_id,
-              exercise_number
-            )
-          }
+      // Regular code execution
+      if (!isSubmission) {
+        setOutput(data.output || '')
+        if (data.error) {
+          setError(data.error)
         }
+        return
       }
+
+      // Handle exercise submission result
+      setOutput(data.output || '')
+
+      // Update correctness based on success flag from backend
+      setIsCorrect(data.success)
 
       // Handle any errors from the backend
       if (data.error) {
-        setError(executionOutput)
+        setError(data.error)
+      }
+
+      // If successful and user is logged in, update completion status
+      if (data.success && user && !isProject) {
+        await handleExerciseCompletion(user.user!, tutorial_id, exercise_number)
       }
     } catch (err) {
-      // Handle network or parsing errors
       setError(err instanceof Error ? err.message : 'An error occurred')
       if (isSubmission) {
         setIsCorrect(false)
       }
     } finally {
-      // Reset executing states
       setIsExecuting(false)
-
       if (isSubmission) {
         setIsSubmitting(false)
       } else {

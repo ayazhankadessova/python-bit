@@ -1,0 +1,27 @@
+{
+  "python101": {
+    "tutorial_id": "python101",
+    "title": "Introduction to Python",
+    "description": "Learn the basics of Python programming",
+    "exercises": {
+      "1": {
+        "exercise_number": 1,
+        "description": "Write a function that prints 'Hello, World!'",
+        "expected_output": "Hello, World!",
+        "test_code": "def test_hello_world():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    hello_world()\n    sys.stdout = sys.__stdout__\n    assert output.getvalue().strip() == \"Hello, World!\", \"Expected 'Hello, World!'\"\n    return True",
+        "hints": [
+          "Remember to use the print() function",
+          "The message should match exactly"
+        ],
+        "difficulty": "beginner"
+      },
+      "2": {
+        "exercise_number": 2,
+        "description": "Create a function that adds two numbers",
+        "test_code": "def test_add_numbers():\n    assert add_numbers(2, 3) == 5, \"2 + 3 should equal 5\"\n    assert add_numbers(-1, 1) == 0, \"(-1) + 1 should equal 0\"\n    assert add_numbers(0, 0) == 0, \"0 + 0 should equal 0\"\n    return True",
+        "hints": ["Use the + operator", "Return the sum of the parameters"],
+        "difficulty": "beginner"
+      }
+    }
+  }
+}
