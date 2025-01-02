@@ -4,13 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon server.js",
-    "nodemon": "nodemon server.js",
+    "fastapi-dev": "pip3 install -r requirements.txt && python3 -m uvicorn api.index:app --reload",
+    "next-dev": "next dev",
+    "dev": "concurrently \"npm run next-dev\" \"npm run fastapi-dev\"",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "concurrently": "^9.0.1",
     "@codemirror/lang-python": "^6.1.6",
     "@hookform/resolvers": "^3.9.1",
     "@monaco-editor/react": "^4.6.0",
