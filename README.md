@@ -385,6 +385,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [ ] show if error when running
 - [ ] should backend return {err & output} or {err, success, output}
 - [ ] tut 4 and rest
+- [ ] store expected output in config file, not in .md.
 
 
 ## Project Test cases
