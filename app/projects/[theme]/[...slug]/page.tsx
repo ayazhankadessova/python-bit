@@ -5,7 +5,7 @@ import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
 import BackButton from '@/components/ui/backbutton'
 import PythonResizableCodeEditor from '@/components/code-resizable-executor'
-import { getExerciseById } from '@/utils/exercise'
+import { getExerciseById } from '@/utils/projects'
 
 interface PostPageProps {
   params: {
@@ -30,9 +30,9 @@ export async function generateStaticParams(): Promise<
   }))
 }
 
-export default async function PostPage({ params }: PostPageProps) {
+export default async function ProjectPage({ params }: PostPageProps) {
   const post = await getPostFromParams(params)
-  const fullLinkGenerated = `${siteConfig.url}/blog/${params?.slug?.join('/')}`
+  const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme.trim().replace("", '-')}/${params?.slug?.join('/')}`
   const exercise = getExerciseById(post!.id)
 
 

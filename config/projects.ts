@@ -5,14 +5,14 @@
 //   [key: string]: Exercise;
 // };
 
-import {ExerciseCollection } from '@/types/utils'
+import {ProjectCollection } from '@/types/utils'
 import projectConfigs from './project_configs.json'
 
 // Type assertion to ensure the JSON matches our Exercise type
-export const EXERCISES = projectConfigs as ExerciseCollection
+export const PROJECTS = projectConfigs as ProjectCollection
 
 // config/exercises.ts
-export const EXERCISES_old: ExerciseCollection = {
+export const EXERCISES_old: ProjectCollection = {
   auraPts: {
     id: 'aura-points-calculator',
     title: 'Aura Points Calculator',

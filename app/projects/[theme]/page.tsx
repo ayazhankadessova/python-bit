@@ -13,16 +13,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { projects } from '#site/content'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { useRouter } from 'next/navigation'
+import BackButton from '@/components/ui/backbutton'
+import { SharePost } from '@/components/share-post'
+import { siteConfig } from '@/config/site'
+// import { getProjectProgress } from '@/components/session-views/helpers'
+import { ProjectItem } from '@/components/projects/project-item'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface ThemePageProps {
   params: {
@@ -37,7 +33,8 @@ interface ThemePageProps {
 const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('createdAt')
-  const router = useRouter()
+  // const router = useRouter()
+  const { user } = useAuth()
 
   // Filter projects by theme
   const themeProjects = projects.filter(
@@ -58,25 +55,27 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   // Pagination
   const currentPage = Number(searchParams?.page) || 1
   const currentPerPage = Number(searchParams?.perPage) || 5
-  // const totalPages = Math.ceil(sortedProjects.length / currentPerPage)
+  const fullLinkGenerated = `${siteConfig.url}/projects/${params.theme}`
+  
 
   const displayProjects = sortedProjects.slice(
     currentPerPage * (currentPage - 1),
     currentPerPage * currentPage
   )
 
-  const handleProjectClick = (slug: string) => {
-    router.push(`/projects/${params.theme}/${slug}`)
-  }
-
   return (
     <div className='container mx-auto px-8 py-8'>
+      <div className='flex justify-between mb-4 ml-1'>
+        <BackButton />
+        <SharePost fullLink={fullLinkGenerated} />
+      </div>
+
       <h1 className='font-bold text-4xl mb-6 capitalize'>
         {params.theme.replace('-', ' ')} Projects
       </h1>
 
       <div className='space-y-6'>
-        <div className='flex gap-4'>
+        <div className='flex gap-4 justify-between'>
           <Input
             type='text'
             placeholder='Search projects...'
@@ -102,31 +101,11 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
         {displayProjects.length > 0 ? (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {displayProjects.map((project) => (
-              <Card
+              <ProjectItem
                 key={project.slugAsParams}
-                className='hover:shadow-lg transition-shadow'
-              >
-                <CardHeader>
-                  <div className='flex items-center justify-between'>
-                    <div className='flex items-center gap-4'>
-                      <CardTitle>{project.title}</CardTitle>
-                    </div>
-                  </div>
-                  <CardDescription>{project.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className='flex gap-2 mb-4'>
-                    <Badge variant='outline'>{project.difficulty}</Badge>
-                    <Badge variant='outline'>{project.estimatedTime}</Badge>
-                  </div>
-                  <Button
-                    className='w-full mt-4'
-                    onClick={() => handleProjectClick(project.slugAsParams)}
-                  >
-                    Start Project
-                  </Button>
-                </CardContent>
-              </Card>
+                project={project}
+                user={user}
+              />
             ))}
           </div>
         ) : (

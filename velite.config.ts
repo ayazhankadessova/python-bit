@@ -36,7 +36,7 @@ const projects = defineCollection({
       slug: s.path(),
       id: s.string().max(99),
       title: s.string().max(99),
-      description: s.string().max(999).optional(),
+      description: s.string().max(999),
       date: s.number(),
       theme: s.string().max(99),
       difficulty: s.string().max(99),

@@ -389,8 +389,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [ ] store expected output in config file, not in .md.
 - [ ] added aura points , can see in frontend. add testCode to backend
 - [x] handleProjectCompletion
-- [ ] show that project is completed
+- [x] show that project is completed
+- [ ] do we even need config for the exercises?
+
+## jan 4
+- [ ] add back btn to theme
+- [ ] add back btn to project
+- [ ] `api/projects/[pid]` -> we get info on that project and pass to postItem. useSWR
+- [ ] add attempts. show attempts
 - [ ] show attempts for project
+- [ ] add one more project
+- [ ] `api/tutorial/[tid]` -> get info on tutorial progress. cache it and only refresh if hanld exercise completing
 
 
 ## Project Test cases
