@@ -1,4 +1,4 @@
-# config/tutorial_loader.py
+# app/api/config/tutorial_loader.py
 
 import json
 import os
@@ -36,7 +36,13 @@ class TutorialLoader:
 
     def _load_tutorials(self):
         """Load tutorials from JSON file"""
-        config_path = os.path.join(os.path.dirname(__file__), 'tutorial_configs.json')
+        # Get the project root directory (2 levels up from current file)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(os.path.dirname(current_dir))
+        config_path = os.path.join(project_root, 'config', 'tutorial_configs.json')
+
+        # print(config_path)
+
         try:
             with open(config_path, 'r') as f:
                 data = json.load(f)
@@ -67,18 +73,18 @@ class TutorialLoader:
 
     def get_tutorial(self, tutorial_id: str) -> Optional[Tutorial]:
         """Get a tutorial by ID"""
-        print(self._tutorials.get(tutorial_id))
+        # print(self._tutorials.get(tutorial_id))
         return self._tutorials.get(tutorial_id)
 
     def get_exercise(self, tutorial_id: str, exercise_number: int) -> Optional[Exercise]:
         """Get a specific exercise from a tutorial"""
         tutorial = self.get_tutorial(tutorial_id)
         if tutorial:
-            print(tutorial)
+            # print(tutorial)
             return tutorial.exercises.get(exercise_number)
-        else:
-            print(f"Tutorial '{tutorial_id}' not found")
-            # return None
+        # else:
+        #     print(f"Tutorial '{tutorial_id}' not found")
+        #     # return None
         return None
 
     def get_all_tutorials(self) -> Dict[str, Tutorial]:

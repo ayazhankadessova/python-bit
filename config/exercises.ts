@@ -1,4 +1,4 @@
-// types/exercise.ts
+// config/exercises.ts
 import { Exercise } from '@/types/utils'
 
 export type ExerciseCollection = {
