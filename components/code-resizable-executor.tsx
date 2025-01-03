@@ -6,7 +6,7 @@ import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { useAuth } from '@/contexts/AuthContext'
-import { handleExerciseCompletion } from './session-views/helpers'
+import { handleProjectCompletion } from './session-views/helpers'
 import { CodeEditorProps } from '@/types/props'
 import {
   ResizableHandle,
@@ -17,9 +17,7 @@ import {
 const PythonResizableCodeEditor = ({
   initialCode,
   expectedOutput,
-  exercise_number = 1,
-  tutorial_id = 'default',
-  testCode,
+  project_id,
   isProject = false,
 }: CodeEditorProps) => {
   const user = useAuth()
@@ -44,97 +42,60 @@ const PythonResizableCodeEditor = ({
   }
 
   const executeCode = async (isSubmission: boolean) => {
-    setIsExecuting(true)
-    setError(null)
-    setOutput('')
-    setIsCorrect(null)
-
-    if (isSubmission) {
-      setIsSubmitting(true)
-    } else {
-      setIsRunning(true)
-    }
-
-    try {
-      // Only include test code if this is a submission
-      const codeToExecute =
-        isSubmission && isProject ? `${code}\n\n${testCode}` : code
-
-      // Prepare the request payload
-      const requestPayload = {
-        code: codeToExecute,
-        exercise_number,
-        tutorial_id,
-      }
-
-      // Fetch from Flask backend
-      const response = await fetch('/api/execute', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestPayload),
-      })
-
-      const data = await response.json()
-
-      // Handle rate limiting
-      if (data.error === 'Rate limit exceeded') {
-        setError('Rate limit exceeded. Please wait 1 minute.')
-        return
-      }
-
-      // Handle different response structures
-      const executionOutput = data.output ? data.output.trim() : ''
-
-      // Set output
-      setOutput(executionOutput)
-
-      // Only check correctness if this is a submission
+      setIsExecuting(true)
+      setError(null)
+      setOutput('')
+      setIsCorrect(null)
+  
       if (isSubmission) {
-        // Determine correctness based on project or expected output
-        if (isProject) {
-          // For projects, check if there are no errors
-          setIsCorrect(
-            !executionOutput.includes('AssertionError') &&
-              !executionOutput.includes('Error') &&
-              !data.error
-          )
-        } else if (expectedOutput) {
-          // For specific exercises, compare with expected output
-          setIsCorrect(executionOutput === expectedOutput.trim())
-          if (executionOutput === expectedOutput.trim() && user) {
-            console.log('sending to fb!')
-            await handleExerciseCompletion(
-              user.user!,
-              tutorial_id,
-              exercise_number
-            )
-          }
-        }
-      }
-
-      // Handle any errors from the backend
-      if (data.error) {
-        setError(executionOutput)
-      }
-    } catch (err) {
-      // Handle network or parsing errors
-      setError(err instanceof Error ? err.message : 'An error occurred')
-      if (isSubmission) {
-        setIsCorrect(false)
-      }
-    } finally {
-      // Reset executing states
-      setIsExecuting(false)
-
-      if (isSubmission) {
-        setIsSubmitting(false)
+        setIsSubmitting(true)
       } else {
+        setIsRunning(true)
+      }
+  
+      try {
+        const requestPayload = {
+          code,
+          project_id
+        }
+  
+        const endpoint = isSubmission
+          ? '/api/py/test-project'
+          : '/api/py/execute'
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestPayload),
+        })
+  
+        const data = await response.json()
+  
+        // Set output and error states
+        setOutput(data.output)
+        setError(data.error ? data.output : null)
+  
+        // Set correctness for submissions
+        if (isSubmission) {
+          setIsCorrect(data.success)
+        }
+  
+        // Handle project completion
+        if (data.success && user && isSubmission) {
+          await handleProjectCompletion(user.user!, project_id, code!, true)
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
+        if (isSubmission) {
+          setIsCorrect(false)
+        }
+      } finally {
+        setIsExecuting(false)
+        setIsSubmitting(false)
         setIsRunning(false)
       }
     }
-  }
 
   const isDarkTheme = theme === 'dark' || theme === 'vscode'
 
@@ -157,8 +118,7 @@ const PythonResizableCodeEditor = ({
               isDarkTheme ? 'text-zinc-400' : 'text-zinc-600'
             }`}
           >
-            Exercise {exercise_number}{' '}
-            {tutorial_id !== 'default' && `• ${tutorial_id}`}
+            Project {project_id}{' '}
           </span>
         </div>
         <div className='flex items-center gap-2'>

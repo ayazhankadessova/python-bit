@@ -42,3 +42,4 @@ next-env.d.ts
 __pycache__/
 venv
 solutions.md
+config/project_configs.json

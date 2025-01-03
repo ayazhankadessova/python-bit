@@ -7,7 +7,7 @@ import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { useAuth } from '@/contexts/AuthContext'
 import { handleExerciseCompletion } from './session-views/helpers'
-import { CodeEditorProps } from '@/types/props'
+import { ExerciseCodeEditorProps } from '@/types/props'
 
 
 const PythonCodeEditor = ({
@@ -16,7 +16,7 @@ const PythonCodeEditor = ({
   exercise_number = 1,
   tutorial_id = 'default',
   isProject = false,
-}: CodeEditorProps) => {
+}: ExerciseCodeEditorProps) => {
   const user = useAuth()
   const [code, setCode] = useState(initialCode)
   const [output, setOutput] = useState('')
@@ -76,7 +76,7 @@ const PythonCodeEditor = ({
   //     // Handle rate limiting
   //     if (data.error === 'Rate limit exceeded') {
   //       setError('Rate limit exceeded. Please wait 1 minute.')
-  //       return 
+  //       return
   //     }
 
   //     // Handle different response structures

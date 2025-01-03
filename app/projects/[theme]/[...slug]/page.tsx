@@ -77,7 +77,8 @@ export default async function PostPage({ params }: PostPageProps) {
           {exercise && (
             <PythonResizableCodeEditor
               initialCode={exercise?.starterCode}
-              testCode={exercise?.testCode}
+              project_id = {exercise?.id}
+              // testCode={exercise?.testCode}
               isProject={true}
             />
           )}

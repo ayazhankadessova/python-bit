@@ -384,8 +384,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - [ ] show if error when running
 - [ ] should backend return {err & output} or {err, success, output}
-- [ ] tut 4 and rest
+- [x] tut 4 and rest
+- [ ] projects to config
 - [ ] store expected output in config file, not in .md.
+- [ ] added aura points , can see in frontend. add testCode to backend
+- [x] handleProjectCompletion
+- [ ] show that project is completed
+- [ ] show attempts for project
 
 
 ## Project Test cases
@@ -458,3 +463,22 @@ import { useAuth } from '@/contexts/AuthContext'
 1. `container mx-auto px-8 py-8`
 2. add toc to tutorials
 Output does not match expected result
+
+
+## projects 
+
+```
+users/
+  {uid}/
+    projects/
+      {project_id}/
+        completed: boolean
+        lastAttempt: number
+        totalAttempts: number
+        successfulAttempts: number
+        attempts/
+          {auto-id}/  // Automatically generated ID
+            code: string
+            timestamp: number
+            success: boolean
+```

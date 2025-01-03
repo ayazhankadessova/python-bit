@@ -3,11 +3,13 @@ from pydantic import BaseModel
 from typing import List, Optional
 from ..services.code_execution import CodeExecutionService
 from ..services.exercise_service import ExerciseService
+from ..services.project_service import ProjectService
 from ..dependencies import limiter
 
 router = APIRouter()
 code_execution = CodeExecutionService()
 exercise_service = ExerciseService()
+project_service = ProjectService()
 
 class CodeExecutionRequest(BaseModel):
     code: str
@@ -19,6 +21,10 @@ class TestExerciseRequest(BaseModel):
     exercise_number: Optional[int] = 1
     tutorial_id: Optional[str] = "default"
     # test_cases: Optional[List[dict]] = []
+
+class TestProjectRequest(BaseModel):
+    code: str
+    project_id: Optional[str] = "default"
 
 @router.post("/execute")
 @limiter.limit("5/minute")
@@ -51,6 +57,23 @@ async def test_exercise(request: Request, test_request: TestExerciseRequest):
             exercise_number=test_request.exercise_number,
             tutorial_id=test_request.tutorial_id,
             # test_cases=test_request.test_cases
+        )
+        return result
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail={'error': str(e), 'output': ''}
+        )
+    
+@router.post("/test-project")
+@limiter.limit("30/minute")
+async def test_exercise(request: Request, test_request: TestProjectRequest):
+    """Endpoint for testing specific exercises"""
+    try:
+        result = await project_service.test_project(
+            code=test_request.code,
+            project_id =test_request.project_id,
         )
         return result
         
