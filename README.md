@@ -380,7 +380,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Add better imgs
 - [ ] Meme creation tools
 
-#
+# Jan 2
+
+- [ ] show if error when running
+- [ ] should backend return {err & output} or {err, success, output}
+- [ ] tut 4 and rest
 
 
 ## Project Test cases

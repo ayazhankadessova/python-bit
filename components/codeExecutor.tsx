@@ -130,6 +130,7 @@ const PythonCodeEditor = ({
   //     }
   //   }
   // }
+
   const executeCode = async (isSubmission: boolean) => {
     setIsExecuting(true)
     setError(null)
@@ -144,14 +145,14 @@ const PythonCodeEditor = ({
 
     try {
       const requestPayload = {
-        code: code,
+        code,
         exercise_number,
         tutorial_id,
       }
 
-      // Choose endpoint based on submission type
-      const endpoint = isSubmission ? '/api/py/test-exercise' : '/api/py/execute'
-
+      const endpoint = isSubmission
+        ? '/api/py/test-exercise'
+        : '/api/py/execute'
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -163,33 +164,22 @@ const PythonCodeEditor = ({
       const data = await response.json()
 
       // Handle rate limiting
-      if (data.error === 'Rate limit exceeded') {
-        setError('Rate limit exceeded. Please wait 1 minute.')
-        return
+      // if (data.error === 'Rate limit exceeded') {
+      //   setError('Rate limit exceeded. Please wait 1 minute.')
+      //   return
+      // }
+
+      // Set output and error states
+      setOutput(data.output)
+      setError(data.error ? data.output : null)
+
+      // Set correctness for submissions
+      if (isSubmission) {
+        setIsCorrect(data.success)
       }
 
-      // Regular code execution
-      if (!isSubmission) {
-        setOutput(data.output || '')
-        if (data.error) {
-          setError(data.error)
-        }
-        return
-      }
-
-      // Handle exercise submission result
-      setOutput(data.output || '')
-
-      // Update correctness based on success flag from backend
-      setIsCorrect(data.success)
-
-      // Handle any errors from the backend
-      if (data.error) {
-        setError(data.error)
-      }
-
-      // If successful and user is logged in, update completion status
-      if (data.success && user && !isProject) {
+      // Handle exercise completion
+      if (data.success && user && isSubmission && !isProject) {
         await handleExerciseCompletion(user.user!, tutorial_id, exercise_number)
       }
     } catch (err) {
@@ -199,11 +189,8 @@ const PythonCodeEditor = ({
       }
     } finally {
       setIsExecuting(false)
-      if (isSubmission) {
-        setIsSubmitting(false)
-      } else {
-        setIsRunning(false)
-      }
+      setIsSubmitting(false)
+      setIsRunning(false)
     }
   }
 
@@ -366,7 +353,7 @@ const PythonCodeEditor = ({
               ? '✅ All tests passed!'
               : isProject
               ? '❌ Some tests failed. Check the output above for details.'
-              : '❌ Try again! \nExpected Output: ' + expectedOutput}
+              : '❌ Try again! '}
           </div>
         )}
       </div>

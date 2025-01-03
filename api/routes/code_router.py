@@ -29,8 +29,7 @@ async def execute_code(request: Request, code_request: CodeExecutionRequest):
         
         response_data = {
             'output': execution_result['output'],
-            'exercise_number': code_request.exercise_number,
-            'tutorial_id': code_request.tutorial_id,
+            'success': execution_result['success'],
             'error': execution_result['error']
         }
         
