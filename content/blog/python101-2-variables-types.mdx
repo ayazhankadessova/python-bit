@@ -85,7 +85,7 @@ Fix this code by adding `str(12)`:
 <PythonCodeEditor
   initialCode={`print("My age: " + 12)  # ❌ Oops! This makes Python sad`} 
   exercise_number={2}
-  expectedOutput="My age: 12"
+  expectedOutput={true}
   tutorial_id="python101-2-variables-types"
 />
 
@@ -101,11 +101,7 @@ print("My age: " + my_age)
 print("Number of pets: " + str(number_of_pets))
 print("Favorite number: " + favorite_number)`}
   exercise_number={3}
-  expectedOutput= {
-    `My age: 12
-Number of pets: 3
-Favorite number: 42`
-  }
+  expectedOutput= {true}
   tutorial_id="python101-2-variables-types"
 />
 
@@ -127,9 +123,7 @@ pizza_slices = 3.14    # Mm... pi! 🥧
 print("My height: " + my_height)
 print("Pizza slices: " + pizza_slices)`}
   exercise_number={4}
-  expectedOutput={`
-  My height: 5.5
-  Pizza slices: 3.14`}
+  expectedOutput={true}
   tutorial_id="python101-2-variables-types"
 />
 
@@ -244,14 +238,7 @@ print("Age:", my_age)
 print("Hobby:", my_favorite_hobby)
 print("Loves Coding:", likes_coding)
 print("=======================")`}
-  expectedOutput="=======================
-🎮 CODER PROFILE 🎮
-=======================
-Name: Amy
-Age: 24
-Hobby: Gaming
-Loves Coding: True
-======================="
+  expectedOutput={true}
   exercise_number={8}
   tutorial_id="python101-2-variables-types"
 />
@@ -288,7 +275,7 @@ age = "13"
 is cool = True
 favorite_number = 3.5`}
   exercise_number={10}
-  expectedOutput= "Sam is 13 years old and loves the number 3.5!"
+  expectedOutput= {true}
   tutorial_id="python101-2-variables-types"
 />
 
