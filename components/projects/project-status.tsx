@@ -3,6 +3,7 @@
 import { CheckCircle, Clock } from 'lucide-react'
 import { useProgress } from '@/hooks/projects/useProjectProgress'
 import { useAuth } from '@/contexts/AuthContext'
+import { formatDate } from '@/lib/utils'
 
 interface ProjectStatusProps {
   projectId: string
@@ -44,7 +45,7 @@ export function ProjectStatus({ projectId, detailed }: ProjectStatusProps) {
       </div>
       {progress.lastAttempt && (
         <div className='text-muted-foreground'>
-          Last attempt: {progress.lastAttempt}
+          Last attempt: {formatDate(progress.lastAttempt)}
         </div>
       )}
     </div>
