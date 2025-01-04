@@ -398,6 +398,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] project status to theme
 - [ ] last attemp to date -> format date is util
 - [x] move utils/projects to lib
+- [ ] keep all interfaces in 1 place
 - [ ] `api/projects/[pid]` -> we get info on that project and pass to postItem. useSWR
 - [ ] add attempts. show attempts
 - [ ] show attempts for project

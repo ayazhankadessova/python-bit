@@ -32,7 +32,6 @@ interface ThemePageProps {
 const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('createdAt')
-  const { user } = useAuth()
 
   // Filter projects by theme
   const themeProjects = projects.filter(
