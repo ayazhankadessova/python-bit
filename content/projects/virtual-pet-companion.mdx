@@ -1,0 +1,319 @@
+---
+title: Virtual Pet Companion
+id: "virtual-pet-companion"
+description: "Create a fun and educational virtual pet system that simulates pet care and animal facts!"
+date: 1234567890
+theme: "pet-companion"
+difficulty: "beginner"
+estimatedTime: "2-3 hours"
+tags: ["python", "pets", "beginner", "simulator"]
+image: https://picsum.photos/id/237/200
+published: true
+---
+
+Welcome animal lovers! In this project, we'll create an interactive virtual pet system that combines pet care with educational content about different animal species.
+
+## Project Overview
+You'll build a system that:
+- Creates virtual pets with unique characteristics
+- Tracks pet needs (hunger, happiness, energy)
+- Provides pet care activities
+- Includes an encyclopedia of animal facts
+- Saves pet status and progress
+
+## Prerequisites
+- Basic Python knowledge
+- Understanding of classes and methods
+- Familiarity with dictionaries
+
+## Phase 1: Setting Up the Pet Class
+
+### Step 1.1: Initialize Pet Attributes
+
+```python showLineNumbers
+def __init__(self, name, species):
+    ...
+    self.hunger = 50      # Start at 50% hunger
+    ...
+
+    # TODO: Initialize pet attributes (name, species, hunger, happiness, energy, last_meal_time)
+    # Set up the pet's name and species from parameters
+    # Initialize hunger at 50 (middle value)
+    # Initialize happiness at 75 (fairly happy)
+    # Initialize energy at 100 (full energy)
+    # Initialize last_meal_time as None
+    
+```
+
+### Testing Checkpoint
+
+```python showLineNumbers
+pet = Pet("Buddy", "dog")
+print(pet.name)        # Should print: Buddy
+print(pet.hunger)      # Should print: 50
+print(pet.happiness)   # Should print: 75
+print(pet.energy)      # Should print: 100
+```
+
+### Step 1.2: Implement Feeding System
+
+- Key Considerations:
+
+1. Use `min()` and `max()` to keep values in range
+2. Consider the relationship between food amount and stat changes
+3. Return appropriate feedback messages
+
+```python showLineNumbers
+def feed(self, food_amount):
+    # TODO: Add input validation
+    # Validate that food_amount is between 0 and 100
+    ...
+    
+    # TODO: Calculate and apply hunger reduction
+    # Reduce hunger based on food amount (use a ratio of 1:2)
+
+    hunger_reduction = min(... / 2, self.hunger)
+    self.hunger = max(0, self.hunger - ...)
+    
+    # TODO: Calculate and apply happiness boost
+    # Increase happiness slightly (use a ratio of 1:4) based on food_amount
+    happiness_boost = ... / 4
+    self.happiness = min(100, self.happiness + ...)
+    
+    # Ensure values stay between 0 and 100
+    # TODO: Return results dictionary    
+    return {
+        'message': f'{self.name} has been fed!',
+        'hunger_reduced': ...,
+        'happiness_gained': ...
+    }
+```
+
+### Step 1.3: Implement Play System
+
+- Important Formulas:
+
+1. Energy cost = play_time ÷ 2
+2. Happiness gain = play_time
+3. Hunger increase = play_time ÷ 3
+
+```python showLineNumbers
+def play(self, play_time):
+    # TODO: Add input validation
+    #Validate play_time (0-60 minutes)
+    if not 0 <= ... <= 60:
+        raise ValueError('Play time must be between 0 and 60 minutes')
+
+    # TODO: Calculate and check energy cost
+    # Calculate energy cost based on play_time (half of play_time)
+    energy_cost = ... / 2
+    # Check if pet has enough energy to play 
+    if self.energy < ...:
+        return {'message': f'{self....} is too tired to play!'}
+
+    # TODO: Update pet stats
+    # Decrease energy by energy_cost
+    self.energy = max(0, ... - energy_cost)
+    # Happiness_boost becomes play_time
+    happiness_boost = ...
+    # Hunger increase is 1/3 of play_time
+    hunger_increase = play_time / 3
+    # Update happiness, now it is the minimum of 100 and current happiness + happiness_boost
+    ... = min(100, self.happiness + ...)
+
+    # Update hunger, now it is the minimum of 100 and current hunger + hunger_increase
+    ... = min(100, self.hunger + ...)
+
+    # Return results dictionary
+    return {
+        'message': f'{self.name} had fun playing!',
+        'energy_spent': ...,
+        'happiness_gained': ...,
+        'hunger_increased': ...
+    }
+```
+
+### Step 1.4: Implement Rest System
+
+- Key Ratios:
+
+1. Energy recovery: 15 minutes = +1 energy
+2. Happiness reduction: slight decrease over time
+
+```python showLineNumbers
+def rest(self, rest_time):
+    # TODO: Add input validation
+    # Validate rest_time (0-480 minutes)
+    if not 0 <= ... <= 480:
+        raise ValueError('Rest time must be between 0 and 480 minutes')
+
+    # TODO: Calculate and apply energy recovery
+    # Calculate energy recovery (1/4 of rest_time)
+    ... = ... / 4
+
+    # Increase energy but decrease happiness slightly
+    self.energy = min(100, self.energy + ...)
+    # Calculate happiness reduction (1/8 of rest_time)
+    happiness_reduction = ... / 8
+    # Decrease happiness but not below 0
+    self.happiness = max(0, self.happiness - ...)
+    return {
+        'message': f'{self.name} took a nice rest!',
+        'energy_recovered': ...,
+        'happiness_reduced': ...
+    }
+```
+
+### Step 1.5: Implement Status System
+
+- Status Ranges to Implement:
+
+1. 0-20: Critical
+2. 21-40: Low
+3. 41-60: Moderate
+4. 61-80: Good
+5. 81-100: Excellent
+
+```python showLineNumbers
+def get_status(self):
+    # Define the status levels 
+    status_levels = {
+        '0-20': 'Critical',
+        '...': 'Low',
+        '41-60': 'Moderate',
+        '...': 'Good',
+        '81-100': 'Excellent'
+    }
+    # Helper function to get status level
+    def get_level(value):
+        for range_str, ... in status_levels.items():
+            ..., end = map(int, range_str.split('-'))
+            if start <= ... <= end:
+                return level
+        return 'Unknown'
+    return {
+        'name': self.name,
+        'species': ...,
+        'hunger': {
+            'value': ...,
+            'level': get_level(self.hunger)
+        },
+        'happiness': {
+            'value': self.happiness,
+            'level': ...
+        },
+        'energy': {
+            'value': ...,
+            'level': ...
+        }
+    }
+```
+## Phase 2: Animal Encyclopedia
+
+### Step 2.1: Initialize Encyclopedia
+
+- Set up initial data structure with:
+
+1. Species information
+2. Basic facts for common pets
+3. Required fields for each species
+
+```python showLineNumbers
+class AnimalEncyclopedia:
+    def __init__(self):
+        # TODO: Initialize the encyclopedia with some basic animal facts
+        # Hint: Use a dictionary to store species information
+        self.species_data = {
+            'dog': {
+                'diet': ['omnivore'],
+                'lifespan': '10-13 years',
+                'habitat': 'domestic',
+                'care_tips': ['Regular exercise needed', 'Social interaction important', 'Regular vet check-ups']
+            },
+            'cat': {
+                'diet': ['carnivore'],
+                'lifespan': '12-18 years',
+                'habitat': 'domestic',
+                'care_tips': ['Clean litter box daily', 'Provide scratching posts', 'Regular grooming']
+            }
+        }
+```
+### Step 2.2: Species Management Methods
+
+- Implement methods to:
+
+1. Add new species info
+2. Retrieve existing species data
+3. Handle errors appropriately
+
+```python showLineNumbers
+def add_species(self, species, facts):
+    # TODO: Validate input format
+    if not isinstance(facts, dict):
+            raise ValueError('Facts must be provided as a dictionary')
+        self.species_data[species.lower()] = facts
+        return {'message': f'Added/updated information for {species}'}
+    ...
+    
+    # TODO: Add or update species data
+    ...
+
+def get_species_info(self, species):
+    # TODO: Handle species lookup
+    # Make it lowercase
+    species = ....lower()
+    if species not in ...:
+        raise KeyError(f'No information available for {species}')
+    return self.species_data[...]
+```
+
+
+## Getting Started
+Let's create the foundation for our Pet class! Here's your starter code with TODOs:
+
+```python showLineNumbers
+class Pet:
+    def __init__(self, name, species):
+        # TODO: Initialize pet attributes (name, species, hunger, happiness, energy)
+        # Hint: Set initial values for hunger, happiness, and energy (0-100)
+        pass
+```
+
+
+```python
+        
+    def feed(self, food_amount):
+        # TODO: Increase pet's fullness and happiness based on food_amount
+        # Hint: Don't let values go above 100
+        pass
+    
+    def play(self, play_time):
+        # TODO: Increase happiness but decrease energy
+        # Hint: Consider how play_time affects the values
+        pass
+    
+    def rest(self, rest_time):
+        # TODO: Increase energy but decrease happiness slightly
+        # Hint: Balance the energy gain with happiness loss
+        pass
+    
+    def get_status(self):
+        # TODO: Return a dictionary with the pet's current stats
+        # Hint: Include all important pet attributes
+        pass
+
+class AnimalEncyclopedia:
+    def __init__(self):
+        # TODO: Initialize the encyclopedia with some basic animal facts
+        # Hint: Use a dictionary to store species information
+        pass
+    
+    def add_species(self, species, facts):
+        # TODO: Add a new species and its facts to the encyclopedia
+        pass
+    
+    def get_species_info(self, species):
+        # TODO: Return facts about the specified species
+        # Hint: Handle cases where species isn't found
+        pass
+```

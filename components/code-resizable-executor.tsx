@@ -13,6 +13,7 @@ import {
   ResizablePanelGroup,
   ResizablePanel,
 } from '@/components/ui/resizable'
+import { useProgress } from '@/hooks/projects/useProjectProgress'
 
 const PythonResizableCodeEditor = ({
   initialCode,
@@ -20,7 +21,7 @@ const PythonResizableCodeEditor = ({
   project_id,
   isProject = false,
 }: CodeEditorProps) => {
-  const user = useAuth()
+  const {user} = useAuth()
   const [code, setCode] = useState(initialCode)
   const [output, setOutput] = useState('')
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
@@ -29,6 +30,7 @@ const PythonResizableCodeEditor = ({
   const [theme, setTheme] = useState<'light' | 'dark' | 'vscode'>('vscode')
   const [isRunning, setIsRunning] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { invalidateCache } = useProgress(project_id, user)
 
   const getTheme = () => {
     switch (theme) {
@@ -79,11 +81,12 @@ const PythonResizableCodeEditor = ({
         // Set correctness for submissions
         if (isSubmission) {
           setIsCorrect(data.success)
+          invalidateCache()
         }
   
         // Handle project completion
         if (data.success && user && isSubmission) {
-          await handleProjectCompletion(user.user!, project_id, code!, true)
+          await handleProjectCompletion(user, project_id, code!, true)
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred')

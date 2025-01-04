@@ -7,6 +7,7 @@ import BackButton from '@/components/ui/backbutton'
 import PythonResizableCodeEditor from '@/components/code-resizable-executor'
 import { getExerciseById } from '@/utils/projects'
 import { ProjectStatus } from '@/components/projects/project-status'
+import '@/styles/mdx-style.css'
 
 interface PostPageProps {
   params: {
@@ -36,13 +37,6 @@ export default async function ProjectPage({ params }: PostPageProps) {
   const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme.trim().replace("", '-')}/${params?.slug?.join('/')}`
   const exercise = getExerciseById(post!.id)
 
-  // const { progress } = useProgress(post?.slugAsParams ?? null, user, {
-  //   revalidateOnFocus: false,
-  //   revalidateOnReconnect: true,
-  //   dedupingInterval: 600000, // Cache for 10 minutes
-  // })
-
-
   if (!post || !post.published) {
     notFound()
   }
@@ -60,7 +54,6 @@ export default async function ProjectPage({ params }: PostPageProps) {
       {/* Split screen container */}
       <div className='flex flex-1 min-h-0'>
         {' '}
-        {/* min-h-0 is crucial for flexbox height calculations */}
         {/* Left side - Tutorial content */}
         <div className='w-1/2 overflow-y-auto border-r p-6'>
           <div className='max-w-3xl mx-auto'>
@@ -69,7 +62,7 @@ export default async function ProjectPage({ params }: PostPageProps) {
                 {post.title}
               </h1>
               <div className='my-4'>
-                <ProjectStatus projectId={post.slugAsParams} />
+                <ProjectStatus projectId={post.slugAsParams} detailed={true}/>
               </div>
               {post.description && (
                 <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>
@@ -88,7 +81,6 @@ export default async function ProjectPage({ params }: PostPageProps) {
             <PythonResizableCodeEditor
               initialCode={exercise?.starterCode}
               project_id={exercise?.id}
-              // testCode={exercise?.testCode}
               isProject={true}
             />
           )}

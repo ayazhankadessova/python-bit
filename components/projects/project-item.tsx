@@ -10,8 +10,7 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { getProjectProgress } from '@/components/session-views/helpers'
-import { useProgress } from '@/hooks/projects/useProjectProgress'
+import { ProjectStatus } from './project-status'
 import { User } from '@/types/firebase'
 
 interface Project {
@@ -31,11 +30,6 @@ interface ProjectItemProps {
 export function ProjectItem({ project, user }: ProjectItemProps) {
   const router = useRouter()
   
-  const { progress } = useProgress(project.slugAsParams, user, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    dedupingInterval: 600000, // Cache for 10 minutes
- })
 
   const handleProjectClick = () => {
     router.push(`/projects/${project.theme}/${project.slugAsParams}`)
@@ -47,9 +41,7 @@ export function ProjectItem({ project, user }: ProjectItemProps) {
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-4'>
             <CardTitle>{project.title}</CardTitle>
-            {user && progress?.completed && (
-              <CheckCircle className='h-5 w-5 text-green-500' />
-            )}
+            <ProjectStatus projectId={project.slugAsParams} detailed={false} />
           </div>
         </div>
         <CardDescription>{project.description}</CardDescription>
@@ -58,14 +50,9 @@ export function ProjectItem({ project, user }: ProjectItemProps) {
         <div className='flex gap-2 mb-4'>
           <Badge variant='outline'>{project.difficulty}</Badge>
           <Badge variant='outline'>{project.estimatedTime}</Badge>
-          {user && (progress?.totalAttempts ?? 0) > 0 && (
-            <Badge variant='outline'>
-              {progress?.successfulAttempts}/{progress?.totalAttempts} attempts
-            </Badge>
-          )}
         </div>
         <Button className='w-full mt-4' onClick={handleProjectClick}>
-          {progress?.completed ? 'Review Project' : 'Start Project'}
+          {'Start Project'}
         </Button>
       </CardContent>
     </Card>
