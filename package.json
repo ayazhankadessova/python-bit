@@ -12,7 +12,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "concurrently": "^9.0.1",
     "@codemirror/lang-python": "^6.1.6",
     "@hookform/resolvers": "^3.9.1",
     "@monaco-editor/react": "^4.6.0",
@@ -26,6 +25,7 @@
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.2",
+    "@radix-ui/react-tooltip": "^1.1.6",
     "@tailwindcss/typography": "^0.5.10",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.7",
@@ -37,6 +37,7 @@
     "child_process": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "concurrently": "^9.0.1",
     "express": "^4.21.0",
     "firebase": "^11.0.2",
     "jose": "^5.9.6",

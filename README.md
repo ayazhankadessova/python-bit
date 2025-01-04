@@ -383,23 +383,31 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 # Jan 2
 
 - [ ] show if error when running
-- [ ] should backend return {err & output} or {err, success, output}
+- [x] should backend return {err & output} or {err, success, output}
 - [x] tut 4 and rest
 - [ ] projects to config
 - [ ] store expected output in config file, not in .md.
 - [ ] added aura points , can see in frontend. add testCode to backend
 - [x] handleProjectCompletion
 - [x] show that project is completed
-- [ ] do we even need config for the exercises?
+- [ ] do we even need config for the exercises? technically, if i dont want to pass starter code, but then i have to have it in json?
 
 ## jan 4
-- [ ] add back btn to theme
-- [ ] add back btn to project
+- [x] add back btn to theme
+- [ ] Project status 
+- [ ] project status to theme
+- [ ] last attemp to date
 - [ ] `api/projects/[pid]` -> we get info on that project and pass to postItem. useSWR
 - [ ] add attempts. show attempts
 - [ ] show attempts for project
 - [ ] add one more project
 - [ ] `api/tutorial/[tid]` -> get info on tutorial progress. cache it and only refresh if hanld exercise completing
+- [ ] const { progress, invalidateCache } = useProgress(projectId, user)
+- [ ] add latest attempt to project
+
+// When submitting code:
+await submitCode(...)
+invalidateCache() // This will drop the cache and trigger a refetch
 
 
 ## Project Test cases

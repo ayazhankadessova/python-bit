@@ -6,6 +6,7 @@ import { siteConfig } from '@/config/site'
 import BackButton from '@/components/ui/backbutton'
 import PythonResizableCodeEditor from '@/components/code-resizable-executor'
 import { getExerciseById } from '@/utils/projects'
+import { ProjectStatus } from '@/components/projects/project-status'
 
 interface PostPageProps {
   params: {
@@ -35,6 +36,12 @@ export default async function ProjectPage({ params }: PostPageProps) {
   const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme.trim().replace("", '-')}/${params?.slug?.join('/')}`
   const exercise = getExerciseById(post!.id)
 
+  // const { progress } = useProgress(post?.slugAsParams ?? null, user, {
+  //   revalidateOnFocus: false,
+  //   revalidateOnReconnect: true,
+  //   dedupingInterval: 600000, // Cache for 10 minutes
+  // })
+
 
   if (!post || !post.published) {
     notFound()
@@ -61,6 +68,9 @@ export default async function ProjectPage({ params }: PostPageProps) {
               <h1 className='mb-2 text-foreground dark:text-foreground'>
                 {post.title}
               </h1>
+              <div className='my-4'>
+                <ProjectStatus projectId={post.slugAsParams} />
+              </div>
               {post.description && (
                 <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>
                   {post.description}
@@ -77,7 +87,7 @@ export default async function ProjectPage({ params }: PostPageProps) {
           {exercise && (
             <PythonResizableCodeEditor
               initialCode={exercise?.starterCode}
-              project_id = {exercise?.id}
+              project_id={exercise?.id}
               // testCode={exercise?.testCode}
               isProject={true}
             />

@@ -1,5 +1,4 @@
 // components/ProjectItem.tsx
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CheckCircle } from 'lucide-react'
 import {
@@ -12,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { getProjectProgress } from '@/components/session-views/helpers'
+import { useProgress } from '@/hooks/projects/useProjectProgress'
 import { User } from '@/types/firebase'
 
 interface Project {
@@ -30,23 +30,12 @@ interface ProjectItemProps {
 
 export function ProjectItem({ project, user }: ProjectItemProps) {
   const router = useRouter()
-  const [progress, setProgress] = useState<{
-    completed: boolean
-    totalAttempts: number
-    successfulAttempts: number
-  } | null>(null)
-
-  useEffect(() => {
-    async function fetchProgress() {
-      if (!user) return
-      const projectProgress = await getProjectProgress(
-        user.uid,
-        project.slugAsParams
-      )
-      setProgress(projectProgress)
-    }
-    fetchProgress()
-  }, [user, project.slugAsParams])
+  
+  const { progress } = useProgress(project.slugAsParams, user, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+    dedupingInterval: 600000, // Cache for 10 minutes
+ })
 
   const handleProjectClick = () => {
     router.push(`/projects/${project.theme}/${project.slugAsParams}`)
