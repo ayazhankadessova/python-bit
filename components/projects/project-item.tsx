@@ -1,6 +1,5 @@
 // components/ProjectItem.tsx
 import { useRouter } from 'next/navigation'
-import { CheckCircle } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -24,10 +23,9 @@ interface Project {
 
 interface ProjectItemProps {
   project: Project
-  user: User | null
 }
 
-export function ProjectItem({ project, user }: ProjectItemProps) {
+export function ProjectItem({ project }: ProjectItemProps) {
   const router = useRouter()
   
 

@@ -16,7 +16,6 @@ import { projects } from '#site/content'
 import BackButton from '@/components/ui/backbutton'
 import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
-// import { getProjectProgress } from '@/components/session-views/helpers'
 import { ProjectItem } from '@/components/projects/project-item'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -33,7 +32,6 @@ interface ThemePageProps {
 const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('createdAt')
-  // const router = useRouter()
   const { user } = useAuth()
 
   // Filter projects by theme
@@ -104,7 +102,7 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
               <ProjectItem
                 key={project.slugAsParams}
                 project={project}
-                user={user}
+                // user={user}
               />
             ))}
           </div>
