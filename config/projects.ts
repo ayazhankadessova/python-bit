@@ -6,7 +6,7 @@
 // };
 
 import {ProjectCollection } from '@/types/utils'
-import projectConfigs from './project_configs.json'
+import projectConfigs from '@/config/project_configs.json'
 
 // Type assertion to ensure the JSON matches our Exercise type
 export const PROJECTS = projectConfigs as ProjectCollection
