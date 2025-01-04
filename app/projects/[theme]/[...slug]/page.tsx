@@ -5,7 +5,9 @@ import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
 import BackButton from '@/components/ui/backbutton'
 import PythonResizableCodeEditor from '@/components/code-resizable-executor'
-import { getExerciseById } from '@/utils/exercise'
+import { getExerciseById } from '@/lib/projects/utils'
+import { ProjectStatus } from '@/components/projects/project-status'
+import '@/styles/mdx-style.css'
 
 interface PostPageProps {
   params: {
@@ -30,11 +32,10 @@ export async function generateStaticParams(): Promise<
   }))
 }
 
-export default async function PostPage({ params }: PostPageProps) {
+export default async function ProjectPage({ params }: PostPageProps) {
   const post = await getPostFromParams(params)
-  const fullLinkGenerated = `${siteConfig.url}/blog/${params?.slug?.join('/')}`
+  const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme.trim().replace("", '-')}/${params?.slug?.join('/')}`
   const exercise = getExerciseById(post!.id)
-
 
   if (!post || !post.published) {
     notFound()
@@ -53,7 +54,6 @@ export default async function PostPage({ params }: PostPageProps) {
       {/* Split screen container */}
       <div className='flex flex-1 min-h-0'>
         {' '}
-        {/* min-h-0 is crucial for flexbox height calculations */}
         {/* Left side - Tutorial content */}
         <div className='w-1/2 overflow-y-auto border-r p-6'>
           <div className='max-w-3xl mx-auto'>
@@ -61,6 +61,9 @@ export default async function PostPage({ params }: PostPageProps) {
               <h1 className='mb-2 text-foreground dark:text-foreground'>
                 {post.title}
               </h1>
+              <div className='my-4'>
+                <ProjectStatus projectId={post.slugAsParams} detailed={true}/>
+              </div>
               {post.description && (
                 <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>
                   {post.description}
@@ -77,7 +80,7 @@ export default async function PostPage({ params }: PostPageProps) {
           {exercise && (
             <PythonResizableCodeEditor
               initialCode={exercise?.starterCode}
-              testCode={exercise?.testCode}
+              project_id={exercise?.id}
               isProject={true}
             />
           )}

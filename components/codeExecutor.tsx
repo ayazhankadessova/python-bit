@@ -7,7 +7,7 @@ import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { useAuth } from '@/contexts/AuthContext'
 import { handleExerciseCompletion } from './session-views/helpers'
-import { CodeEditorProps } from '@/types/props'
+import { ExerciseCodeEditorProps } from '@/types/props'
 
 
 const PythonCodeEditor = ({
@@ -15,9 +15,8 @@ const PythonCodeEditor = ({
   expectedOutput,
   exercise_number = 1,
   tutorial_id = 'default',
-  testCode,
   isProject = false,
-}: CodeEditorProps) => {
+}: ExerciseCodeEditorProps) => {
   const user = useAuth()
   const [code, setCode] = useState(initialCode)
   const [output, setOutput] = useState('')
@@ -39,6 +38,99 @@ const PythonCodeEditor = ({
     }
   }
 
+  // const executeCode = async (isSubmission: boolean) => {
+  //   setIsExecuting(true)
+  //   setError(null)
+  //   setOutput('')
+  //   setIsCorrect(null)
+
+  //   if (isSubmission) {
+  //     setIsSubmitting(true)
+  //   } else {
+  //     setIsRunning(true)
+  //   }
+
+  //   try {
+  //     // Only include test code if this is a submission
+  //     const codeToExecute =
+  //       isSubmission && isProject ? `${code}\n\n${testCode}` : code
+
+  //     // Prepare the request payload
+  //     const requestPayload = {
+  //       code: codeToExecute,
+  //       exercise_number,
+  //       tutorial_id,
+  //     }
+
+  //     // Fetch from Flask backend
+  //     const response = await fetch('/api/execute', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(requestPayload),
+  //     })
+
+  //     const data = await response.json()
+
+  //     // Handle rate limiting
+  //     if (data.error === 'Rate limit exceeded') {
+  //       setError('Rate limit exceeded. Please wait 1 minute.')
+  //       return
+  //     }
+
+  //     // Handle different response structures
+  //     const executionOutput = data.output ? data.output.trim() : ''
+
+  //     // Set output
+  //     setOutput(executionOutput)
+
+  //     // Only check correctness if this is a submission
+  //     if (isSubmission) {
+  //       // Determine correctness based on project or expected output
+  //       if (isProject) {
+  //         // For projects, check if there are no errors
+  //         setIsCorrect(
+  //           !executionOutput.includes('AssertionError') &&
+  //             !executionOutput.includes('Error') &&
+  //             !data.error
+  //         )
+  //       } else if (expectedOutput) {
+  //         // For specific exercises, compare with expected output
+  //         setIsCorrect(executionOutput === expectedOutput.trim())
+  //         if (executionOutput === expectedOutput.trim() && user) {
+  //           console.log('sending to fb!')
+  //           await handleExerciseCompletion(
+  //             user.user!,
+  //             tutorial_id,
+  //             exercise_number
+  //           )
+  //         }
+  //       }
+  //     }
+
+  //     // Handle any errors from the backend
+  //     if (data.error) {
+  //       setError(executionOutput)
+  //     }
+  //   } catch (err) {
+  //     // Handle network or parsing errors
+  //     setError(err instanceof Error ? err.message : 'An error occurred')
+  //     if (isSubmission) {
+  //       setIsCorrect(false)
+  //     }
+  //   } finally {
+  //     // Reset executing states
+  //     setIsExecuting(false)
+
+  //     if (isSubmission) {
+  //       setIsSubmitting(false)
+  //     } else {
+  //       setIsRunning(false)
+  //     }
+  //   }
+  // }
+
   const executeCode = async (isSubmission: boolean) => {
     setIsExecuting(true)
     setError(null)
@@ -52,19 +144,16 @@ const PythonCodeEditor = ({
     }
 
     try {
-      // Only include test code if this is a submission
-      const codeToExecute =
-        isSubmission && isProject ? `${code}\n\n${testCode}` : code
-
-      // Prepare the request payload
       const requestPayload = {
-        code: codeToExecute,
+        code,
         exercise_number,
         tutorial_id,
       }
 
-      // Fetch from Flask backend
-      const response = await fetch('/api/execute', {
+      const endpoint = isSubmission
+        ? '/api/py/test-exercise'
+        : '/api/py/execute'
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,60 +164,33 @@ const PythonCodeEditor = ({
       const data = await response.json()
 
       // Handle rate limiting
-      if (data.error === 'Rate limit exceeded') {
-        setError('Rate limit exceeded. Please wait 1 minute.')
-        return 
-      }
+      // if (data.error === 'Rate limit exceeded') {
+      //   setError('Rate limit exceeded. Please wait 1 minute.')
+      //   return
+      // }
 
-      // Handle different response structures
-      const executionOutput = data.output ? data.output.trim() : ''
+      // Set output and error states
+      setOutput(data.output)
+      setError(data.error ? data.output : null)
 
-      // Set output
-      setOutput(executionOutput)
-
-      // Only check correctness if this is a submission
+      // Set correctness for submissions
       if (isSubmission) {
-        // Determine correctness based on project or expected output
-        if (isProject) {
-          // For projects, check if there are no errors
-          setIsCorrect(
-            !executionOutput.includes('AssertionError') &&
-              !executionOutput.includes('Error') &&
-              !data.error
-          )
-        } else if (expectedOutput) {
-          // For specific exercises, compare with expected output
-          setIsCorrect(executionOutput === expectedOutput.trim())
-          if (executionOutput === expectedOutput.trim() && user) {
-            console.log('sending to fb!')
-            await handleExerciseCompletion(
-              user.user!,
-              tutorial_id,
-              exercise_number
-            )
-          }
-        }
+        setIsCorrect(data.success)
       }
 
-      // Handle any errors from the backend
-      if (data.error) {
-        setError(executionOutput)
+      // Handle exercise completion
+      if (data.success && user && isSubmission && !isProject) {
+        await handleExerciseCompletion(user.user!, tutorial_id, exercise_number)
       }
     } catch (err) {
-      // Handle network or parsing errors
       setError(err instanceof Error ? err.message : 'An error occurred')
       if (isSubmission) {
         setIsCorrect(false)
       }
     } finally {
-      // Reset executing states
       setIsExecuting(false)
-
-      if (isSubmission) {
-        setIsSubmitting(false)
-      } else {
-        setIsRunning(false)
-      }
+      setIsSubmitting(false)
+      setIsRunning(false)
     }
   }
 
@@ -291,7 +353,7 @@ const PythonCodeEditor = ({
               ? '✅ All tests passed!'
               : isProject
               ? '❌ Some tests failed. Check the output above for details.'
-              : '❌ Try again! \nExpected Output: ' + expectedOutput}
+              : '❌ Try again! '}
           </div>
         )}
       </div>

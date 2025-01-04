@@ -37,3 +37,10 @@ next-env.d.ts
 
 
 .velite
+
+# python
+__pycache__/
+venv
+solutions.md
+# config/project_configs.json
+config/project_configs_answers.json

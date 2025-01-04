@@ -3,13 +3,13 @@
 'use client'
 
 import React, { useState } from 'react'
-import { posts } from '#site/content'
+import { tutorials } from '#site/content'
 import { PostItem } from '@/components/post-item'
 import {
-  sortPosts,
-  filterPostsBySearchTerm,
-  sortPostsByTime,
-} from '@/utils/posts'
+  sortTutorials,
+  filterTutorialsBySearchTerm,
+  sortTutorialsByTime,
+} from '@/lib/tutorials/utils'
 import { CustomPagination } from '@/components/pagination-query'
 import { Input } from '@/components/ui/input'
 import {
@@ -36,21 +36,21 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
   const { user } = useAuth()
   console.log("user from blog page:" , user)
 
-  const publishedPosts = filterPostsBySearchTerm(
-    posts.filter((post) => post.published),
+  const publishedTutorials = filterTutorialsBySearchTerm(
+    tutorials.filter((tutorial) => tutorial.published),
     searchText
   )
 
-  const sortedPosts =
+  const sortedTutorials =
     sortMethod === 'Difficulty'
-      ? sortPosts(publishedPosts)
-      : sortPostsByTime(publishedPosts)
+      ? sortTutorials(publishedTutorials)
+      : sortTutorialsByTime(publishedTutorials)
 
   const currentPage = Number(searchParams?.page) || 1
   const currentPerPage = Number(searchParams?.perPage) || 5
-  const totalPages = Math.ceil(publishedPosts.length / currentPerPage)
+  const totalPages = Math.ceil(publishedTutorials.length / currentPerPage)
 
-  const displayPosts = sortedPosts.slice(
+  const displayTutorials = sortedTutorials.slice(
     currentPerPage * (currentPage - 1),
     currentPerPage * currentPage
   )
@@ -97,11 +97,11 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
       <hr className='my-4' />
 
       {/* Posts List */}
-      {displayPosts?.length > 0 ? (
+      {displayTutorials?.length > 0 ? (
         <ul className='flex flex-col space-y-4'>
-          {displayPosts.map((post) => (
-            <li key={post.slug}>
-              <PostItem post={post} user={user} />
+          {displayTutorials.map((tutorial) => (
+            <li key={tutorial.slug}>
+              <PostItem post={tutorial} user={user} />
             </li>
           ))}
         </ul>

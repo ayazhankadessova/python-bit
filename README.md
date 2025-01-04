@@ -380,7 +380,36 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Add better imgs
 - [ ] Meme creation tools
 
-#
+# Jan 2
+
+- [ ] show if error when running
+- [x] should backend return {err & output} or {err, success, output}
+- [x] tut 4 and rest
+- [ ] projects to config
+- [ ] store expected output in config file, not in .md.
+- [ ] added aura points , can see in frontend. add testCode to backend
+- [x] handleProjectCompletion
+- [x] show that project is completed
+- [ ] do we even need config for the exercises? technically, if i dont want to pass starter code, but then i have to have it in json?
+
+## jan 4
+- [x] add back btn to theme
+- [x] Project status 
+- [x] project status to theme
+- [ ] last attemp to date -> format date is util
+- [x] move utils/projects to lib
+- [ ] keep all interfaces in 1 place
+- [ ] `api/projects/[pid]` -> we get info on that project and pass to postItem. useSWR
+- [ ] add attempts. show attempts
+- [ ] show attempts for project
+- [ ] add one more project
+- [ ] `api/tutorial/[tid]` -> get info on tutorial progress. cache it and only refresh if hanld exercise completing
+- [ ] const { progress, invalidateCache } = useProgress(projectId, user)
+- [ ] add latest attempt to project
+
+// When submitting code:
+await submitCode(...)
+invalidateCache() // This will drop the cache and trigger a refetch
 
 
 ## Project Test cases
@@ -452,3 +481,23 @@ import { useAuth } from '@/contexts/AuthContext'
 
 1. `container mx-auto px-8 py-8`
 2. add toc to tutorials
+Output does not match expected result
+
+
+## projects 
+
+```
+users/
+  {uid}/
+    projects/
+      {project_id}/
+        completed: boolean
+        lastAttempt: number
+        totalAttempts: number
+        successfulAttempts: number
+        attempts/
+          {auto-id}/  // Automatically generated ID
+            code: string
+            timestamp: number
+            success: boolean
+```

@@ -1,0 +1,1 @@
+https://medium.com/@anandmanash321/error-a-serverless-function-has-exceeded-the-unzipped-maximum-size-of-250-mb-990af9b2346d

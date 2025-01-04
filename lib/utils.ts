@@ -1,47 +1,30 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { Post } from '#site/content'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
 
-export function formatDate(input: number): string {
-  const date = new Date(input * 1000)
-  return date.toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  })
-}
+export function formatDate(epoch: number): string {
+  // Check if the epoch is in milliseconds (13 digits) or seconds (10 digits)
+  const timestamp = epoch.toString().length === 13 ? epoch : epoch * 1000
 
-export function sortPosts(posts: Array<Post>) {
-  return posts.sort((a, b) => a.order - b.order)
-}
+  try {
+    const date = new Date(timestamp)
 
-export function sortPostsByTime(posts: Array<Post>): Array<Post> {
-  return posts.sort((a, b) => b.date - a.date)
-}
+    // Validate if the date is valid
+    if (isNaN(date.getTime())) {
+      throw new Error('Invalid date')
+    }
 
-export function filterPostsBySearchTerm(
-  posts: Array<Post>,
-  searchTerm: string
-): Array<Post> {
-  if (!searchTerm) return posts
-
-  const normalizedSearchTerm = searchTerm.toLowerCase().trim()
-
-  return posts.filter((post) => {
-    const { title, description, tags } = post
-    const normalizedTitle = title.toLowerCase()
-    const normalizedExcerpt = description?.toLowerCase()
-    const normalizedTags = tags?.map((tag) => tag.toLowerCase())
-
-    return (
-      normalizedTitle.includes(normalizedSearchTerm) ||
-      normalizedExcerpt?.includes(normalizedSearchTerm) ||
-      normalizedTags?.some((tag) => tag.includes(normalizedSearchTerm))
-    )
-  })
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    })
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return 'Invalid date'
+  }
 }

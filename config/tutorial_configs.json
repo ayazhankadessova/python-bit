@@ -1,0 +1,436 @@
+{
+  "python101-1-what-is-python": {
+    "tutorial_id": "python101-1-what-is-python",
+    "title": "What is Python?",
+    "description": "Begin your coding journey with Python",
+    "exercises": {
+      "1": {
+        "exercise_number": 1,
+        "description": "Write your first Python program that prints 'Hello, World!'",
+        "expected_output": "Hello, World!",
+        "test_code": "def test_hello_world():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    assert actual_output == \"Hello, World!\", f\"Expected 'Hello, World!', but got '{actual_output}'\"\n    return True",
+        "hints": [
+          "Remember to use the print() function",
+          "Make sure to use double quotes around your text",
+          "Check your spelling and capitalization"
+        ],
+        "difficulty": "beginner"
+      },
+      "2": {
+        "exercise_number": 2,
+        "description": "Understanding indentation in Python with if statements",
+        "expected_output": "Wait... you're still awesome!",
+        "test_code": "def test_indentation():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    assert actual_output == \"Wait... you're still awesome!\", f\"Expected 'Wait... you're still awesome!', but got '{actual_output}'\"\n    return True",
+        "hints": [
+          "Make sure your indentation is consistent",
+          "Use 4 spaces for each level of indentation",
+          "Check that your if/else statements are properly aligned"
+        ],
+        "difficulty": "beginner"
+      },
+      "3": {
+        "exercise_number": 3,
+        "description": "Make your computer say 'Hello, Python!'",
+        "expected_output": "Hello, Python!",
+        "test_code": "def test_hello_python():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    assert actual_output == \"Hello, Python!\", f\"Expected 'Hello, Python!', but got '{actual_output}'\"\n    return True",
+        "hints": [
+          "Use the print() function",
+          "Don't forget the quotation marks",
+          "Remember proper capitalization"
+        ],
+        "difficulty": "beginner"
+      },
+      "4": {
+        "exercise_number": 4,
+        "description": "String concatenation and multiplication challenge",
+        "expected_output": "Hello World!\nHelloHelloHello",
+        "test_code": "def test_string_operations():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    expected_lines = [\"Hello World!\", \"HelloHelloHello\"]\n    actual_lines = actual_output.split('\\n')\n    \n    assert len(actual_lines) == 2, \"Expected two lines of output\"\n    assert actual_lines[0] == expected_lines[0], f\"First line should be '{expected_lines[0]}'\"\n    assert actual_lines[1] == expected_lines[1], f\"Second line should be '{expected_lines[1]}'\"\n    return True",
+        "hints": [
+          "Use + to concatenate strings",
+          "Use * to repeat strings",
+          "Make sure your spacing is correct in string concatenation"
+        ],
+        "difficulty": "beginner"
+      }
+    }
+  },
+  "python101-2-variables-types": {
+    "tutorial_id": "python101-2-variables-types",
+    "title": "Python Variables",
+    "description": "Learn how to store and work with different types of data in Python",
+    "exercises": {
+      "1": {
+        "exercise_number": 1,
+        "description": "Create and print variables of different types",
+        "test_code": "def test_variables():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        # Check if output contains both number and string\n        assert 'my_favorite_number' in user_code, \"Create a variable named my_favorite_number\"\n        assert 'my_name' in user_code, \"Create a variable named my_name\"\n        assert 'am_i_learning_python' in user_code, \"Create a variable named am_i_learning_python\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Make sure to use the correct variable names",
+          "Don't forget to use print() to show the values",
+          "Remember: strings need quotes, numbers don't"
+        ],
+        "difficulty": "beginner"
+      },
+      "2": {
+        "exercise_number": 2,
+        "description": "Fix the code by converting number to string",
+        "expected_output": "My age: 12",
+        "test_code": "def test_string_conversion():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert actual_output == \"My age: 12\", f\"Expected 'My age: 12', but got '{actual_output}'\"\n        assert 'str(12)' in user_code, \"Don't forget to use str() to convert the number\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use str() to convert the number before adding it to text",
+          "The format should be: print(\"My age: \" + str(12))",
+          "Make sure there's a space after the colon"
+        ],
+        "difficulty": "beginner"
+      },
+      "3": {
+        "exercise_number": 3,
+        "description": "Fix the code by adding str() where needed",
+        "expected_output": "My age: 12\nNumber of pets: 3\nFavorite number: 42",
+        "test_code": "def test_multiple_conversions():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"My age: 12\\nNumber of pets: 3\\nFavorite number: 42\"\n        assert actual_output == expected, f\"Expected '{expected}', but got '{actual_output}'\"\n        assert 'str(' in user_code, \"Don't forget to use str() to convert numbers\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Remember to convert each number to string when adding to text",
+          "Check each line separately to find where str() is needed",
+          "Make sure the spacing matches exactly"
+        ],
+        "difficulty": "beginner"
+      },
+      "4": {
+        "exercise_number": 4,
+        "description": "Work with floating point numbers",
+        "expected_output": "My height: 5.5\nPizza slices: 3.14",
+        "test_code": "def test_floats():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"My height: 5.5\\nPizza slices: 3.14\"\n        assert actual_output == expected, f\"Expected '{expected}', but got '{actual_output}'\"\n        assert 'str(' in user_code, \"Don't forget to convert floats to strings\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Floating point numbers also need str() when adding to strings",
+          "Keep the decimal points exactly as shown",
+          "Check your spacing after the colons"
+        ],
+        "difficulty": "beginner"
+      },
+      "5": {
+        "exercise_number": 5,
+        "description": "Working with strings",
+        "test_code": "def test_strings():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        lines = actual_output.split('\\n')\n        assert len(lines) == 3, \"You should print three lines\"\n        assert all('name' in lines[0].lower(), \"First line should include name\")\n        assert all('game' in lines[1].lower(), \"Second line should include game\")\n        assert all('message' in lines[2].lower(), \"Third line should include message\")\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Make sure to use quotes around string values",
+          "You can concatenate strings using +",
+          "Double-check your variable names"
+        ],
+        "difficulty": "beginner"
+      },
+      "6": {
+        "exercise_number": 6,
+        "description": "Working with boolean values",
+        "test_code": "def test_booleans():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        assert 'is_python_fun = True' in user_code, \"You should set is_python_fun to True\"\n        assert 'am_i_tired = False' in user_code, \"You should set am_i_tired to False\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Boolean values are either True or False",
+          "Don't use quotes around True and False",
+          "Remember to capitalize True and False"
+        ],
+        "difficulty": "beginner"
+      },
+      "7": {
+        "exercise_number": 7,
+        "description": "Fun with string concatenation and multiplication",
+        "test_code": "def test_string_operations():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert \"Hi! I'm Jesse and I'm 13 years old!\" in actual_output, \"Check your greeting format\"\n        assert \"🖐 🖐 🖐 🖐 🖐\" in actual_output, \"The high five emoji should appear 5 times\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use + to join strings together",
+          "Use * to repeat strings",
+          "Remember to convert numbers to strings"
+        ],
+        "difficulty": "beginner"
+      },
+      "8": {
+        "exercise_number": 8,
+        "description": "Create a coder profile",
+        "expected_output": "=======================\n🎮 CODER PROFILE 🎮\n=======================\nName: Amy\nAge: 24\nHobby: Gaming\nLoves Coding: True\n=======================",
+        "test_code": "def test_profile():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"=======================\\n🎮 CODER PROFILE 🎮\\n=======================\\nName: Amy\\nAge: 24\\nHobby: Gaming\\nLoves Coding: True\\n=======================\"\n        assert actual_output == expected, \"Check your profile values and format\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Make sure to use the correct values for Amy",
+          "Double-check the variable names",
+          "Remember: strings need quotes, numbers don't"
+        ],
+        "difficulty": "beginner"
+      },
+      "9": {
+        "exercise_number": 9,
+        "description": "Experiment with string operations",
+        "test_code": "def test_string_experiments():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        lines = actual_output.split('\\n')\n        assert lines[0] == \"hahahahaha\", \"First line should be 'ha' repeated 5 times\"\n        assert lines[1] == \"python rules\", \"Second line should combine 'python' and 'rules'\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "For the first line, multiply 'ha' by 5",
+          "For the second line, don't forget the space between words",
+          "Use + to concatenate strings"
+        ],
+        "difficulty": "beginner"
+      },
+      "10": {
+        "exercise_number": 10,
+        "description": "Fix the broken code",
+        "expected_output": "Sam is 13 years old and loves the number 3.5!",
+        "test_code": "def test_fix_code():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert actual_output == \"Sam is 13 years old and loves the number 3.5!\", \"Check your output format\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Fix the variable name (remove space)",
+          "Convert age to a number",
+          "Make sure to use the correct string formatting",
+          "Remember to add spaces between words"
+        ],
+        "difficulty": "beginner"
+      }
+    }
+  },
+  "python101-3-collections": {
+    "tutorial_id": "python101-3-collections",
+    "title": "Python Collections",
+    "description": "Learn about Python's amazing ways to store and organize data",
+    "exercises": {
+      "1": {
+        "exercise_number": 1,
+        "description": "Create and manipulate a list representing a backpack",
+        "test_code": "def test_backpack():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        local_vars = locals()\n        assert 'my_backpack' in local_vars, \"Create a list called my_backpack\"\n        assert isinstance(local_vars['my_backpack'], list), \"my_backpack should be a list\"\n        assert 'flashlight' in local_vars['my_backpack'], \"Don't forget to add the flashlight!\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use square brackets [] to create a list",
+          "Use append() to add items to the list",
+          "Remember: list indices start at 0"
+        ],
+        "difficulty": "beginner"
+      },
+      "2": {
+        "exercise_number": 2,
+        "description": "Create a fruit basket list and add specific fruits",
+        "expected_output": "['apple', 'banana', 'orange']",
+        "test_code": "def test_fruit_basket():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        local_vars = locals()\n        assert 'fruit_basket' in local_vars, \"Create a list called fruit_basket\"\n        basket = local_vars['fruit_basket']\n        assert basket == ['apple', 'banana', 'orange'], \"Basket should contain exactly ['apple', 'banana', 'orange']\"\n        assert '.append' in user_code, \"Use the append() method\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Start with an empty list: fruit_basket = []",
+          "Use append() to add each fruit",
+          "Make sure to add the fruits in the correct order"
+        ],
+        "difficulty": "beginner"
+      },
+      "3": {
+        "exercise_number": 3,
+        "description": "Create and use tuples for storing birthday and color information",
+        "test_code": "def test_tuples():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        local_vars = locals()\n        assert 'my_birthday' in local_vars, \"Create a tuple called my_birthday\"\n        assert isinstance(local_vars['my_birthday'], tuple), \"my_birthday should be a tuple\"\n        assert len(local_vars['my_birthday']) == 3, \"Birthday tuple should have 3 elements\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use parentheses () to create a tuple",
+          "Remember: tuples are immutable",
+          "Access tuple elements using index numbers"
+        ],
+        "difficulty": "beginner"
+      },
+      "4": {
+        "exercise_number": 4,
+        "description": "Create a tuple for geocache coordinates",
+        "expected_output": "Latitude: 37.7749\nFull Location: (37.7749, -122.4194, 10)",
+        "test_code": "def test_geocache():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"Latitude: 37.7749\\nFull Location: (37.7749, -122.4194, 10)\"\n        assert actual_output == expected, f\"Expected '{expected}', but got '{actual_output}'\"\n        local_vars = locals()\n        assert isinstance(local_vars['geocache_location'], tuple), \"geocache_location should be a tuple\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Create a tuple with exactly 3 numbers",
+          "Use the exact coordinates provided",
+          "Print the latitude using index 0"
+        ],
+        "difficulty": "beginner"
+      },
+      "5": {
+        "exercise_number": 5,
+        "description": "Create and manipulate a dictionary for a game character",
+        "test_code": "def test_player_dict():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        local_vars = locals()\n        assert 'player' in local_vars, \"Create a dictionary called player\"\n        player = local_vars['player']\n        assert isinstance(player, dict), \"player should be a dictionary\"\n        assert 'fire blast' in player['powers'], \"Add 'fire blast' to powers\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use curly braces {} to create a dictionary",
+          "Add items using square bracket notation",
+          "Remember to use quotes for string keys"
+        ],
+        "difficulty": "beginner"
+      },
+      "6": {
+        "exercise_number": 6,
+        "description": "Create and update a game inventory system using dictionaries",
+        "expected_output": "Full Inventory: {'health_potion': 7, 'magic_scroll': 3, 'golden_key': 1}\nHealth Potions: 7",
+        "test_code": "def test_inventory():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"Full Inventory: {'health_potion': 7, 'magic_scroll': 3, 'golden_key': 1}\\nHealth Potions: 7\"\n        assert actual_output == expected, f\"Expected '{expected}', but got '{actual_output}'\"\n        local_vars = locals()\n        assert local_vars['game_inventory']['health_potion'] == 7, \"Health potions should be 7 after adding 2\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Start with the initial quantities",
+          "Use += to increase the health potion count",
+          "Print the full dictionary for inventory"
+        ],
+        "difficulty": "beginner"
+      },
+      "7": {
+        "exercise_number": 7,
+        "description": "Create and manipulate a set of Minecraft items",
+        "test_code": "def test_minecraft_set():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        local_vars = locals()\n        assert isinstance(local_vars['minecraft_items'], set), \"minecraft_items should be a set\"\n        assert 'torch' in local_vars['minecraft_items'], \"Don't forget to add the torch!\"\n        assert local_vars['minecraft_items'].count('diamond') == 1 if hasattr(local_vars['minecraft_items'], 'count') else True, \"Set should only have one diamond\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use curly braces {} to create a set",
+          "Sets automatically remove duplicates",
+          "Use add() to add new items to a set"
+        ],
+        "difficulty": "beginner"
+      },
+      "8": {
+        "exercise_number": 8,
+        "description": "Create a battle royale loadout using a set",
+        "expected_output": "Total Unique Weapons: 3",
+        "test_code": "def test_battle_loadout():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        local_vars = locals()\n        loadout = local_vars['battle_loadout']\n        assert isinstance(loadout, set), \"battle_loadout should be a set\"\n        assert len(loadout) == 4, \"Should have exactly 4 weapons\"\n        assert 'grenades' not in loadout, \"Grenades should be removed\"\n        actual_output = output.getvalue().strip()\n        assert actual_output == \"Total Unique Weapons: 4\", \"Output should match exactly\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Create an empty set using set()",
+          "Add all weapons one by one",
+          "Use remove() to remove grenades",
+          "Use len() to count weapons"
+        ],
+        "difficulty": "beginner"
+      },
+      "9": {
+        "exercise_number": 9,
+        "description": "Create a complete game character profile using multiple collection types",
+        "expected_output": "=== PLAYER PROFILE ===\nName: DragonSlayer99\nClass: warrior\nWeapons: ['sword', 'bow', 'magic staff', 'throwing axe', 'crossbow']\nTotal Achievements: 5",
+        "test_code": "def test_game_profile():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        local_vars = locals()\n        assert local_vars['my_character']['name'] == 'DragonSlayer99', \"Character name should be DragonSlayer99\"\n        assert local_vars['my_character']['class'] == 'warrior', \"Character class should be warrior\"\n        assert len(local_vars['weapons']) == 5, \"Should have 5 weapons\"\n        assert len(local_vars['achievements']) == 5, \"Should have 5 achievements\"\n        actual_output = output.getvalue().strip()\n        assert actual_output == \"=== PLAYER PROFILE ===\\nName: DragonSlayer99\\nClass: warrior\\nWeapons: ['sword', 'bow', 'magic staff', 'throwing axe', 'crossbow']\\nTotal Achievements: 5\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Follow the exact order of weapons",
+          "Use the exact character name and class",
+          "Add all achievements exactly as specified",
+          "Print values in the exact format shown"
+        ],
+        "difficulty": "beginner"
+      },
+      "10": {
+        "exercise_number": 10,
+        "description": "Debug and fix issues with different collection types",
+        "expected_output": "Tuple: (1, 2, 3)\nPlayer Stats: {'health': 200}\nLength of my set: 3",
+        "test_code": "def test_debug():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"Tuple: (1, 2, 3)\\nPlayer Stats: {'health': 200}\\nLength of my set: 3\"\n        assert actual_output == expected, f\"Expected '{expected}', but got '{actual_output}'\"\n        local_vars = locals()\n        assert local_vars['my_tuple'] == (1, 2, 3), \"Tuple should remain unchanged\"\n        assert len(local_vars['my_set']) == 3, \"Set should have 3 unique elements\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Remember: tuples are immutable",
+          "Dictionaries can't have duplicate keys",
+          "Sets automatically remove duplicates"
+        ],
+        "difficulty": "beginner"
+      }
+    }
+  },
+  "python101-4-operators": {
+    "tutorial_id": "python101-4-operators",
+    "title": "Python Operators",
+    "description": "Master the magical tools of Python!",
+    "exercises": {
+      "1": {
+        "exercise_number": 1,
+        "description": "Practice arithmetic operators with game character stats",
+        "expected_output": "Total Health: 150\nScore: 75\nEach player gets: 25.0 coins\nSuper attack damage: 8\nLeftover gems: 1",
+        "test_code": "def test_arithmetic():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'total_health' in locals(), \"Create total_health variable\"\n        assert total_health == 150, \"Health should be 150\"\n        assert 'score' in locals() and score == 75, \"Score should be 75\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use + for addition (initial_health + bonus_health)",
+          "Use * for multiplication (score * 3)",
+          "Use / for division (treasure / 4)",
+          "Use ** for power (2 ** 3)",
+          "Use % for remainder (100 % 3)"
+        ],
+        "difficulty": "beginner"
+      },
+      "2": {
+        "exercise_number": 2,
+        "description": "Practice string operators by creating hero names and cheers",
+        "expected_output": "Your hero name: Super Coder\nThe crowd goes: Hip Hip Hooray! Hip Hip Hooray! Hip Hip Hooray!",
+        "test_code": "def test_string_ops():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'hero_name' in locals(), \"Create hero_name variable\"\n        assert hero_name == \"Super Coder\", \"Hero name should be 'Super Coder'\"\n        assert 'crowd_cheer' in locals(), \"Create crowd_cheer variable\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use + to combine strings",
+          "Don't forget spaces between words",
+          "Use * to repeat strings"
+        ],
+        "difficulty": "beginner"
+      },
+      "3": {
+        "exercise_number": 3,
+        "description": "Practice list operators by combining inventories",
+        "expected_output": "You found: ['sword', 'shield', 'potion', 'map']\nPower-ups collected: ['⭐', '⭐', '⭐']",
+        "test_code": "def test_list_ops():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        assert 'full_inventory' in locals(), \"Create full_inventory variable\"\n        assert len(full_inventory) == 4, \"Inventory should have 4 items\"\n        assert 'power_ups' in locals(), \"Create power_ups variable\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use + to combine lists",
+          "Use * to repeat lists",
+          "Check the order of items in the output"
+        ],
+        "difficulty": "beginner"
+      },
+      "4": {
+        "exercise_number": 4,
+        "description": "Practice comparison operators with game decisions",
+        "expected_output": "Password correct? True\nCan enter dungeon? True\nCan another player join? True",
+        "test_code": "def test_comparison_ops():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        assert 'is_correct' in locals(), \"Create is_correct variable\"\n        assert is_correct == True, \"Password check should be True\"\n        assert 'can_enter_dungeon' in locals(), \"Create can_enter_dungeon variable\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use == for equality comparison",
+          "Use > for greater than",
+          "Use <= for less than or equal to"
+        ],
+        "difficulty": "beginner"
+      },
+      "5": {
+        "exercise_number": 5,
+        "description": "Practice logical operators with game conditions",
+        "expected_output": "Ready for battle? True\nCan attack? True\nStill playing? True",
+        "test_code": "def test_logical_ops():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        assert 'ready_for_battle' in locals(), \"Create ready_for_battle variable\"\n        assert ready_for_battle == True, \"Should be ready for battle\"\n        assert 'can_attack' in locals(), \"Create can_attack variable\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use and to require both conditions",
+          "Use or when either condition is okay",
+          "Use not to flip True/False"
+        ],
+        "difficulty": "beginner"
+      },
+      "6": {
+        "exercise_number": 6,
+        "description": "Create a game score calculator using arithmetic operators",
+        "expected_output": "Total Health: 150\nScore: 75\nEach player gets: 25.0 coins\nSuper attack damage: 8\nLeftover gems: 1",
+        "test_code": "def test_game_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"Total Health: 150\\nScore: 75\\nEach player gets: 25.0 coins\\nSuper attack damage: 8\\nLeftover gems: 1\"\n        assert actual_output == expected, f\"Expected '{expected}', but got '{actual_output}'\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Fill in each blank with the correct operator",
+          "Remember order of operations",
+          "Check the expected output carefully"
+        ],
+        "difficulty": "beginner"
+      },
+      "7": {
+        "exercise_number": 7,
+        "description": "Create a complete score calculator with conditions",
+        "expected_output": "High Score!",
+        "test_code": "def test_final_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"300\\nNew High Score: True\"\n        assert actual_output == expected, f\"Expected '{expected}', but got '{actual_output}'\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Start with base_score",
+          "Add 100 if has_power_up is True",
+          "Double score if is_critical_hit is True",
+          "Compare final score with current_high_score"
+        ],
+        "difficulty": "beginner"
+      },
+      "8": {
+        "exercise_number": 8,
+        "description": "Create ultimate inventory by combining and duplicating lists",
+        "expected_output": "['sword', 'shield', 'potion', 'sword', 'shield', 'potion', 'sword', 'shield', 'potion']\nTrue",
+        "test_code": "def test_ultimate_inventory():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'combined_items' in locals(), \"Create combined_items variable\"\n        assert len(combined_items) == 9, \"Final inventory should have 9 items\"\n        assert combined_items.count('sword') == 3, \"Should have 3 swords\"\n        assert 'sword' in combined_items, \"Check for 'sword' in inventory\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "First combine starter_items and found_items using +",
+          "Then multiply the combined list by 3 using *",
+          "Use 'in' operator to check if 'sword' is in the inventory"
+        ],
+        "difficulty": "beginner"
+      },
+      "9": {
+        "exercise_number": 9,
+        "description": "Debug common operator mistakes in game code",
+        "expected_output": "150\nTrue\nTrue",
+        "test_code": "def test_debug_operators():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'player_health' in locals(), \"Fix player_health calculation\"\n        assert player_health == 150, \"player_health should be 150\"\n        assert is_high_score == True, \"is_high_score should be True\"\n        assert has_power == False, \"has_power should be False\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Bug 1: Convert string '100' to integer before adding",
+          "Bug 2: Use == for comparison, not = (assignment)",
+          "Bug 3: Use parentheses to clarify operator precedence"
+        ],
+        "difficulty": "intermediate"
+      },
+      "10": {
+        "exercise_number": 10,
+        "description": "Create a complete game score calculator with bonus points and critical hits",
+        "expected_output": "New score: 150\nIs critical hit: True\nNew High Score: False",
+        "test_code": "def test_score_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'final_score' in locals(), \"Calculate final_score\"\n        assert final_score == 300, \"Final score should be 300\"\n        assert 'is_new_high_score' in locals(), \"Check for new high score\"\n        assert is_new_high_score == True, \"Should be a new high score\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Start with base_score (50)",
+          "Add 100 if has_power_up using if statement",
+          "Multiply by 2 if is_critical_hit",
+          "Compare with current_high_score using >"
+        ],
+        "difficulty": "intermediate"
+      }
+    }
+  }
+}

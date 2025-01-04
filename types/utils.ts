@@ -1,4 +1,4 @@
-export interface Exercise {
+export interface Project {
   id: string
   title: string
   description: string
@@ -14,8 +14,8 @@ export interface Exercise {
   solution?: string
 }
 
-export type ExerciseCollection = {
-  [key: string]: Exercise
+export type ProjectCollection = {
+  [key: string]: Project
 }
 
 export type Example = {
