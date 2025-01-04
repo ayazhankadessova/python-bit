@@ -55,7 +55,7 @@ const dialogsInfo: DialogsInfo = {
   },
   Tutorials: {
     title: 'Tutorials',
-    href: '/blog',
+    href: '/tutorials',
     toggle: false,
   },
   Projects: {

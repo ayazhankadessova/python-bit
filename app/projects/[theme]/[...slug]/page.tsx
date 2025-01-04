@@ -5,7 +5,7 @@ import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
 import BackButton from '@/components/ui/backbutton'
 import PythonResizableCodeEditor from '@/components/code-resizable-executor'
-import { getExerciseById } from '@/utils/projects'
+import { getExerciseById } from '@/lib/projects/utils'
 import { ProjectStatus } from '@/components/projects/project-status'
 import '@/styles/mdx-style.css'
 

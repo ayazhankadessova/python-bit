@@ -1,4 +1,4 @@
-import { posts } from '#site/content'
+import { tutorials } from '#site/content'
 import { notFound } from 'next/navigation'
 import { MDXContent } from '@/components/mdx-components'
 import { SharePost } from '@/components/share-post'
@@ -14,26 +14,26 @@ interface PostPageProps {
 
 async function getPostFromParams(params: PostPageProps['params']) {
   const slug = params?.slug?.join('/')
-  const post = posts.find((post) => post.slugAsParams === slug)
+  const tutorial = tutorials.find((tutorial) => tutorial.slugAsParams === slug)
 
-  return post
+  return tutorial
 }
 
 // if slug is same as slugAsParams of one of the pages
 export async function generateStaticParams(): Promise<
   { slug: string[]; revalidate?: number }[]
 > {
-  return posts.map((post) => ({
-    slug: post.slugAsParams.split('/'),
+  return tutorials.map((tutorial) => ({
+    slug: tutorial.slugAsParams.split('/'),
     revalidate: 7200,
   }))
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-  const post = await getPostFromParams(params)
-  const fullLinkGenerated = `${siteConfig.url}/blog/${params?.slug?.join('/')}`
+  const tutorial = await getPostFromParams(params)
+  const fullLinkGenerated = `${siteConfig.url}/tutorials/${params?.slug?.join('/')}`
 
-  if (!post || !post.published) {
+  if (!tutorial || !tutorial.published) {
     notFound()
   }
 
@@ -45,15 +45,15 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
       <article className='prose prose-img:rounded-xl max-w-none mt-2 prose dark:prose-invert'>
         <h1 className='mb-2 text-foreground dark:text-foreground'>
-          {post.title}
+          {tutorial.title}
         </h1>
-        {post.description ? (
+        {tutorial.description ? (
           <p className='text-xl mt-0  text-muted-foreground dark:text-muted-foreground'>
-            {post.description}
+            {tutorial.description}
           </p>
         ) : null}
         <hr className='my-4' />
-        <MDXContent code={post.body} />
+        <MDXContent code={tutorial.body} />
       </article>
     </div>
   )

@@ -394,8 +394,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## jan 4
 - [x] add back btn to theme
-- [ ] Project status 
-- [ ] project status to theme
+- [x] Project status 
+- [x] project status to theme
 - [ ] last attemp to date
 - [ ] `api/projects/[pid]` -> we get info on that project and pass to postItem. useSWR
 - [ ] add attempts. show attempts
