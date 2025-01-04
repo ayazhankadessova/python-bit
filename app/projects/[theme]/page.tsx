@@ -17,7 +17,6 @@ import BackButton from '@/components/ui/backbutton'
 import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
 import { ProjectItem } from '@/components/projects/project-item'
-import { useAuth } from '@/contexts/AuthContext'
 
 interface ThemePageProps {
   params: {
@@ -101,7 +100,6 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
               <ProjectItem
                 key={project.slugAsParams}
                 project={project}
-                // user={user}
               />
             ))}
           </div>
