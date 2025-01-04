@@ -10,7 +10,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ProjectStatus } from './project-status'
-import { User } from '@/types/firebase'
 
 interface Project {
   title: string
