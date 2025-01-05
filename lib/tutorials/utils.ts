@@ -106,23 +106,54 @@ export async function handleExerciseSubmission(
 }
 
 export async function handleExerciseRun(user: User, tutorialId: string) {
-  if (!user) return
+  if (!user) return null
+  if (!tutorialId) return null
 
-  const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
-  const now = Date.now()
+  try {
+    const progressRef = doc(
+      fireStore,
+      'users',
+      user.uid,
+      'tutorials',
+      tutorialId
+    )
+    const now = Date.now()
 
-  // Only update the lastUpdated timestamp
-  await setDoc(
-    progressRef,
-    {
+    // Get current data first to ensure document exists
+    const docSnap = await getDoc(progressRef)
+
+    // Initialize with default structure
+    const currentData: TutorialData = {
+      exercises: {},
       lastUpdated: now,
-    },
-    { merge: true }
-  )
+      ...(docSnap.exists() ? (docSnap.data() as TutorialData) : {}),
+    }
 
-  return {
-    timestamp: now,
-    lastUpdated: now,
+    // Create update object with type safety
+    const updateData = {
+      lastUpdated: now,
+      // Preserve exercises if they exist
+      ...(currentData.exercises
+        ? { exercises: currentData.exercises }
+        : { exercises: {} }),
+    }
+
+    // Update the document
+    await setDoc(progressRef, updateData, { merge: true })
+
+    return {
+      timestamp: now,
+      lastUpdated: now,
+      success: true,
+    }
+  } catch (error) {
+    console.error('Error in handleExerciseRun:', error)
+    return {
+      timestamp: Date.now(),
+      lastUpdated: Date.now(),
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    }
   }
 }
 
@@ -145,28 +176,3 @@ export async function getLatestExerciseCode(
 
   return exercise.attempts[exercise.attempts.length - 1].code
 }
-
-// export async function handleExerciseSubmission(
-//   user: User,
-//   tutorialId: string,
-//   exerciseNumber: number,
-//   success: boolean
-//   code: string
-// ) {
-//   if (!user) return
-
-//   const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
-
-//   await setDoc(
-//     progressRef,
-//     {
-//       exercises: {
-//         [exerciseNumber]: {
-//           completed: true,
-//           timestamp: Date.now(),
-//         },
-//       },
-//     },
-//     { merge: true }
-//   )
-// }
