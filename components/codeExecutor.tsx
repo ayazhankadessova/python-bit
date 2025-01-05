@@ -6,7 +6,7 @@ import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { useAuth } from '@/contexts/AuthContext'
-import { handleExerciseSubmission } from '@/lib/tutorials/utils'
+import { handleExerciseSubmission, handleExerciseRun } from '@/lib/tutorials/utils'
 import { ExerciseCodeEditorProps } from '@/types/props'
 import { invalidateTutorialProgress } from '@/hooks/tutorial/useTutorialProgress'
 import {
@@ -101,6 +101,10 @@ const PythonCodeEditor = ({
         )
         // In any component
         await invalidateTutorialProgress(user.uid, tutorial_id)
+      }
+
+      if (user && !isSubmission && !isProject && code) {
+        await handleExerciseRun(user, tutorial_id)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')

@@ -4,6 +4,14 @@ import { doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { TutorialProgress, TutorialData } from '@/types/tutorial/tutorial'
 
+const DEFAULT_TUTORIAL_PROGRESS: TutorialProgress = {
+  progress: 0,
+  completedExercises: 0,
+  totalExercises: 0,
+  exercises: {},
+  lastUpdated: 1704449954,
+}
+
 export async function GET(request: Request) {
   try {
     // Get URL parameters using URLSearchParams
@@ -26,11 +34,7 @@ export async function GET(request: Request) {
 
     // If no document exists, return default progress
     if (!docSnap.exists()) {
-      return NextResponse.json({
-        progress: 0,
-        exercises: {},
-        lastUpdated: Date.now(),
-      })
+      return NextResponse.json(DEFAULT_TUTORIAL_PROGRESS)
     }
 
     // Calculate progress
@@ -48,7 +52,7 @@ export async function GET(request: Request) {
       completedExercises,
       totalExercises: Number(count),
       exercises,
-      lastUpdated: data.lastUpdated,
+      lastUpdated: data.lastUpdated ?? Date.now(),
     }
 
     return NextResponse.json(response)

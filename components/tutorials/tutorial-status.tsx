@@ -3,7 +3,7 @@
 import { CheckCircle, Clock, BookOpen } from 'lucide-react'
 import { useTutorialProgress } from '@/hooks/tutorial/useTutorialProgress'
 import { useAuth } from '@/contexts/AuthContext'
-import { cn } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 
 interface TutorialStatusProps {
   tutorialId: string
@@ -23,7 +23,7 @@ export function TutorialStatus({
   textClassName,
 }: TutorialStatusProps) {
   const { user } = useAuth()
-  const { progress, completedExercises, totalExercises, isLoading } =
+  const { progress, completedExercises, totalExercises, isLoading, lastUpdated } =
     useTutorialProgress(tutorialId, exerciseCount, user, {
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
@@ -67,9 +67,16 @@ export function TutorialStatus({
             </>
           )}
         </div>
-        {progress > 0 && <div className={cn('text-muted-foreground', textClassName)}>
-          {completedExercises}/{totalExercises} exercises completed
-        </div>}
+        {progress > 0 && (
+          <div className={cn('text-muted-foreground', textClassName)}>
+            {completedExercises}/{totalExercises} exercises completed
+          </div>
+        )}
+        {lastUpdated && lastUpdated > 1704449954 && (
+          <div className='text-muted-foreground'>
+            Last attempt: {formatDate(lastUpdated)}
+          </div>
+        )}
       </div>
     )
   }

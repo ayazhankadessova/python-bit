@@ -96,43 +96,26 @@ export async function handleExerciseSubmission(
   }
 }
 
-// export async function handleExerciseRun(
-//   user: User,
-//   tutorialId: string,
-//   exerciseNumber: number,
-// ) {
-//   if (!user) return
+export async function handleExerciseRun(user: User, tutorialId: string) {
+  if (!user) return
 
-//   const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
-//   const now = Date.now()
+  const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
+  const now = Date.now()
 
-//   // Get current exercise data
-//   const docSnap = await getDoc(progressRef)
-//   const currentData = docSnap.exists()
-//     ? (docSnap.data() as TutorialData)
-//     : { exercises: {} as Record<number, Exercise>, lastUpdated: now }
+  // Only update the lastUpdated timestamp
+  await setDoc(
+    progressRef,
+    {
+      lastUpdated: now,
+    },
+    { merge: true }
+  )
 
-//   // Get current exercise or create default
-//   const currentExercise =
-//     currentData.exercises[exerciseNumber] ?? createDefaultExercise(now)
-
-//   // Prepare the exercise update
-//   // Update the document
-//   await setDoc(
-//     progressRef,
-//     {
-//       exercises: {
-//         [exerciseNumber]: exerciseUpdate,
-//       },
-//       lastUpdated: now,
-//     },
-//     { merge: true }
-//   )
-
-//   return {
-//     timestamp: now,
-//   }
-// }
+  return {
+    timestamp: now,
+    lastUpdated: now,
+  }
+}
 
 export async function getLatestExerciseCode(
   user: User,

@@ -50,11 +50,11 @@ export function useTutorialProgress(
   )
 
   return {
-    progress: data?.progress || 0,
+    progress: data?.progress ?? 0,
     completedExercises: data?.completedExercises,
     totalExercises: data?.totalExercises,
     exercises: data?.exercises,
-    lastUpdated: Date.now(),
+    lastUpdated: data?.lastUpdated,
     isLoading: !error && !data,
     error,
     invalidateCache: () => mutate(undefined, true),
