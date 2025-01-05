@@ -18,7 +18,7 @@ interface TutorialItemProps {
   user: User | null
 }
 
-export function TutorialItem({ post, user }: TutorialItemProps) {
+export function TutorialItem({ post }: TutorialItemProps) {
   const { slug, title, description, tags, exercises, firestoreId } = post
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
