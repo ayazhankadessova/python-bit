@@ -2,7 +2,6 @@ import { doc, getDoc, updateDoc, arrayUnion, setDoc, increment, collection } fro
 import { fireStore } from '@/firebase/firebase'
 import { User } from '@/types/firebase'
 import { Socket } from 'socket.io-client'
-import { TutorialData} from "@/types/tutorial/tutorial"
 
 // Shared helper function to update weekly progress
 export async function updateWeeklyProgress(
@@ -89,52 +88,6 @@ export async function handleTaskCompletion({
     console.error('Error handling task completion:', error)
     throw error
   }
-}
-
-export async function handleExerciseCompletion(
-  user: User,
-  tutorialId: string,
-  exerciseNumber: number
-) {
-  if (!user) return
-
-  const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
-
-  await setDoc(
-    progressRef,
-    {
-      exercises: {
-        [exerciseNumber]: {
-          completed: true,
-          timestamp: Date.now(),
-        },
-      },
-    },
-    { merge: true }
-  )
-}
-
-export async function getTutorialProgress(
-  userId: string,
-  tutorialId: string,
-  count: number
-) {
-  const tutorialRef = doc(fireStore, 'users', userId, 'tutorials', tutorialId)
-  const docSnap = await getDoc(tutorialRef)
-
-  if (!docSnap.exists()) return 0
-
-  const data = docSnap.data() as TutorialData
-  console.log('Raw data:', JSON.stringify(data, null, 2))
-
-  // Correctly parse exercises
-  const exercises = data.exercises || {}
-
-  const completedExercises = Object.values(exercises).filter(
-    (exercise) => exercise?.completed
-  ).length
-
-  return (completedExercises / count) * 100
 }
 
 export async function handleProjectCompletion(

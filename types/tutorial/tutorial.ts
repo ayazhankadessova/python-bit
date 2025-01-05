@@ -17,13 +17,19 @@ export interface UseTutorialProgressOptions {
   dedupingInterval?: number
 }
 
-export interface ExerciseProgress {
-  completed: boolean
+export interface ExerciseAttempt {
   timestamp: number
+  success: boolean
+  code: string
+}
+
+export interface Exercise {
+  completed: boolean
+  lastUpdated: number
+  attempts: ExerciseAttempt[]
 }
 
 export interface TutorialData {
-  exercises?: {
-    [exerciseNumber: number]: ExerciseProgress
-  }
+  exercises: Record<number, Exercise>
+  lastUpdated: number
 }

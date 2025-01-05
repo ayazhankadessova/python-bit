@@ -48,7 +48,7 @@ export async function GET(request: Request) {
       completedExercises,
       totalExercises: Number(count),
       exercises,
-      lastUpdated: Date.now(),
+      lastUpdated: data.lastUpdated,
     }
 
     return NextResponse.json(response)
