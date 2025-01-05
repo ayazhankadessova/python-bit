@@ -401,6 +401,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Jan 5
 
+- [ ] add Try again button and reser code button
 - [ ] add overall Progress thing to tutorial
 - [ ] add last Activity
 - [ ] keep all interfaces in 1 place
