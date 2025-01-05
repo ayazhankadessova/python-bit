@@ -52,22 +52,32 @@ export async function handleExerciseSubmission(
   const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
   const now = Date.now()
 
-  // Get current exercise data
+  // Get current exercise data with explicit type checking
   const docSnap = await getDoc(progressRef)
-  const currentData = docSnap.exists()
-    ? (docSnap.data() as TutorialData)
-    : { exercises: {} as Record<number, Exercise>, lastUpdated: now }
+  const currentData: TutorialData = {
+    exercises: {},
+    lastUpdated: now,
+    ...(docSnap.exists() ? (docSnap.data() as TutorialData) : {}),
+  }
+
+  // Ensure exercises object exists
+  if (!currentData.exercises) {
+    currentData.exercises = {}
+  }
 
   // Get current exercise or create default
   const currentExercise =
     currentData.exercises[exerciseNumber] ?? createDefaultExercise(now)
 
+  // Ensure attempts array exists
+  const currentAttempts = currentExercise.attempts || []
+
   // Prepare the exercise update
   const exerciseUpdate: Exercise = {
-    completed: success || currentExercise.completed, // Once completed, stays completed
+    completed: success || currentExercise.completed || false, // Add fallback for completed
     lastUpdated: now,
     attempts: [
-      ...currentExercise.attempts,
+      ...currentAttempts,
       {
         timestamp: now,
         success,
@@ -76,17 +86,16 @@ export async function handleExerciseSubmission(
     ],
   }
 
-  // Update the document
-  await setDoc(
-    progressRef,
-    {
-      exercises: {
-        [exerciseNumber]: exerciseUpdate,
-      },
-      lastUpdated: now,
+  // Create a safe update object
+  const updateData = {
+    exercises: {
+      [exerciseNumber]: exerciseUpdate,
     },
-    { merge: true }
-  )
+    lastUpdated: now,
+  }
+
+  // Update the document
+  await setDoc(progressRef, updateData, { merge: true })
 
   return {
     success,
