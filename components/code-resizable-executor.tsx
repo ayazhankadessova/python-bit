@@ -13,7 +13,7 @@ import {
   ResizablePanelGroup,
   ResizablePanel,
 } from '@/components/ui/resizable'
-import { useProgress } from '@/hooks/projects/useProjectProgress'
+import { useProjectProgress } from '@/hooks/projects/useProjectProgress'
 
 const PythonResizableCodeEditor = ({
   initialCode,
@@ -30,7 +30,7 @@ const PythonResizableCodeEditor = ({
   const [theme, setTheme] = useState<'light' | 'dark' | 'vscode'>('vscode')
   const [isRunning, setIsRunning] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const { invalidateCache } = useProgress(project_id, user)
+  const { invalidateCache } = useProjectProgress(project_id, user)
 
   const getTheme = () => {
     switch (theme) {

@@ -4,6 +4,7 @@ import { MDXContent } from '@/components/mdx-components'
 import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
 import BackButton from '@/components/ui/backbutton'
+import { TutorialStatus } from '@/components/tutorials/tutorial-status'
 import '@/styles/mdx-style.css'
 
 interface PostPageProps {
@@ -47,6 +48,12 @@ export default async function PostPage({ params }: PostPageProps) {
         <h1 className='mb-2 text-foreground dark:text-foreground'>
           {tutorial.title}
         </h1>
+        <TutorialStatus
+          tutorialId={tutorial.firestoreId}
+          exerciseCount={tutorial.exercises}
+          detailed={true}
+          className='my-6'
+        />
         {tutorial.description ? (
           <p className='text-xl mt-0  text-muted-foreground dark:text-muted-foreground'>
             {tutorial.description}

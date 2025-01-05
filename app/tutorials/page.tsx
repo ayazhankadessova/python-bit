@@ -4,7 +4,7 @@
 
 import React, { useState } from 'react'
 import { tutorials } from '#site/content'
-import { PostItem } from '@/components/post-item'
+import { TutorialItem } from '@/components/tutorials/tutorial-item'
 import {
   sortTutorials,
   filterTutorialsBySearchTerm,
@@ -101,7 +101,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
         <ul className='flex flex-col space-y-4'>
           {displayTutorials.map((tutorial) => (
             <li key={tutorial.slug}>
-              <PostItem post={tutorial} user={user} />
+              <TutorialItem post={tutorial} user={user} />
             </li>
           ))}
         </ul>

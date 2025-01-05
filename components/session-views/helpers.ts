@@ -195,31 +195,3 @@ export async function handleProjectCompletion(
     throw error
   }
 }
-
-export async function getProjectProgress(userId: string, projectId: string) {
-  try {
-    const projectRef = doc(fireStore, 'users', userId, 'projects', projectId)
-    const projectDoc = await getDoc(projectRef)
-
-    if (!projectDoc.exists()) {
-      // Project hasn't been attempted yet
-      return {
-        completed: false,
-        lastAttempt: null,
-        totalAttempts: 0,
-        successfulAttempts: 0,
-      }
-    }
-
-    const data = projectDoc.data()
-    return {
-      completed: data.completed || false,
-      lastAttempt: data.lastAttempt || null,
-      totalAttempts: data.totalAttempts || 0,
-      successfulAttempts: data.successfulAttempts || 0,
-    }
-  } catch (error) {
-    console.error('Error getting project progress:', error)
-    throw error
-  }
-}
