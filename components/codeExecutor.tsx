@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { Play, Loader2, Sun, Moon, Code2, RotateCcw } from 'lucide-react'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
