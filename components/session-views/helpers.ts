@@ -3,17 +3,6 @@ import { fireStore } from '@/firebase/firebase'
 import { User } from '@/types/firebase'
 import { Socket } from 'socket.io-client'
 
-interface ExerciseProgress {
-  completed: boolean
-  timestamp: number
-}
-
-interface TutorialData {
-  exercises?: {
-    [exerciseNumber: number]: ExerciseProgress
-  }
-}
-
 // Shared helper function to update weekly progress
 export async function updateWeeklyProgress(
   classroomId: string,
@@ -101,52 +90,6 @@ export async function handleTaskCompletion({
   }
 }
 
-export async function handleExerciseCompletion(
-  user: User,
-  tutorialId: string,
-  exerciseNumber: number
-) {
-  if (!user) return
-
-  const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
-
-  await setDoc(
-    progressRef,
-    {
-      exercises: {
-        [exerciseNumber]: {
-          completed: true,
-          timestamp: Date.now(),
-        },
-      },
-    },
-    { merge: true }
-  )
-}
-
-export async function getTutorialProgress(
-  userId: string,
-  tutorialId: string,
-  count: number
-) {
-  const tutorialRef = doc(fireStore, 'users', userId, 'tutorials', tutorialId)
-  const docSnap = await getDoc(tutorialRef)
-
-  if (!docSnap.exists()) return 0
-
-  const data = docSnap.data() as TutorialData
-  console.log('Raw data:', JSON.stringify(data, null, 2))
-
-  // Correctly parse exercises
-  const exercises = data.exercises || {}
-
-  const completedExercises = Object.values(exercises).filter(
-    (exercise) => exercise?.completed
-  ).length
-
-  return (completedExercises / count) * 100
-}
-
 export async function handleProjectCompletion(
   user: User,
   project_id: string,
@@ -192,34 +135,6 @@ export async function handleProjectCompletion(
     )
   } catch (error) {
     console.error('Error recording project completion:', error)
-    throw error
-  }
-}
-
-export async function getProjectProgress(userId: string, projectId: string) {
-  try {
-    const projectRef = doc(fireStore, 'users', userId, 'projects', projectId)
-    const projectDoc = await getDoc(projectRef)
-
-    if (!projectDoc.exists()) {
-      // Project hasn't been attempted yet
-      return {
-        completed: false,
-        lastAttempt: null,
-        totalAttempts: 0,
-        successfulAttempts: 0,
-      }
-    }
-
-    const data = projectDoc.data()
-    return {
-      completed: data.completed || false,
-      lastAttempt: data.lastAttempt || null,
-      totalAttempts: data.totalAttempts || 0,
-      successfulAttempts: data.successfulAttempts || 0,
-    }
-  } catch (error) {
-    console.error('Error getting project progress:', error)
     throw error
   }
 }

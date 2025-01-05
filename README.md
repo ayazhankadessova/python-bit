@@ -398,13 +398,22 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] project status to theme
 - [ ] last attemp to date -> format date is util
 - [x] move utils/projects to lib
+
+## Jan 5
+
+- [x] add Reset code button to codeExecutor
+- [x] handleExercise run
+- [x] lastUpdated not shown if no progress at all
+- [x] add overall Progress thing to tutorial
+- [x] add last Activity
 - [ ] keep all interfaces in 1 place
-- [ ] `api/projects/[pid]` -> we get info on that project and pass to postItem. useSWR
 - [ ] add attempts. show attempts
+
+## Jan 6
 - [ ] show attempts for project
 - [ ] add one more project
 - [ ] `api/tutorial/[tid]` -> get info on tutorial progress. cache it and only refresh if hanld exercise completing
-- [ ] const { progress, invalidateCache } = useProgress(projectId, user)
+- [ ] const { progress, invalidateCache } = useProjectProgress(projectId, user)
 - [ ] add latest attempt to project
 
 // When submitting code:

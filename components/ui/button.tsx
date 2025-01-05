@@ -10,14 +10,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         destructive:
-          'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
+          'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:-translate-y-0.5',
         outline:
           'border border-input bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] shadow-sm hover:bg-accent hover:text-accent-foreground',
         secondary:
           'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
-        softBlue: 'bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-primary font-medium shadow-sm border border-blue-200/50 hover:shadow-md hover:from-blue-200 hover:via-blue-300 hover:to-blue-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-blue-900/70 dark:via-blue-800/70 dark:to-blue-900/70 dark:border-blue-700/20 dark:hover:from-blue-800/70 dark:hover:via-blue-700/70 dark:hover:to-blue-800/70',        // 'bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-blue-900 shadow-sm hover:shadow-md hover:from-blue-200 hover:via-blue-300 hover:to-blue-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 dark:text-blue-100 dark:border-blue-700/50 dark:hover:from-blue-800 dark:hover:via-blue-700 dark:hover:to-blue-800',
+        softBlue:
+          'bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-primary font-medium shadow-sm border border-blue-200/50 hover:shadow-md hover:from-blue-200 hover:via-blue-300 hover:to-blue-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-blue-900/70 dark:via-blue-800/70 dark:to-blue-900/70 dark:border-blue-700/20 dark:hover:from-blue-800/70 dark:hover:via-blue-700/70 dark:hover:to-blue-800/70', // 'bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-blue-900 shadow-sm hover:shadow-md hover:from-blue-200 hover:via-blue-300 hover:to-blue-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 dark:text-blue-100 dark:border-blue-700/50 dark:hover:from-blue-800 dark:hover:via-blue-700 dark:hover:to-blue-800',
         default:
           'relative bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-500 text-white shadow-lg hover:from-blue-700 hover:via-indigo-600 hover:to-blue-600 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0',
       },

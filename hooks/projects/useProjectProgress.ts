@@ -8,7 +8,7 @@ export interface Progress {
   lastAttempt: number
 }
 
-interface UseProgressOptions {
+interface useProjectProgressOptions {
   revalidateOnFocus?: boolean
   revalidateOnReconnect?: boolean
   dedupingInterval?: number
@@ -17,10 +17,10 @@ interface UseProgressOptions {
 /**
  * Custom hook for fetching user progress on projects/tasks
  */
-export function useProgress(
+export function useProjectProgress(
   projectId: string | null,
   user: User | null,
-  options: UseProgressOptions = {}
+  options: useProjectProgressOptions = {}
 ) {
   const {
     revalidateOnFocus = false,

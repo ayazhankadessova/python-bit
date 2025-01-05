@@ -1,7 +1,7 @@
 'use client'
 
 import { CheckCircle, Clock } from 'lucide-react'
-import { useProgress } from '@/hooks/projects/useProjectProgress'
+import { useProjectProgress } from '@/hooks/projects/useProjectProgress'
 import { useAuth } from '@/contexts/AuthContext'
 import { formatDate } from '@/lib/utils'
 
@@ -12,7 +12,7 @@ interface ProjectStatusProps {
 
 export function ProjectStatus({ projectId, detailed }: ProjectStatusProps) {
   const { user } = useAuth()
-  const { progress } = useProgress(projectId, user, {
+  const { progress } = useProjectProgress(projectId, user, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
     dedupingInterval: 600000,
