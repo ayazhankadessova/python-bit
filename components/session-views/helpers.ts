@@ -2,17 +2,7 @@ import { doc, getDoc, updateDoc, arrayUnion, setDoc, increment, collection } fro
 import { fireStore } from '@/firebase/firebase'
 import { User } from '@/types/firebase'
 import { Socket } from 'socket.io-client'
-
-interface ExerciseProgress {
-  completed: boolean
-  timestamp: number
-}
-
-interface TutorialData {
-  exercises?: {
-    [exerciseNumber: number]: ExerciseProgress
-  }
-}
+import { TutorialData} from "@/types/tutorial/tutorial"
 
 // Shared helper function to update weekly progress
 export async function updateWeeklyProgress(

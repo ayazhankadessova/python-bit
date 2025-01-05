@@ -3,8 +3,7 @@
 import { CheckCircle, Clock, BookOpen } from 'lucide-react'
 import { useTutorialProgress } from '@/hooks/tutorial/useTutorialProgress'
 import { useAuth } from '@/contexts/AuthContext'
-// import { formatDate } from '@/lib/utils'
-import { cn } from '@/lib/utils' 
+import { cn } from '@/lib/utils'
 
 interface TutorialStatusProps {
   tutorialId: string
@@ -24,22 +23,15 @@ export function TutorialStatus({
   textClassName,
 }: TutorialStatusProps) {
   const { user } = useAuth()
-  const {
-    progress,
-    completedExercises,
-    // totalExercises,
-    // lastUpdated,
-    // exercises,
-  } = useTutorialProgress(tutorialId, exerciseCount, user, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    dedupingInterval: 600000,
-  })
+  const { progress, completedExercises, totalExercises, isLoading } =
+    useTutorialProgress(tutorialId, exerciseCount, user, {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
+      dedupingInterval: 600000,
+    })
 
-  if (!user || !progress) return null
-
-  // If no exercises started, don't show anything
-  if (progress === 0) return null
+  // Only return null if user is not authenticated or data is still loading
+  if (!user || isLoading) return null
 
   // Detailed view with exercise count and last updated
   if (detailed) {
@@ -75,14 +67,9 @@ export function TutorialStatus({
             </>
           )}
         </div>
-        <div className={cn('text-muted-foreground', textClassName)}>
-          {completedExercises}/{exerciseCount} exercises completed
-        </div>
-        {/* {lastUpdated && (
-          <div className={cn('text-muted-foreground', textClassName)}>
-            Last activity: {formatDate(lastUpdated)}
-          </div>
-        )} */}
+        {progress > 0 && <div className={cn('text-muted-foreground', textClassName)}>
+          {completedExercises}/{totalExercises} exercises completed
+        </div>}
       </div>
     )
   }

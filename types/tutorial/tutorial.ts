@@ -16,3 +16,14 @@ export interface UseTutorialProgressOptions {
   revalidateOnReconnect?: boolean
   dedupingInterval?: number
 }
+
+export interface ExerciseProgress {
+  completed: boolean
+  timestamp: number
+}
+
+export interface TutorialData {
+  exercises?: {
+    [exerciseNumber: number]: ExerciseProgress
+  }
+}

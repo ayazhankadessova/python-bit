@@ -41,7 +41,7 @@ export function useTutorialProgress(
   )
 
   return {
-    progress: data?.progress,
+    progress: data?.progress || 0,
     completedExercises: data?.completedExercises,
     totalExercises: data?.totalExercises,
     exercises: data?.exercises,
