@@ -47,13 +47,22 @@ export function useProjectProgress(
       revalidateOnFocus,
       revalidateOnReconnect,
       dedupingInterval,
+      revalidateOnMount: true, // Always revalidate on mount
     }
   )
+
+  const invalidateCache = async () => {
+    try {
+      await mutate(undefined, true) // Drop the cache and revalidate
+    } catch (error) {
+      console.error('Error revalidating progress:', error)
+    }
+  }
 
   return {
     progress: data,
     isLoading: !error && !data,
     error,
-    invalidateCache: () => mutate(undefined, true), // Drop the cache and revalidate
+    invalidateCache,
   }
 }

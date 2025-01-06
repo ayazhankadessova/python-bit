@@ -410,6 +410,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [ ] add attempts. show attempts
 
 ## Jan 6
+- [ ] Invalidate projects status cache
 - [ ] show attempts for project
 - [ ] add one more project
 - [ ] `api/tutorial/[tid]` -> get info on tutorial progress. cache it and only refresh if hanld exercise completing

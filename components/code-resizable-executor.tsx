@@ -31,6 +31,7 @@ const PythonResizableCodeEditor = ({
   project_id,
   isProject = false,
 }: CodeEditorProps) => {
+  // const userString = useAuth()
   const {user} = useAuth()
   const [code, setCode] = useState(initialCode)
   const [output, setOutput] = useState('')
@@ -92,13 +93,17 @@ const PythonResizableCodeEditor = ({
         // Set correctness for submissions
         if (isSubmission) {
           setIsCorrect(data.success)
-          invalidateCache()
         }
   
         // Handle project completion
-        if (data.success && user && isSubmission) {
-          await handleProjectCompletion(user, project_id, code!, true)
+        if (user && isSubmission) {
+          await handleProjectCompletion(user, project_id, code!, data.success)
         }
+
+        if (data.success && user  && isSubmission) {
+          await invalidateCache()
+        }
+
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred')
         if (isSubmission) {
