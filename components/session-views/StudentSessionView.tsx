@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
-import { Socket } from 'socket.io-client'
 import Split from 'react-split'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
@@ -20,21 +19,11 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import FileProcessorTest from './FileProcessorTest'
 import { handleTaskCompletion } from './helpers'
 import {Week} from "@/types/firebase"
+import { useWebSocket } from '@/hooks/websocket/useWebSocket'
 
-interface StudentSessionViewProps {
-  classroomId: string
-  onEndSession: () => void
-  socket: Socket | null
-}
-
-export function StudentSessionView({
-  classroomId,
-  onEndSession,
-  socket,
-}: StudentSessionViewProps) {
+export function StudentSessionView({ classroomId }: { classroomId: string }) {
   const { user } = useAuth()
   const { toast } = useToast()
   const [currentProblem, setCurrentProblem] = useState<Problem | null>(null)
@@ -45,9 +34,15 @@ export function StudentSessionView({
   const [weekProblems, setWeekProblems] = useState<string[]>([])
   const [isAiHelpOpen, setIsAiHelpOpen] = useState(false)
   const [output, setOutput] = useState('')
-  const joinedRoom = useRef(false)
   const [isRunning, setIsRunning] = useState(false)
 
+   const { isConnected, sendMessage, on } = useWebSocket(
+     classroomId,
+     user?.displayName,
+     false // isTeacher = false
+   )
+
+  // Initial data fetch
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -64,15 +59,15 @@ export function StudentSessionView({
         }
 
         const classroomData = classroomDoc.data()
-        if (!classroomData.activeSession) {
-          toast({
-            title: 'No Active Session',
-            description: 'Please wait for the teacher to start the session',
-            variant: 'destructive',
-          })
-          onEndSession()
-          return
-        }
+        // if (!classroomData.activeSession) {
+        //   toast({
+        //     title: 'No Active Session',
+        //     description: 'Please wait for the teacher to start the session',
+        //     variant: 'destructive',
+        //   })
+        //   onEndSession()
+        //   return
+        // }
 
         setSelectedWeek(classroomData.lastTaughtWeek)
         const curriculumRef = doc(
@@ -117,36 +112,25 @@ export function StudentSessionView({
     }
 
     fetchData()
-  }, [classroomId, user, toast, onEndSession])
+  }, [classroomId, user, toast])
 
-  // Socket event handlers
-  useEffect(() => {
-    if (!socket || !user?.displayName) return
+  // WebSocket event handlers
+   useEffect(() => {
+     // Handle receiving code from teacher
+     const unsubscribeTeacherCode = on('teacher-code', (data) => {
+       setStudentCode(data.code)
+     })
 
-    // Only join room if we haven't already
-    if (!joinedRoom.current) {
-      console.log('Joining room for first time')
-      socket.emit('join-room', classroomId, user.displayName, false)
-      joinedRoom.current = true
-    }
+     // Handle code requests from teacher
+     const unsubscribeCodeRequest = on('request-code', () => {
+       sendMessage('code-update', { studentCode })
+     })
 
-    socket.on('teacher-code', (data: { code: string }) => {
-      setStudentCode(data.code)
-    })
-
-    socket.on('session-ended', () => {
-      toast({
-        title: 'Session Ended',
-        description: 'The teacher has ended the session',
-      })
-      onEndSession()
-    })
-
-    return () => {
-      socket.off('teacher-code')
-      socket.off('session-ended')
-    }
-  }, [socket, user?.displayName, classroomId, toast, onEndSession])
+     return () => {
+       unsubscribeTeacherCode()
+       unsubscribeCodeRequest()
+     }
+   }, [on, studentCode, sendMessage])
 
   const handleRunCode = async () => {
     if (!currentProblem || !studentCode) return
@@ -187,7 +171,6 @@ export function StudentSessionView({
 
     setIsRunning(true)
     try {
-      // First validate code structure
       const isValid = currentProblem.handlerFunction(studentCode)
       if (!isValid) {
         throw new Error(
@@ -195,7 +178,6 @@ export function StudentSessionView({
         )
       }
 
-      // Submit code for testing
       const response = await fetch('/api/submit-code', {
         method: 'POST',
         headers: {
@@ -214,17 +196,17 @@ export function StudentSessionView({
         throw new Error(result.error)
       }
 
-      await handleTaskCompletion({
-        taskId: currentProblem.id,
-        userId: user.uid,
-        classroomId,
-        selectedWeek,
-        socket,
-        userName: user.displayName || undefined,
-        onUpdateCompletedProblems: (taskId) => {
-          setCompletedProblems((prev) => [...prev, taskId])
-        },
-      })
+      // await handleTaskCompletion({
+      //   taskId: currentProblem.id,
+      //   userId: user.uid,
+      //   classroomId,
+      //   selectedWeek,
+      //   userName: user.displayName || undefined,
+      //   onUpdateCompletedProblems: (taskId) => {
+      //     setCompletedProblems((prev) => [...prev, taskId])
+      //   },
+      //   sendMessage, // Pass the new sendMessage function instead of socket
+      // })
 
       toast({
         title: 'Success!',
@@ -232,11 +214,10 @@ export function StudentSessionView({
       })
 
       // Notify teacher of completion
-      socket?.emit('task-completed', {
+      sendMessage('task-completed', {
         taskId: currentProblem.id,
         studentId: user.uid,
         studentName: user.displayName,
-        classroomId,
       })
     } catch (error) {
       console.error('Submit code error:', error)
@@ -252,12 +233,11 @@ export function StudentSessionView({
   }
 
   const handleUpdateCode = () => {
-    if (!socket || !user?.displayName) return
+    if (!user?.displayName) return
 
-    socket.emit('code-update', {
+    sendMessage('code-update', {
       code: studentCode,
       username: user.displayName,
-      classroomId,
     })
 
     toast({
@@ -266,12 +246,20 @@ export function StudentSessionView({
     })
   }
 
+  // Add connection status indicator
+  const connectionStatus = isConnected ? (
+    <div className='text-green-500'>Connected</div>
+  ) : (
+    <div className='text-red-500'>Disconnected</div>
+  )
+
   if (isLoading) return <div>Loading...</div>
 
   return (
     <div className='h-screen flex'>
       <div className='w-1/4 border-r p-4 bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] overflow-y-auto'>
         <h2 className='text-xl font-bold mb-4'>Week {selectedWeek} Problems</h2>
+        {connectionStatus}
         <div className='space-y-2'>
           {weekProblems.map((problemId) => {
             const problem = problems[problemId]
@@ -352,16 +340,6 @@ export function StudentSessionView({
           {currentProblem?.id === 'file-processor' ? (
             <div className='mt-4'>
               <h3 className='text-lg font-semibold mb-2'>Test Your Solution</h3>
-              <FileProcessorTest
-                code={studentCode}
-                socket={socket}
-                userId={user!.uid}
-                classroomId={classroomId}
-                selectedWeek={selectedWeek!}
-                onProblemComplete={(problemId) => {
-                  setCompletedProblems((prev) => [...prev, problemId])
-                }}
-              />
             </div>
           ) : (
             <div className='h-40 p-4 bg-black text-white font-mono text-sm overflow-y-auto'>

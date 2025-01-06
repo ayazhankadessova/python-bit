@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
-import { Socket } from 'socket.io-client'
 import { problems } from '@/utils/problems'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
@@ -14,12 +13,7 @@ import { fireStore } from '@/firebase/firebase'
 import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore'
 import { Week } from '@/types/firebase'
 import { Problem } from '@/types/utils'
-
-interface TeacherSessionViewProps {
-  classroomId: string
-  onEndSession: () => void
-  socket: Socket | null
-}
+import { useWebSocket } from '@/hooks/websocket/useWebSocket'
 
 interface WeeklyProgress {
   taskCompletions: {
@@ -29,11 +23,7 @@ interface WeeklyProgress {
   lastUpdated?: string
 }
 
-export function TeacherSessionView({
-  classroomId,
-  onEndSession,
-  socket,
-}: TeacherSessionViewProps) {
+export function TeacherSessionView({ classroomId }: { classroomId: string }) {
   const { user } = useAuth()
   const { toast } = useToast()
   const [currentProblem, setCurrentProblem] = useState<Problem | null>(null)
@@ -52,8 +42,13 @@ export function TeacherSessionView({
   const [output, setOutput] = useState('')
   const [isRunning, setIsRunning] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const joinedRoom = useRef(false)
-  // const inviteLink = `${process.env.NEXT_PUBLIC_BASE_URL}/join/${classroomId}`
+  const [studentCode, setStudentCode] = useState<string>('')
+
+  const { isConnected, sendMessage, on } = useWebSocket(
+    classroomId,
+    user?.displayName,
+    true // isTeacher = true
+  )
 
   const updateWeekProblems = async (weekNumber: number) => {
     try {
@@ -141,10 +136,9 @@ export function TeacherSessionView({
     if (!studentUsername) {
       setTeacherCode(currentProblem?.starterCode || '')
     } else {
-      // Request the student's latest code
-      if (socket) {
-        socket.emit('get-student-code', classroomId, studentUsername)
-      }
+      sendMessage('get-student-code', {
+        username: studentUsername,
+      })
     }
   }
 
@@ -219,11 +213,8 @@ export function TeacherSessionView({
   }
 
   const handleSendCode = () => {
-    if (!socket) return
-
     if (selectedStudentUsername) {
-      socket.emit('send-code-to-student', {
-        classroomId,
+      sendMessage('send-code-to-student', {
         studentUsername: selectedStudentUsername,
         code: teacherCode,
       })
@@ -232,8 +223,7 @@ export function TeacherSessionView({
         description: `Code sent to ${selectedStudentUsername}`,
       })
     } else {
-      socket.emit('send-code-to-all', {
-        classroomId,
+      sendMessage('send-code-to-all', {
         code: teacherCode,
       })
       toast({
@@ -243,14 +233,11 @@ export function TeacherSessionView({
     }
   }
 
-  useEffect(() => {
-    console.log('Socket connection status:', {
-      socketExists: !!socket,
-      userDisplayName: user?.displayName,
-      classroomId,
-      joinedRoom: joinedRoom.current,
-    })
-  }, [socket, user?.displayName, classroomId])
+  const connectionStatus = isConnected ? (
+    <div className='text-green-500'>Connected</div>
+  ) : (
+    <div className='text-red-500'>Disconnected</div>
+  )
 
   // Initial data fetch
   useEffect(() => {
@@ -309,43 +296,41 @@ export function TeacherSessionView({
   }, [classroomId, toast])
 
   // Socket event handlers
+  // Inside TeacherSessionView component
+
   useEffect(() => {
-    if (!socket || !user?.displayName) {
-      console.log('Missing dependencies:', {
-        socket: !!socket,
-        userDisplayName: user?.displayName,
-      })
-      return
-    }
-
-    console.log('Setting up socket event listeners')
-
-    if (!joinedRoom.current) {
-      console.log('Joining room:', classroomId)
-      socket.emit('join-room', classroomId, user.displayName, true)
-      joinedRoom.current = true
-    }
-
-    socket.on('update-participants', (data) => {
-      console.log('Received update-participants:', data)
-      setStudentsUsernames(data.students)
+    // Handle student list updates
+    const unsubscribeParticipants = on('update-participants', (data) => {
+      console.log('Received participants update:', data) // Debug log
+      if (Array.isArray(data.students)) {
+        setStudentsUsernames(data.students)
+      } else {
+        console.error('Received invalid students data:', data)
+      }
     })
 
-    // Add new listener for student code response
-    socket.on('student-code', (data) => {
-      console.log('Received student code:', data)
-      setTeacherCode(data.code)
-      // if (selectedStudentUsername == data.username) {
-      //   setTeacherCode(data.code)
-      // }
+    // Handle receiving student code
+    const unsubscribeStudentCode = on('student-code', (data) => {
+      console.log('Received student code:', data) // Debug log
+      if (data && data.code) {
+        setTeacherCode(data.code)
+      }
+    })
+
+    // Handle student code updates
+    const unsubscribeCodeUpdates = on('student-code-updated', (data) => {
+      console.log('Received code update:', data) // Debug log
+      if (selectedStudentUsername === data.username && data.code) {
+        setStudentCode(data.code)
+      }
     })
 
     return () => {
-      console.log('Cleaning up socket event listeners')
-      socket.off('update-participants')
-      socket.off('student-code')
+      unsubscribeParticipants()
+      unsubscribeStudentCode()
+      unsubscribeCodeUpdates()
     }
-  }, [socket, user?.displayName, classroomId])
+  }, [on, selectedStudentUsername])
 
   if (isLoading) return <div>Loading...</div>
 
@@ -356,6 +341,7 @@ export function TeacherSessionView({
         <div className='space-y-4'>
           <div className='flex justify-between items-center'>
             <h2 className='text-xl font-bold'>Session Control</h2>
+            {connectionStatus}
           </div>
           <WeekSelector
             selectedWeek={selectedWeek}
@@ -365,9 +351,9 @@ export function TeacherSessionView({
               handleStartWeek(weekNumber)
             }}
           />
-          <Button variant='destructive' onClick={onEndSession}>
+          {/* <Button variant='destructive' onClick={onEndSession}>
             End Session
-          </Button>
+          </Button> */}
           <div className='space-y-2'>
             <h3 className='font-semibold'>Connected Students</h3>
             {studentsUsernames.map((studentUsername) => (

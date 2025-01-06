@@ -410,29 +410,22 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [ ] add attempts. show attempts
 
 ## Jan 6
-- [ ] Invalidate projects status cache
+- [x] Invalidate projects status cache
+- [ ] clean up interfaces
+- [ ] Real-time classrooms implement
+
+
+## Jan 7
 - [ ] show attempts for project
 - [ ] add one more project
-- [ ] `api/tutorial/[tid]` -> get info on tutorial progress. cache it and only refresh if hanld exercise completing
+- [ ] Check all api calls. cal execute code -> succes -> frontend -> backend. remove such flow
 - [ ] const { progress, invalidateCache } = useProjectProgress(projectId, user)
 - [ ] add latest attempt to project
+- [ ] Invalidate cache for project using global key
 
-// When submitting code:
-await submitCode(...)
-invalidateCache() // This will drop the cache and trigger a refetch
+## Jan 8: teacher views
 
-
-## Project Test cases
-
-- [ ] Add test cases to 2-3 projects
-Modern Features to Include:
-Achievements/badges system
-Social sharing options
-Project showcases
-Peer reviews
-AI-powered hints
-Real-time collaboration
-Customizable themes/avatars
+- [ ] Monitoring
 
 for every classroom, teachers will want to see progress
 we will leyt them choose classroom and show
@@ -443,21 +436,24 @@ list of students and their progress
 for every student -> go to their "tutorials progress" -> set of completed exercises
 we will see the total progress by 
 tutrials data or every tutorials
-- is logged in ? exerices number, tutorial_id 
-- execute code , is_exercise if yes then upd in firestore
-- show is completed for ever lesson
-- progress for every lesson
-- what to store on firestore (lesson id , total exercises count)
-- for user, create progress_tut collection and store their tut progress
-- [ ] How can i track completion? For every classroom, show list of lessons and how many completed. Completed = Did exercise
-- [ ] Classes
-- [ ] For teacher, add panel to monitor each classroom
+
+
+## Modern Features to Include:
+
+1. Achievements/badges system
+2. Social sharing options
+3. Project showcases
+4. Peer reviews
+5. AI-powered hints
+6. Real-time collaboration
+7. Customizable themes/avatars
+
 
 ## BackLog
-- [ ] GitHub, Logo icons
-- [ ] Dont send expectedOutput and testCases, they should be in Backend
+- [x] GitHub, Logo icons
+- [x] Dont send expectedOutput and testCases, they should be in Backend
 - [ ] Search Button Functionality
-- [ ] logo
+- [x] logo
 - [ ] Add quiz custom elements
 - [ ] fix page paddings & nav font bigger
 - [ ] Pagination in Tutorials page should be more sophisticated (per page), show page numbers
