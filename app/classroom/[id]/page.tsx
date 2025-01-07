@@ -31,7 +31,6 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
   const { toast } = useToast()
   const router = useRouter()
   const { user } = useAuth() // Firebase Auth context
-
   const [error, setError] = useState<string | null>(null)
   const [classroom, setClassroom] = useState<ClassroomData | null>(null)
   const [userRole, setUserRole] = useState<'teacher' | 'student' | null>(null)
@@ -62,7 +61,6 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
         } as ClassroomData
 
         setClassroom(classroomData)
-
         setUserRole(user?.role)
       } catch (error) {
         console.error('Error fetching classroom:', error)

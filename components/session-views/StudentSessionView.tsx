@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { handleTaskCompletion } from './helpers'
+// import { handleTaskCompletion } from './helpers'
 import {Week} from "@/types/firebase"
 import { useWebSocket } from '@/hooks/websocket/useWebSocket'
 

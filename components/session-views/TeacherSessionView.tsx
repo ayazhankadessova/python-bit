@@ -24,7 +24,7 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
   const [selectedStudent, setSelectedStudent] = useState<
     string | null
   >(null)
-  const [students, setStudent] = useState<string[]>([])
+  const [students, setStudents] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null)
   const [weekProblems, setWeekProblems] = useState<string[]>([])
@@ -298,7 +298,7 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
     const unsubscribeParticipants = on('update-participants', (data) => {
       console.log('Received participants update:', data) // Debug log
       if (Array.isArray(data.students)) {
-        setStudentsUsernames(data.students)
+        setStudents(data.students)
       } else {
         console.error('Received invalid students data:', data)
       }
@@ -307,15 +307,15 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
     // Handle receiving student code
     const unsubscribeStudentCode = on('student-code', (data) => {
       console.log('Received student code:', data) // Debug log
-      if (data && data.code) {
-        setTeacherCode(data.code)
+      if (selectedStudent === data.username && data.code) {
+        setStudentCode(data.code)
       }
     })
 
     // Handle student code updates
     const unsubscribeCodeUpdates = on('student-code-updated', (data) => {
       console.log('Received code update:', data) // Debug log
-      if (selectedStudentUsername === data.username && data.code) {
+      if (selectedStudent === data.username && data.code) {
         setStudentCode(data.code)
       }
     })
@@ -325,7 +325,7 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
       unsubscribeStudentCode()
       unsubscribeCodeUpdates()
     }
-  }, [on, selectedStudentUsername])
+  }, [on, selectedStudent])
 
   if (isLoading) return <div>Loading...</div>
 
@@ -351,17 +351,17 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
           </Button> */}
           <div className='space-y-2'>
             <h3 className='font-semibold'>Connected Students</h3>
-            {studentsUsernames.map((studentUsername) => (
+            {students.map((studentUsername) => (
               <Card
                 key={studentUsername}
                 className={`cursor-pointer hover:bg-accent ${
-                  selectedStudentUsername === studentUsername
+                  selectedStudent === studentUsername
                     ? 'border-primary'
                     : ''
                 }`}
                 onClick={() => {
                   // If clicking the same student, deselect them
-                  if (selectedStudentUsername === studentUsername) {
+                  if (selectedStudent === studentUsername) {
                     handleStudentSelect(null)
                   } else {
                     handleStudentSelect(studentUsername)
@@ -405,7 +405,7 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
                       <CardTitle className='text-sm'>
                         {problems[problemId].title}
                         <span className='text-muted-foreground ml-2'>
-                          {completions.length}/{studentsUsernames.length}{' '}
+                          {completions.length}/{students.length}{' '}
                           completed
                         </span>
                       </CardTitle>
@@ -418,7 +418,7 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
 
           <div className='flex flex-col gap-4'>
             <CodeMirror
-              value={teacherCode}
+              value={selectedStudent ? studentCode : teacherCode}
               height='300px'
               theme={vscodeDark}
               extensions={[python()]}
@@ -437,8 +437,8 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
                 </Button>
                 <Button variant='outline' onClick={handleSendCode}>
                   <Send className='mr-2' />
-                  {selectedStudentUsername
-                    ? `Send to ${selectedStudentUsername}`
+                  {selectedStudent
+                    ? `Send to ${selectedStudent}`
                     : 'Send to All'}
                 </Button>
               </div>

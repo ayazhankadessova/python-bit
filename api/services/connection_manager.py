@@ -6,6 +6,11 @@ class ConnectionManager:
         self.classrooms: Dict[str, Dict] = {}
 
     async def connect(self, websocket: WebSocket, classroom_id: str, username: str, is_teacher: bool):
+
+        if not is_teacher and classroom_id not in self.classrooms:
+            await websocket.close(code=4000, reason="Cannot join - no teacher present")
+            return
+    
         await websocket.accept()
         
         if classroom_id not in self.classrooms:

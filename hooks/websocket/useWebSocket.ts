@@ -55,9 +55,13 @@ export function useWebSocket(
        }
      }
 
-    ws.current.onclose = () => {
+    ws.current.onclose = (event) => {
       console.log('WebSocket disconnected')
       setIsConnected(false)
+
+      if (event.code === 4000) {
+        alert(event.reason || 'Cannot join - no teacher present')
+      }
     }
 
     ws.current.onerror = (error) => {
