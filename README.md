@@ -416,6 +416,14 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 
 ## Jan 7
+- [ ] use resizable code editor 
+- [ ] track via username
+- [ ] send code to all
+- [ ] send code to specific student
+- [ ] get code of specific student
+- [ ] when no student selected, go back to your code
+- [ ] reset code
+- [ ] Active session check using ping
 - [ ] show attempts for project
 - [ ] add one more project
 - [ ] Check all api calls. cal execute code -> succes -> frontend -> backend. remove such flow
@@ -507,3 +515,94 @@ users/
             timestamp: number
             success: boolean
 ```
+
+
+## WebSocket messageHandlers
+
+1. < Get student code
+
+- Send from Frontend:
+
+```
+sendMessage('get-student-code', {
+        username: studentUsername,
+      })
+```
+
+- Backend Response:
+
+``` 
+await websocket.send_json({
+    "type": "student-code",
+    "data": {
+        "username": student["username"],
+        "code": student.get("code", "")
+    }
+})
+```
+
+- Handled on the Frontend:
+
+```
+const unsubscribeStudentCode = on('student-code', (data) => {
+      console.log('Received student code:', data) // Debug log
+      if (data && data.code) {
+        setTeacherCode(data.code)
+      }
+    })
+```
+
+2. Send code to student
+
+- Send from frontend:
+
+```
+sendMessage('send-code-to-student', {
+  studentUsername: selectedStudent,
+  code: teacherCode,
+})
+```
+
+- Send from backend:
+
+```
+if student and student.get("websocket"):
+  await student["websocket"].send_json({
+      "type": "teacher-code",
+      "data": {
+          "code": event_data.get("code", "")
+      }
+})
+```
+- Receive at frontend
+```
+const unsubscribeTeacherCode = on('teacher-code', (data) => {
+       setStudentCode(data.code)
+     })
+```
+3. Send code to all
+
+- Send from frontend:
+```
+sendMessage('send-code-to-all', {
+        code: teacherCode,
+      })
+```
+
+- Send from backend:
+
+```
+await manager.broadcast(classroom_id, "teacher-code", {
+      "code": event_data.get("code", "")
+  })
+```
+
+- Receive at frontend
+```
+const unsubscribeTeacherCode = on('teacher-code', (data) => {
+       setStudentCode(data.code)
+     })
+```
+
+
+

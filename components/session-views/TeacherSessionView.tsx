@@ -14,24 +14,17 @@ import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore'
 import { Week } from '@/types/firebase'
 import { Problem } from '@/types/utils'
 import { useWebSocket } from '@/hooks/websocket/useWebSocket'
-
-interface WeeklyProgress {
-  taskCompletions: {
-    [taskId: string]: string[] // Array of user IDs who completed the task
-  }
-  activeSession?: boolean
-  lastUpdated?: string
-}
+import { WeeklyProgress } from '@/models/types'
 
 export function TeacherSessionView({ classroomId }: { classroomId: string }) {
   const { user } = useAuth()
   const { toast } = useToast()
   const [currentProblem, setCurrentProblem] = useState<Problem | null>(null)
   const [teacherCode, setTeacherCode] = useState('')
-  const [selectedStudentUsername, setSelectedStudentUsername] = useState<
+  const [selectedStudent, setSelectedStudent] = useState<
     string | null
   >(null)
-  const [studentsUsernames, setStudentsUsernames] = useState<string[]>([])
+  const [students, setStudent] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null)
   const [weekProblems, setWeekProblems] = useState<string[]>([])
@@ -132,7 +125,7 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
   }
 
   const handleStudentSelect = (studentUsername: string | null) => {
-    setSelectedStudentUsername(studentUsername)
+    setSelectedStudent(studentUsername)
     if (!studentUsername) {
       setTeacherCode(currentProblem?.starterCode || '')
     } else {
@@ -146,7 +139,7 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
     const problem = problems[problemId]
     setCurrentProblem(problem)
     // Only set starter code if no student is selected
-    if (!selectedStudentUsername) {
+    if (!selectedStudent) {
       setTeacherCode(problem.starterCode)
     }
   }
@@ -213,16 +206,18 @@ export function TeacherSessionView({ classroomId }: { classroomId: string }) {
   }
 
   const handleSendCode = () => {
-    if (selectedStudentUsername) {
+    if (selectedStudent) {
+      // Checked
       sendMessage('send-code-to-student', {
-        studentUsername: selectedStudentUsername,
+        studentUsername: selectedStudent,
         code: teacherCode,
       })
       toast({
         title: 'Code Sent',
-        description: `Code sent to ${selectedStudentUsername}`,
+        description: `Code sent to ${selectedStudent}`,
       })
     } else {
+      // Checked
       sendMessage('send-code-to-all', {
         code: teacherCode,
       })

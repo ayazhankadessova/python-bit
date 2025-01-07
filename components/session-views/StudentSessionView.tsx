@@ -116,7 +116,7 @@ export function StudentSessionView({ classroomId }: { classroomId: string }) {
 
   // WebSocket event handlers
    useEffect(() => {
-     // Handle receiving code from teacher
+     // CHECKED: Handle send-code-to-student'le receiving code from teacher
      const unsubscribeTeacherCode = on('teacher-code', (data) => {
        setStudentCode(data.code)
      })

@@ -42,12 +42,20 @@ export interface AuthResponse {
   token: string
 }
 
+// export interface WeeklyProgress {
+//   _id: string
+//   classroomId: string
+//   weekNumber: number
+//   assignmentId: string
+//   tasks: TaskProgress[]
+// }
+
 export interface WeeklyProgress {
-  _id: string
-  classroomId: string
-  weekNumber: number
-  assignmentId: string
-  tasks: TaskProgress[]
+  taskCompletions: {
+    [taskId: string]: string[] // Array of user IDs who completed the task
+  }
+  activeSession?: boolean
+  lastUpdated?: string
 }
 
 export interface TaskProgress {

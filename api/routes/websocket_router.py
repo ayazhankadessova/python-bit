@@ -93,12 +93,13 @@ async def websocket_endpoint(
                             "username": username,
                             "code": event_data.get("code", "")
                         })
-                        
+            # Checked
             elif event_type == "send-code-to-all":
                 await manager.broadcast(classroom_id, "teacher-code", {
                     "code": event_data.get("code", "")
                 })
                 
+            # Checked
             elif event_type == "get-student-code":
                 if classroom_id in manager.classrooms:
                     classroom = manager.classrooms[classroom_id]
@@ -112,7 +113,7 @@ async def websocket_endpoint(
                                 "code": student.get("code", "")
                             }
                         })
-                        
+            # CHECKED            
             elif event_type == "send-code-to-student":
                 target_username = event_data.get("studentUsername")
                 if classroom_id in manager.classrooms:

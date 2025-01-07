@@ -2,7 +2,8 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { SessionView } from '@/components/session-view'
+import { TeacherSessionView } from '@/components/session-views/TeacherSessionView'
+import { StudentSessionView } from '@/components/session-views/StudentSessionView'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
@@ -31,7 +32,6 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
   const router = useRouter()
   const { user } = useAuth() // Firebase Auth context
 
-  // const [socket, setSocket] = useState<Socket | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [classroom, setClassroom] = useState<ClassroomData | null>(null)
   const [userRole, setUserRole] = useState<'teacher' | 'student' | null>(null)
@@ -192,12 +192,12 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
 
   // Main session view
   if (user && classroom ) {
-    return (
-      <SessionView
-        classroomId={classroomId}
-        onEndSession={handleEndSession}
-      />
-    )
+
+     return user?.role == "teacher" ? (
+        <TeacherSessionView classroomId={classroomId} />
+      ) : (
+        <StudentSessionView classroomId={classroomId} />
+      )
   }
 
   return (
