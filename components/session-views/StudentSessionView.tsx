@@ -121,14 +121,8 @@ export function StudentSessionView({ classroomId }: { classroomId: string }) {
        setStudentCode(data.code)
      })
 
-     // Handle code requests from teacher
-     const unsubscribeCodeRequest = on('request-code', () => {
-       sendMessage('code-update', { studentCode })
-     })
-
      return () => {
        unsubscribeTeacherCode()
-       unsubscribeCodeRequest()
      }
    }, [on, studentCode, sendMessage])
 
