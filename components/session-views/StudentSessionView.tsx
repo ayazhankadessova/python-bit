@@ -307,7 +307,7 @@ export function StudentSessionView({ classroomId }: { classroomId: string }) {
                     )}
                     {isRunning ? 'Running...' : 'Run Code'}
                   </Button>
-                  <Button onClick={handleSubmitCode} disabled={isRunning}>
+                  <Button disabled={isRunning}>
                     Submit Solution
                   </Button>
                 </>

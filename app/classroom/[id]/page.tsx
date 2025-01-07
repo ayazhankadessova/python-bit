@@ -95,35 +95,6 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
     }
   }
 
-  // Loading state
-  // if (isCheckingSession && userRole === 'student') {
-  //   return (
-  //     <div className='flex flex-col items-center justify-center min-h-screen'>
-  //       <Card className='w-96'>
-  //         <CardContent className='pt-6 text-center'>
-  //           <Loader2 className='h-8 w-8 animate-spin mx-auto mb-4' />
-  //           <h2 className='text-xl font-semibold mb-2'>
-  //             Checking Session Status
-  //           </h2>
-  //           <p className='text-gray-600 mb-4'>
-  //             Attempting to connect to the classroom...
-  //           </p>
-  //           <p className='text-sm text-gray-400 mb-6'>
-  //             Timeout in {Math.ceil(SESSION_CHECK_TIMEOUT / 1000)}s
-  //           </p>
-  //           <Button
-  //             onClick={() => router.push('/classrooms')}
-  //             variant='outline'
-  //             className='w-full'
-  //           >
-  //             Cancel
-  //           </Button>
-  //         </CardContent>
-  //       </Card>
-  //     </div>
-  //   )
-  // }
-
   // Error state
   if (error) {
     return (
@@ -154,39 +125,6 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
       </div>
     )
   }
-
-  // No active session state (for students)
-  // if (!isActiveSession && userRole === 'student') {
-  //   return (
-  //     <div className='flex flex-col items-center justify-center min-h-screen'>
-  //       <Card className='w-96'>
-  //         <CardContent className='pt-6 text-center'>
-  //           <h2 className='text-xl font-semibold mb-4'>No Active Session</h2>
-  //           <p className='text-gray-600 mb-6'>
-  //             The teacher has not started the session yet.
-  //           </p>
-  //           <div className='space-y-3'>
-  //             {/* <Button
-  //               onClick={handleRetryConnection}
-  //               className='w-full mb-2'
-  //               variant='default'
-  //             >
-  //               <Loader2 className='mr-2 h-4 w-4' />
-  //               Try Again
-  //             </Button> */}
-  //             <Button
-  //               onClick={() => router.push('/classrooms')}
-  //               className='w-full'
-  //               variant='outline'
-  //             >
-  //               Return to Classrooms
-  //             </Button>
-  //           </div>
-  //         </CardContent>
-  //       </Card>
-  //     </div>
-  //   )
-  // }
 
   // Main session view
   if (user && classroom ) {
