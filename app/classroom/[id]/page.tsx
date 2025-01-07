@@ -6,10 +6,10 @@ import { TeacherSessionView } from '@/components/session-views/TeacherSessionVie
 import { StudentSessionView } from '@/components/session-views/StudentSessionView'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { useToast } from '@/hooks/use-toast'
+// import { useToast } from '@/hooks/use-toast'
 import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { doc, getDoc} from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 
 interface PageProps {
@@ -28,12 +28,12 @@ interface ClassroomData {
 }
 
 const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
-  const { toast } = useToast()
+  // const { toast } = useToast()
   const router = useRouter()
   const { user } = useAuth() // Firebase Auth context
   const [error, setError] = useState<string | null>(null)
   const [classroom, setClassroom] = useState<ClassroomData | null>(null)
-  const [userRole, setUserRole] = useState<'teacher' | 'student' | null>(null)
+  // const [userRole, setUserRole] = useState<'teacher' | 'student' | null>(null)
 
   const classroomId = params.id
 
@@ -61,7 +61,7 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
         } as ClassroomData
 
         setClassroom(classroomData)
-        setUserRole(user?.role)
+        // setUserRole(user?.role)
       } catch (error) {
         console.error('Error fetching classroom:', error)
         setError('Failed to load classroom data')
