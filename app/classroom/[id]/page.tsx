@@ -72,28 +72,28 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
   }, [user, classroomId, router])
 
 
-  const handleEndSession = async () => {
-    if (!classroom) return
+  // const handleEndSession = async () => {
+  //   if (!classroom) return
 
-    try {
-      // Update classroom status in Firebase
-      if (userRole === 'teacher') {
-        const classroomRef = doc(fireStore, 'classrooms', classroomId)
-        await updateDoc(classroomRef, {
-          isActive: false,
-        })
-      }
+  //   try {
+  //     // Update classroom status in Firebase
+  //     if (userRole === 'teacher') {
+  //       const classroomRef = doc(fireStore, 'classrooms', classroomId)
+  //       await updateDoc(classroomRef, {
+  //         isActive: false,
+  //       })
+  //     }
 
-      router.push('/classrooms')
-    } catch (error) {
-      console.error('Error ending session:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to end session properly',
-        variant: 'destructive',
-      })
-    }
-  }
+  //     router.push('/classrooms')
+  //   } catch (error) {
+  //     console.error('Error ending session:', error)
+  //     toast({
+  //       title: 'Error',
+  //       description: 'Failed to end session properly',
+  //       variant: 'destructive',
+  //     })
+  //   }
+  // }
 
   // Error state
   if (error) {
