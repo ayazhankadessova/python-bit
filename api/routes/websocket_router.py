@@ -9,59 +9,59 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 manager = ConnectionManager()
 
-@router.websocket("/ws/health")
-async def health_check(websocket: WebSocket):
-    """
-    WebSocket endpoint for connection health monitoring.
-    Simplified version that responds to any received message.
-    """
-    print("New health check connection attempting to connect...")
+# @router.websocket("/ws/health")
+# async def health_check(websocket: WebSocket):
+#     """
+#     WebSocket endpoint for connection health monitoring.
+#     Simplified version that responds to any received message.
+#     """
+#     print("New health check connection attempting to connect...")
     
-    try:
-        await websocket.accept()
-        print("Health check connection accepted")
+#     try:
+#         await websocket.accept()
+#         print("Health check connection accepted")
         
-        # Send initial health status
-        await websocket.send_json({
-            "type": "health",
-            "status": "connected",
-            "message": "WebSocket connection established"
-        })
+#         # Send initial health status
+#         await websocket.send_json({
+#             "type": "health",
+#             "status": "connected",
+#             "message": "WebSocket connection established"
+#         })
         
-        while True:
-            try:
-                # Wait for any message from client
-                data = await websocket.receive_json()
-                print(f"Received message: {data}")
+#         while True:
+#             try:
+#                 # Wait for any message from client
+#                 data = await websocket.receive_json()
+#                 print(f"Received message: {data}")
                 
-                # Echo back with health status
-                await websocket.send_json({
-                    "type": "health",
-                    "status": "healthy",
-                    "message": "Connection is active",
-                    "received": data
-                })
+#                 # Echo back with health status
+#                 await websocket.send_json({
+#                     "type": "health",
+#                     "status": "healthy",
+#                     "message": "Connection is active",
+#                     "received": data
+#                 })
                 
-            except WebSocketDisconnect:
-                print("Client disconnected normally")
-                break
-            except Exception as e:
-                print(f"Error in WebSocket communication: {str(e)}")
-                await websocket.send_json({
-                    "type": "health",
-                    "status": "error",
-                    "message": str(e)
-                })
-                break
+#             except WebSocketDisconnect:
+#                 print("Client disconnected normally")
+#                 break
+#             except Exception as e:
+#                 print(f"Error in WebSocket communication: {str(e)}")
+#                 await websocket.send_json({
+#                     "type": "health",
+#                     "status": "error",
+#                     "message": str(e)
+#                 })
+#                 break
                 
-    except Exception as e:
-        print(f"Error in health check: {str(e)}")
-        if websocket.client_state.connected:
-            await websocket.close(code=status.WS_1011_INTERNAL_ERROR)
-        return JSONResponse(
-            status_code=500,
-            content={"error": str(e)}
-        )
+#     except Exception as e:
+#         print(f"Error in health check: {str(e)}")
+#         if websocket.client_state.connected:
+#             await websocket.close(code=status.WS_1011_INTERNAL_ERROR)
+#         return JSONResponse(
+#             status_code=500,
+#             content={"error": str(e)}
+#         )
     
 @router.websocket("/ws/{classroom_id}/{username}/{is_teacher}")
 async def websocket_endpoint(
