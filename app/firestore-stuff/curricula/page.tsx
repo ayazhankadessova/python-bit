@@ -14,7 +14,6 @@ import {
 import { doc, setDoc, collection, getDocs } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Loader2, Plus, Trash2 } from 'lucide-react'
-import { nanoid } from 'nanoid'
 import {Curriculum, Week } from '@/types/classrooms/live-session'
 
 interface Problem {
@@ -24,7 +23,6 @@ interface Problem {
 }
 
 const initialState: Curriculum = {
-  id: '',
   name: '',
   description: '',
   weeks: [
@@ -217,10 +215,9 @@ const CurriculumForm = () => {
     setLoading(true)
 
     try {
-      const curriculumId = inputs.id || nanoid()
+      const curriculumId = inputs.name.replace(" ", "-")
       const curriculumDoc = {
         ...inputs,
-        id: curriculumId,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       }
@@ -250,7 +247,7 @@ const CurriculumForm = () => {
           onSubmit={handleSubmit}
           className='space-y-6 bg-white p-8 rounded-xl shadow-lg border border-gray-200'
         >
-          <div className='space-y-2'>
+          {/* <div className='space-y-2'>
             <Label htmlFor='id'>Curriculum ID (Optional)</Label>
             <Input
               id='id'
@@ -260,7 +257,7 @@ const CurriculumForm = () => {
               placeholder='unique-curriculum-id'
               className='bg-gray-50 border-gray-300'
             />
-          </div>
+          </div> */}
 
           <div className='space-y-2'>
             <Label htmlFor='name'>Name</Label>

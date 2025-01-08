@@ -24,7 +24,7 @@ export function ClassroomCard({
       <CardHeader>
         <CardTitle>{classroom.name}</CardTitle>
         <CardDescription>
-          {classroom.curriculumName || classroom.curriculum?.name}
+          {classroom.curriculumName}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -51,11 +51,11 @@ export function ClassroomCard({
               ? '● Session Active'
               : '○ No Active Session'}
           </div>
-          {classroom.curriculum?.weeks && (
+          {/* {classroom.curriculum?.weeks && (
             <p className='text-sm text-blue-600'>
               Total Weeks: {classroom.curriculum.weeks.length}
             </p>
-          )}
+          )} */}
         </div>
       </CardContent>
       <CardFooter className='flex justify-between'>{actionButton}</CardFooter>

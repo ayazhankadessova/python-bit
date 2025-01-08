@@ -76,18 +76,6 @@ interface WeeklyProgress {
   endedAt?: number
 }
 
-export interface Classroom {
-  id: string
-  name: string
-  teacherId: string
-  curriculumId: string
-  curriculumName: string
-  students: string[]
-  classCode: string
-  lastTaughtWeek: number
-  createdAt: number
-  updatedAt: number
-}
 
 interface StudentClassroom {
   classroomId: string
@@ -97,16 +85,18 @@ interface StudentClassroom {
 // Classes in files
 
 export interface ClassroomTC {
-  id: string
-  name: string
-  teacherId: string
-  curriculumId: string
-  students: string[]
-  curriculumName: string
-  classCode: string
-  lastTaughtWeek: number
+  id: string //yes
+  name: string // yes
+  teacherId: string  // yes
+  curriculumId: string // //yes
+  students: string[] // yes
+  curriculumName: string // yes
+  classCode: string // yes
+  lastTaughtWeek: number // yes
   activeSession?: boolean
-  curriculum?: CurriculumInputs
+  createdAt: number //yes
+  updatedAt: number //yes
+  school: string // yes
 }
 
 export interface Week {

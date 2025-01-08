@@ -131,7 +131,6 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
         lastTaughtWeek: 0,
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        activeSession: false,
       })
 
       // Update teacher's classrooms array

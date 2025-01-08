@@ -14,7 +14,7 @@ import {Example, Assignment, Week, Curriculum} from '@/types/classrooms/live-ses
 const CurriculumManager = () => {
   const [activeTab, setActiveTab] = useState('curriculum')
   const [curriculum, setCurriculum] = useState<Curriculum>({
-    title: '',
+    name: '',
     description: '',
     weeks: [],
   })
@@ -218,7 +218,7 @@ const CurriculumManager = () => {
                 <div className='space-y-2'>
                   <Label>Title</Label>
                   <Input
-                    value={curriculum.title}
+                    value={curriculum.name}
                     onChange={(e) =>
                       setCurriculum((prev) => ({
                         ...prev,

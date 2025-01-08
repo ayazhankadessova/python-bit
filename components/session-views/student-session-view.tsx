@@ -3,7 +3,6 @@ import { doc, onSnapshot, updateDoc} from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
@@ -20,11 +19,13 @@ import { problems } from '@/utils/problems'
 interface StudentSessionViewProps {
   classroomId: string
   sessionId: string
+  onEndSession: () => void
 }
 
 export function StudentSessionView({
   classroomId,
-  sessionId,
+  sessionId, 
+  onEndSession,
 }: StudentSessionViewProps) {
   const { user } = useAuth()
   const { toast } = useToast()
@@ -180,6 +181,10 @@ export function StudentSessionView({
     return (
       <div className='h-screen flex items-center justify-center'>
         <p>Loading session...</p>
+        <Button
+          className='mt-4'
+          onClick={onEndSession}
+        >Go back to Classroom</Button>
       </div>
     )
   }
@@ -189,6 +194,9 @@ export function StudentSessionView({
     return (
       <div className='h-screen flex items-center justify-center'>
         <p>This session has ended.</p>
+        <Button className='mt-4' onClick={onEndSession}>
+          Go back to Classroom
+        </Button>
       </div>
     )
   }
