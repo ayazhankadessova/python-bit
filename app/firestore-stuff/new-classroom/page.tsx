@@ -9,40 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Plus, Trash } from 'lucide-react'
 import { doc, setDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
-
-interface Example {
-  id: string
-  inputText: string
-  outputText: string
-  explanation?: string
-}
-
-interface Assignment {
-  id: string
-  title: string
-  problemStatement: string
-  starterCode: string
-  starterFunctionName: string
-  examples: Example[]
-  testCode: string
-}
-
-interface Week {
-  weekNumber: number
-  title: string
-  tutorialContent: {
-    theory: string
-    examples: string
-    resources: string[]
-  }
-  assignmentIds: string[]
-}
-
-interface Curriculum {
-  title: string
-  description: string
-  weeks: Week[]
-}
+import {Example, Assignment, Week, Curriculum} from '@/types/classrooms/live-session'
 
 const CurriculumManager = () => {
   const [activeTab, setActiveTab] = useState('curriculum')

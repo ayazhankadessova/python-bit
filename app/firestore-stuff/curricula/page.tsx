@@ -30,8 +30,13 @@ const initialState: Curriculum = {
   weeks: [
     {
       weekNumber: 1,
-      topic: '',
+      title: '',
       assignmentIds: [],
+      tutorialContent: {
+        theory: '',
+        examples: '',
+        resources: [],
+      }
     },
   ],
 }
@@ -188,8 +193,13 @@ const CurriculumForm = () => {
         ...prev.weeks,
         {
           weekNumber: prev.weeks.length + 1,
-          topic: '',
+          title: '',
           assignmentIds: [],
+          tutorialContent: {
+            theory: '',
+            examples: '',
+            resources: [],
+          },
         },
       ],
     }))
@@ -311,9 +321,9 @@ const CurriculumForm = () => {
                   <div>
                     <Label>Topic</Label>
                     <Input
-                      value={week.topic}
+                      value={week.title}
                       onChange={(e) =>
-                        handleWeekChange(index, 'topic', e.target.value)
+                        handleWeekChange(index, 'title', e.target.value)
                       }
                       placeholder="Week's topic"
                       required

@@ -36,66 +36,66 @@ const SessionPage: React.FC<PageProps> = ({ params }) => {
   const classroomId = params.id
   const sessionId = params.sid
 
-  // Fetch classroom data and determine user role
-  useEffect(() => {
-    const fetchClassroomAndRole = async () => {
-      if (!user) {
-        setError('Not authenticated')
-        router.push('/')
-        return
-      }
+  // // Fetch classroom data and determine user role
+  // useEffect(() => {
+  //   const fetchClassroomAndRole = async () => {
+  //     if (!user) {
+  //       setError('Not authenticated')
+  //       router.push('/')
+  //       return
+  //     }
 
-      try {
-        const classroomRef = doc(fireStore, 'classrooms', classroomId)
-        const classroomSnap = await getDoc(classroomRef)
+  //     try {
+  //       const classroomRef = doc(fireStore, 'classrooms', classroomId)
+  //       const classroomSnap = await getDoc(classroomRef)
 
-        if (!classroomSnap.exists()) {
-          setError('Classroom not found')
-          toast({
-            title: 'Error',
-            description: 'Classroom not found',
-            variant: 'destructive',
-          })
-          router.push('/classrooms')
-          return
-        }
+  //       if (!classroomSnap.exists()) {
+  //         setError('Classroom not found')
+  //         toast({
+  //           title: 'Error',
+  //           description: 'Classroom not found',
+  //           variant: 'destructive',
+  //         })
+  //         router.push('/classrooms')
+  //         return
+  //       }
 
-        // Verify user has access to this classroom
-        const classroomData = {
-          id: classroomSnap.id,
-          ...classroomSnap.data(),
-        } as ClassroomData
+  //       // Verify user has access to this classroom
+  //       const classroomData = {
+  //         id: classroomSnap.id,
+  //         ...classroomSnap.data(),
+  //       } as ClassroomData
 
-        const hasAccess =
-          user.role === 'teacher'
-            ? classroomData.teacherId === user.uid
-            : classroomData.studentIds.includes(user.uid)
+  //       const hasAccess =
+  //         user.role === 'teacher'
+  //           ? classroomData.teacherId === user.uid
+  //           : classroomData.studentIds.includes(user.uid)
 
-        if (!hasAccess) {
-          setError('Unauthorized access')
-          toast({
-            title: 'Error',
-            description: 'You do not have access to this classroom',
-            variant: 'destructive',
-          })
-          router.push('/classrooms')
-          return
-        }
+  //       if (!hasAccess) {
+  //         setError('Unauthorized access')
+  //         toast({
+  //           title: 'Error',
+  //           description: 'You do not have access to this classroom',
+  //           variant: 'destructive',
+  //         })
+  //         router.push('/classrooms')
+  //         return
+  //       }
 
-        setClassroom(classroomData)
-      } catch (error) {
-        console.error('Error fetching classroom:', error)
-        setError('Failed to load classroom data')
-        toast({
-          title: 'Error',
-          description: 'Failed to load classroom data',
-          variant: 'destructive',
-        })
-      }
-    }
+  //       setClassroom(classroomData)
+  //     } catch (error) {
+  //       console.error('Error fetching classroom:', error)
+  //       setError('Failed to load classroom data')
+  //       toast({
+  //         title: 'Error',
+  //         description: 'Failed to load classroom data',
+  //         variant: 'destructive',
+  //       })
+  //     }
+  //   }
 
-    fetchClassroomAndRole()
-  }, [user, classroomId, router, toast])
+  //   fetchClassroomAndRole()
+  // }, [user, classroomId, router, toast])
 
   if (error) {
     return (
@@ -106,7 +106,7 @@ const SessionPage: React.FC<PageProps> = ({ params }) => {
   }
 
   // Show loading state while fetching data
-  if (!user || !classroom) {
+  if (!user) {
     return (
       <div className='flex items-center justify-center min-h-screen'>
         <Loader2 className='h-8 w-8 animate-spin' />

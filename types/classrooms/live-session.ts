@@ -45,13 +45,34 @@ export interface ExecutionResult {
 
 export interface Week {
   weekNumber: number
-  topic: string
-  assignmentIds: string[] // Array of problem IDs
+  title: string
+  tutorialContent: {
+    theory: string
+    examples: string
+    resources: string[]
+  }
+  assignmentIds: string[]
 }
-
 export interface Curriculum {
   id: string
   name: string
   description: string
   weeks: Week[]
+}
+
+export interface Assignment {
+  id: string
+  title: string
+  problemStatement: string
+  starterCode: string
+  starterFunctionName: string
+  examples: Example[]
+  testCode: string
+}
+
+export interface Example {
+  id: string
+  inputText: string
+  outputText: string
+  explanation?: string
 }

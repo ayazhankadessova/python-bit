@@ -16,7 +16,8 @@ import {
 import type { LiveSession } from '@/types/classrooms/live-session'
 import { fireStore } from '@/firebase/firebase'
 import { Loader2 } from 'lucide-react'
-import {formatDate, calculateDuration} from "@/lib/utils"
+import { formatDate, calculateDuration } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
 
 interface SessionManagementProps {
   classroomId: string
@@ -39,6 +40,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
   )
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
   // Monitor active session and session history
   useEffect(() => {
@@ -84,7 +86,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
         // Fetch session history
         const historyQuery = query(
           sessionsRef,
-        //   where('endedAt', '!=', null),
+          //   where('endedAt', '!=', null),
           orderBy('endedAt', 'desc'),
           limit(10) // Adjust limit as needed
         )
@@ -173,6 +175,20 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     }
   }
 
+  const joinSession = async () => {
+    if (!activeSession) return
+
+    try {
+      setIsLoading(true)
+      router.push(`/classroom/${classroomId}/session/${activeSession.id}`)
+    } catch (err) {
+      console.error('Error joining session:', err)
+      setError('Failed to join session')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   if (isLoading) {
     return (
       <div className='flex items-center justify-center p-4'>
@@ -186,22 +202,22 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
   }
 
   // For students, only show active session status
-//   if (!isTeacher) {
-//     return (
-//       <div className='p-4'>
-//         {activeSession ? (
-//           <div className='text-green-600 font-medium'>
-//             Class is in session (Started{' '}
-//             {formatDate(activeSession.startedAt)})
-//           </div>
-//         ) : (
-//           <div className='text-gray-600'>
-//             Waiting for teacher to start the session
-//           </div>
-//         )}
-//       </div>
-//     )
-//   }
+  //   if (!isTeacher) {
+  //     return (
+  //       <div className='p-4'>
+  //         {activeSession ? (
+  //           <div className='text-green-600 font-medium'>
+  //             Class is in session (Started{' '}
+  //             {formatDate(activeSession.startedAt)})
+  //           </div>
+  //         ) : (
+  //           <div className='text-gray-600'>
+  //             Waiting for teacher to start the session
+  //           </div>
+  //         )}
+  //       </div>
+  //     )
+  //   }
 
   // Teacher view with session management and history
   return (
@@ -218,30 +234,50 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
                 Duration: {calculateDuration(activeSession.startedAt, null)}
               </div>
             </div>
+
+            {isTeacher && (
+              <button
+                onClick={endSession}
+                disabled={isLoading}
+                className='bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors disabled:opacity-50'
+              >
+                {isLoading ? (
+                  <Loader2 className='h-4 w-4 animate-spin' />
+                ) : (
+                  'End Session'
+                )}
+              </button>
+            )}
+
             <button
-              onClick={endSession}
+              onClick={joinSession}
               disabled={isLoading}
               className='bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors disabled:opacity-50'
             >
               {isLoading ? (
                 <Loader2 className='h-4 w-4 animate-spin' />
               ) : (
-                'End Session'
+                'Join Session'
               )}
             </button>
           </div>
         ) : (
-          <button
-            onClick={createSession}
-            disabled={isLoading}
-            className='bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors disabled:opacity-50'
-          >
-            {isLoading ? (
-              <Loader2 className='h-4 w-4 animate-spin' />
-            ) : (
-              'Start New Session'
+          <div className='space-y-4'>
+            <div className='text-green-600 font-medium'>No Active Session</div>
+            {isTeacher && (
+              <button
+                onClick={createSession}
+                disabled={isLoading}
+                className='bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors disabled:opacity-50'
+              >
+                {isLoading ? (
+                  <Loader2 className='h-4 w-4 animate-spin' />
+                ) : (
+                  'Start New Session'
+                )}
+              </button>
             )}
-          </button>
+          </div>
         )}
       </div>
 
