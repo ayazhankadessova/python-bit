@@ -1,16 +1,15 @@
+// export default SessionManagement
 import React, { useEffect, useState } from 'react'
 import {
   collection,
   query,
   orderBy,
-  getDocs,
-  where,
   addDoc,
   updateDoc,
   doc,
   onSnapshot,
   FirestoreError,
-  getDoc,
+  where,
   limit,
 } from 'firebase/firestore'
 import type { LiveSession } from '@/types/classrooms/live-session'
@@ -86,9 +85,8 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
         // Fetch session history
         const historyQuery = query(
           sessionsRef,
-          //   where('endedAt', '!=', null),
           orderBy('endedAt', 'desc'),
-          limit(10) // Adjust limit as needed
+          limit(10)
         )
 
         const unsubscribeHistory = onSnapshot(
@@ -123,7 +121,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     fetchSessions()
   }, [classroomId])
 
-  // Create new session
+  // Create new session with complete LiveSession interface
   const createSession = async () => {
     if (activeSession) {
       setError('A session is already in progress')
@@ -137,10 +135,12 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
         `classrooms/${classroomId}/sessions`
       )
 
-      const newSession = {
+      const newSession: Omit<LiveSession, 'id'> = {
         startedAt: Date.now(),
         endedAt: null,
-        teacherId,
+        weekNumber: 1, // You might want to pass this as a prop or calculate it
+        activeTask: '', // Initial empty task
+        students: {}, // Initialize empty students record
       }
 
       await addDoc(sessionRef, newSession)
@@ -189,37 +189,18 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className='flex items-center justify-center p-4'>
-        <Loader2 className='h-6 w-6 animate-spin' />
-      </div>
-    )
-  }
+    if (isLoading) {
+      return (
+        <div className='flex items-center justify-center p-4'>
+          <Loader2 className='h-6 w-6 animate-spin' />
+        </div>
+      )
+    }
 
-  if (error) {
-    return <div className='p-4 text-red-600'>Error: {error}</div>
-  }
+    if (error) {
+      return <div className='p-4 text-red-600'>Error: {error}</div>
+    }
 
-  // For students, only show active session status
-  //   if (!isTeacher) {
-  //     return (
-  //       <div className='p-4'>
-  //         {activeSession ? (
-  //           <div className='text-green-600 font-medium'>
-  //             Class is in session (Started{' '}
-  //             {formatDate(activeSession.startedAt)})
-  //           </div>
-  //         ) : (
-  //           <div className='text-gray-600'>
-  //             Waiting for teacher to start the session
-  //           </div>
-  //         )}
-  //       </div>
-  //     )
-  //   }
-
-  // Teacher view with session management and history
   return (
     <div className='space-y-6'>
       {/* Active Session Management */}
@@ -233,6 +214,14 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
               <div className='text-sm text-gray-500'>
                 Duration: {calculateDuration(activeSession.startedAt, null)}
               </div>
+              <div className='text-sm text-gray-500'>
+                Week: {activeSession.weekNumber}
+              </div>
+              {activeSession.activeTask && (
+                <div className='text-sm text-gray-500'>
+                  Current Task: {activeSession.activeTask}
+                </div>
+              )}
             </div>
 
             {isTeacher && (
@@ -252,7 +241,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
             <button
               onClick={joinSession}
               disabled={isLoading}
-              className='bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors disabled:opacity-50'
+              className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors disabled:opacity-50'
             >
               {isLoading ? (
                 <Loader2 className='h-4 w-4 animate-spin' />
@@ -263,7 +252,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
           </div>
         ) : (
           <div className='space-y-4'>
-            <div className='text-green-600 font-medium'>No Active Session</div>
+            <div className='text-gray-600 font-medium'>No Active Session</div>
             {isTeacher && (
               <button
                 onClick={createSession}
@@ -296,6 +285,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
                 <div className='flex justify-between items-start'>
                   <div>
                     <div className='font-medium'>
+                      Week {session.weekNumber} -{' '}
                       {formatDate(session.startedAt)}
                     </div>
                     <div className='text-sm text-gray-500'>
@@ -304,6 +294,11 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
                         ? formatDate(session.endedAt)
                         : 'In Progress'}
                     </div>
+                    {session.activeTask && (
+                      <div className='text-sm text-gray-500'>
+                        Task: {session.activeTask}
+                      </div>
+                    )}
                   </div>
                   <div className='text-sm font-medium text-gray-600'>
                     {session.duration}
