@@ -2,15 +2,12 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { SessionView } from '@/components/session-view'
-import io, { Socket } from 'socket.io-client'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
+import { SessionManagement } from '@/components/session-views/session-management'
 
 interface PageProps {
   params: {
@@ -28,31 +25,14 @@ interface ClassroomData {
 }
 
 const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
-  const SESSION_CHECK_TIMEOUT = 5000 // 5 seconds
-  const { toast } = useToast()
   const router = useRouter()
   const { user } = useAuth() // Firebase Auth context
 
-  const [socket, setSocket] = useState<Socket | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [isActiveSession, setIsActiveSession] = useState<boolean>(false)
-  const [isCheckingSession, setIsCheckingSession] = useState(true)
-  const [retryCount, setRetryCount] = useState(0)
   const [classroom, setClassroom] = useState<ClassroomData | null>(null)
   const [userRole, setUserRole] = useState<'teacher' | 'student' | null>(null)
 
   const classroomId = params.id
-
-  const handleRetryConnection = () => {
-    setIsCheckingSession(true)
-    setError(null)
-    setIsActiveSession(false)
-    if (socket) {
-      socket.disconnect()
-      setSocket(null)
-    }
-    setRetryCount((prev) => prev + 1)
-  }
 
   // Fetch classroom data and determine user role
   useEffect(() => {
@@ -90,222 +70,13 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
     fetchClassroomAndRole()
   }, [user, classroomId, router])
 
-  // Socket connection setup
-  useEffect(() => {
-    if (!user || !userRole || !classroom) return
-
-    let statusCheckTimeout: NodeJS.Timeout
-    let connectionAttemptTimeout: NodeJS.Timeout | null = null
-
-    const connectSocket = async () => {
-      try {
-        setIsCheckingSession(true)
-
-        if (socket) {
-          socket.disconnect()
-          setSocket(null)
-        }
-
-        const newSocket = io('http://localhost:3000')
-
-        setSocket(newSocket)
-
-        statusCheckTimeout = setTimeout(() => {
-          setIsCheckingSession(false)
-          if (userRole === 'student') {
-            setError('Connection timeout. Please try again.')
-          }
-        }, SESSION_CHECK_TIMEOUT)
-
-        newSocket.on('connect', () => {
-          console.log('Connected to socket server')
-          newSocket.emit(
-            'join-room',
-            classroomId,
-            user.displayName || user.email,
-            userRole === 'teacher'
-          )
-        })
-
-        newSocket.on(
-          'session-status',
-          (data: { active: boolean; message?: string }) => {
-            clearTimeout(statusCheckTimeout)
-            console.log('Received session status:', data)
-            setIsActiveSession(data.active)
-            setIsCheckingSession(false)
-
-            if (!data.active && userRole === 'student') {
-              setError('No active session found')
-            }
-          }
-        )
-
-        newSocket.on('connect_error', (error) => {
-          clearTimeout(statusCheckTimeout)
-          console.error('Socket connection error:', error)
-          setError('Failed to connect. Please try again.')
-          setIsCheckingSession(false)
-        })
-
-        newSocket.on('error', (error) => {
-          clearTimeout(statusCheckTimeout)
-          console.error('Socket error:', error)
-          setError(error)
-          setIsCheckingSession(false)
-        })
-      } catch (error) {
-        clearTimeout(statusCheckTimeout)
-        setError('Connection failed. Please try again.')
-        setIsCheckingSession(false)
-        console.log(error)
-      }
-    }
-
-    connectionAttemptTimeout = setTimeout(connectSocket, 500)
-
-    return () => {
-      clearTimeout(statusCheckTimeout)
-      clearTimeout(connectionAttemptTimeout)
-      if (socket) {
-        socket.disconnect()
-      }
-    }
-  }, [user, userRole, classroom, classroomId, retryCount])
-
-  const handleEndSession = async () => {
-    if (!classroom) return
-
-    try {
-      // Update classroom status in Firebase
-      if (userRole === 'teacher') {
-        const classroomRef = doc(fireStore, 'classrooms', classroomId)
-        await updateDoc(classroomRef, {
-          isActive: false,
-        })
-      }
-
-      // Handle socket disconnect
-      if (socket && user) {
-        if (userRole === 'teacher') {
-          socket.emit('end-session', classroomId)
-        } else {
-          socket.emit('leave-room', classroomId, user.displayName || user.email)
-        }
-        socket.disconnect()
-      }
-
-      router.push('/classrooms')
-    } catch (error) {
-      console.error('Error ending session:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to end session properly',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  // Loading state
-  if (isCheckingSession && userRole === 'student') {
-    return (
-      <div className='flex flex-col items-center justify-center min-h-screen'>
-        <Card className='w-96'>
-          <CardContent className='pt-6 text-center'>
-            <Loader2 className='h-8 w-8 animate-spin mx-auto mb-4' />
-            <h2 className='text-xl font-semibold mb-2'>
-              Checking Session Status
-            </h2>
-            <p className='text-gray-600 mb-4'>
-              Attempting to connect to the classroom...
-            </p>
-            <p className='text-sm text-gray-400 mb-6'>
-              Timeout in {Math.ceil(SESSION_CHECK_TIMEOUT / 1000)}s
-            </p>
-            <Button
-              onClick={() => router.push('/classrooms')}
-              variant='outline'
-              className='w-full'
-            >
-              Cancel
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className='flex flex-col items-center justify-center min-h-screen'>
-        <Card className='w-96'>
-          <CardContent className='pt-6 text-center'>
-            <h2 className='text-xl font-semibold mb-4'>Connection Error</h2>
-            <p className='text-red-500 mb-6'>{error}</p>
-            <div className='space-y-3'>
-              <Button
-                onClick={handleRetryConnection}
-                className='w-full mb-2'
-                variant='default'
-              >
-                <Loader2 className='mr-2 h-4 w-4' />
-                Try Again
-              </Button>
-              <Button
-                onClick={() => router.push('/classrooms')}
-                className='w-full'
-                variant='outline'
-              >
-                Return to Classrooms
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  // No active session state (for students)
-  if (!isActiveSession && userRole === 'student') {
-    return (
-      <div className='flex flex-col items-center justify-center min-h-screen'>
-        <Card className='w-96'>
-          <CardContent className='pt-6 text-center'>
-            <h2 className='text-xl font-semibold mb-4'>No Active Session</h2>
-            <p className='text-gray-600 mb-6'>
-              The teacher has not started the session yet.
-            </p>
-            <div className='space-y-3'>
-              <Button
-                onClick={handleRetryConnection}
-                className='w-full mb-2'
-                variant='default'
-              >
-                <Loader2 className='mr-2 h-4 w-4' />
-                Try Again
-              </Button>
-              <Button
-                onClick={() => router.push('/classrooms')}
-                className='w-full'
-                variant='outline'
-              >
-                Return to Classrooms
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
   // Main session view
-  if (user && classroom && (isActiveSession || userRole === 'teacher')) {
+  if (user && classroom) {
     return (
-      <SessionView
+      <SessionManagement
         classroomId={classroomId}
-        onEndSession={handleEndSession}
-        socket={socket}
+        teacherId={user.uid}
+        isTeacher={userRole === 'teacher'}
       />
     )
   }

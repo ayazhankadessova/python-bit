@@ -15,19 +15,7 @@ import { doc, setDoc, collection, getDocs } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Loader2, Plus, Trash2 } from 'lucide-react'
 import { nanoid } from 'nanoid'
-
-interface Week {
-  weekNumber: number
-  topic: string
-  assignmentIds: string[] // Array of problem IDs
-}
-
-interface CurriculumInputs {
-  id: string
-  name: string
-  description: string
-  weeks: Week[]
-}
+import {Curriculum, Week } from '@/types/classrooms/live-session'
 
 interface Problem {
   id: string
@@ -35,7 +23,7 @@ interface Problem {
   difficulty: string
 }
 
-const initialState: CurriculumInputs = {
+const initialState: Curriculum = {
   id: '',
   name: '',
   description: '',
@@ -49,7 +37,7 @@ const initialState: CurriculumInputs = {
 }
 
 const CurriculumForm = () => {
-  const [inputs, setInputs] = useState<CurriculumInputs>(initialState)
+  const [inputs, setInputs] = useState<Curriculum>(initialState)
   const [loading, setLoading] = useState(false)
   const [problems, setProblems] = useState<Problem[]>([])
 

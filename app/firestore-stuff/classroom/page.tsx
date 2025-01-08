@@ -12,6 +12,7 @@ import {
   writeBatch,
   doc,
   arrayUnion,
+  setDoc,
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { nanoid } from 'nanoid'
@@ -36,12 +37,14 @@ import { Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
+import { Curriculum, Week } from '@/types/classrooms/live-session'
 
-interface Curriculum {
-  id: string
-  name: string
-  description?: string
-}
+
+// interface Curriculum {
+//   id: string
+//   name: string
+//   description?: string
+// }
 
 interface Student {
   id: string
@@ -140,6 +143,7 @@ export default function CreateClassroomPage() {
     })
   }
 
+  // Only showing the modified onSubmit function since the rest remains the same
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     if (!user) return
 
@@ -166,6 +170,21 @@ export default function CreateClassroomPage() {
         school: user.school,
       })
 
+      // Initialize sessions subcollection with a metadata document
+      // This ensures the collection exists and contains useful information
+      const sessionsMetadataRef = doc(
+        fireStore,
+        `classrooms/${classroomId}/sessions`,
+        '_metadata'
+      )
+      batch.set(sessionsMetadataRef, {
+        createdAt: Date.now(),
+        totalSessions: 0,
+        lastSessionAt: null,
+        isInitialized: true,
+        // Add any other metadata fields you might need
+      })
+
       // Update teacher's classrooms
       const teacherRef = doc(fireStore, 'users', user.uid)
       batch.update(teacherRef, {
@@ -178,10 +197,27 @@ export default function CreateClassroomPage() {
         const studentRef = doc(fireStore, 'users', studentId)
         batch.update(studentRef, {
           classrooms: arrayUnion(classroomId),
+          updatedAt: Date.now(),
         })
       })
 
       await batch.commit()
+
+      // Optional: Create the compound index programmatically
+      // Note: This requires additional security rules configuration
+      // You might want to create the index manually in the Firebase Console instead
+
+      const indexRef = doc(
+        fireStore,
+        `classrooms/${classroomId}/.indexes/sessions`
+      )
+      await setDoc(indexRef, {
+        fields: {
+          endedAt: 'ASCENDING',
+          startedAt: 'DESCENDING',
+        },
+        queryScope: 'COLLECTION',
+      })
 
       toast({
         title: 'Success',
