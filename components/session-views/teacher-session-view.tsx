@@ -15,24 +15,18 @@ import {
   UpdateData,
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
-import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
-import CodeMirror from '@uiw/react-codemirror'
-import { vscodeDark } from '@uiw/codemirror-theme-vscode'
-import { python } from '@codemirror/lang-python'
 import { useToast } from '@/hooks/use-toast'
-import { Play, StopCircle, Send, RefreshCw, LogOut } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { WeekSelector } from './WeekSelector'
 import type {
   LiveSession,
   SessionStudent,
-  ExecutionResult,
   Curriculum,
   Week,
   Assignment,
 } from '@/types/classrooms/live-session'
-import { Problem } from '@/types/utils'
 import { ClassroomTC } from '@/types/firebase'
 import {
   Select,
@@ -56,9 +50,7 @@ export function TeacherSessionView({
   sessionId,
   onEndSession,
 }: TeacherSessionViewProps): JSX.Element {
-  const { user } = useAuth()
   const { toast } = useToast()
-  const [currentProblem, setCurrentProblem] = useState<Problem | null>(null)
   const [studentCode, setStudentCode] = useState<string>('')
   const [teacherCode, setTeacherCode] = useState<string>('')
   const [selectedStudentUsername, setSelectedStudentUsername] = useState<
@@ -68,7 +60,6 @@ export function TeacherSessionView({
     Array<{ username: string } & SessionStudent>
   >([])
   const [output, setOutput] = useState<string>('')
-  const [isRunning, setIsRunning] = useState<boolean>(false)
   const [currentSession, setCurrentSession] = useState<LiveSession | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -82,8 +73,6 @@ export function TeacherSessionView({
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<
     string | null
   >(null)
-  const [isExecuting, setIsExecuting] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
 
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
@@ -324,16 +313,9 @@ export function TeacherSessionView({
   }
 
   const handleRunCode = async (isSubmission: boolean) => {
-    setIsExecuting(true)
     setError(null)
     setOutput('')
     setIsCorrect(null)
-
-    if (isSubmission) {
-      setIsSubmitting(true)
-    } else {
-      setIsRunning(true)
-    }
 
     const code = selectedStudentUsername ? studentCode : teacherCode
     const id = currentAssignment?.id
@@ -386,10 +368,6 @@ export function TeacherSessionView({
       if (isSubmission) {
         setIsCorrect(false)
       }
-    } finally {
-      setIsExecuting(false)
-      setIsSubmitting(false)
-      setIsRunning(false)
     }
   }
 
@@ -501,41 +479,126 @@ export function TeacherSessionView({
       })
     }
   }
+  // <div className='h-screen flex'>
+  //   {/* Left Panel: Students List and Week Selection */}
+  //   <div className='w-1/4 border-r p-4 bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]'>
+  //     <div className='space-y-4'>
+  //       {/* End Session Button */}
+  //       <Button
+  //         onClick={endSession}
+  //         variant='destructive'
+  //         className='w-full'
+  //         disabled={isLoading}
+  //       >
+  //         <LogOut className='mr-2 h-4 w-4' />
+  //         {isLoading ? 'Ending Session...' : 'End Session'}
+  //       </Button>
+
+  //       {/* Week Selector */}
+  //       {classroom && curriculum && (
+  //         <WeekSelector
+  //           selectedWeek={currentWeek?.weekNumber || 1}
+  //           totalWeeks={curriculum?.weeks.length ?? 1}
+  //           onSelectWeek={handleWeekSelect}
+  //         />
+  //       )}
+
+  //       {/* Assignment Selector */}
+  //       {currentWeek && currentWeek.assignmentIds.length > 0 && (
+  //         <div className='space-y-2'>
+  //           <label className='text-sm font-medium'>Select Assignment</label>
+  //           <Select
+  //             value={selectedAssignmentId ?? undefined}
+  //             onValueChange={handleAssignmentSelect}
+  //           >
+  //             <SelectTrigger>
+  //               <SelectValue placeholder='Select an assignment' />
+  //             </SelectTrigger>
+  //             <SelectContent>
+  //               {currentWeek.assignmentIds.map((assignmentId) => (
+  //                 <SelectItem key={assignmentId} value={assignmentId}>
+  //                   {currentAssignment?.title || assignmentId}
+  //                 </SelectItem>
+  //               ))}
+  //             </SelectContent>
+  //           </Select>
+  //         </div>
+  //       )}
+
+  //       <h1>{error}</h1>
+  //       <h1>{classroom?.curriculumId}</h1>
+
+  //       {/* Connected Students */}
+  //       <div className='space-y-2 mt-4'>
+  //         <h3 className='font-semibold'>Connected Students</h3>
+  //         {students.map((student) => (
+  //           <Card
+  //             key={student.username}
+  //             className={`cursor-pointer hover:bg-accent ${
+  //               selectedStudentUsername === student.username
+  //                 ? 'border-primary'
+  //                 : ''
+  //             }`}
+  //             onClick={() => handleStudentSelect(student.username)}
+  //           >
+  //             <CardHeader>
+  //               <CardTitle className='text-sm'>{student.username}</CardTitle>
+  //             </CardHeader>
+  //           </Card>
+  //         ))}
+  //       </div>
+  //     </div>
+  //   </div>
+
+  //   {/* Right Panel: Assignment Content and Code Editor */}
+  //   <div className='flex-1 flex flex-col p-4'>
+  //     {currentAssignment && (
+  //       <div className='mb-4'>
+  //         <h2 className='text-xl font-bold mb-2'>
+  //           {currentAssignment.title}
+  //         </h2>
+
+  //         <MarkdownRenderer content={currentAssignment.problemStatement} />
+  //       </div>
+  //     )}
+
+  //     <PythonEditor
+  //       initialCode={editorInitialCode}
+  //       onCodeChange={setTeacherCode}
+  //       onRunCode={() => handleRunCode(false)}
+  //       onSubmitCode={() => handleRunCode(true)}
+  //       onSendCode={handleSendCode}
+  //       isTeacher={true}
+  //       selectedStudent={selectedStudentUsername}
+  //       output={output}
+  //       error={error}
+  //       isCorrect={isCorrect}
+  //       title={currentAssignment?.title}
+  //     />
+
+  //   </div>
+  // </div>
 
   return (
-    <div className='h-screen flex'>
-      {/* Left Panel: Students List and Week Selection */}
-      <div className='w-1/4 border-r p-4 bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]'>
-        <div className='space-y-4'>
-          {/* End Session Button */}
-          <Button
-            onClick={endSession}
-            variant='destructive'
-            className='w-full'
-            disabled={isLoading}
-          >
-            <LogOut className='mr-2 h-4 w-4' />
-            {isLoading ? 'Ending Session...' : 'End Session'}
-          </Button>
+    <div className='h-screen flex flex-col'>
+      {/* Top Navigation Bar */}
+      <nav className='border-b px-4 py-2 bg-background shrink-0'>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center space-x-4'>
+            {classroom && curriculum && (
+              <WeekSelector
+                selectedWeek={currentWeek?.weekNumber || 1}
+                totalWeeks={curriculum?.weeks.length ?? 1}
+                onSelectWeek={handleWeekSelect}
+              />
+            )}
 
-          {/* Week Selector */}
-          {classroom && curriculum && (
-            <WeekSelector
-              selectedWeek={currentWeek?.weekNumber || 1}
-              totalWeeks={curriculum?.weeks.length ?? 1}
-              onSelectWeek={handleWeekSelect}
-            />
-          )}
-
-          {/* Assignment Selector */}
-          {currentWeek && currentWeek.assignmentIds.length > 0 && (
-            <div className='space-y-2'>
-              <label className='text-sm font-medium'>Select Assignment</label>
+            {currentWeek && currentWeek.assignmentIds.length > 0 && (
               <Select
                 value={selectedAssignmentId ?? undefined}
                 onValueChange={handleAssignmentSelect}
               >
-                <SelectTrigger>
+                <SelectTrigger className='w-[300px]'>
                   <SelectValue placeholder='Select an assignment' />
                 </SelectTrigger>
                 <SelectContent>
@@ -546,125 +609,80 @@ export function TeacherSessionView({
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-          )}
-
-          <h1>{error}</h1>
-          <h1>{classroom?.curriculumId}</h1>
-
-          {/* Connected Students */}
-          <div className='space-y-2 mt-4'>
-            <h3 className='font-semibold'>Connected Students</h3>
-            {students.map((student) => (
-              <Card
-                key={student.username}
-                className={`cursor-pointer hover:bg-accent ${
-                  selectedStudentUsername === student.username
-                    ? 'border-primary'
-                    : ''
-                }`}
-                onClick={() => handleStudentSelect(student.username)}
-              >
-                <CardHeader>
-                  <CardTitle className='text-sm'>{student.username}</CardTitle>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Right Panel: Assignment Content and Code Editor */}
-      <div className='flex-1 flex flex-col p-4'>
-        {currentAssignment && (
-          <div className='mb-4'>
-            <h2 className='text-xl font-bold mb-2'>
-              {currentAssignment.title}
-            </h2>
-
-            <MarkdownRenderer content={currentAssignment.problemStatement} />
-            {/* <div
-              className='prose dark:prose-invert mb-4'
-              dangerouslySetInnerHTML={{
-                __html: currentAssignment.problemStatement,
-              }}
-            /> */}
-          </div>
-        )}
-
-        {/* <CodeMirror
-          value={selectedStudentUsername ? studentCode : teacherCode}
-          height='calc(100vh - 300px)'
-          theme={vscodeDark}
-          extensions={[python()]}
-          onChange={setTeacherCode}
-        /> */}
-
-        <PythonEditor
-          initialCode={editorInitialCode}
-          onCodeChange={setTeacherCode}
-          onRunCode={() => handleRunCode(false)}
-          onSubmitCode={() => handleRunCode(true)}
-          onSendCode={handleSendCode}
-          isTeacher={true}
-          selectedStudent={selectedStudentUsername}
-          output={output}
-          error={error}
-          isExecuting={isExecuting}
-          isCorrect={isCorrect}
-          title={currentAssignment?.title}
-        />
-
-        {/* <div className='mt-4 space-x-2'>
-          <Button onClick={() => handleRunCode(false)} disabled={isExecuting}>
-            {isRunning ? (
-              <StopCircle className='mr-2 h-4 w-4' />
-            ) : (
-              <Play className='mr-2 h-4 w-4' />
             )}
-            {isRunning ? 'Running...' : 'Run Code'}
-          </Button>
+          </div>
 
           <Button
-            onClick={() => handleRunCode(true)}
-            className='bg-blue-600 hover:bg-blue-700 text-white'
-            disabled={isExecuting}
+            onClick={endSession}
+            variant='destructive'
+            size='sm'
+            disabled={isLoading}
           >
-            {isSubmitting ? (
-              <StopCircle className='w-4 h-4 mr-2 animate-spin' />
-            ) : (
-              <Play className='w-4 h-4 mr-2' />
+            <LogOut className='mr-2 h-4 w-4' />
+            {isLoading ? 'Ending Session...' : 'End Session'}
+          </Button>
+        </div>
+      </nav>
+
+      {/* Main Content Area */}
+      <div className='flex flex-1 overflow-hidden'>
+        {/* Left Panel - Single scrollbar for entire content */}
+        <div className='w-[45%] border-r overflow-y-auto'>
+          {/* Problem Description - Takes natural height */}
+          <div className='p-4'>
+            {currentAssignment && (
+              <div className='prose dark:prose-invert max-w-none'>
+                <h1 className='text-xl font-bold mb-4'>
+                  {currentAssignment.title}
+                </h1>
+                <MarkdownRenderer
+                  content={currentAssignment.problemStatement}
+                />
+              </div>
             )}
-            Submit
-          </Button>
-
-          <Button onClick={handleSendCode}>
-            <Send className='mr-2 h-4 w-4' />
-            {selectedStudentUsername
-              ? `Send to ${selectedStudentUsername}`
-              : 'Send to All'}
-          </Button>
-        </div> */}
-
-        {output && (
-          <div className='mt-4 p-4 bg-black text-white font-mono rounded-md'>
-            <pre>{output}</pre>
           </div>
-        )}
 
-        {isCorrect !== null && !error && (
-          <div
-            className={`mt-4 p-2 rounded ${
-              isCorrect
-                ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400'
-                : 'bg-red-50 text-red-600 dark:bg-red-950/20 dark:text-red-400'
-            }`}
-          >
-            {isCorrect
-              ? '✅ All tests passed!'
-              : '❌ Some tests failed. Check the output above for details.'}
+          {/* Connected Students - Takes natural height */}
+          <div className='border-t bg-muted p-4'>
+            <h3 className='font-semibold mb-3'>Connected Students</h3>
+            <div className='space-y-2'>
+              {students.map((student) => (
+                <Card
+                  key={student.username}
+                  className={`cursor-pointer hover:bg-accent transition-colors ${
+                    selectedStudentUsername === student.username
+                      ? 'border-primary bg-accent'
+                      : ''
+                  }`}
+                  onClick={() => handleStudentSelect(student.username)}
+                >
+                  <CardHeader className='py-2 px-3'>
+                    <CardTitle className='text-sm'>
+                      {student.username}
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* Right Panel: Code Editor */}
+        <div className='flex-1'>
+          <PythonEditor
+            initialCode={editorInitialCode}
+            onCodeChange={setTeacherCode}
+            onRunCode={() => handleRunCode(false)}
+            onSubmitCode={() => handleRunCode(true)}
+            onSendCode={handleSendCode}
+            isTeacher={true}
+            selectedStudent={selectedStudentUsername}
+            output={output}
+            error={error}
+            isCorrect={isCorrect}
+            title={currentAssignment?.title}
+          />
+        </div>
       </div>
     </div>
   )

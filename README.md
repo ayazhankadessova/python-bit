@@ -423,12 +423,20 @@ invalidateCache() // This will drop the cache and trigger a refetch
 ## Jan 9 
 
 - [x] run code and show output 
-- [ ] no test code but rather expected output !!
-- [ ] make reusable component for code editor in live session
+- [x] no test code but rather expected output !!
+- [x] make reusable component for code editor in live session
+
+## Jan 10
+- [ ] Fix the assignent in firebase
+- [ ] fix its json
 - [ ] add students when they connect 
 - [ ] add more weeks
-- [ ] add submit code -> get test code from backend
 - [x] remove selectedStudent
+
+
+## Later
+
+- [ ] get assignment expectedOutput from firestore [fastapi]
 
 ## Project Test cases
 

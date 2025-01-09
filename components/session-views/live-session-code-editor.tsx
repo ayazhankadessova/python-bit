@@ -3,7 +3,7 @@ import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { Button } from '@/components/ui/button'
-import { Play, StopCircle, Send, Sun, Moon, Code2, Loader2 } from 'lucide-react'
+import { Play, Send, Sun, Moon, Code2, Loader2 } from 'lucide-react'
 import {
   ResizableHandle,
   ResizablePanelGroup,
@@ -20,7 +20,6 @@ interface PythonEditorProps {
   selectedStudent?: string | null
   output: string
   error: string | null
-  isExecuting: boolean
   isCorrect?: boolean | null
   title?: string
 }
@@ -35,12 +34,12 @@ export function PythonEditor({
   selectedStudent,
   output,
   error,
-  isExecuting,
   isCorrect,
   title = 'Python Editor',
 }: PythonEditorProps) {
   const [code, setCode] = useState(initialCode)
   const [theme, setTheme] = useState<'light' | 'dark'>('dark')
+  const [isExecuting, setIsExecuting] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -51,20 +50,24 @@ export function PythonEditor({
 
   const handleRunCode = async () => {
     setIsRunning(true)
+    setIsExecuting(true)
     try {
       await onRunCode(code)
     } finally {
       setIsRunning(false)
+      setIsExecuting(true)
     }
   }
 
   const handleSubmitCode = async () => {
     if (!onSubmitCode) return
     setIsSubmitting(true)
+    setIsExecuting(true)
     try {
       await onSubmitCode(code)
     } finally {
       setIsSubmitting(false)
+      setIsExecuting(true)
     }
   }
 
