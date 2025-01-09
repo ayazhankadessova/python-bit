@@ -103,32 +103,71 @@ export function StudentSessionView({
     }
   }
 
-  const handleRunCode = async (): Promise<void> => {
-    if (!currentProblem || !studentCode) return
-
+  const handleRunCode = async (isSubmission: boolean) => {
     setIsRunning(true)
+    setError(null)
     setOutput('')
+    //   setIsCorrect(null)
+
+    //   if (isSubmission) {
+    //     setIsSubmitting(true)
+    //   } else {
+    //     setIsRunning(true)
+    //   }
 
     try {
-      const response = await fetch('/api/execute-code', {
+      const requestPayload = {
+        studentCode,
+        //   exercise_number,
+        //   tutorial_id,
+      }
+
+      const endpoint = isSubmission
+        ? '/api/py/test-exercise'
+        : '/api/py/execute'
+      const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          code: studentCode,
-          functionName: currentProblem.starterFunctionName,
-          testCases: currentProblem.testCases,
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestPayload),
       })
 
-      const result = await response.json()
-      setOutput(result.success ? result.output : `Error: ${result.error}`)
-    } catch (error) {
-      setOutput(
-        `Error: ${
-          error instanceof Error ? error.message : 'Unknown error occurred'
-        }`
-      )
+      const data = await response.json()
+
+      // Set output and error states
+      setOutput(data.output)
+      setError(data.error ? data.output : null)
+
+      // Set correctness for submissions
+      //   if (isSubmission) {
+      //     setIsCorrect(data.success)
+      //   }
+
+      // Handle exercise completion
+      //   if (user && isSubmission && !isProject && code) {
+      //     await handleExerciseSubmission(
+      //       user,
+      //       tutorial_id,
+      //       exercise_number,
+      //       data.success,
+      //       code
+      //     )
+      //     // In any component
+      //     await invalidateTutorialProgress(user.uid, tutorial_id)
+      //   }
+
+      //   if (user && !isSubmission && !isProject && code) {
+      //     await handleExerciseRun(user, tutorial_id)
+      //   }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+      //   if (isSubmission) {
+      //     setIsCorrect(false)
+      //   }
     } finally {
+      //   setIsExecuting(false)
+      //   setIsSubmitting(false)
       setIsRunning(false)
     }
   }

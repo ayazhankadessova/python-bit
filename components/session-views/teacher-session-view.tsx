@@ -12,7 +12,7 @@ import {
   limit,
   FirestoreError,
   serverTimestamp,
-  UpdateData
+  UpdateData,
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { useAuth } from '@/contexts/AuthContext'
@@ -24,7 +24,14 @@ import { python } from '@codemirror/lang-python'
 import { useToast } from '@/hooks/use-toast'
 import { Play, StopCircle, Send, RefreshCw, LogOut } from 'lucide-react'
 import { WeekSelector } from './WeekSelector'
-import type { LiveSession, SessionStudent, ExecutionResult, Curriculum, Week, Assignment } from '@/types/classrooms/live-session'
+import type {
+  LiveSession,
+  SessionStudent,
+  ExecutionResult,
+  Curriculum,
+  Week,
+  Assignment,
+} from '@/types/classrooms/live-session'
 import { Problem } from '@/types/utils'
 import { ClassroomTC } from '@/types/firebase'
 import {
@@ -34,7 +41,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {MarkdownRenderer} from '@/components/markdown-renderer'
+import { MarkdownRenderer } from '@/components/markdown-renderer'
+import {formatCode} from "@/lib/utils"
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -88,7 +96,6 @@ export function TeacherSessionView({
 
         const classroomData = classroomDoc.data() as ClassroomTC
         setClassroom(classroomData)
-       
 
         // Make sure curriculumId exists
         if (!classroomData.curriculumId) {
@@ -155,7 +162,7 @@ export function TeacherSessionView({
         if (assignmentDoc.exists()) {
           const assignmentData = assignmentDoc.data() as Assignment
           setCurrentAssignment(assignmentData)
-          setTeacherCode(assignmentData.starterCode)
+          setTeacherCode(formatCode(assignmentData.starterCode))
         }
       } catch (error) {
         console.error('Error fetching assignment:', error)
@@ -275,27 +282,72 @@ export function TeacherSessionView({
     }
   }
 
-  const handleRunCode = async (): Promise<void> => {
-    if (!teacherCode && !studentCode) return
+  const handleRunCode = async (isSubmission: boolean) => {
     setIsRunning(true)
+    setError(null)
     setOutput('')
+    //   setIsCorrect(null)
 
+    //   if (isSubmission) {
+    //     setIsSubmitting(true)
+    //   } else {
+    //     setIsRunning(true)
+    //   }
+
+    const code = selectedStudentUsername ? studentCode : teacherCode
     try {
-      const response = await fetch('/api/execute-code', {
+      const requestPayload = {
+        code,
+        //   exercise_number,
+        //   tutorial_id,
+      }
+
+      const endpoint = isSubmission
+        ? '/api/py/test-exercise'
+        : '/api/py/execute'
+      const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          code: teacherCode,
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestPayload),
       })
 
-      const result = (await response.json()) as ExecutionResult
-      setOutput(result.success ? result.output || '' : `Error: ${result.error}`)
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error occurred'
-      setOutput(`Error: ${errorMessage}`)
+      const data = await response.json()
+
+      // Set output and error states
+      setOutput(data.output)
+      setError(data.error ? data.output : null)
+
+      // Set correctness for submissions
+      //   if (isSubmission) {
+      //     setIsCorrect(data.success)
+      //   }
+
+      // Handle exercise completion
+      //   if (user && isSubmission && !isProject && code) {
+      //     await handleExerciseSubmission(
+      //       user,
+      //       tutorial_id,
+      //       exercise_number,
+      //       data.success,
+      //       code
+      //     )
+      //     // In any component
+      //     await invalidateTutorialProgress(user.uid, tutorial_id)
+      //   }
+
+      //   if (user && !isSubmission && !isProject && code) {
+      //     await handleExerciseRun(user, tutorial_id)
+      //   }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+      //   if (isSubmission) {
+      //     setIsCorrect(false)
+      //   }
     } finally {
+      //   setIsExecuting(false)
+      //   setIsSubmitting(false)
       setIsRunning(false)
     }
   }
@@ -388,26 +440,26 @@ export function TeacherSessionView({
     }
   }
 
-   const handleAssignmentSelect = async (assignmentId: string) => {
-     setSelectedAssignmentId(assignmentId)
+  const handleAssignmentSelect = async (assignmentId: string) => {
+    setSelectedAssignmentId(assignmentId)
 
-     try {
-       // Update session's activeTask
-       await updateDoc(
-         doc(fireStore, `classrooms/${classroomId}/sessions/${sessionId}`),
-         {
-           activeTask: assignmentId,
-         }
-       )
-     } catch (error) {
-       console.error('Error updating assignment:', error)
-       toast({
-         title: 'Error',
-         description: 'Failed to update assignment',
-         variant: 'destructive',
-       })
-     }
-   }
+    try {
+      // Update session's activeTask
+      await updateDoc(
+        doc(fireStore, `classrooms/${classroomId}/sessions/${sessionId}`),
+        {
+          activeTask: assignmentId,
+        }
+      )
+    } catch (error) {
+      console.error('Error updating assignment:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to update assignment',
+        variant: 'destructive',
+      })
+    }
+  }
 
   return (
     <div className='h-screen flex'>
@@ -488,7 +540,7 @@ export function TeacherSessionView({
             <h2 className='text-xl font-bold mb-2'>
               {currentAssignment.title}
             </h2>
-            
+
             <MarkdownRenderer content={currentAssignment.problemStatement} />
             {/* <div
               className='prose dark:prose-invert mb-4'
@@ -500,7 +552,10 @@ export function TeacherSessionView({
         )}
 
         <CodeMirror
-          value={selectedStudentUsername ? studentCode : teacherCode}
+          value={
+            selectedStudentUsername
+              ? studentCode : teacherCode
+          }
           height='calc(100vh - 300px)'
           theme={vscodeDark}
           extensions={[python()]}
@@ -508,7 +563,7 @@ export function TeacherSessionView({
         />
 
         <div className='mt-4 space-x-2'>
-          <Button onClick={handleRunCode} disabled={isRunning}>
+          <Button onClick={() => handleRunCode(false)} disabled={isRunning}>
             {isRunning ? (
               <StopCircle className='mr-2 h-4 w-4' />
             ) : (

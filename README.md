@@ -420,7 +420,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 await submitCode(...)
 invalidateCache() // This will drop the cache and trigger a refetch
 
+## Jan 9 
 
+- [ ] run code and show output 
+- [ ] add students when they connect 
+- [ ] add more weeks
+- [ ] add submit code -> get test code from backend
 ## Project Test cases
 
 - [ ] Add test cases to 2-3 projects

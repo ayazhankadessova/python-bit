@@ -65,3 +65,10 @@ export function calculateDuration(
   // Return both hours and minutes
   return `${hours}h ${minutes}m`
 }
+
+export const formatCode = (code: string) => {
+  return code
+    .replace(/\\n/g, '\n') // Replace double escaped newlines
+    .replace(/\\/g, '') // Remove any remaining single backslashes
+    .replace(/"{2,}/g, '"') // Replace multiple quotes with single quotes if needed
+}
