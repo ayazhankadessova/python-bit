@@ -42,7 +42,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { MarkdownRenderer } from '@/components/markdown-renderer'
-import {formatCode} from "@/lib/utils"
+import { formatCode } from '@/lib/utils'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -81,6 +81,9 @@ export function TeacherSessionView({
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<
     string | null
   >(null)
+  const [isExecuting, setIsExecuting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
 
   useEffect(() => {
     const fetchClassroomAndCurriculum = async () => {
@@ -162,7 +165,11 @@ export function TeacherSessionView({
         if (assignmentDoc.exists()) {
           const assignmentData = assignmentDoc.data() as Assignment
           setCurrentAssignment(assignmentData)
-          setTeacherCode(formatCode(assignmentData.starterCode))
+          setTeacherCode(
+            formatCode(
+              assignmentData.starterCode 
+            )
+          )
         }
       } catch (error) {
         console.error('Error fetching assignment:', error)
@@ -283,27 +290,27 @@ export function TeacherSessionView({
   }
 
   const handleRunCode = async (isSubmission: boolean) => {
-    setIsRunning(true)
+    setIsExecuting(true)
     setError(null)
     setOutput('')
-    //   setIsCorrect(null)
+    setIsCorrect(null)
 
-    //   if (isSubmission) {
-    //     setIsSubmitting(true)
-    //   } else {
-    //     setIsRunning(true)
-    //   }
+    if (isSubmission) {
+      setIsSubmitting(true)
+    } else {
+      setIsRunning(true)
+    }
 
     const code = selectedStudentUsername ? studentCode : teacherCode
+    const id = currentAssignment?.id
     try {
       const requestPayload = {
-        code,
-        //   exercise_number,
-        //   tutorial_id,
+        code: code,
+        assignment_id: id,
       }
 
       const endpoint = isSubmission
-        ? '/api/py/test-exercise'
+        ? '/api/py/test-assignment'
         : '/api/py/execute'
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -320,9 +327,9 @@ export function TeacherSessionView({
       setError(data.error ? data.output : null)
 
       // Set correctness for submissions
-      //   if (isSubmission) {
-      //     setIsCorrect(data.success)
-      //   }
+      if (isSubmission) {
+        setIsCorrect(data.success)
+      }
 
       // Handle exercise completion
       //   if (user && isSubmission && !isProject && code) {
@@ -342,12 +349,12 @@ export function TeacherSessionView({
       //   }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
-      //   if (isSubmission) {
-      //     setIsCorrect(false)
-      //   }
+      if (isSubmission) {
+        setIsCorrect(false)
+      }
     } finally {
-      //   setIsExecuting(false)
-      //   setIsSubmitting(false)
+      setIsExecuting(false)
+      setIsSubmitting(false)
       setIsRunning(false)
     }
   }
@@ -552,10 +559,7 @@ export function TeacherSessionView({
         )}
 
         <CodeMirror
-          value={
-            selectedStudentUsername
-              ? studentCode : teacherCode
-          }
+          value={selectedStudentUsername ? studentCode : teacherCode}
           height='calc(100vh - 300px)'
           theme={vscodeDark}
           extensions={[python()]}
@@ -563,13 +567,26 @@ export function TeacherSessionView({
         />
 
         <div className='mt-4 space-x-2'>
-          <Button onClick={() => handleRunCode(false)} disabled={isRunning}>
+          <Button onClick={() => handleRunCode(false)} disabled={isExecuting}>
             {isRunning ? (
               <StopCircle className='mr-2 h-4 w-4' />
             ) : (
               <Play className='mr-2 h-4 w-4' />
             )}
             {isRunning ? 'Running...' : 'Run Code'}
+          </Button>
+
+          <Button
+            onClick={() => handleRunCode(true)}
+            className='bg-blue-600 hover:bg-blue-700 text-white'
+            disabled={isExecuting}
+          >
+            {isSubmitting ? (
+              <StopCircle className='w-4 h-4 mr-2 animate-spin' />
+            ) : (
+              <Play className='w-4 h-4 mr-2' />
+            )}
+            Submit
           </Button>
 
           <Button onClick={handleSendCode}>
@@ -583,6 +600,21 @@ export function TeacherSessionView({
         {output && (
           <div className='mt-4 p-4 bg-black text-white font-mono rounded-md'>
             <pre>{output}</pre>
+          </div>
+        )}
+
+        {isCorrect !== null && !error && (
+          <div
+            className={`mt-4 p-2 rounded ${
+              isCorrect
+                ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400'
+                : 'bg-red-50 text-red-600 dark:bg-red-950/20 dark:text-red-400'
+            }`}
+          >
+            {isCorrect
+              ? '✅ All tests passed!'
+              : '❌ Some tests failed. Check the output above for details.'
+              }
           </div>
         )}
       </div>

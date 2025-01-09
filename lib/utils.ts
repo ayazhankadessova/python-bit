@@ -69,6 +69,6 @@ export function calculateDuration(
 export const formatCode = (code: string) => {
   return code
     .replace(/\\n/g, '\n') // Replace double escaped newlines
-    .replace(/\\/g, '') // Remove any remaining single backslashes
-    .replace(/"{2,}/g, '"') // Replace multiple quotes with single quotes if needed
+    .replace(/"{2,}/g, '"') // Replace multiple quotes with single quotes
+  // Removed the .replace(/\\/g, '') that was causing the issue
 }

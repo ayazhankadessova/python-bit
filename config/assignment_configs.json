@@ -1,0 +1,24 @@
+{
+  "hello-world-task-1": {
+    "id": "hello-world-task-1",
+    "title": "Create a Personalized Greeting Function",
+    "problemStatement": "# Custom Greeting Generator\n\nWrite a function called `create_greeting` that creates a personalized greeting message. The function should:\n\n1. Take a single parameter `name` (string)\n2. Print exactly three lines:\n - First line: 'Hello, Python!'\n - Second line: The provided name\n - Third line: 'I'm ready to code!'\n\n## Requirements:\n- Use the print() function for each line\n- Maintain exact spacing and punctuation\n- Handle any input name correctly\n\n## Note:\n- Pay attention to the exact text and punctuation\n- Each message should be on its own line\n- The function should work for any valid input name",
+    "starterCode": "def create_greeting(name):\n    # Write your code here\n    pass",
+    "starterFunctionName": "create_greeting",
+    "examples": [
+      {
+        "id": "example1",
+        "inputText": "create_greeting('Alice')",
+        "outputText": "Hello, Python!\nAlice\nI'm ready to code!",
+        "explanation": "When we call create_greeting with 'Alice', it prints three lines with the correct format"
+      },
+      {
+        "id": "example2",
+        "inputText": "create_greeting('Bob123')",
+        "outputText": "Hello, Python!\nBob123\nI'm ready to code!",
+        "explanation": "The function works with any string input, including numbers in the name"
+      }
+    ],
+    "testCode": "def test_greeting():\n    import sys\n    from io import StringIO\n    \n    # Capture output\n    old_stdout = sys.stdout\n    result = StringIO()\n    sys.stdout = result\n    \n    try:\n        # Test the function\n        create_greeting('TestStudent')\n        output = result.getvalue().strip().split('\\n')\n        \n        # Reset stdout\n        sys.stdout = old_stdout\n        \n        # Check if we have exactly 3 lines\n        assert len(output) == 3, 'Your function should print exactly three lines'\n        \n        # Check each line\n        assert output[0] == 'Hello, Python!', \"First line should be 'Hello, Python!'\"\n        assert output[1] == 'TestStudent', 'Second line should be the name provided'\n        assert output[2] == \"I'm ready to code!\", \"Third line should be 'I'm ready to code!'\"\n        \n        print('Great job! Your greeting function works perfectly! 🎉')\n        return True\n        \n    except AssertionError as e:\n        sys.stdout = old_stdout\n        print(f'Oops! {str(e)}. Try again!')\n        return False\n    except Exception as e:\n        sys.stdout = old_stdout\n        print(f'An error occurred: {str(e)}')\n        return False\n\ntest_greeting()"
+  }
+}
