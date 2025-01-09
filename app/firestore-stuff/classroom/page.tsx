@@ -85,7 +85,7 @@ export default function CreateClassroomPage() {
     }
   }, [user, router, toast])
 
-  // Update the fetchData function in your useEffect
+  // Update the fetchData function in y our useEffect
 useEffect(() => {
   const fetchData = async () => {
     if (!user?.school) return;

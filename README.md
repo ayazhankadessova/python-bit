@@ -423,11 +423,12 @@ invalidateCache() // This will drop the cache and trigger a refetch
 ## Jan 9 
 
 - [x] run code and show output 
+- [ ] no test code but rather expected output !!
 - [ ] make reusable component for code editor in live session
 - [ ] add students when they connect 
 - [ ] add more weeks
 - [ ] add submit code -> get test code from backend
-- [ ] remove selectedStudent
+- [x] remove selectedStudent
 
 ## Project Test cases
 

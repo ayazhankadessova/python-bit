@@ -43,6 +43,7 @@ import {
 } from '@/components/ui/select'
 import { MarkdownRenderer } from '@/components/markdown-renderer'
 import { formatCode } from '@/lib/utils'
+import { PythonEditor } from '@/components/session-views/live-session-code-editor'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -84,6 +85,19 @@ export function TeacherSessionView({
   const [isExecuting, setIsExecuting] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
+
+  const [editorInitialCode, setEditorInitialCode] = useState<string>('')
+
+  // Add this effect to manage the editor's initial code
+  useEffect(() => {
+    if (selectedStudentUsername && studentCode) {
+      setEditorInitialCode(studentCode)
+    } else if (currentAssignment?.starterCode) {
+      setEditorInitialCode(formatCode(currentAssignment.starterCode))
+    } else {
+      setEditorInitialCode('') // Fallback empty string
+    }
+  }, [selectedStudentUsername, studentCode, currentAssignment])
 
   useEffect(() => {
     const fetchClassroomAndCurriculum = async () => {
@@ -156,20 +170,26 @@ export function TeacherSessionView({
   // Fetch assignment when selected
   useEffect(() => {
     const fetchAssignment = async () => {
-      if (!selectedAssignmentId) return
+      if (!selectedAssignmentId) {
+        console.log('No selectedAssignmentId, skipping fetch')
+        return
+      }
 
       try {
+        console.log('Fetching assignment with ID:', selectedAssignmentId)
         const assignmentDoc = await getDoc(
           doc(fireStore, 'assignments', selectedAssignmentId)
         )
+
         if (assignmentDoc.exists()) {
           const assignmentData = assignmentDoc.data() as Assignment
+          console.log('Assignment loaded:', assignmentData)
+          console.log('Starter code:', assignmentData.starterCode)
+
           setCurrentAssignment(assignmentData)
-          setTeacherCode(
-            formatCode(
-              assignmentData.starterCode 
-            )
-          )
+          setTeacherCode(formatCode(assignmentData.starterCode))
+        } else {
+          console.log('Assignment document does not exist')
         }
       } catch (error) {
         console.error('Error fetching assignment:', error)
@@ -245,12 +265,26 @@ export function TeacherSessionView({
   }, [classroomId, currentSession?.id, selectedStudentUsername])
 
   const handleStudentSelect = async (
-    studentUsername: string | null
+    studentUsername: string
   ): Promise<void> => {
+    console.log('handleStudentSelect called with:', studentUsername)
+    console.log('Current selectedStudentUsername:', selectedStudentUsername)
+
+    // If clicking on already selected student, deselect them
+    if (selectedStudentUsername === studentUsername) {
+      console.log('Attempting to deselect student')
+      setSelectedStudentUsername(null)
+      console.log('Current assignment:', currentAssignment)
+      if (currentAssignment) {
+        console.log('Setting teacher code to starter code')
+        setTeacherCode(formatCode(currentAssignment.starterCode))
+      }
+      return
+    }
+
+    // Otherwise, select the new student
     setSelectedStudentUsername(studentUsername)
-    if (!studentUsername) {
-      setTeacherCode(currentProblem?.starterCode || '')
-    } else if (currentSession) {
+    if (currentSession) {
       const sessionDoc = await getDoc(
         doc(fireStore, `classrooms/${classroomId}/sessions`, currentSession.id)
       )
@@ -558,15 +592,30 @@ export function TeacherSessionView({
           </div>
         )}
 
-        <CodeMirror
+        {/* <CodeMirror
           value={selectedStudentUsername ? studentCode : teacherCode}
           height='calc(100vh - 300px)'
           theme={vscodeDark}
           extensions={[python()]}
           onChange={setTeacherCode}
+        /> */}
+
+        <PythonEditor
+          initialCode={editorInitialCode}
+          onCodeChange={setTeacherCode}
+          onRunCode={() => handleRunCode(false)}
+          onSubmitCode={() => handleRunCode(true)}
+          onSendCode={handleSendCode}
+          isTeacher={true}
+          selectedStudent={selectedStudentUsername}
+          output={output}
+          error={error}
+          isExecuting={isExecuting}
+          isCorrect={isCorrect}
+          title={currentAssignment?.title}
         />
 
-        <div className='mt-4 space-x-2'>
+        {/* <div className='mt-4 space-x-2'>
           <Button onClick={() => handleRunCode(false)} disabled={isExecuting}>
             {isRunning ? (
               <StopCircle className='mr-2 h-4 w-4' />
@@ -595,7 +644,7 @@ export function TeacherSessionView({
               ? `Send to ${selectedStudentUsername}`
               : 'Send to All'}
           </Button>
-        </div>
+        </div> */}
 
         {output && (
           <div className='mt-4 p-4 bg-black text-white font-mono rounded-md'>
@@ -613,8 +662,7 @@ export function TeacherSessionView({
           >
             {isCorrect
               ? '✅ All tests passed!'
-              : '❌ Some tests failed. Check the output above for details.'
-              }
+              : '❌ Some tests failed. Check the output above for details.'}
           </div>
         )}
       </div>
