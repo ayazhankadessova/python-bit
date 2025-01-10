@@ -430,8 +430,10 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [ ] Fix the assignent in firebase
 - [ ] fix its json
 - [ ] add students when they connect 
+- [ ] deploy to vercel
 - [ ] add more weeks
 - [x] remove selectedStudent
+- [ ] get project progress information
 
 
 ## Later
