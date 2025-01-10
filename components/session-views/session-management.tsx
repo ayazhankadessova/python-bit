@@ -205,7 +205,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     <div className='space-y-6'>
       {/* Active Session Management */}
       <div className='p-4 border rounded-lg bg-white shadow-sm'>
-        <h3 className='text-lg font-medium mb-4'>Session Management</h3>
+        <h3 className='text-lg font-medium mb-4'>Session Management for {teacherId} </h3>
         {activeSession ? (
           <div className='space-y-4'>
             <div className='text-green-600 font-medium'>

@@ -31,10 +31,10 @@ export function StudentSessionView({
   const { toast } = useToast()
   const [studentCode, setStudentCode] = useState<string>('')
   const [currentSession, setCurrentSession] = useState<LiveSession | null>(null)
-  const [output, setOutput] = useState<string>('')
-  const [isRunning, setIsRunning] = useState<boolean>(false)
+  // const [output, setOutput] = useState<string>('')
+  // const [isRunning, setIsRunning] = useState<boolean>(false)
   const [currentProblem, setCurrentProblem] = useState<Problem | null>(null)
-  const [isAiHelpOpen, setIsAiHelpOpen] = useState<boolean>(false)
+  // const [isAiHelpOpen, setIsAiHelpOpen] = useState<boolean>(false)
 
   // Listen to specific session using sessionId
   useEffect(() => {
@@ -103,74 +103,74 @@ export function StudentSessionView({
     }
   }
 
-  const handleRunCode = async (isSubmission: boolean) => {
-    setIsRunning(true)
-    // setError(null)
-    setOutput('')
-    //   setIsCorrect(null)
+  // const handleRunCode = async (isSubmission: boolean) => {
+  //   setIsRunning(true)
+  //   // setError(null)
+  //   setOutput('')
+  //   //   setIsCorrect(null)
 
-    //   if (isSubmission) {
-    //     setIsSubmitting(true)
-    //   } else {
-    //     setIsRunning(true)
-    //   }
+  //   //   if (isSubmission) {
+  //   //     setIsSubmitting(true)
+  //   //   } else {
+  //   //     setIsRunning(true)
+  //   //   }
 
-    try {
-      const requestPayload = {
-        studentCode,
-        //   exercise_number,
-        //   tutorial_id,
-      }
+  //   try {
+  //     const requestPayload = {
+  //       studentCode,
+  //       //   exercise_number,
+  //       //   tutorial_id,
+  //     }
 
-      const endpoint = isSubmission
-        ? '/api/py/test-exercise'
-        : '/api/py/execute'
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestPayload),
-      })
+  //     const endpoint = isSubmission
+  //       ? '/api/py/test-exercise'
+  //       : '/api/py/execute'
+  //     const response = await fetch(endpoint, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(requestPayload),
+  //     })
 
-      const data = await response.json()
+  //     const data = await response.json()
 
-      // Set output and error states
-      setOutput(data.output)
-      // setError(data.error ? data.output : null)
+  //     // Set output and error states
+  //     setOutput(data.output)
+  //     // setError(data.error ? data.output : null)
 
-      // Set correctness for submissions
-      //   if (isSubmission) {
-      //     setIsCorrect(data.success)
-      //   }
+  //     // Set correctness for submissions
+  //     //   if (isSubmission) {
+  //     //     setIsCorrect(data.success)
+  //     //   }
 
-      // Handle exercise completion
-      //   if (user && isSubmission && !isProject && code) {
-      //     await handleExerciseSubmission(
-      //       user,
-      //       tutorial_id,
-      //       exercise_number,
-      //       data.success,
-      //       code
-      //     )
-      //     // In any component
-      //     await invalidateTutorialProgress(user.uid, tutorial_id)
-      //   }
+  //     // Handle exercise completion
+  //     //   if (user && isSubmission && !isProject && code) {
+  //     //     await handleExerciseSubmission(
+  //     //       user,
+  //     //       tutorial_id,
+  //     //       exercise_number,
+  //     //       data.success,
+  //     //       code
+  //     //     )
+  //     //     // In any component
+  //     //     await invalidateTutorialProgress(user.uid, tutorial_id)
+  //     //   }
 
-      //   if (user && !isSubmission && !isProject && code) {
-      //     await handleExerciseRun(user, tutorial_id)
-      //   }
-    } catch (err) {
-      // setError(err instanceof Error ? err.message : 'An error occurred')
-      //   if (isSubmission) {
-      //     setIsCorrect(false)
-      //   }
-    } finally {
-      //   setIsExecuting(false)
-      //   setIsSubmitting(false)
-      setIsRunning(false)
-    }
-  }
+  //     //   if (user && !isSubmission && !isProject && code) {
+  //     //     await handleExerciseRun(user, tutorial_id)
+  //     //   }
+  //   } catch (err) {
+  //     // setError(err instanceof Error ? err.message : 'An error occurred')
+  //     //   if (isSubmission) {
+  //     //     setIsCorrect(false)
+  //     //   }
+  //   } finally {
+  //     //   setIsExecuting(false)
+  //     //   setIsSubmitting(false)
+  //     setIsRunning(false)
+  //   }
+  // }
 
   const handleSubmitCode = async (): Promise<void> => {
     if (!currentSession || !user?.displayName || !currentProblem) return
@@ -303,7 +303,7 @@ export function StudentSessionView({
               <Button
                 variant='outline'
                 size='sm'
-                onClick={() => setIsAiHelpOpen(true)}
+                // onClick={() => setIsAiHelpOpen(true)}
               >
                 <Bot className='w-4 h-4 mr-2' />
                 AI Help
@@ -316,27 +316,27 @@ export function StudentSessionView({
                 variant='outline'
                 size='sm'
                 // onClick={handleRunCode}
-                disabled={isRunning}
+                // disabled={isRunning}
               >
-                {isRunning ? (
+                {false ? (
                   <StopCircle className='w-4 h-4 mr-2' />
                 ) : (
                   <Play className='w-4 h-4 mr-2' />
                 )}
-                {isRunning ? 'Running...' : 'Run Code'}
+                {/* {isRunning ? 'Running...' : 'Run Code'} */}
               </Button>
               <Button
                 variant='default'
                 size='sm'
                 onClick={handleSubmitCode}
-                disabled={isRunning}
+                // disabled={isRunning}
               >
                 Submit Solution
               </Button>
             </div>
           </div>
           <div className='font-mono text-sm text-white overflow-y-auto max-h-[calc(30vh-4rem)]'>
-            <pre>{output || 'No output yet...'}</pre>
+            {/* <pre>{output || 'No output yet...'}</pre> */}
           </div>
         </div>
       </div>

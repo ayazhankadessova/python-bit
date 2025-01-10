@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Plus, Trash } from 'lucide-react'
 import { doc, setDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
-import {Example, Assignment, Week, Curriculum} from '@/types/classrooms/live-session'
+import {Assignment, Curriculum} from '@/types/classrooms/live-session'
 
 const CurriculumManager = () => {
   const [activeTab, setActiveTab] = useState('curriculum')

@@ -16,19 +16,19 @@ interface PageProps {
 const SessionPage: React.FC<PageProps> = ({ params }) => {
   const router = useRouter()
   const { user } = useAuth()
-  const [error, setError] = useState<string | null>(null)
+  // const [error, setError] = useState<string | null>(null)
 
   // Get IDs from URL parameters
   const classroomId = params.id
   const sessionId = params.sid
 
-  if (error) {
-    return (
-      <div className='flex items-center justify-center min-h-screen'>
-        <div className='text-red-600'>{error}</div>
-      </div>
-    )
-  }
+  // if (error) {
+  //   return (
+  //     <div className='flex items-center justify-center min-h-screen'>
+  //       <div className='text-red-600'>{error}</div>
+  //     </div>
+  //   )
+  // }
 
   // Show loading state while fetching data
   if (!user) {

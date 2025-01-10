@@ -14,7 +14,7 @@ interface PageProps {
 const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
   const { user } = useAuth() // Firebase Auth context
 
-  const [error, setError] = useState<string | null>(null)
+  // const [error, setError] = useState<string | null>(null)
 
   const classroomId = params.id
 
