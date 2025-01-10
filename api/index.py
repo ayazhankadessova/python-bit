@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from .routes import code_router, health_router
+from .routes import code_router
 from .dependencies import limiter
 
 # Create FastAPI instance
@@ -31,5 +31,4 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(health_router.router, prefix="/api/py")
 app.include_router(code_router.router, prefix="/api/py")
