@@ -28,10 +28,12 @@ export function useProjectProgress(
     dedupingInterval = 600000, // 10 minutes
   } = options
 
-  // Only fetch if we have both entityId and user
+  // Only fetch if we have both projectId and user
   const shouldFetch = Boolean(projectId && user)
+
+  // Create the path-based URL
   const url = shouldFetch
-    ? `/api/progress/project?userId=${user?.uid}&projectId=${projectId}`
+    ? `/api/progress/project/${user?.uid}/${projectId}`
     : null
 
   const { data, error, mutate } = useSWR<Progress>(
