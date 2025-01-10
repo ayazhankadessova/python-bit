@@ -33,7 +33,3 @@ app.add_middleware(
 # Include routers
 app.include_router(health_router.router, prefix="/api/py")
 app.include_router(code_router.router, prefix="/api/py")
-
-@app.get("/api/py/helloFastApi")
-def hello_fast_api():
-    return {"message": "Hello from FastAPI"}

@@ -1,18 +1,7 @@
 import useSWR from 'swr'
 import { User } from '@/types/firebase'
-
-export interface Progress {
-  completed: boolean
-  totalAttempts: number
-  successfulAttempts: number
-  lastAttempt: number
-}
-
-interface useProjectProgressOptions {
-  revalidateOnFocus?: boolean
-  revalidateOnReconnect?: boolean
-  dedupingInterval?: number
-}
+import { Progress } from '@/types/project/general'
+import {useProjectProgressOptions} from '@/types/project/props'
 
 /**
  * Custom hook for fetching user progress on projects/tasks
