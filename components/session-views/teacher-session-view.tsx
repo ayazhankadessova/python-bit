@@ -172,9 +172,6 @@ export function TeacherSessionView({
 
         if (assignmentDoc.exists()) {
           const assignmentData = assignmentDoc.data() as Assignment
-          console.log('Assignment loaded:', assignmentData)
-          console.log('Starter code:', assignmentData.starterCode)
-
           setCurrentAssignment(assignmentData)
           setTeacherCode(formatCode(assignmentData.starterCode))
         } else {
@@ -194,31 +191,42 @@ export function TeacherSessionView({
   }, [selectedAssignmentId, toast])
 
   useEffect(() => {
-    const sessionRef = collection(
+    const sessionRef = doc(
       fireStore,
-      `classrooms/${classroomId}/sessions`
-    )
-    const q = query(
-      sessionRef,
-      where('endedAt', '==', null),
-      orderBy('startedAt', 'desc'),
-      limit(1)
+      `classrooms/${classroomId}/sessions/${sessionId}`
     )
 
     const unsubscribe = onSnapshot(
-      q,
+      sessionRef,
       (snapshot) => {
         setIsLoading(false)
-
-        if (!snapshot.empty) {
-          const sessionData = snapshot.docs[0].data() as Omit<LiveSession, 'id'>
+        if (snapshot.exists()) {
+          const sessionData = snapshot.data() as Omit<LiveSession, 'id'>
           const session: LiveSession = {
-            id: snapshot.docs[0].id,
+            id: snapshot.id,
             ...sessionData,
           }
           setCurrentSession(session)
+
+          // Update students directly from session data
+          const studentArray = Object.entries(sessionData.students).map(
+            ([username, info]) => ({
+              username,
+              ...info,
+            })
+          )
+          setStudents(studentArray)
+
+          // Update selected student's code if needed
+          if (
+            selectedStudentUsername &&
+            sessionData.students[selectedStudentUsername]
+          ) {
+            setStudentCode(sessionData.students[selectedStudentUsername].code)
+          }
         } else {
           setCurrentSession(null)
+          setError('Session not found')
         }
       },
       (err) => {
@@ -228,30 +236,7 @@ export function TeacherSessionView({
     )
 
     return () => unsubscribe()
-  }, [classroomId])
-
-  useEffect(() => {
-    if (!currentSession) return
-
-    const unsubscribe = onSnapshot(
-      doc(fireStore, `classrooms/${classroomId}/sessions`, currentSession.id),
-      (snapshot) => {
-        const data = snapshot.data() as LiveSession
-        setStudents(
-          Object.entries(data.students).map(([username, info]) => ({
-            username,
-            ...info,
-          }))
-        )
-
-        if (selectedStudentUsername && data.students[selectedStudentUsername]) {
-          setTeacherCode(data.students[selectedStudentUsername].code)
-        }
-      }
-    )
-
-    return () => unsubscribe()
-  }, [classroomId, currentSession?.id, selectedStudentUsername])
+  }, [classroomId, sessionId, selectedStudentUsername])
 
   const handleStudentSelect = async (
     studentUsername: string

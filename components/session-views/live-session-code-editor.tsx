@@ -17,6 +17,7 @@ interface PythonEditorProps {
   onSubmitCode?: (code: string) => Promise<void>
   isTeacher?: boolean
   onSendCode?: (code: string, studentUsername?: string) => Promise<void>
+  onUpdateCode?: () => Promise<void>
   selectedStudent?: string | null
   output: string
   error: string | null
@@ -31,6 +32,7 @@ export function PythonEditor({
   onSubmitCode,
   isTeacher = false,
   onSendCode,
+  onUpdateCode,
   selectedStudent,
   output,
   error,
@@ -42,6 +44,17 @@ export function PythonEditor({
   const [isExecuting, setIsExecuting] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isUpdating, setIsUpdating] = useState(false)
+
+  const handleUpdateCode = async () => {
+    if (!onUpdateCode) return
+    setIsUpdating(true)
+    try {
+      await onUpdateCode()
+    } finally {
+      setIsUpdating(false)
+    }
+  }
 
   const handleCodeChange = (value: string) => {
     setCode(value)
@@ -223,13 +236,28 @@ export function PythonEditor({
                 </Button>
               )}
 
-              {isTeacher && onSendCode && (
+              {isTeacher && onSendCode ? (
                 <Button onClick={handleSendCode} className='ml-auto'>
                   <Send className='mr-2 h-4 w-4' />
                   {selectedStudent
                     ? `Send to ${selectedStudent}`
                     : 'Send to All'}
                 </Button>
+              ) : (
+                onUpdateCode && (
+                  <Button
+                    onClick={handleUpdateCode}
+                    className='ml-auto bg-blue-600 hover:bg-blue-700'
+                    disabled={isUpdating}
+                  >
+                    {isUpdating ? (
+                      <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                    ) : (
+                      <Send className='mr-2 h-4 w-4' />
+                    )}
+                    {isUpdating ? 'Updating...' : 'Update Code'}
+                  </Button>
+                )
               )}
             </div>
 

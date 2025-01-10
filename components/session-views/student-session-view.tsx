@@ -1,18 +1,9 @@
-// TeacherSessionView.tsx
 import React, { useState, useEffect } from 'react'
 import {
   doc,
-  collection,
   onSnapshot,
-  updateDoc,
   getDoc,
-  query,
-  orderBy,
-  where,
-  limit,
-  FirestoreError,
-  serverTimestamp,
-  UpdateData,
+  updateDoc
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Button } from '@/components/ui/button'
@@ -38,6 +29,7 @@ import {
 import { MarkdownRenderer } from '@/components/markdown-renderer'
 import { formatCode } from '@/lib/utils'
 import { PythonEditor } from '@/components/session-views/live-session-code-editor'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -50,6 +42,7 @@ export function StudentSessionView({
   sessionId,
   onEndSession,
 }: TeacherSessionViewProps): JSX.Element {
+  const { user } = useAuth()
   const { toast } = useToast()
   const [studentCode, setStudentCode] = useState<string>('')
   const [teacherCode, setTeacherCode] = useState<string>('')
@@ -161,16 +154,12 @@ export function StudentSessionView({
       }
 
       try {
-        console.log('Fetching assignment with ID:', selectedAssignmentId)
         const assignmentDoc = await getDoc(
           doc(fireStore, 'assignments', selectedAssignmentId)
         )
 
         if (assignmentDoc.exists()) {
           const assignmentData = assignmentDoc.data() as Assignment
-          console.log('Assignment loaded:', assignmentData)
-          console.log('Starter code:', assignmentData.starterCode)
-
           setCurrentAssignment(assignmentData)
           setTeacherCode(formatCode(assignmentData.starterCode))
         } else {
@@ -190,31 +179,34 @@ export function StudentSessionView({
   }, [selectedAssignmentId, toast])
 
   useEffect(() => {
-    const sessionRef = collection(
+    const sessionRef = doc(
       fireStore,
-      `classrooms/${classroomId}/sessions`
-    )
-    const q = query(
-      sessionRef,
-      where('endedAt', '==', null),
-      orderBy('startedAt', 'desc'),
-      limit(1)
+      `classrooms/${classroomId}/sessions/${sessionId}`
     )
 
     const unsubscribe = onSnapshot(
-      q,
+      sessionRef,
       (snapshot) => {
         setIsLoading(false)
-
-        if (!snapshot.empty) {
-          const sessionData = snapshot.docs[0].data() as Omit<LiveSession, 'id'>
+        if (snapshot.exists()) {
+          const sessionData = snapshot.data() as Omit<LiveSession, 'id'>
           const session: LiveSession = {
-            id: snapshot.docs[0].id,
+            id: snapshot.id,
             ...sessionData,
           }
           setCurrentSession(session)
+
+          // Update students directly from session data
+          const studentArray = Object.entries(sessionData.students).map(
+            ([username, info]) => ({
+              username,
+              ...info,
+            })
+          )
+          setStudents(studentArray)
         } else {
           setCurrentSession(null)
+          setError('Session not found')
         }
       },
       (err) => {
@@ -224,26 +216,7 @@ export function StudentSessionView({
     )
 
     return () => unsubscribe()
-  }, [classroomId])
-
-  useEffect(() => {
-    if (!currentSession) return
-
-    const unsubscribe = onSnapshot(
-      doc(fireStore, `classrooms/${classroomId}/sessions`, currentSession.id),
-      (snapshot) => {
-        const data = snapshot.data() as LiveSession
-        setStudents(
-          Object.entries(data.students).map(([username, info]) => ({
-            username,
-            ...info,
-          }))
-        )
-      }
-    )
-
-    return () => unsubscribe()
-  }, [classroomId, currentSession?.id])
+  }, [classroomId, sessionId])
 
   // const leaveSession = async () => {
   //   try {
@@ -273,12 +246,46 @@ export function StudentSessionView({
   //   }
   // }
 
+  const handleUpdateCode = async (): Promise<void> => {
+    if (!currentSession || !user?.displayName) return
+
+    try {
+      const sessionRef = doc(
+        fireStore,
+        `classrooms/${classroomId}/sessions/${sessionId}`
+      )
+      const now = Date.now()
+
+      // Update student's code and lastUpdated timestamp
+      await updateDoc(sessionRef, {
+        [`students.${user.displayName}`]: {
+          code: studentCode,
+          lastUpdated: now,
+          submissions:
+            currentSession.students[user.displayName]?.submissions || [],
+        },
+      })
+
+      toast({
+        title: 'Code Updated',
+        description: 'Your code has been updated for the teacher to see.',
+      })
+    } catch (error) {
+      console.error('Error updating code:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to update code',
+        variant: 'destructive',
+      })
+    }
+  }
+
   const handleRunCode = async (isSubmission: boolean) => {
     setError(null)
     setOutput('')
     setIsCorrect(null)
 
-    const code = studentCode 
+    const code = studentCode
     const id = currentAssignment?.id
     try {
       const requestPayload = {
@@ -396,7 +403,7 @@ export function StudentSessionView({
 
           {/* Connected Students - Always visible */}
           <div className='border-t bg-muted/50 p-4 max-h-[40vh] flex flex-col'>
-            <h3 className='font-semibold mb-3'>Connected Students</h3>
+            <h3 className='font-semibold mb-3'>Your Classmates</h3>
             <div className='space-y-2 overflow-y-auto flex-1'>
               {students.map((student) => (
                 <Card
@@ -405,7 +412,9 @@ export function StudentSessionView({
                 >
                   <CardHeader className='py-2 px-3'>
                     <CardTitle className='text-sm'>
-                      {student.username}
+                      {student.username === user?.displayName
+                        ? 'Me'
+                        : student.username}
                     </CardTitle>
                   </CardHeader>
                 </Card>
@@ -418,12 +427,11 @@ export function StudentSessionView({
         <div className='flex-1'>
           <PythonEditor
             initialCode={editorInitialCode}
-            onCodeChange={setTeacherCode}
+            onCodeChange={setStudentCode} // Change this from setTeacherCode to setStudentCode
             onRunCode={() => handleRunCode(false)}
             onSubmitCode={() => handleRunCode(true)}
-            // onSendCode={handleSendCode}
-            isTeacher={true}
-            // selectedStudent={selectedStudentUsername}
+            isTeacher={false} // Make sure this is false for students
+            onUpdateCode={handleUpdateCode} // Pass the update handler
             output={output}
             error={error}
             isCorrect={isCorrect}
