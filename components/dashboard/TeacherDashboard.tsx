@@ -80,7 +80,7 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
             {activeClassrooms.length > 0 && (
               <ClassroomList
                 classrooms={activeClassrooms}
-                onJoinClassroom={(id) => router.push(`/classroom/${id}`)}
+                onJoinClassroom={(id) => router.push(`/classrooms/${id}`)}
                 userRole='teacher'
               />
             )}

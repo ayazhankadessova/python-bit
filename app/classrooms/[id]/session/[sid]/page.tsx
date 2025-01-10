@@ -46,14 +46,14 @@ const SessionPage: React.FC<PageProps> = ({ params }) => {
       sessionId={sessionId}
       onEndSession={() => {
         // Handle session end
-        router.push(`/classroom/${classroomId}`)
+        router.push(`/classrooms/${classroomId}`)
       }}
     />
   ) : (
     <StudentSessionView
       classroomId={classroomId}
       sessionId={sessionId}
-      onEndSession={() => router.push(`/classroom/${classroomId}`)}
+      onEndSession={() => router.push(`/classrooms/${classroomId}`)}
     />
   )
 }

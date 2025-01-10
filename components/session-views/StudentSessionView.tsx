@@ -3,78 +3,65 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { Socket } from 'socket.io-client'
-import Split from 'react-split'
+import { problems } from '@/utils/problems'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
-import { doc, getDoc } from 'firebase/firestore'
-import { fireStore } from '@/firebase/firebase'
-import { Problem } from '@/types/utils'
-import { problems } from '@/utils/problems'
 import { useToast } from '@/hooks/use-toast'
-import { Play, StopCircle, Bot, RefreshCw } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog'
-import FileProcessorTest from './FileProcessorTest'
-import { handleTaskCompletion } from './helpers'
-import {Week} from "@/types/firebase"
+import { Send, Play, StopCircle, RefreshCw } from 'lucide-react'
+import { WeekSelector } from './WeekSelector'
+import { fireStore } from '@/firebase/firebase'
+import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore'
+import { Week } from '@/types/firebase'
+import { Problem } from '@/types/utils'
 
-interface StudentSessionViewProps {
+interface TeacherSessionViewProps {
   classroomId: string
   onEndSession: () => void
   socket: Socket | null
+}
+
+interface WeeklyProgress {
+  taskCompletions: {
+    [taskId: string]: string[] // Array of user IDs who completed the task
+  }
+  activeSession?: boolean
+  lastUpdated?: string
 }
 
 export function StudentSessionView({
   classroomId,
   onEndSession,
   socket,
-}: StudentSessionViewProps) {
+}: TeacherSessionViewProps) {
   const { user } = useAuth()
   const { toast } = useToast()
   const [currentProblem, setCurrentProblem] = useState<Problem | null>(null)
-  const [studentCode, setStudentCode] = useState('')
+  const [teacherCode, setTeacherCode] = useState('')
+  const [selectedStudentUsername, setSelectedStudentUsername] = useState<
+    string | null
+  >(null)
+  const [studentsUsernames, setStudentsUsernames] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [completedProblems, setCompletedProblems] = useState<string[]>([])
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null)
   const [weekProblems, setWeekProblems] = useState<string[]>([])
-  const [isAiHelpOpen, setIsAiHelpOpen] = useState(false)
+  const [totalWeeks, setTotalWeeks] = useState(0)
+  const [weeklyProgress, setWeeklyProgress] = useState<WeeklyProgress | null>(
+    null
+  )
   const [output, setOutput] = useState('')
-  const joinedRoom = useRef(false)
   const [isRunning, setIsRunning] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const joinedRoom = useRef(false)
+  // const inviteLink = `${process.env.NEXT_PUBLIC_BASE_URL}/join/${classroomId}`
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const classroomRef = doc(fireStore, 'classrooms', classroomId)
-        const classroomDoc = await getDoc(classroomRef)
+  const updateWeekProblems = async (weekNumber: number) => {
+    try {
+      const classroomRef = doc(fireStore, 'classrooms', classroomId)
+      const classroomDoc = await getDoc(classroomRef)
 
-        if (!classroomDoc.exists()) {
-          toast({
-            title: 'Error',
-            description: 'Classroom not found',
-            variant: 'destructive',
-          })
-          return
-        }
-
+      if (classroomDoc.exists()) {
         const classroomData = classroomDoc.data()
-        if (!classroomData.activeSession) {
-          toast({
-            title: 'No Active Session',
-            description: 'Please wait for the teacher to start the session',
-            variant: 'destructive',
-          })
-          onEndSession()
-          return
-        }
-
-        setSelectedWeek(classroomData.lastTaughtWeek)
         const curriculumRef = doc(
           fireStore,
           'curricula',
@@ -85,71 +72,93 @@ export function StudentSessionView({
         if (curriculumDoc.exists()) {
           const curriculumData = curriculumDoc.data()
           const weekData = curriculumData.weeks.find(
-            (w: Week) => w.weekNumber === classroomData.lastTaughtWeek
+            (w: Week) => w.weekNumber === weekNumber
           )
+
           if (weekData) {
             setWeekProblems(weekData.assignmentIds)
             if (weekData.assignmentIds.length > 0) {
               const firstProblem = problems[weekData.assignmentIds[0]]
               setCurrentProblem(firstProblem)
-              setStudentCode(firstProblem.starterCode)
+              setTeacherCode(firstProblem.starterCode)
             }
           }
         }
+      }
+    } catch (error) {
+      console.error('Error updating week problems:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to load week problems',
+        variant: 'destructive',
+      })
+    }
+  }
 
-        if (user) {
-          const userRef = doc(fireStore, 'users', user.uid)
-          const userDoc = await getDoc(userRef)
-          if (userDoc.exists()) {
-            setCompletedProblems(userDoc.data().solvedProblems || [])
-          }
-        }
+  const handleStartWeek = async (weekNumber: number) => {
+    if (!user) return
 
-        setIsLoading(false)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-        toast({
-          title: 'Error',
-          description: 'Failed to load session data!',
-          variant: 'destructive',
-        })
+    try {
+      const classroomRef = doc(fireStore, 'classrooms', classroomId)
+      await updateDoc(classroomRef, {
+        lastTaughtWeek: weekNumber, // Use the passed week number
+        activeSession: true,
+      })
+
+      const weeklyProgressRef = doc(
+        fireStore,
+        'weeklyProgress',
+        `${classroomId}-${weekNumber}` // Use the passed week number
+      )
+      await setDoc(
+        weeklyProgressRef,
+        {
+          activeSession: true,
+          lastUpdated: new Date().toISOString(),
+          taskCompletions: {},
+        },
+        { merge: true }
+      )
+
+      await updateWeekProblems(weekNumber)
+
+      toast({
+        title: 'Week Started',
+        description: `Week ${weekNumber} started successfully.`,
+      })
+    } catch (error) {
+      console.error('Error starting week:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to start the week',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const handleStudentSelect = (studentUsername: string | null) => {
+    setSelectedStudentUsername(studentUsername)
+    if (!studentUsername) {
+      setTeacherCode(currentProblem?.starterCode || '')
+    } else {
+      // Request the student's latest code
+      if (socket) {
+        socket.emit('get-student-code', classroomId, studentUsername)
       }
     }
+  }
 
-    fetchData()
-  }, [classroomId, user, toast, onEndSession])
-
-  // Socket event handlers
-  useEffect(() => {
-    if (!socket || !user?.displayName) return
-
-    // Only join room if we haven't already
-    if (!joinedRoom.current) {
-      console.log('Joining room for first time')
-      socket.emit('join-room', classroomId, user.displayName, false)
-      joinedRoom.current = true
+  const handleProblemSelect = (problemId: string) => {
+    const problem = problems[problemId]
+    setCurrentProblem(problem)
+    // Only set starter code if no student is selected
+    if (!selectedStudentUsername) {
+      setTeacherCode(problem.starterCode)
     }
-
-    socket.on('teacher-code', (data: { code: string }) => {
-      setStudentCode(data.code)
-    })
-
-    socket.on('session-ended', () => {
-      toast({
-        title: 'Session Ended',
-        description: 'The teacher has ended the session',
-      })
-      onEndSession()
-    })
-
-    return () => {
-      socket.off('teacher-code')
-      socket.off('session-ended')
-    }
-  }, [socket, user?.displayName, classroomId, toast, onEndSession])
+  }
 
   const handleRunCode = async () => {
-    if (!currentProblem || !studentCode) return
+    if (!currentProblem || !teacherCode) return
 
     setIsRunning(true)
     setOutput('')
@@ -159,13 +168,14 @@ export function StudentSessionView({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          code: studentCode,
+          code: teacherCode,
           functionName: currentProblem.starterFunctionName,
           input: currentProblem.examples[0].inputText,
         }),
       })
 
       const result = await response.json()
+
       if (result.success) {
         setOutput(result.output)
       } else {
@@ -182,96 +192,289 @@ export function StudentSessionView({
     }
   }
 
-  async function handleSubmitCode() {
-    if (!currentProblem || !user || !selectedWeek) return
+  const refreshProgress = async () => {
+    if (!selectedWeek) return
 
-    setIsRunning(true)
+    setIsRefreshing(true)
     try {
-      // First validate code structure
-      const isValid = currentProblem.handlerFunction(studentCode)
-      if (!isValid) {
-        throw new Error(
-          'Code validation failed: Please check your function signature and implementation'
-        )
+      const weeklyProgressRef = doc(
+        fireStore,
+        'weeklyProgress',
+        `${classroomId}-${selectedWeek}`
+      )
+      const weeklyProgressDoc = await getDoc(weeklyProgressRef)
+      if (weeklyProgressDoc.exists()) {
+        setWeeklyProgress(weeklyProgressDoc.data() as WeeklyProgress)
       }
-
-      // Submit code for testing
-      const response = await fetch('/api/submit-code', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          code: studentCode,
-          problemId: currentProblem.id,
-          testCases: currentProblem.testCases,
-        }),
-      })
-
-      const result = await response.json()
-
-      if (!result.success) {
-        throw new Error(result.error)
-      }
-
-      await handleTaskCompletion({
-        taskId: currentProblem.id,
-        userId: user.uid,
-        classroomId,
-        selectedWeek,
-        socket,
-        userName: user.displayName || undefined,
-        onUpdateCompletedProblems: (taskId) => {
-          setCompletedProblems((prev) => [...prev, taskId])
-        },
-      })
-
-      toast({
-        title: 'Success!',
-        description: 'All test cases passed! Solution submitted successfully.',
-      })
-
-      // Notify teacher of completion
-      socket?.emit('task-completed', {
-        taskId: currentProblem.id,
-        studentId: user.uid,
-        studentName: user.displayName,
-        classroomId,
-      })
     } catch (error) {
-      console.error('Submit code error:', error)
+      console.error('Error refreshing progress:', error)
       toast({
         title: 'Error',
-        description:
-          error instanceof Error ? error.message : 'An unknown error occurred',
+        description: 'Failed to refresh progress',
         variant: 'destructive',
       })
     } finally {
-      setIsRunning(false)
+      setIsRefreshing(false)
     }
   }
 
-  const handleUpdateCode = () => {
-    if (!socket || !user?.displayName) return
+  const handleSendCode = () => {
+    if (!socket) return
 
-    socket.emit('code-update', {
-      code: studentCode,
-      username: user.displayName,
-      classroomId,
-    })
-
-    toast({
-      title: 'Code Updated',
-      description: 'Your code has been updated for the teacher to see.',
-    })
+    if (selectedStudentUsername) {
+      socket.emit('send-code-to-student', {
+        classroomId,
+        studentUsername: selectedStudentUsername,
+        code: teacherCode,
+      })
+      toast({
+        title: 'Code Sent',
+        description: `Code sent to ${selectedStudentUsername}`,
+      })
+    } else {
+      socket.emit('send-code-to-all', {
+        classroomId,
+        code: teacherCode,
+      })
+      toast({
+        title: 'Code Broadcast',
+        description: 'Code sent to all students',
+      })
+    }
   }
+
+  useEffect(() => {
+    console.log('Socket connection status:', {
+      socketExists: !!socket,
+      userDisplayName: user?.displayName,
+      classroomId,
+      joinedRoom: joinedRoom.current,
+    })
+  }, [socket, user?.displayName, classroomId])
+
+  // Initial data fetch
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const classroomRef = doc(fireStore, 'classrooms', classroomId)
+        const classroomDoc = await getDoc(classroomRef)
+
+        if (!classroomDoc.exists()) {
+          toast({
+            title: 'Error',
+            description: 'Classroom not found',
+            variant: 'destructive',
+          })
+          return
+        }
+
+        const classroomData = classroomDoc.data()
+        const curriculumRef = doc(
+          fireStore,
+          'curricula',
+          classroomData.curriculumId
+        )
+        const curriculumDoc = await getDoc(curriculumRef)
+
+        if (curriculumDoc.exists()) {
+          const curriculumData = curriculumDoc.data()
+          setTotalWeeks(curriculumData.weeks.length)
+          setSelectedWeek(classroomData.lastTaughtWeek || 1)
+
+          const weekData = curriculumData.weeks.find(
+            (w: Week) => w.weekNumber === (classroomData.lastTaughtWeek || 1)
+          )
+          if (weekData) {
+            setWeekProblems(weekData.assignmentIds)
+            if (weekData.assignmentIds.length > 0) {
+              const firstProblem = problems[weekData.assignmentIds[0]]
+              setCurrentProblem(firstProblem)
+              setTeacherCode(firstProblem.starterCode)
+            }
+          }
+        }
+
+        setIsLoading(false)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        toast({
+          title: 'Error',
+          description: 'Failed to load classroom data',
+          variant: 'destructive',
+        })
+      }
+    }
+
+    fetchData()
+  }, [classroomId, toast])
+
+  // Socket event handlers
+  useEffect(() => {
+    if (!socket || !user?.displayName) {
+      console.log('Missing dependencies:', {
+        socket: !!socket,
+        userDisplayName: user?.displayName,
+      })
+      return
+    }
+
+    console.log('Setting up socket event listeners')
+
+    if (!joinedRoom.current) {
+      console.log('Joining room:', classroomId)
+      socket.emit('join-room', classroomId, user.displayName, true)
+      joinedRoom.current = true
+    }
+
+    socket.on('update-participants', (data) => {
+      console.log('Received update-participants:', data)
+      setStudentsUsernames(data.students)
+    })
+
+    // Add new listener for student code response
+    socket.on('student-code', (data) => {
+      console.log('Received student code:', data)
+      setTeacherCode(data.code)
+      // if (selectedStudentUsername == data.username) {
+      //   setTeacherCode(data.code)
+      // }
+    })
+
+    return () => {
+      console.log('Cleaning up socket event listeners')
+      socket.off('update-participants')
+      socket.off('student-code')
+    }
+  }, [socket, user?.displayName, classroomId])
 
   if (isLoading) return <div>Loading...</div>
 
   return (
     <div className='h-screen flex'>
-      <div className='w-1/4 border-r p-4 bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] overflow-y-auto'>
-        <h2 className='text-xl font-bold mb-4'>Week {selectedWeek} Problems</h2>
+      {/* Part 1: Students and Session Management */}
+      <div className='w-1/4 border-r bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] p-4 flex flex-col'>
+        <div className='space-y-4'>
+          <div className='flex justify-between items-center'>
+            <h2 className='text-xl font-bold'>Session Control</h2>
+          </div>
+          <WeekSelector
+            selectedWeek={selectedWeek}
+            totalWeeks={totalWeeks}
+            onSelectWeek={(weekNumber) => {
+              setSelectedWeek(weekNumber)
+              handleStartWeek(weekNumber)
+            }}
+          />
+          <Button variant='destructive' onClick={onEndSession}>
+            End Session
+          </Button>
+          <div className='space-y-2'>
+            <h3 className='font-semibold'>Connected Students</h3>
+            {studentsUsernames.map((studentUsername) => (
+              <Card
+                key={studentUsername}
+                className={`cursor-pointer hover:bg-accent ${
+                  selectedStudentUsername === studentUsername
+                    ? 'border-primary'
+                    : ''
+                }`}
+                onClick={() => {
+                  // If clicking the same student, deselect them
+                  if (selectedStudentUsername === studentUsername) {
+                    handleStudentSelect(null)
+                  } else {
+                    handleStudentSelect(studentUsername)
+                  }
+                }}
+              >
+                <CardHeader>
+                  <CardTitle className='text-sm'>{studentUsername}</CardTitle>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Part 2: Progress and Code Management */}
+      <div className='flex-1 flex flex-col'>
+        <div className='border-b p-4'>
+          <div className='flex justify-between items-center mb-4'>
+            <h2 className='text-xl font-bold'>Week {selectedWeek} Progress</h2>
+            <Button
+              onClick={refreshProgress}
+              disabled={isRefreshing}
+              variant='outline'
+            >
+              <RefreshCw
+                className={`mr-2 ${isRefreshing ? 'animate-spin' : ''}`}
+              />
+              Refresh Progress
+            </Button>
+          </div>
+
+          {weeklyProgress && (
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4'>
+              {weekProblems.map((problemId) => {
+                const completions =
+                  weeklyProgress.taskCompletions[problemId] || []
+                return (
+                  <Card key={problemId}>
+                    <CardHeader>
+                      <CardTitle className='text-sm'>
+                        {problems[problemId].title}
+                        <span className='text-muted-foreground ml-2'>
+                          {completions.length}/{studentsUsernames.length}{' '}
+                          completed
+                        </span>
+                      </CardTitle>
+                    </CardHeader>
+                  </Card>
+                )
+              })}
+            </div>
+          )}
+
+          <div className='flex flex-col gap-4'>
+            <CodeMirror
+              value={teacherCode}
+              height='300px'
+              theme={vscodeDark}
+              extensions={[python()]}
+              onChange={setTeacherCode}
+            />
+
+            <div className='flex justify-between items-center'>
+              <div className='space-x-2'>
+                <Button onClick={handleRunCode} disabled={isRunning}>
+                  {isRunning ? (
+                    <StopCircle className='mr-2' />
+                  ) : (
+                    <Play className='mr-2' />
+                  )}
+                  {isRunning ? 'Running...' : 'Run Code'}
+                </Button>
+                <Button variant='outline' onClick={handleSendCode}>
+                  <Send className='mr-2' />
+                  {selectedStudentUsername
+                    ? `Send to ${selectedStudentUsername}`
+                    : 'Send to All'}
+                </Button>
+              </div>
+            </div>
+
+            {output && (
+              <div className='p-4 bg-black text-white font-mono text-sm rounded'>
+                <pre>{output}</pre>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Part 3: Problem Selection and Details */}
+      <div className='w-1/4 border-l bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] p-4'>
+        <h2 className='text-xl font-bold mb-4'>Week Problems</h2>
         <div className='space-y-2'>
           {weekProblems.map((problemId) => {
             const problem = problems[problemId]
@@ -281,138 +484,27 @@ export function StudentSessionView({
                 className={`cursor-pointer hover:bg-accent ${
                   currentProblem?.id === problemId ? 'border-primary' : ''
                 }`}
-                onClick={() => {
-                  const problem = problems[problemId]
-                  setCurrentProblem(problem)
-                  setStudentCode(problem.starterCode) // Add this line
-                }}
+                onClick={() => handleProblemSelect(problemId)}
               >
                 <CardHeader>
-                  <CardTitle className='text-sm flex items-center justify-between'>
-                    {problem.title}
-                    {completedProblems.includes(problemId) && (
-                      <div className='h-2 w-2 bg-green-500 rounded-full' />
-                    )}
-                  </CardTitle>
+                  <CardTitle className='text-sm'>{problem.title}</CardTitle>
                 </CardHeader>
               </Card>
             )
           })}
         </div>
-      </div>
 
-      <Split className='flex-1' sizes={[40, 60]} minSize={400}>
-        <div className='p-4 overflow-y-auto'>
-          {currentProblem && (
-            <>
-              <h1 className='text-2xl font-bold mb-4'>
-                {currentProblem.title}
-              </h1>
-              <div className='prose dark:prose-invert'>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: currentProblem.problemStatement,
-                  }}
-                />
-              </div>
-            </>
-          )}
-
-          {currentProblem?.examples &&
-            currentProblem.id !== 'file-processor' && (
-              <div className='mt-4'>
-                <h3 className='text-lg font-semibold mb-2'>Examples</h3>
-                {currentProblem.examples.map((example) => (
-                  <div
-                    key={example.id}
-                    className='bg-muted p-4 rounded-lg mb-2'
-                  >
-                    <p>Input: {example.inputText}</p>
-                    <p>Output: {example.outputText}</p>
-                    {example.explanation && (
-                      <p className='text-sm text-muted-foreground mt-1'>
-                        {example.explanation}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-        </div>
-
-        <div className='flex flex-col'>
-          <CodeMirror
-            value={studentCode}
-            height='60%'
-            theme={vscodeDark}
-            extensions={[python()]}
-            onChange={(value) => setStudentCode(value)}
-          />
-
-          {currentProblem?.id === 'file-processor' ? (
-            <div className='mt-4'>
-              <h3 className='text-lg font-semibold mb-2'>Test Your Solution</h3>
-              <FileProcessorTest
-                code={studentCode}
-                socket={socket}
-                userId={user!.uid}
-                classroomId={classroomId}
-                selectedWeek={selectedWeek!}
-                onProblemComplete={(problemId) => {
-                  setCompletedProblems((prev) => [...prev, problemId])
-                }}
-              />
-            </div>
-          ) : (
-            <div className='h-40 p-4 bg-black text-white font-mono text-sm overflow-y-auto'>
-              <div className='flex items-center gap-2 mb-2'>
-                <div className='h-2 w-2 rounded-full bg-green-500' />
-                <span className='text-xs text-gray-400'>Output</span>
-              </div>
-              <pre>{output || 'No output yet...'}</pre>
-            </div>
-          )}
-
-          <div className='p-4 border-t flex justify-between'>
-            <div className='space-x-2'>
-              <Button variant='outline' onClick={() => setIsAiHelpOpen(true)}>
-                <Bot className='mr-2 h-4 w-4' />
-                AI Help
-              </Button>
-
-              <Button onClick={handleUpdateCode}>
-                <RefreshCw className='mr-2 h-4 w-4' />
-                Update Code
-              </Button>
-
-              {currentProblem?.id !== 'file-processor' && (
-                <>
-                  <Button onClick={handleRunCode} disabled={isRunning}>
-                    {isRunning ? (
-                      <StopCircle className='mr-2 h-4 w-4' />
-                    ) : (
-                      <Play className='mr-2 h-4 w-4' />
-                    )}
-                    {isRunning ? 'Running...' : 'Run Code'}
-                  </Button>
-                  <Button onClick={handleSubmitCode} disabled={isRunning}>
-                    Submit Solution
-                  </Button>
-                </>
-              )}
-            </div>
+        {currentProblem && (
+          <div className='mt-4 prose dark:prose-invert'>
+            <h3>Problem Description</h3>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: currentProblem.problemStatement,
+              }}
+            />
           </div>
-        </div>
-      </Split>
-
-      <Dialog open={isAiHelpOpen} onOpenChange={setIsAiHelpOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>AI Help</DialogTitle>
-            <DialogDescription>Get help with your code</DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+        )}
+      </div>
     </div>
   )
 }

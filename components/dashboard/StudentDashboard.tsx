@@ -46,7 +46,7 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
         <StatCard icon={BookOpen} title='My Classes'>
           <ClassroomList
             classrooms={classrooms}
-            onJoinClassroom={(id) => router.push(`/classroom/${id}`)}
+            onJoinClassroom={(id) => router.push(`/classrooms/${id}`)}
             userRole='student'
           />
         </StatCard>

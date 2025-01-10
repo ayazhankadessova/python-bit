@@ -26,7 +26,7 @@ export function useStartStudentLesson() {
         throw new Error('Please wait for the teacher to start the session')
       }
 
-      router.push(`/classroom/${classroomId}`)
+      router.push(`/classrooms/${classroomId}`)
     } catch (error) {
       toast({
         title: 'Error',

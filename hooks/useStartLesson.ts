@@ -17,11 +17,11 @@ export function useStartLesson() {
         activeSession: true,
       })
       // Use replace instead of push to prevent back navigation issues
-      router.replace(`/classroom/${classroomId}`)
+      router.replace(`/classrooms/${classroomId}`)
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to start lesson',
+        description: 'Failed to start lesson: ' + error,
         variant: 'destructive',
       })
     } finally {

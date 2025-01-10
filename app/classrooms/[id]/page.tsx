@@ -23,7 +23,6 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
     return (
       <SessionManagement
         classroomId={classroomId}
-        teacherId={user.uid}
         isTeacher={user.role === 'teacher'}
       />
     )
