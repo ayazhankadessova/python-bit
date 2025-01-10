@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button'
 interface WeekSelectorProps {
   selectedWeek: number | null
   totalWeeks: number
-  onSelectWeek: (weekNumber: number) => void
+  onSelectWeek?: (weekNumber: number) => void
 }
 
 export function WeekSelector({
@@ -33,7 +33,9 @@ export function WeekSelector({
 
   const handleStartWeek = () => {
     if (tempSelectedWeek) {
-      onSelectWeek(parseInt(tempSelectedWeek))
+      if (onSelectWeek) {
+        onSelectWeek(parseInt(tempSelectedWeek))
+      }
       setIsOpen(false)
     }
   }

@@ -45,7 +45,7 @@ interface TeacherSessionViewProps {
   sessionId: string
 }
 
-export function TeacherSessionView({
+export function StudentSessionView({
   classroomId,
   sessionId,
   onEndSession,
@@ -53,9 +53,6 @@ export function TeacherSessionView({
   const { toast } = useToast()
   const [studentCode, setStudentCode] = useState<string>('')
   const [teacherCode, setTeacherCode] = useState<string>('')
-  const [selectedStudentUsername, setSelectedStudentUsername] = useState<
-    string | null
-  >(null)
   const [students, setStudents] = useState<
     Array<{ username: string } & SessionStudent>
   >([])
@@ -63,7 +60,6 @@ export function TeacherSessionView({
   const [currentSession, setCurrentSession] = useState<LiveSession | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
   const [classroom, setClassroom] = useState<ClassroomTC | null>(null)
   const [curriculum, setCurriculum] = useState<Curriculum | null>(null)
   const [currentWeek, setCurrentWeek] = useState<Week | null>(null)
@@ -79,14 +75,14 @@ export function TeacherSessionView({
 
   // Add this effect to manage the editor's initial code
   useEffect(() => {
-    if (selectedStudentUsername && studentCode) {
+    if (studentCode) {
       setEditorInitialCode(studentCode)
     } else if (currentAssignment?.starterCode) {
       setEditorInitialCode(formatCode(currentAssignment.starterCode))
     } else {
       setEditorInitialCode('') // Fallback empty string
     }
-  }, [selectedStudentUsername, studentCode, currentAssignment])
+  }, [studentCode, currentAssignment])
 
   useEffect(() => {
     const fetchClassroomAndCurriculum = async () => {
@@ -243,81 +239,46 @@ export function TeacherSessionView({
             ...info,
           }))
         )
-
-        if (selectedStudentUsername && data.students[selectedStudentUsername]) {
-          setTeacherCode(data.students[selectedStudentUsername].code)
-        }
       }
     )
 
     return () => unsubscribe()
-  }, [classroomId, currentSession?.id, selectedStudentUsername])
+  }, [classroomId, currentSession?.id])
 
-  const handleStudentSelect = async (
-    studentUsername: string
-  ): Promise<void> => {
-    console.log('handleStudentSelect called with:', studentUsername)
-    console.log('Current selectedStudentUsername:', selectedStudentUsername)
-
-    // If clicking on already selected student, deselect them
-    if (selectedStudentUsername === studentUsername) {
-      console.log('Attempting to deselect student')
-      setSelectedStudentUsername(null)
-      console.log('Current assignment:', currentAssignment)
-      if (currentAssignment) {
-        console.log('Setting teacher code to starter code')
-        setTeacherCode(formatCode(currentAssignment.starterCode))
-      }
-      return
-    }
-
-    // Otherwise, select the new student
-    setSelectedStudentUsername(studentUsername)
-    if (currentSession) {
-      const sessionDoc = await getDoc(
-        doc(fireStore, `classrooms/${classroomId}/sessions`, currentSession.id)
-      )
-      const data = sessionDoc.data() as LiveSession
-      if (data.students[studentUsername]) {
-        setStudentCode(data.students[studentUsername].code)
-      }
-    }
-  }
-
-  const endSession = async () => {
-    try {
-      setIsLoading(true)
-      const sessionRef = doc(
-        fireStore,
-        `classrooms/${classroomId}/sessions/${sessionId}`
-      )
-      await updateDoc(sessionRef, {
-        endedAt: Date.now(),
-      })
-      toast({
-        title: 'Session Ended',
-        description: 'The session has been successfully ended.',
-      })
-      onEndSession() // Call the provided callback
-    } catch (err) {
-      const firebaseError = err as FirestoreError
-      setError(firebaseError.message)
-      toast({
-        title: 'Error',
-        description: 'Failed to end session',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  // const leaveSession = async () => {
+  //   try {
+  //     setIsLoading(true)
+  //     const sessionRef = doc(
+  //       fireStore,
+  //       `classrooms/${classroomId}/sessions/${sessionId}`
+  //     )
+  //     await updateDoc(sessionRef, {
+  //       endedAt: Date.now(),
+  //     })
+  //     toast({
+  //       title: 'Session Ended',
+  //       description: 'The session has been successfully ended.',
+  //     })
+  //     onEndSession() // Call the provided callback
+  //   } catch (err) {
+  //     const firebaseError = err as FirestoreError
+  //     setError(firebaseError.message)
+  //     toast({
+  //       title: 'Error',
+  //       description: 'Failed to end session',
+  //       variant: 'destructive',
+  //     })
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
 
   const handleRunCode = async (isSubmission: boolean) => {
     setError(null)
     setOutput('')
     setIsCorrect(null)
 
-    const code = selectedStudentUsername ? studentCode : teacherCode
+    const code = studentCode 
     const id = currentAssignment?.id
     try {
       const requestPayload = {
@@ -371,115 +332,6 @@ export function TeacherSessionView({
     }
   }
 
-  const handleSendCode = async (): Promise<void> => {
-    if (!currentSession) return
-
-    try {
-      const sessionRef = doc(
-        fireStore,
-        `classrooms/${classroomId}/sessions`,
-        currentSession.id
-      )
-
-      if (selectedStudentUsername) {
-        await updateDoc(sessionRef, {
-          [`students.${selectedStudentUsername}.code`]: teacherCode,
-          [`students.${selectedStudentUsername}.lastUpdated`]:
-            serverTimestamp(),
-        })
-
-        toast({
-          title: 'Code Sent',
-          description: `Code sent to ${selectedStudentUsername}`,
-        })
-      } else {
-        // Use UpdateData type from Firestore
-        const updates: UpdateData<LiveSession> = {}
-
-        students.forEach((student) => {
-          updates[`students.${student.username}.code`] = teacherCode
-          updates[`students.${student.username}.lastUpdated`] =
-            serverTimestamp()
-        })
-
-        await updateDoc(sessionRef, updates)
-
-        toast({
-          title: 'Code Broadcast',
-          description: 'Code sent to all students',
-        })
-      }
-    } catch (error) {
-      console.error('Error sending code:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to send code',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  const handleWeekSelect = async (weekNumber: number) => {
-    if (!curriculum) return
-
-    const selectedWeek = curriculum.weeks.find(
-      (week) => week.weekNumber === weekNumber
-    )
-    if (!selectedWeek) return
-
-    setCurrentWeek(selectedWeek)
-
-    try {
-      // Update classroom's lastTaughtWeek
-      await updateDoc(doc(fireStore, 'classrooms', classroomId), {
-        lastTaughtWeek: weekNumber,
-        updatedAt: Date.now(),
-      })
-
-      // Update session's weekNumber and reset activeTask
-      await updateDoc(
-        doc(fireStore, `classrooms/${classroomId}/sessions/${sessionId}`),
-        {
-          weekNumber: weekNumber,
-          activeTask: selectedWeek.assignmentIds[0] || '',
-        }
-      )
-
-      // Set first assignment of the week as default
-      if (selectedWeek.assignmentIds.length > 0) {
-        setSelectedAssignmentId(selectedWeek.assignmentIds[0])
-      }
-    } catch (error) {
-      console.error('Error updating week:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to update week',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  const handleAssignmentSelect = async (assignmentId: string) => {
-    setSelectedAssignmentId(assignmentId)
-
-    try {
-      // Update session's activeTask
-      await updateDoc(
-        doc(fireStore, `classrooms/${classroomId}/sessions/${sessionId}`),
-        {
-          activeTask: assignmentId,
-        }
-      )
-    } catch (error) {
-      console.error('Error updating assignment:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to update assignment',
-        variant: 'destructive',
-      })
-    }
-  }
-
   return (
     <div className='h-screen flex flex-col'>
       {/* Top Navigation Bar */}
@@ -490,14 +342,13 @@ export function TeacherSessionView({
               <WeekSelector
                 selectedWeek={currentWeek?.weekNumber || 1}
                 totalWeeks={curriculum?.weeks.length ?? 1}
-                onSelectWeek={handleWeekSelect}
               />
             )}
 
             {currentWeek && currentWeek.assignmentIds.length > 0 && (
               <Select
                 value={selectedAssignmentId ?? undefined}
-                onValueChange={handleAssignmentSelect}
+                // onValueChange={handleAssignmentSelect}
               >
                 <SelectTrigger className='w-[300px]'>
                   <SelectValue placeholder='Select an assignment' />
@@ -514,13 +365,13 @@ export function TeacherSessionView({
           </div>
 
           <Button
-            onClick={endSession}
+            // onClick={endSession}
             variant='destructive'
             size='sm'
             disabled={isLoading}
           >
             <LogOut className='mr-2 h-4 w-4' />
-            {isLoading ? 'Ending Session...' : 'End Session'}
+            {isLoading ? 'Leaving Session...' : 'Leave Session'}
           </Button>
         </div>
       </nav>
@@ -528,7 +379,6 @@ export function TeacherSessionView({
       {/* Main Content Area */}
       <div className='flex flex-1 overflow-hidden'>
         {/* Left Panel - Single scrollbar for entire content */}
-        {/* Left Panel */}
         <div className='w-[45%] border-r flex flex-col h-full'>
           {/* Problem Description - Fixed height with scroll */}
           <div className='flex-1 overflow-y-auto p-4 max-h-[calc(60vh)]'>
@@ -551,12 +401,7 @@ export function TeacherSessionView({
               {students.map((student) => (
                 <Card
                   key={student.username}
-                  className={`cursor-pointer hover:bg-accent transition-colors ${
-                    selectedStudentUsername === student.username
-                      ? 'border-primary bg-accent'
-                      : ''
-                  }`}
-                  onClick={() => handleStudentSelect(student.username)}
+                  className={`cursor-pointer hover:bg-accent transition-colors ${'border-softBlue bg-accent'}`}
                 >
                   <CardHeader className='py-2 px-3'>
                     <CardTitle className='text-sm'>
@@ -576,9 +421,9 @@ export function TeacherSessionView({
             onCodeChange={setTeacherCode}
             onRunCode={() => handleRunCode(false)}
             onSubmitCode={() => handleRunCode(true)}
-            onSendCode={handleSendCode}
+            // onSendCode={handleSendCode}
             isTeacher={true}
-            selectedStudent={selectedStudentUsername}
+            // selectedStudent={selectedStudentUsername}
             output={output}
             error={error}
             isCorrect={isCorrect}
