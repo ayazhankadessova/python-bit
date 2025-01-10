@@ -2,8 +2,6 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import Image from 'next/image'
 
 interface MarkdownRendererProps {
@@ -20,22 +18,6 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       className={`prose dark:prose-invert max-w-none ${className}`}
       remarkPlugins={[remarkGfm]}
       components={{
-        // Handle code blocks with syntax highlighting
-        code({ node, className, children, ...props }) {
-          const match = /language-(\w+)/.exec(className || '')
-          const language = match ? match[1] : 'text'
-
-          return (
-            <SyntaxHighlighter
-              style={vscDarkPlus}
-              language={language}
-              PreTag='div'
-              {...props}
-            >
-              {String(children).replace(/\n$/, '')}
-            </SyntaxHighlighter>
-          ) 
-        },
         // Custom image component using Next.js Image
         img({ src, alt }) {
           if (!src) return null

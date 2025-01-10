@@ -47,7 +47,7 @@ async function _fetchClassroomData(userId: string) {
           return {
             id: classroomDoc.id,
             ...classroomData,
-            curriculum: curriculumData,
+            // curriculum: curriculumData,
           } as ClassroomTC
         } catch (error) {
           console.error(`Error fetching classroom ${classroomId}:`, error)

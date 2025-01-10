@@ -105,7 +105,7 @@ export function StudentSessionView({
 
   const handleRunCode = async (isSubmission: boolean) => {
     setIsRunning(true)
-    setError(null)
+    // setError(null)
     setOutput('')
     //   setIsCorrect(null)
 
@@ -137,7 +137,7 @@ export function StudentSessionView({
 
       // Set output and error states
       setOutput(data.output)
-      setError(data.error ? data.output : null)
+      // setError(data.error ? data.output : null)
 
       // Set correctness for submissions
       //   if (isSubmission) {
@@ -161,7 +161,7 @@ export function StudentSessionView({
       //     await handleExerciseRun(user, tutorial_id)
       //   }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      // setError(err instanceof Error ? err.message : 'An error occurred')
       //   if (isSubmission) {
       //     setIsCorrect(false)
       //   }
@@ -315,7 +315,7 @@ export function StudentSessionView({
               <Button
                 variant='outline'
                 size='sm'
-                onClick={handleRunCode}
+                // onClick={handleRunCode}
                 disabled={isRunning}
               >
                 {isRunning ? (

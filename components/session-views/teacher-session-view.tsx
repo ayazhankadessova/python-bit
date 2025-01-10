@@ -479,105 +479,6 @@ export function TeacherSessionView({
       })
     }
   }
-  // <div className='h-screen flex'>
-  //   {/* Left Panel: Students List and Week Selection */}
-  //   <div className='w-1/4 border-r p-4 bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]'>
-  //     <div className='space-y-4'>
-  //       {/* End Session Button */}
-  //       <Button
-  //         onClick={endSession}
-  //         variant='destructive'
-  //         className='w-full'
-  //         disabled={isLoading}
-  //       >
-  //         <LogOut className='mr-2 h-4 w-4' />
-  //         {isLoading ? 'Ending Session...' : 'End Session'}
-  //       </Button>
-
-  //       {/* Week Selector */}
-  //       {classroom && curriculum && (
-  //         <WeekSelector
-  //           selectedWeek={currentWeek?.weekNumber || 1}
-  //           totalWeeks={curriculum?.weeks.length ?? 1}
-  //           onSelectWeek={handleWeekSelect}
-  //         />
-  //       )}
-
-  //       {/* Assignment Selector */}
-  //       {currentWeek && currentWeek.assignmentIds.length > 0 && (
-  //         <div className='space-y-2'>
-  //           <label className='text-sm font-medium'>Select Assignment</label>
-  //           <Select
-  //             value={selectedAssignmentId ?? undefined}
-  //             onValueChange={handleAssignmentSelect}
-  //           >
-  //             <SelectTrigger>
-  //               <SelectValue placeholder='Select an assignment' />
-  //             </SelectTrigger>
-  //             <SelectContent>
-  //               {currentWeek.assignmentIds.map((assignmentId) => (
-  //                 <SelectItem key={assignmentId} value={assignmentId}>
-  //                   {currentAssignment?.title || assignmentId}
-  //                 </SelectItem>
-  //               ))}
-  //             </SelectContent>
-  //           </Select>
-  //         </div>
-  //       )}
-
-  //       <h1>{error}</h1>
-  //       <h1>{classroom?.curriculumId}</h1>
-
-  //       {/* Connected Students */}
-  //       <div className='space-y-2 mt-4'>
-  //         <h3 className='font-semibold'>Connected Students</h3>
-  //         {students.map((student) => (
-  //           <Card
-  //             key={student.username}
-  //             className={`cursor-pointer hover:bg-accent ${
-  //               selectedStudentUsername === student.username
-  //                 ? 'border-primary'
-  //                 : ''
-  //             }`}
-  //             onClick={() => handleStudentSelect(student.username)}
-  //           >
-  //             <CardHeader>
-  //               <CardTitle className='text-sm'>{student.username}</CardTitle>
-  //             </CardHeader>
-  //           </Card>
-  //         ))}
-  //       </div>
-  //     </div>
-  //   </div>
-
-  //   {/* Right Panel: Assignment Content and Code Editor */}
-  //   <div className='flex-1 flex flex-col p-4'>
-  //     {currentAssignment && (
-  //       <div className='mb-4'>
-  //         <h2 className='text-xl font-bold mb-2'>
-  //           {currentAssignment.title}
-  //         </h2>
-
-  //         <MarkdownRenderer content={currentAssignment.problemStatement} />
-  //       </div>
-  //     )}
-
-  //     <PythonEditor
-  //       initialCode={editorInitialCode}
-  //       onCodeChange={setTeacherCode}
-  //       onRunCode={() => handleRunCode(false)}
-  //       onSubmitCode={() => handleRunCode(true)}
-  //       onSendCode={handleSendCode}
-  //       isTeacher={true}
-  //       selectedStudent={selectedStudentUsername}
-  //       output={output}
-  //       error={error}
-  //       isCorrect={isCorrect}
-  //       title={currentAssignment?.title}
-  //     />
-
-  //   </div>
-  // </div>
 
   return (
     <div className='h-screen flex flex-col'>
@@ -604,7 +505,7 @@ export function TeacherSessionView({
                 <SelectContent>
                   {currentWeek.assignmentIds.map((assignmentId) => (
                     <SelectItem key={assignmentId} value={assignmentId}>
-                      {currentAssignment?.title || assignmentId}
+                      {assignmentId}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -627,9 +528,10 @@ export function TeacherSessionView({
       {/* Main Content Area */}
       <div className='flex flex-1 overflow-hidden'>
         {/* Left Panel - Single scrollbar for entire content */}
-        <div className='w-[45%] border-r overflow-y-auto'>
-          {/* Problem Description - Takes natural height */}
-          <div className='p-4'>
+        {/* Left Panel */}
+        <div className='w-[45%] border-r flex flex-col h-full'>
+          {/* Problem Description - Fixed height with scroll */}
+          <div className='flex-1 overflow-y-auto p-4 max-h-[calc(60vh)]'>
             {currentAssignment && (
               <div className='prose dark:prose-invert max-w-none'>
                 <h1 className='text-xl font-bold mb-4'>
@@ -642,10 +544,10 @@ export function TeacherSessionView({
             )}
           </div>
 
-          {/* Connected Students - Takes natural height */}
-          <div className='border-t bg-muted p-4'>
+          {/* Connected Students - Always visible */}
+          <div className='border-t bg-muted/50 p-4 max-h-[40vh] flex flex-col'>
             <h3 className='font-semibold mb-3'>Connected Students</h3>
-            <div className='space-y-2'>
+            <div className='space-y-2 overflow-y-auto flex-1'>
               {students.map((student) => (
                 <Card
                   key={student.username}

@@ -55,7 +55,7 @@ export function PythonEditor({
       await onRunCode(code)
     } finally {
       setIsRunning(false)
-      setIsExecuting(true)
+      setIsExecuting(false)
     }
   }
 
@@ -67,7 +67,7 @@ export function PythonEditor({
       await onSubmitCode(code)
     } finally {
       setIsSubmitting(false)
-      setIsExecuting(true)
+      setIsExecuting(false)
     }
   }
 
