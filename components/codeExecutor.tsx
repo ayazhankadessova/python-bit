@@ -220,7 +220,7 @@ const PythonCodeEditor = ({
 
             <Button
               onClick={() => setIsResetDialogOpen(true)}
-              variant='destructive'
+              variant='softTealSecondary'
               className='ml-auto'
               disabled={isExecuting}
             >

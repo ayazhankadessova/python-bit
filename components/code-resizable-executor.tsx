@@ -234,7 +234,7 @@ const PythonResizableCodeEditor = ({
 
                 <Button
                   onClick={() => setIsResetDialogOpen(true)}
-                  variant='destructive'
+                  variant='softTealSecondary'
                   className='ml-auto hover:bg-red-700'
                   disabled={isExecuting}
                 >

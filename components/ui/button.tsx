@@ -29,6 +29,16 @@ const buttonVariants = cva(
           dark:text-teal-100 dark:border-teal-600/30 
           dark:hover:from-teal-700/80 dark:hover:via-teal-600/80 dark:hover:to-teal-700/80
         `,
+        softTealSecondary: `
+        bg-gradient-to-r from-teal-100/90 via-teal-200/90 to-teal-100/90 
+        text-teal-700 font-medium 
+        shadow-sm border border-teal-200/30 
+        hover:shadow-md hover:from-teal-100 hover:via-teal-200 hover:to-teal-100 
+        hover:-translate-y-0.5 active:translate-y-0
+        dark:from-teal-900/40 dark:via-teal-800/40 dark:to-teal-900/40 
+        dark:text-teal-300 dark:border-teal-700/20 
+        dark:hover:from-teal-800/40 dark:hover:via-teal-700/40 dark:hover:to-teal-800/40
+      `,
         warmYellow: `
           bg-gradient-to-r from-amber-100 via-yellow-200 to-amber-100 
           text-amber-900 font-medium 
