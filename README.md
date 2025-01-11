@@ -427,10 +427,19 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [x] make reusable component for code editor in live session
 
 ## Jan 10
-- [ ] Fix the assignent in firebase
-- [ ] fix its json
+- [ ] add three themes to live session code editor
+- [x] update code
+- [ ] reset code
+- [ ] fix when disabled
+- [ ] add reset code to live session code editor
+- [x] Fix the assignent in firebase
+- [x] fix its json
+- [x] join leave session
+- [ ] join session then u should pre select week task
+- [ ] ui for management of classrooms
+- [ ] handle complete assignment
 - [ ] add students when they connect 
-- [ ] deploy to vercel
+- [x] deploy to vercel
 - [ ] add more weeks
 - [x] remove selectedStudent
 - [ ] get project progress information

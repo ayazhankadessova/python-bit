@@ -11,12 +11,15 @@ import {
   FirestoreError,
   where,
   limit,
+  arrayUnion,
 } from 'firebase/firestore'
 import type { LiveSession } from '@/types/classrooms/live-session'
 import { fireStore } from '@/firebase/firebase'
 import { Loader2 } from 'lucide-react'
 import { formatDate, calculateDuration } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
+
 
 interface SessionManagementProps {
   classroomId: string
@@ -31,6 +34,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
   classroomId,
   isTeacher,
 }) => {
+  const { user } = useAuth()
   const [activeSession, setActiveSession] = useState<LiveSession | null>(null)
   const [sessionHistory, setSessionHistory] = useState<SessionWithDuration[]>(
     []
@@ -139,6 +143,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
         weekNumber: 1, // You might want to pass this as a prop or calculate it
         activeTask: '', // Initial empty task
         students: {}, // Initialize empty students record
+        activeStudents: [], // Initialize empty active students array
       }
 
       await addDoc(sessionRef, newSession)
@@ -178,6 +183,26 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
 
     try {
       setIsLoading(true)
+
+      // First update the activeStudents array in the session document
+      if (!isTeacher) {
+        const sessionRef = doc(
+          fireStore,
+          `classrooms/${classroomId}/sessions/${activeSession.id}`
+        )
+
+        // Add the student to activeStudents array if they're not already in it
+        await updateDoc(sessionRef, {
+          activeStudents: arrayUnion(user?.displayName),
+          [`students.${user?.displayName}`]: {
+            currentTask: activeSession.activeTask || '',
+            joinedAt: Date.now(),
+            progress: [],
+          },
+        })
+      }
+
+      // Then navigate to the session page
       router.push(`/classrooms/${classroomId}/session/${activeSession.id}`)
     } catch (err) {
       console.error('Error joining session:', err)

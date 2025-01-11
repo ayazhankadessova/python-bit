@@ -3,7 +3,7 @@ import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { Button } from '@/components/ui/button'
-import { Play, Send, Sun, Moon, Code2, Loader2 } from 'lucide-react'
+import { Play, Send, Sun, Moon, Code2, Loader2, RefreshCw } from 'lucide-react'
 import {
   ResizableHandle,
   ResizablePanelGroup,
@@ -253,7 +253,7 @@ export function PythonEditor({
                     {isUpdating ? (
                       <Loader2 className='w-4 h-4 mr-2 animate-spin' />
                     ) : (
-                      <Send className='mr-2 h-4 w-4' />
+                      <RefreshCw className='mr-2 h-4 w-4' />
                     )}
                     {isUpdating ? 'Updating...' : 'Update Code'}
                   </Button>

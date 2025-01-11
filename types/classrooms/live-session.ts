@@ -23,6 +23,7 @@ export interface LiveSession {
   weekNumber: number
   activeTask: string
   students: Record<string, SessionStudent>
+  activeStudents: string[]
 }
 
 export interface Submission {

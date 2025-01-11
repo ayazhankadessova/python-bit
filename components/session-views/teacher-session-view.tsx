@@ -2,14 +2,9 @@
 import React, { useState, useEffect } from 'react'
 import {
   doc,
-  collection,
   onSnapshot,
   updateDoc,
   getDoc,
-  query,
-  orderBy,
-  where,
-  limit,
   FirestoreError,
   serverTimestamp,
   UpdateData,
@@ -74,8 +69,8 @@ export function TeacherSessionView({
     string | null
   >(null)
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
-
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
+  const [activeStudents, setActiveStudents] = useState<string[]>([])
 
   // Add this effect to manage the editor's initial code
   useEffect(() => {
@@ -216,6 +211,7 @@ export function TeacherSessionView({
             })
           )
           setStudents(studentArray)
+          setActiveStudents(sessionData.activeStudents)
 
           // Update selected student's code if needed
           if (
@@ -484,12 +480,15 @@ export function TeacherSessionView({
                 value={selectedAssignmentId ?? undefined}
                 onValueChange={handleAssignmentSelect}
               >
-                <SelectTrigger className='w-[300px]'>
+                <SelectTrigger className='w-[300px] bg-secondary hover:bg-secondary/90'>
                   <SelectValue placeholder='Select an assignment' />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className='w-[300px] bg-popover/90'>
                   {currentWeek.assignmentIds.map((assignmentId) => (
-                    <SelectItem key={assignmentId} value={assignmentId}>
+                    <SelectItem
+                      key={assignmentId}
+                      value={assignmentId}
+                    >
                       {assignmentId}
                     </SelectItem>
                   ))}
@@ -533,20 +532,18 @@ export function TeacherSessionView({
           <div className='border-t bg-muted/50 p-4 max-h-[40vh] flex flex-col'>
             <h3 className='font-semibold mb-3'>Connected Students</h3>
             <div className='space-y-2 overflow-y-auto flex-1'>
-              {students.map((student) => (
+              {activeStudents.map((student) => (
                 <Card
-                  key={student.username}
+                  key={student}
                   className={`cursor-pointer hover:bg-accent transition-colors ${
-                    selectedStudentUsername === student.username
+                    selectedStudentUsername === student
                       ? 'border-primary bg-accent'
                       : ''
                   }`}
-                  onClick={() => handleStudentSelect(student.username)}
+                  onClick={() => handleStudentSelect(student)}
                 >
                   <CardHeader className='py-2 px-3'>
-                    <CardTitle className='text-sm'>
-                      {student.username}
-                    </CardTitle>
+                    <CardTitle className='text-sm'>{student}</CardTitle>
                   </CardHeader>
                 </Card>
               ))}
