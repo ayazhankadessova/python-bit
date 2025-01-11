@@ -3,12 +3,13 @@ import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { Button } from '@/components/ui/button'
-import { Play, Send, Sun, Moon, Code2, Loader2, RefreshCw } from 'lucide-react'
+import { Play, Send, Code2, Loader2, RefreshCw } from 'lucide-react'
 import {
   ResizableHandle,
   ResizablePanelGroup,
   ResizablePanel,
 } from '@/components/ui/resizable'
+import ThemeButtons from '@/components/code-editors/theme-buttons'
 
 interface PythonEditorProps {
   initialCode: string
@@ -40,11 +41,22 @@ export function PythonEditor({
   title = 'Python Editor',
 }: PythonEditorProps) {
   const [code, setCode] = useState(initialCode)
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark')
+  const [theme, setTheme] = useState<'light' | 'dark' | 'vscode'>('vscode')
   const [isExecuting, setIsExecuting] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
+
+  const getTheme = () => {
+    switch (theme) {
+      case 'light':
+        return vscodeLight
+      case 'dark':
+        return vscodeDark
+      default:
+        return vscodeLight
+    }
+  }
 
   const handleUpdateCode = async () => {
     if (!onUpdateCode) return
@@ -93,7 +105,7 @@ export function PythonEditor({
     }
   }
 
-  const isDarkTheme = theme === 'dark'
+  const isDarkTheme = theme === 'dark' || theme === 'vscode'
 
   useEffect(() => {
     console.log('Initial code changed:', initialCode)
@@ -133,24 +145,7 @@ export function PythonEditor({
             {title}
           </span>
         </div>
-        <div className='flex items-center gap-2'>
-          <Button
-            variant='ghost'
-            size='sm'
-            onClick={() => setTheme('light')}
-            className={theme === 'light' ? 'text-amber-500' : 'text-amber-200'}
-          >
-            <Sun className='w-4 h-4' />
-          </Button>
-          <Button
-            variant='ghost'
-            size='sm'
-            onClick={() => setTheme('dark')}
-            className={theme === 'dark' ? 'text-blue-500' : 'text-blue-200'}
-          >
-            <Moon className='w-4 h-4' />
-          </Button>
-        </div>
+        <ThemeButtons theme={theme} setTheme={setTheme} />
       </div>
 
       {/* Resizable Panel Group */}
@@ -164,7 +159,7 @@ export function PythonEditor({
             <CodeMirror
               value={code}
               height='100%'
-              theme={isDarkTheme ? vscodeDark : vscodeLight}
+              theme={getTheme()}
               extensions={[python()]}
               onChange={handleCodeChange}
               className='h-full'
@@ -224,8 +219,8 @@ export function PythonEditor({
               {onSubmitCode && (
                 <Button
                   onClick={handleSubmitCode}
-                  className='bg-blue-600 hover:bg-blue-700 text-white'
                   disabled={isExecuting}
+                  variant="outline"
                 >
                   {isSubmitting ? (
                     <Loader2 className='w-4 h-4 mr-2 animate-spin' />
