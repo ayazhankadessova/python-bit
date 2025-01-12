@@ -123,7 +123,7 @@ const Signup = () => {
       </div>
 
       {firebaseError && (
-        <div className='text-destructive text-sm text-center mb-4 p-2 bg-red-400/20 rounded'>
+        <div className='text-primary/70 text-sm text-center mb-4 p-2 bg-red-400/20 rounded'>
           {firebaseError}
         </div>
       )}
