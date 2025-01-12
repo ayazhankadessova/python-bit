@@ -117,20 +117,62 @@ export function TeacherSessionView({
 
         // Set initial week based on lastTaughtWeek
         const initialWeek = curriculumData.weeks.find(
-          (week) => week.weekNumber === classroomData.lastTaughtWeek
+          (week) => week.weekNumber === classroomData.lastTaughtWeek + 1
         )
+
+        // after u choose initial week, if it exists set if in `classrooms/${classroomId}/sessions/${sessionId}` too
+        // also set active task in `classrooms/${classroomId}/sessions/${sessionId}`
 
         if (initialWeek) {
           setCurrentWeek(initialWeek)
-          if (initialWeek.assignmentIds.length > 0) {
-            setSelectedAssignmentId(initialWeek.assignmentIds[0])
+          // Set initial assignment if available
+          const initialAssignmentId = initialWeek.assignmentIds[0] || null
+          setSelectedAssignmentId(initialAssignmentId)
+
+          // Update the session document with initial week and active task
+          try {
+            await updateDoc(
+              doc(fireStore, `classrooms/${classroomId}/sessions/${sessionId}`),
+              {
+                weekNumber: initialWeek.weekNumber,
+                activeTask: initialAssignmentId || '',
+              }
+            )
+          } catch (error) {
+            console.error('Error updating session with initial week:', error)
+            toast({
+              title: 'Warning',
+              description: 'Failed to update session with initial week',
+              variant: 'destructive',
+            })
           }
         } else {
           // If no matching week is found, default to the first week
           if (curriculumData.weeks.length > 0) {
-            setCurrentWeek(curriculumData.weeks[0])
-            if (curriculumData.weeks[0].assignmentIds.length > 0) {
-              setSelectedAssignmentId(curriculumData.weeks[0].assignmentIds[0])
+            const firstWeek = curriculumData.weeks[0]
+            setCurrentWeek(firstWeek)
+            const firstAssignmentId = firstWeek.assignmentIds[0] || null
+            setSelectedAssignmentId(firstAssignmentId)
+
+            // Update the session document with first week and active task
+            try {
+              await updateDoc(
+                doc(
+                  fireStore,
+                  `classrooms/${classroomId}/sessions/${sessionId}`
+                ),
+                {
+                  weekNumber: firstWeek.weekNumber,
+                  activeTask: firstAssignmentId || "",
+                }
+              )
+            } catch (error) {
+              console.error('Error updating session with first week:', error)
+              toast({
+                title: 'Warning',
+                description: 'Failed to update session with first week',
+                variant: 'destructive',
+              })
             }
           }
         }

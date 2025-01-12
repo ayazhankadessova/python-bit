@@ -429,7 +429,7 @@ invalidateCache() // This will drop the cache and trigger a refetch
 ## Jan 10
 - [x] add three themes to live session code editor
 - [x] update code
-- [ ] reset code
+- [x] reset code
 - [ ] fix when disabled
 - [ ] add reset code to live session code editor
 - [x] Fix the assignent in firebase
