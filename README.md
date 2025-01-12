@@ -438,9 +438,9 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 ## Jan 12
 
-- [ ] ui for management of classrooms
-- [ ] backticks ui
-- [ ] depreciate test code for assignments
+- [x] ui for management of classrooms
+- [x] backticks ui
+- [x] depreciate test code for assignments
 - [ ] security for firestire stuff
 - [x] join session then u should pre select week task
 - [x] del active session from classroom interface
