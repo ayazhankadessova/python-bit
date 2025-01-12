@@ -114,7 +114,7 @@ const Signup = () => {
   }
 
   return (
-    <div className='w-full max-w-md space-y-8 p-8'>
+    <div className='w-full max-w-md space-y-8 px-8 py-4'>
       <div className='text-center'>
         <h2 className='text-2xl font-bold mb-2'>Register to PythonBit</h2>
         <p className='text-sm text-muted-foreground'>

@@ -64,7 +64,7 @@ export default function LoginForm() {
   }
 
   return (
-    <div className='w-full max-w-md space-y-8 p-8 bg-white rounded-xl shadow-lg'>
+    <div className='w-full max-w-md space-y-8 p-8 rounded-xl shadow-lg'>
       <div className='text-center'>
         <h2 className='text-2xl font-bold'>Welcome back</h2>
         <p className='text-sm text-gray-600 mt-2'>Please sign in to continue</p>

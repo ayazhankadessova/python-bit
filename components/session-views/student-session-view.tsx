@@ -293,7 +293,7 @@ export function StudentSessionView({
   return (
     <div className='h-screen flex flex-col'>
       {/* Top Navigation Bar */}
-      <nav className='border-b px-4 py-2 bg-background shrink-0'>
+      <nav className='border-b px-4 py-2 shrink-0'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center space-x-4'>
             {currentWeek && (
