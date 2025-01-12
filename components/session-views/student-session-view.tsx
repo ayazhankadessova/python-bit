@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import {
-  doc,
-  onSnapshot,
-  getDoc,
-  updateDoc
-} from 'firebase/firestore'
+import React, { useState, useEffect, useCallback } from 'react'
+import { doc, onSnapshot, getDoc, updateDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/hooks/use-toast'
 import { LogOut } from 'lucide-react'
-import type {
-  LiveSession,
-  Assignment,
-} from '@/types/classrooms/live-session'
+import type { LiveSession, Assignment } from '@/types/classrooms/live-session'
 import { MarkdownRenderer } from '@/components/markdown-renderer'
 import { formatCode } from '@/lib/utils'
 import { PythonEditor } from '@/components/session-views/live-session-code-editor'
@@ -49,16 +41,54 @@ export function StudentSessionView({
 
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
 
+  // Wrap handleUpdateCode with useCallback to stabilize the function
+  const handleUpdateCode = useCallback(async (): Promise<void> => {
+    if (!currentSession || !user?.displayName) return
+    try {
+      const sessionRef = doc(
+        fireStore,
+        `classrooms/${classroomId}/sessions/${sessionId}`
+      )
+      const now = Date.now()
+      // Update student's code and lastUpdated timestamp
+      await updateDoc(sessionRef, {
+        [`students.${user.displayName}`]: {
+          code: studentCode,
+          lastUpdated: now,
+          submissions:
+            currentSession.students[user.displayName]?.submissions || [],
+        },
+      })
+      toast({
+        title: 'Code Updated',
+        description: 'Your code has been updated for the teacher to see.',
+      })
+    } catch (error) {
+      console.error('Error updating code:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to update code',
+        variant: 'destructive',
+      })
+    }
+  }, [
+    classroomId,
+    sessionId,
+    studentCode,
+    currentSession,
+    user?.displayName,
+    toast,
+  ])
+
   // Add this effect to manage the editor's initial code
   useEffect(() => {
-    if (studentCode) {
-      setEditorInitialCode(studentCode)
-    } else if (currentAssignment?.starterCode) {
+    if (currentAssignment?.starterCode) {
       setEditorInitialCode(formatCode(currentAssignment.starterCode))
     } else {
       setEditorInitialCode('') // Fallback empty string
     }
-  }, [studentCode, currentAssignment])
+    handleUpdateCode()
+  }, [currentAssignment])
 
   // Listen to specific session using sessionId
   useEffect(() => {
@@ -198,40 +228,6 @@ export function StudentSessionView({
       })
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const handleUpdateCode = async (): Promise<void> => {
-    if (!currentSession || !user?.displayName) return
-
-    try {
-      const sessionRef = doc(
-        fireStore,
-        `classrooms/${classroomId}/sessions/${sessionId}`
-      )
-      const now = Date.now()
-
-      // Update student's code and lastUpdated timestamp
-      await updateDoc(sessionRef, {
-        [`students.${user.displayName}`]: {
-          code: studentCode,
-          lastUpdated: now,
-          submissions:
-            currentSession.students[user.displayName]?.submissions || [],
-        },
-      })
-
-      toast({
-        title: 'Code Updated',
-        description: 'Your code has been updated for the teacher to see.',
-      })
-    } catch (error) {
-      console.error('Error updating code:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to update code',
-        variant: 'destructive',
-      })
     }
   }
 
