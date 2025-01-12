@@ -61,18 +61,6 @@ export interface StudentCompletion {
   completedAt: Date
 }
 
-// export interface Classroom {
-//   _id: string
-//   name: string
-//   teacherId: string
-//   curriculumId: string
-//   curriculumName: string
-//   lastTaughtWeek: number
-//   createdAt: Date
-//   updatedAt: Date
-//   students: string[] // Array of student usernames
-// }
-
 // models/types.ts
 export interface Classroom {
   _id: string

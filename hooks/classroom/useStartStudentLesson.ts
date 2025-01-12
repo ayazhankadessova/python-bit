@@ -20,13 +20,7 @@ export function useStartStudentLesson() {
         throw new Error('Classroom not found')
       }
 
-      const classroomData = classroomDoc.data()
-
-      if (!classroomData.activeSession) {
-        throw new Error('Please wait for the teacher to start the session')
-      }
-
-      router.push(`/classroom/${classroomId}`)
+      router.push(`/classrooms/${classroomId}`)
     } catch (error) {
       toast({
         title: 'Error',

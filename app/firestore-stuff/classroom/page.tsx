@@ -12,6 +12,7 @@ import {
   writeBatch,
   doc,
   arrayUnion,
+  setDoc,
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { nanoid } from 'nanoid'
@@ -36,12 +37,7 @@ import { Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
-
-interface Curriculum {
-  id: string
-  name: string
-  description?: string
-}
+import { Curriculum, Week } from '@/types/classrooms/live-session'
 
 interface Student {
   id: string
@@ -57,12 +53,16 @@ const formSchema = z.object({
 })
 
 export default function CreateClassroomPage() {
-  const [curricula, setCurricula] = useState<Curriculum[]>([])
+  const [curricula, setCurricula] = useState<CurriculumWithId[]>([]);
   const [students, setStudents] = useState<Student[]>([])
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
   const { user } = useAuth()
   const router = useRouter()
+
+  interface CurriculumWithId extends Curriculum {
+  id: string;  // Adding id for Firestore document reference
+}
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -85,49 +85,64 @@ export default function CreateClassroomPage() {
     }
   }, [user, router, toast])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user?.school) return
+  // Update the fetchData function in y our useEffect
+useEffect(() => {
+  const fetchData = async () => {
+    if (!user?.school) return;
 
-      try {
-        // Fetch curricula
-        const curriculaSnap = await getDocs(collection(fireStore, 'curricula'))
-        setCurricula(
-          curriculaSnap.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          })) as Curriculum[]
-        )
+    try {
+      // Fetch curricula
+      const curriculaSnap = await getDocs(collection(fireStore, 'curricula'));
+      const fetchedCurricula = curriculaSnap.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name,
+          description: data.description,
+          weeks: data.weeks.map((week: Week) => ({
+            weekNumber: week.weekNumber,
+            title: week.title,
+            tutorialContent: {
+              theory: week.tutorialContent.theory,
+              examples: week.tutorialContent.examples,
+              resources: week.tutorialContent.resources,
+            },
+            assignmentIds: week.assignmentIds,
+          })),
+        } as CurriculumWithId;
+      });
+      
+      setCurricula(fetchedCurricula);
 
-        // Fetch students from the same school
-        const studentsQuery = query(
-          collection(fireStore, 'users'),
-          where('role', '==', 'student'),
-          where('school', '==', user.school)
-        )
-        const studentsSnap = await getDocs(studentsQuery)
-        setStudents(
-          studentsSnap.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          })) as Student[]
-        )
-      } catch (error) {
-        console.error('Error fetching data:', error)
-        toast({
-          title: 'Error',
-          description: 'Failed to load data',
-          variant: 'destructive',
-        })
-      } finally {
-        setLoading(false)
-      }
+      // Fetch students code remains the same
+      const studentsQuery = query(
+        collection(fireStore, 'users'),
+        where('role', '==', 'student'),
+        where('school', '==', user.school)
+      );
+      const studentsSnap = await getDocs(studentsQuery);
+      setStudents(
+        studentsSnap.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Student[]
+      );
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load data',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
     }
+  };
 
-    if (user) {
-      fetchData()
-    }
-  }, [user, toast])
+  if (user) {
+    fetchData();
+  }
+}, [user, toast]);
 
   const handleStudentToggle = (studentId: string) => {
     const currentStudents = form.getValues('students')
@@ -140,6 +155,7 @@ export default function CreateClassroomPage() {
     })
   }
 
+  // Only showing the modified onSubmit function since the rest remains the same
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     if (!user) return
 
@@ -166,6 +182,21 @@ export default function CreateClassroomPage() {
         school: user.school,
       })
 
+      // Initialize sessions subcollection with a metadata document
+      // This ensures the collection exists and contains useful information
+      const sessionsMetadataRef = doc(
+        fireStore,
+        `classrooms/${classroomId}/sessions`,
+        '_metadata'
+      )
+      batch.set(sessionsMetadataRef, {
+        createdAt: Date.now(),
+        totalSessions: 0,
+        lastSessionAt: null,
+        isInitialized: true,
+        // Add any other metadata fields you might need
+      })
+
       // Update teacher's classrooms
       const teacherRef = doc(fireStore, 'users', user.uid)
       batch.update(teacherRef, {
@@ -178,10 +209,27 @@ export default function CreateClassroomPage() {
         const studentRef = doc(fireStore, 'users', studentId)
         batch.update(studentRef, {
           classrooms: arrayUnion(classroomId),
+          updatedAt: Date.now(),
         })
       })
 
       await batch.commit()
+
+      // Optional: Create the compound index programmatically
+      // Note: This requires additional security rules configuration
+      // You might want to create the index manually in the Firebase Console instead
+
+      const indexRef = doc(
+        fireStore,
+        `classrooms/${classroomId}/.indexes/sessions`
+      )
+      await setDoc(indexRef, {
+        fields: {
+          endedAt: 'ASCENDING',
+          startedAt: 'DESCENDING',
+        },
+        queryScope: 'COLLECTION',
+      })
 
       toast({
         title: 'Success',
@@ -242,7 +290,6 @@ export default function CreateClassroomPage() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name='curriculumId'
@@ -317,7 +364,6 @@ export default function CreateClassroomPage() {
                   </FormItem>
                 )}
               />
-
               <Button
                 type='submit'
                 className='w-full bg-brand-orange hover:bg-brand-orange-s'

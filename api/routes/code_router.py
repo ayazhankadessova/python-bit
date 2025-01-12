@@ -4,12 +4,18 @@ from typing import List, Optional
 from ..services.code_execution import CodeExecutionService
 from ..services.exercise_service import ExerciseService
 from ..services.project_service import ProjectService
+from ..services.assignment_service import AssignmentService
 from ..dependencies import limiter
 
 router = APIRouter()
 code_execution = CodeExecutionService()
 exercise_service = ExerciseService()
 project_service = ProjectService()
+assignment_service = AssignmentService()
+
+class TestAssignmentRequest(BaseModel):
+    code: str
+    assignment_id: str
 
 class CodeExecutionRequest(BaseModel):
     code: str
@@ -77,6 +83,22 @@ async def test_exercise(request: Request, test_request: TestProjectRequest):
         )
         return result
         
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail={'error': str(e), 'output': ''}
+        )
+    
+@router.post("/test-assignment")
+@limiter.limit("30/minute")
+async def test_assignment(request: Request, test_request: TestAssignmentRequest):
+    """Endpoint for testing assignments"""
+    try:
+        result = await assignment_service.test_assignment(
+            code=test_request.code,
+            assignment_id=test_request.assignment_id
+        )
+        return result
     except Exception as e:
         raise HTTPException(
             status_code=500,

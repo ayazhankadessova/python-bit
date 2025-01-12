@@ -55,11 +55,11 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
         actionButton={
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button>
+              <Button variant='softTeal'>
                 <Plus className='mr-2 h-4 w-4' /> Create New Classroom
               </Button>
             </DialogTrigger>
-            <DialogContent className='bg-white'>
+            <DialogContent className='bg-primary-foreground'>
               <DialogHeader>
                 <DialogTitle>Create New Classroom</DialogTitle>
                 <DialogDescription>
@@ -68,7 +68,7 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
               </DialogHeader>
               <CreateClassroomForm
                 teacherId={user.uid}
-                teacherSchool={user.school!}
+                teacherSchool={user.school}
               />
             </DialogContent>
           </Dialog>
@@ -88,13 +88,10 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
               actionButton={
                 <Button
                   onClick={() => startLesson(classroom.id)}
-                  variant={classroom.activeSession ? 'default' : 'secondary'}
                   disabled={isStarting}
                 >
                   <Play className='mr-2 h-4 w-4' />
-                  {classroom.activeSession
-                    ? 'Continue Session'
-                    : 'Start Session'}
+                  {'Enter Classroom'}
                 </Button>
               }
             />

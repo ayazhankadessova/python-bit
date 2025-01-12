@@ -42,12 +42,13 @@ export default function ResetPassword() {
 
       if (!success) throw new Error('Failed to send reset email')
 
+      onClose()
+
       toast({
         title: 'Success',
         description: 'Password reset email sent! Check your inbox.',
         variant: 'success',
       })
-      onClose()
     } catch (error) {
       toast({
         title: 'Error',
@@ -69,7 +70,7 @@ export default function ResetPassword() {
   }, [error, toast])
 
   return (
-    <div className='w-full max-w-md space-y-8 p-8 bg-white rounded-xl shadow-lg'>
+    <div className='w-full max-w-md space-y-8 p-8 rounded-xl shadow-lg'>
       <div className='text-center'>
         <h2 className='text-2xl font-bold'>Reset Password</h2>
         <p className='text-sm text-gray-600 mt-2'>
@@ -102,14 +103,14 @@ export default function ResetPassword() {
             {loading ? 'Sending...' : 'Send Reset Link'}
           </Button>
 
-          <Button
-            type='button'
-            variant='ghost'
-            className='w-full'
-            onClick={() => onOpen('login')}
-          >
-            Back to Login
-          </Button>
+          <div className='mt-2 text-center'>
+            <p
+              onClick={() => onOpen('login')}
+              className='text-sm text-primary hover:underline hover:italic cursor-pointer inline-block'
+            >
+              Back to Login
+            </p>
+          </div>
         </form>
       </Form>
     </div>

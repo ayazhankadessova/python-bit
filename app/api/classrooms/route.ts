@@ -32,22 +32,22 @@ async function _fetchClassroomData(userId: string) {
 
           const classroomData = classroomDoc.data()
 
-          let curriculumData = undefined
-          try {
-            const curriculumDoc = await getDoc(
-              doc(fireStore, 'curricula', classroomData.curriculumId)
-            )
-            if (curriculumDoc.exists()) {
-              curriculumData = curriculumDoc.data()
-            }
-          } catch (error) {
-            console.error('Error fetching curriculum:', error)
-          }
+          // let curriculumData = undefined
+          // try {
+          //   const curriculumDoc = await getDoc(
+          //     doc(fireStore, 'curricula', classroomData.curriculumId)
+          //   )
+          //   if (curriculumDoc.exists()) {
+          //     curriculumData = curriculumDoc.data()
+          //   }
+          // } catch (error) {
+          //   console.error('Error fetching curriculum:', error)
+          // }
 
           return {
             id: classroomDoc.id,
             ...classroomData,
-            curriculum: curriculumData,
+            // curriculum: curriculumData,
           } as ClassroomTC
         } catch (error) {
           console.error(`Error fetching classroom ${classroomId}:`, error)

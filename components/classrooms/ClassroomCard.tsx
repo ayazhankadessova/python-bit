@@ -23,39 +23,21 @@ export function ClassroomCard({
     <Card>
       <CardHeader>
         <CardTitle>{classroom.name}</CardTitle>
-        <CardDescription>
-          {classroom.curriculumName || classroom.curriculum?.name}
-        </CardDescription>
+        <CardDescription>{classroom.curriculumName}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className='space-y-2'>
           {showClassCode && (
-            <p className='text-sm text-gray-600'>
+            <p className='text-muted-foreground'>
               Classroom Code: {classroom.classCode}
             </p>
           )}
-          <p className='text-sm text-gray-600'>
+          <p className='text-muted-foreground'>
             Last taught: Week {classroom.lastTaughtWeek || 0}
           </p>
-          <p className='text-sm text-gray-600'>
+          <p className='text-muted-foreground'>
             Students: {classroom.students?.length || 0}
           </p>
-          <div
-            className={`text-sm ${
-              classroom.activeSession
-                ? 'text-green-600 font-medium'
-                : 'text-gray-500'
-            }`}
-          >
-            {classroom.activeSession
-              ? '● Session Active'
-              : '○ No Active Session'}
-          </div>
-          {classroom.curriculum?.weeks && (
-            <p className='text-sm text-blue-600'>
-              Total Weeks: {classroom.curriculum.weeks.length}
-            </p>
-          )}
         </div>
       </CardContent>
       <CardFooter className='flex justify-between'>{actionButton}</CardFooter>

@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-
 import { fontFamily } from 'tailwindcss/defaultTheme'
 
 const config = {
@@ -28,8 +27,7 @@ const config = {
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: {
-          DEFAULT:
-            'linear-gradient(to right, hsl(var(--background-start)), hsl(var(--background-end)))',
+          DEFAULT: 'hsl(var(--background-start))',
           start: 'hsl(var(--background-start))',
           end: 'hsl(var(--background-end))',
         },

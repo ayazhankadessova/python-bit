@@ -23,18 +23,20 @@ import {
 } from '@/components/ui/select'
 import { useAuth } from '@/contexts/AuthContext'
 
-interface BlogPageProps {
+interface TutorialPageProps {
   searchParams: {
     page?: string
     perPage?: string
   }
 }
 
-const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
+const TutorialPage: React.FC<TutorialPageProps> = ({
+  searchParams,
+}: TutorialPageProps) => {
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('Difficulty')
   const { user } = useAuth()
-  console.log("user from blog page:" , user)
+  console.log('user from blog page:', user)
 
   const publishedTutorials = filterTutorialsBySearchTerm(
     tutorials.filter((tutorial) => tutorial.published),
@@ -115,4 +117,4 @@ const BlogPage: React.FC<BlogPageProps> = ({ searchParams }: BlogPageProps) => {
   )
 }
 
-export default BlogPage
+export default TutorialPage

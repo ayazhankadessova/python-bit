@@ -19,7 +19,7 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
   const { classrooms, isLoading, error} = useTeacherClassrooms(
     user!.uid
   )
-  const activeClassrooms = classrooms.filter((c) => c.activeSession)
+  const activeClassrooms = classrooms.filter((c) => c)
   const totalStudents = classrooms.reduce(
     (acc, classroom) => acc + (classroom.students?.length || 0),
     0
@@ -80,7 +80,7 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
             {activeClassrooms.length > 0 && (
               <ClassroomList
                 classrooms={activeClassrooms}
-                onJoinClassroom={(id) => router.push(`/classroom/${id}`)}
+                onJoinClassroom={(id) => router.push(`/classrooms/${id}`)}
                 userRole='teacher'
               />
             )}

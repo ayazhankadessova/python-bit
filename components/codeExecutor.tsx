@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Play, Loader2, Sun, Moon, Code2, RotateCcw } from 'lucide-react'
+import { Play, Loader2, Code2, RotateCcw } from 'lucide-react'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
@@ -19,6 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import ThemeButtons from '@/components/code-editors/theme-buttons'
 
 const PythonCodeEditor = ({
   initialCode,
@@ -153,36 +154,7 @@ const PythonCodeEditor = ({
               {tutorial_id !== 'default' && `• ${tutorial_id}`}
             </span>
           </div>
-          <div className='flex items-center gap-2'>
-            <Button
-              variant='ghost'
-              size='sm'
-              onClick={() => setTheme('light')}
-              className={
-                theme === 'light' ? 'text-amber-500' : 'text-amber-200'
-              }
-            >
-              <Sun className='w-4 h-4' />
-            </Button>
-            <Button
-              variant='ghost'
-              size='sm'
-              onClick={() => setTheme('dark')}
-              className={theme === 'dark' ? 'text-blue-500' : 'text-blue-200'}
-            >
-              <Moon className='w-4 h-4' />
-            </Button>
-            <Button
-              variant='ghost'
-              size='sm'
-              onClick={() => setTheme('vscode')}
-              className={
-                theme === 'vscode' ? 'text-purple-500' : 'text-purple-200'
-              }
-            >
-              <Code2 className='w-4 h-4' />
-            </Button>
-          </div>
+          <ThemeButtons theme={theme} setTheme={setTheme} />
         </div>
 
         {/* Code Editor - using flex-auto to take remaining space */}
@@ -248,7 +220,7 @@ const PythonCodeEditor = ({
 
             <Button
               onClick={() => setIsResetDialogOpen(true)}
-              variant='destructive'
+              variant='softTealSecondary'
               className='ml-auto'
               disabled={isExecuting}
             >

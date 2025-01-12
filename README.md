@@ -420,6 +420,50 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 await submitCode(...)
 invalidateCache() // This will drop the cache and trigger a refetch
 
+## Jan 9 
+
+- [x] run code and show output 
+- [x] no test code but rather expected output !!
+- [x] make reusable component for code editor in live session
+
+## Jan 10
+- [x] add three themes to live session code editor
+- [x] update code
+- [x] reset code
+- [ ] fix when disabled
+- [x] add reset code to live session code editor
+- [x] Fix the assignent in firebase
+- [x] fix its json
+- [x] join leave session
+
+## Jan 12
+
+- [x] ui for management of classrooms
+- [x] backticks ui
+- [x] depreciate test code for assignments
+- [ ] security for firestire stuff
+- [x] join session then u should pre select week task
+- [x] del active session from classroom interface
+- [ ] show solution to teachers
+- [ ] handle complete assignment
+- [ ] add students when they connect 
+- [x] deploy to vercel
+- [ ] add more weeks
+- [x] remove selectedStudent
+- [ ] get project progress information
+- [ ] add like uncomment this code 
+
+
+- add caching to all firestore opers
+
+## jan 11 
+
+- [ ] implement magic js somehwee
+
+
+## Later
+
+- [ ] get assignment expectedOutput from firestore [fastapi]
 
 ## Project Test cases
 
@@ -454,6 +498,7 @@ tutrials data or every tutorials
 
 ## BackLog
 - [ ] GitHub, Logo icons
+- [ ] In Live Session, Markdown rendered renders backticks and ``` in a weird way. Figure out how rehype pretty code is messing is in conflict
 - [ ] Dont send expectedOutput and testCases, they should be in Backend
 - [ ] Search Button Functionality
 - [ ] logo

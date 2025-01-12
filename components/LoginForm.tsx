@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast'
 import { auth } from '@/firebase/firebase'
 import { useRouter } from 'next/navigation'
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
+import { useAuthModal } from '@/contexts/AuthModalContext'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -27,11 +28,10 @@ type LoginInputs = z.infer<typeof loginSchema>
 export default function LoginForm() {
   const router = useRouter()
   const { toast } = useToast()
-  // const { user } = useAuth()
-  const [signInWithEmailAndPassword, _, loading] =
+  const [signInWithEmailAndPassword, userCred, loading] =
     useSignInWithEmailAndPassword(auth)
 
-  console.log(_)
+  const { onOpen, onClose } = useAuthModal()
 
   const form = useForm<LoginInputs>({
     resolver: zodResolver(loginSchema),
@@ -48,10 +48,11 @@ export default function LoginForm() {
 
       toast({
         title: 'Success',
-        description: 'Successfully signed in!',
+        description: 'Successfully signed in! ' + userCred,
         variant: 'success',
       })
 
+      onClose() 
       router.push('/dashboard')
     } catch (error) {
       console.error('Error signing in:', error)
@@ -64,7 +65,7 @@ export default function LoginForm() {
   }
 
   return (
-    <div className='w-full max-w-md space-y-8 p-8 bg-white rounded-xl shadow-lg'>
+    <div className='w-full max-w-md space-y-8 p-8 rounded-xl shadow-lg'>
       <div className='text-center'>
         <h2 className='text-2xl font-bold'>Welcome back</h2>
         <p className='text-sm text-gray-600 mt-2'>Please sign in to continue</p>
@@ -110,19 +111,18 @@ export default function LoginForm() {
             )}
           />
 
-          {/* <div className='flex items-center justify-end'>
-            <button
-              type='button'
-              className='text-sm text-blue-600 hover:underline'
-              onClick={handleModalChange}
-            >
-              Forgot password?
-            </button>
-          </div> */}
-
           <Button type='submit' className='w-full' disabled={loading}>
             {loading ? 'Signing in...' : 'Sign in'}
           </Button>
+
+          <div className='mt-2 text-center'>
+            <p
+              onClick={() => onOpen('forgotPassword')}
+              className='text-sm text-primary hover:underline hover:italic cursor-pointer inline-block'
+            >
+              Forgot your password?
+            </p>
+          </div>
         </form>
       </Form>
     </div>

@@ -7,7 +7,7 @@
     /* White to teal-200 gradient */
     --background-start: 0 0% 100%; /* white */
     --background-end: 168 55% 90%; /* teal-200 */
-    /* --background: 0 0% 100%; */
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -38,7 +38,7 @@
     /* Dark mode gradient - darker teal tones */
     --background-start: 0 0% 10%; /* dark start */
     --background-end: 168 55% 24%; /* darker teal */
-    /* --background: 222.2 84% 4.9%; */
+    --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
@@ -71,5 +71,16 @@
   }
   body {
     @apply bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] text-foreground;
+  }
+}
+
+/* Define custom gradient utility class */
+@layer utilities {
+  .bg-gradient-custom {
+    @apply bg-gradient-to-r from-background-start via-background-end to-background-start;
+  }
+  
+  .bg-gradient-soft {
+    @apply bg-gradient-to-r from-background-start/50 via-background-end to-background-start/50;
   }
 }

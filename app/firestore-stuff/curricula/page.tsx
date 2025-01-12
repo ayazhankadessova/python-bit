@@ -14,20 +14,7 @@ import {
 import { doc, setDoc, collection, getDocs } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Loader2, Plus, Trash2 } from 'lucide-react'
-import { nanoid } from 'nanoid'
-
-interface Week {
-  weekNumber: number
-  topic: string
-  assignmentIds: string[] // Array of problem IDs
-}
-
-interface CurriculumInputs {
-  id: string
-  name: string
-  description: string
-  weeks: Week[]
-}
+import {Curriculum, Week } from '@/types/classrooms/live-session'
 
 interface Problem {
   id: string
@@ -35,21 +22,25 @@ interface Problem {
   difficulty: string
 }
 
-const initialState: CurriculumInputs = {
-  id: '',
+const initialState: Curriculum = {
   name: '',
   description: '',
   weeks: [
     {
       weekNumber: 1,
-      topic: '',
+      title: '',
       assignmentIds: [],
+      tutorialContent: {
+        theory: '',
+        examples: '',
+        resources: [],
+      }
     },
   ],
 }
 
 const CurriculumForm = () => {
-  const [inputs, setInputs] = useState<CurriculumInputs>(initialState)
+  const [inputs, setInputs] = useState<Curriculum>(initialState)
   const [loading, setLoading] = useState(false)
   const [problems, setProblems] = useState<Problem[]>([])
 
@@ -200,8 +191,13 @@ const CurriculumForm = () => {
         ...prev.weeks,
         {
           weekNumber: prev.weeks.length + 1,
-          topic: '',
+          title: '',
           assignmentIds: [],
+          tutorialContent: {
+            theory: '',
+            examples: '',
+            resources: [],
+          },
         },
       ],
     }))
@@ -219,10 +215,9 @@ const CurriculumForm = () => {
     setLoading(true)
 
     try {
-      const curriculumId = inputs.id || nanoid()
+      const curriculumId = inputs.name.replace(" ", "-")
       const curriculumDoc = {
         ...inputs,
-        id: curriculumId,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       }
@@ -252,7 +247,7 @@ const CurriculumForm = () => {
           onSubmit={handleSubmit}
           className='space-y-6 bg-white p-8 rounded-xl shadow-lg border border-gray-200'
         >
-          <div className='space-y-2'>
+          {/* <div className='space-y-2'>
             <Label htmlFor='id'>Curriculum ID (Optional)</Label>
             <Input
               id='id'
@@ -262,7 +257,7 @@ const CurriculumForm = () => {
               placeholder='unique-curriculum-id'
               className='bg-gray-50 border-gray-300'
             />
-          </div>
+          </div> */}
 
           <div className='space-y-2'>
             <Label htmlFor='name'>Name</Label>
@@ -323,9 +318,9 @@ const CurriculumForm = () => {
                   <div>
                     <Label>Topic</Label>
                     <Input
-                      value={week.topic}
+                      value={week.title}
                       onChange={(e) =>
-                        handleWeekChange(index, 'topic', e.target.value)
+                        handleWeekChange(index, 'title', e.target.value)
                       }
                       placeholder="Week's topic"
                       required

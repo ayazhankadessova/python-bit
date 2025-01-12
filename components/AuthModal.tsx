@@ -35,21 +35,11 @@ const AuthModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='sm:max-w-[425px] gap-0 p-0 bg-background border-none'>
+      <DialogContent className='sm:max-w-[425px] gap-0 p-0 border-none'>
         <div className='flex flex-col w-full'>
-          {/* Header */}
-          <div className='flex justify-between items-center p-4 border-b'>
-            <h2 className='text-xl font-semibold'>
-              {type === 'login'
-                ? 'Login'
-                : type === 'register'
-                ? 'Sign Up'
-                : 'Reset Password'}
-            </h2>
-          </div>
 
           {/* Content */}
-          <div className='px-4 py-6 overflow-y-auto max-h-[80vh]'>
+          <div className='p-0 overflow-y-auto max-h-[80vh]'>
             {type === 'login' ? (
               <Login />
             ) : type === 'register' ? (

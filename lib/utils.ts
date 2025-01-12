@@ -28,3 +28,47 @@ export function formatDate(epoch: number): string {
     return 'Invalid date'
   }
 }
+
+export function calculateDuration(
+  startDate: number,
+  endDate: number | null
+): string {
+  // For ongoing sessions, use current time as end date
+  const end = endDate || Date.now()
+
+  // Both startDate and endDate are already in milliseconds
+  // No need to multiply by 1000 or check length
+  const diffInMs = end - startDate
+
+  // Convert to minutes, round to nearest minute
+  const diffInMinutes = Math.round(diffInMs / (1000 * 60))
+
+  // If less than 1 minute, show "Less than 1m"
+  if (diffInMinutes < 1) {
+    return 'Less than 1m'
+  }
+
+  // If less than 1 hour, return minutes
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes}m`
+  }
+
+  // If 1 hour or more, calculate hours and remaining minutes
+  const hours = Math.floor(diffInMinutes / 60)
+  const minutes = diffInMinutes % 60
+
+  // If no remaining minutes, just return hours
+  if (minutes === 0) {
+    return `${hours}h`
+  }
+
+  // Return both hours and minutes
+  return `${hours}h ${minutes}m`
+}
+
+export const formatCode = (code: string) => {
+  return code
+    .replace(/\\n/g, '\n') // Replace double escaped newlines
+    .replace(/"{2,}/g, '"') // Replace multiple quotes with single quotes
+  // Removed the .replace(/\\/g, '') that was causing the issue
+}

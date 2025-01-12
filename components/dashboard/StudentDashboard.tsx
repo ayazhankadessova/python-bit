@@ -46,7 +46,7 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
         <StatCard icon={BookOpen} title='My Classes'>
           <ClassroomList
             classrooms={classrooms}
-            onJoinClassroom={(id) => router.push(`/classroom/${id}`)}
+            onJoinClassroom={(id) => router.push(`/classrooms/${id}`)}
             userRole='student'
           />
         </StatCard>
@@ -63,7 +63,6 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
             <div>
               <p className='text-sm font-medium'>Active Classes</p>
               <p className='text-2xl font-bold text-blue-600'>
-                {classrooms.filter((c) => c.activeSession).length}/
                 {classrooms.length}
               </p>
             </div>

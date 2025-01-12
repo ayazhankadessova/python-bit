@@ -48,7 +48,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className='min-h-screen bg-background px-8'>
+    <div className='min-h-screen px-8'>
       {/* Hero Section */}
       <section className='container mx-auto px-4 pt-12 pb-6 md:pt-18 md:pb-4'>
         <div className='flex flex-col items-center text-center max-w-3xl mx-auto space-y-6'>

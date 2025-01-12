@@ -54,7 +54,7 @@ class ProjectLoader:
                         tags=project_data.get('tags', [])
                     )
 
-            print(self._projects)
+            # print(self._projects)
         except Exception as e:
             print(f"Error loading project configs: {e}")
             self._projects = {}

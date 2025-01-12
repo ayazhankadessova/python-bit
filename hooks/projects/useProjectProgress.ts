@@ -1,18 +1,7 @@
 import useSWR from 'swr'
 import { User } from '@/types/firebase'
-
-export interface Progress {
-  completed: boolean
-  totalAttempts: number
-  successfulAttempts: number
-  lastAttempt: number
-}
-
-interface useProjectProgressOptions {
-  revalidateOnFocus?: boolean
-  revalidateOnReconnect?: boolean
-  dedupingInterval?: number
-}
+import { Progress } from '@/types/project/general'
+import {useProjectProgressOptions} from '@/types/project/props'
 
 /**
  * Custom hook for fetching user progress on projects/tasks
@@ -28,10 +17,12 @@ export function useProjectProgress(
     dedupingInterval = 600000, // 10 minutes
   } = options
 
-  // Only fetch if we have both entityId and user
+  // Only fetch if we have both projectId and user
   const shouldFetch = Boolean(projectId && user)
+
+  // Create the path-based URL
   const url = shouldFetch
-    ? `/api/progress/project?userId=${user?.uid}&projectId=${projectId}`
+    ? `/api/progress/project/${user?.uid}/${projectId}`
     : null
 
   const { data, error, mutate } = useSWR<Progress>(

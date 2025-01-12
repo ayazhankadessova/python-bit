@@ -1,4 +1,4 @@
-// components/Signup.tsx
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -24,6 +24,8 @@ import { auth, fireStore } from '@/firebase/firebase'
 import { useRouter } from 'next/navigation'
 import { doc, setDoc } from 'firebase/firestore'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
+import Link from 'next/link'
+import { useAuthModal } from '@/contexts/AuthModalContext'
 
 const signUpSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -38,10 +40,11 @@ type SignUpValues = z.infer<typeof signUpSchema>
 const Signup = () => {
   const { toast } = useToast()
   const router = useRouter()
-  // const { user } = useAuth()
-  const [createUserWithEmailAndPassword, _, loading] =
+  const { onClose } = useAuthModal()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [firebaseError, setFirebaseError] = useState<string | null>(null)
+  const [createUserWithEmailAndPassword, userCred] =
     useCreateUserWithEmailAndPassword(auth)
-  console.log(_)
 
   const form = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
@@ -54,17 +57,32 @@ const Signup = () => {
     },
   })
 
+  // Close form if we already have user credentials
+  useEffect(() => {
+    if (userCred) {
+      router.push('/dashboard')
+    }
+  }, [userCred, router])
+
   const onSubmit = async (values: SignUpValues) => {
+    setFirebaseError(null)
+    setIsSubmitting(true)
+
     try {
-      const newUser = await createUserWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         values.email,
         values.password
       )
-      if (!newUser) return
+
+      if (!userCredential?.user) {
+        throw new Error('Failed to create user')
+      }
+
+      const newUser = userCredential.user
 
       const userData = {
-        uid: newUser.user.uid,
-        email: newUser.user.email,
+        uid: newUser.uid,
+        email: newUser.email,
         displayName: values.displayName,
         school: values.school,
         role: values.role,
@@ -76,30 +94,43 @@ const Signup = () => {
         starredProblems: [],
       }
 
-      await setDoc(doc(fireStore, 'users', newUser.user.uid), userData)
+      await setDoc(doc(fireStore, 'users', newUser.uid), userData)
+
+      onClose()
+
       toast({
         title: 'Success',
         description: 'Account Created.',
         variant: 'success',
       })
       router.push('/dashboard')
-    } catch (error) {
+    } catch (err) {
+      const errorMessage = 'An unexpected error occurred during signup' + err
+      setFirebaseError(errorMessage)
       toast({
-        title: 'Error' + error,
-        description: 'Account not Created.',
+        title: 'Error',
+        description: errorMessage,
         variant: 'destructive',
       })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   return (
-    <div className='w-full max-w-md space-y-8 p-8'>
+    <div className='w-full max-w-md space-y-8 px-8 py-4'>
       <div className='text-center'>
         <h2 className='text-2xl font-bold mb-2'>Register to PythonBit</h2>
         <p className='text-sm text-muted-foreground'>
           Join us to start learning or teaching
         </p>
       </div>
+
+      {firebaseError && (
+        <div className='text-primary/70 text-sm text-center mb-4 p-2 bg-red-400/20 rounded'>
+          {firebaseError}
+        </div>
+      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
@@ -114,6 +145,7 @@ const Signup = () => {
                     placeholder='name@example.com'
                     {...field}
                     className='border-gray-500'
+                    disabled={isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -132,6 +164,7 @@ const Signup = () => {
                     placeholder='John Doe'
                     {...field}
                     className='border-gray-500'
+                    disabled={isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -151,6 +184,7 @@ const Signup = () => {
                     placeholder='••••••••'
                     {...field}
                     className='border-gray-500'
+                    disabled={isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -167,6 +201,7 @@ const Signup = () => {
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
+                  disabled={isSubmitting}
                 >
                   <FormControl>
                     <SelectTrigger className='border-gray-500'>
@@ -194,6 +229,7 @@ const Signup = () => {
                     placeholder='Your school name'
                     {...field}
                     className='border-gray-500'
+                    disabled={isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -201,22 +237,18 @@ const Signup = () => {
             )}
           />
 
-          <Button type='submit' disabled={loading} className='w-full'>
-            {loading ? 'Creating account...' : 'Register'}
+          <Button type='submit' disabled={isSubmitting} className='w-full'>
+            {isSubmitting ? 'Creating account...' : 'Register'}
           </Button>
         </form>
       </Form>
 
-      {/* <div className='text-center text-sm'>
+      <div className='text-center text-sm mt-4'>
         <span className='text-muted-foreground'>Already have an account?</span>{' '}
-        <Button
-        v>  variant='link'
-          onClick={handleClick}
-          className='p-0 h-auto font-normal'
-        >
-          Log In
+        <Button variant='link' asChild className='p-0 h-auto font-normal'>
+          <Link href='/login'>Log In</Link>
         </Button>
-      </div */}
+      </div>
     </div>
   )
 }

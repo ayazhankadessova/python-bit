@@ -1,13 +1,14 @@
-// app/api/progress/project/route.ts
+// app/api/progress/project/[userId]/[projectId]/route.ts
 import { NextResponse } from 'next/server'
 import { doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 
-export async function GET(request: Request) {
+export async function GET(
+  request: Request,
+  { params }: { params: { userId: string; projectId: string } }
+) {
   try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
-    const projectId = searchParams.get('projectId')
+    const { userId, projectId } = params
 
     if (!userId || !projectId) {
       return NextResponse.json(
@@ -20,7 +21,6 @@ export async function GET(request: Request) {
     const projectDoc = await getDoc(projectRef)
 
     if (!projectDoc.exists()) {
-      // Project hasn't been attempted yet
       return NextResponse.json({
         completed: false,
         lastAttempt: null,
