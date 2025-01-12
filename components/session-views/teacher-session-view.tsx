@@ -560,9 +560,9 @@ export function TeacherSessionView({
           <div className='flex-1 overflow-y-auto p-4 max-h-[calc(60vh)]'>
             {currentAssignment && (
               <div className='prose dark:prose-invert max-w-none'>
-                <h1 className='text-xl font-bold mb-4'>
+                <h2 className='mb-4'>
                   {currentAssignment.title}
-                </h1>
+                </h2>
                 <MarkdownRenderer
                   content={currentAssignment.problemStatement}
                 />

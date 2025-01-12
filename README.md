@@ -431,11 +431,16 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [x] update code
 - [x] reset code
 - [ ] fix when disabled
-- [ ] add reset code to live session code editor
+- [x] add reset code to live session code editor
 - [x] Fix the assignent in firebase
 - [x] fix its json
 - [x] join leave session
-- [ ] join session then u should pre select week task
+
+## Jan 12
+
+- [ ] depreciate test code for assignments
+- [ ] security for firestire stuff
+- [x] join session then u should pre select week task
 - [ ] ui for management of classrooms
 - [ ] handle complete assignment
 - [ ] add students when they connect 
@@ -443,6 +448,8 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [ ] add more weeks
 - [x] remove selectedStudent
 - [ ] get project progress information
+
+- [ ] add like uncomment this code 
 
 
 ## jan 11 
