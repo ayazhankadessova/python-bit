@@ -443,6 +443,7 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [ ] depreciate test code for assignments
 - [ ] security for firestire stuff
 - [x] join session then u should pre select week task
+- [x] del active session from classroom interface
 - [ ] show solution to teachers
 - [ ] handle complete assignment
 - [ ] add students when they connect 
@@ -450,9 +451,10 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [ ] add more weeks
 - [x] remove selectedStudent
 - [ ] get project progress information
-
 - [ ] add like uncomment this code 
 
+
+- add caching to all firestore opers
 
 ## jan 11 
 

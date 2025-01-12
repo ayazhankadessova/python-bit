@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2 } from 'lucide-react'
+import { Loader2, CalendarDays, Clock } from 'lucide-react'
 import {
   Card,
   CardHeader,
@@ -11,6 +11,15 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   collection,
   query,
@@ -48,6 +57,8 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
   )
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [searchText, setSearchText] = useState('')
+  const [sortMethod, setSortMethod] = useState('newest')
   const router = useRouter()
 
   useEffect(() => {
@@ -93,8 +104,8 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
         // Session history listener
         const historyQuery = query(
           sessionsRef,
-          orderBy('endedAt', 'desc'),
-          // limit(10)
+          where('endedAt', '!=', null),
+          orderBy('endedAt', 'desc')
         )
 
         const unsubscribeHistory = onSnapshot(
@@ -128,6 +139,22 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
 
     fetchSessions()
   }, [classroomId])
+
+  // Filter and sort sessions
+  const filteredSessions = sessionHistory.filter((session) => {
+    const searchLower = searchText.toLowerCase()
+    const weekMatch = session.weekNumber.toString().includes(searchLower)
+    const taskMatch = session.activeTask?.toLowerCase().includes(searchLower)
+    return searchText === '' || weekMatch || taskMatch
+  })
+
+  const sortedSessions = [...filteredSessions].sort((a, b) => {
+    if (sortMethod === 'newest') {
+      return b.startedAt - a.startedAt
+    } else {
+      return a.weekNumber - b.weekNumber
+    }
+  })
 
   const createSession = async () => {
     if (activeSession) {
@@ -195,11 +222,13 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
         )
 
         await updateDoc(sessionRef, {
+          // Add student to activeStudents array
           activeStudents: arrayUnion(user?.displayName),
+          // Store student details in students object
           [`students.${user?.displayName}`]: {
-            currentTask: activeSession.activeTask || '',
-            joinedAt: Date.now(),
-            progress: [],
+            code: '',
+            lastUpdated: Date.now(),
+            submissions: [],
           },
         })
       }
@@ -297,15 +326,49 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Sessions</CardTitle>
-          <CardDescription>History of past sessions</CardDescription>
+          <div className='flex justify-between items-center'>
+            <div>
+              <CardTitle>Recent Sessions</CardTitle>
+              <CardDescription>History of past sessions</CardDescription>
+            </div>
+            <Select onValueChange={setSortMethod} value={sortMethod}>
+              <SelectTrigger className='w-[180px]'>
+                <SelectValue placeholder='Sort By' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value='newest'>
+                    <div className='flex items-center'>
+                      <CalendarDays className='mr-2 h-4 w-4' />
+                      Newest first
+                    </div>
+                  </SelectItem>
+                  <SelectItem value='week'>
+                    <div className='flex items-center'>
+                      <Clock className='mr-2 h-4 w-4' />
+                      By week
+                    </div>
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className='mt-4'>
+            <Input
+              type='text'
+              placeholder='Search by week or task...'
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              className='max-w-sm'
+            />
+          </div>
         </CardHeader>
         <CardContent>
-          {sessionHistory.length === 0 ? (
-            <p className='text-muted-foreground'>No previous sessions</p>
+          {sortedSessions.length === 0 ? (
+            <p className='text-muted-foreground'>No sessions found</p>
           ) : (
             <div className='space-y-2'>
-              {sessionHistory.map((session) => (
+              {sortedSessions.map((session) => (
                 <div
                   key={session.id}
                   className='p-4 rounded-lg border bg-card hover:bg-accent transition-colors'
