@@ -42,6 +42,7 @@
     "concurrently": "^9.0.1",
     "express": "^4.21.0",
     "firebase": "^11.0.2",
+    "firebase-admin": "^13.0.2",
     "jose": "^5.9.6",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.441.0",

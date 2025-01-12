@@ -25,6 +25,7 @@ import { useRouter } from 'next/navigation'
 import { doc, setDoc } from 'firebase/firestore'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import Link from 'next/link'
+import { useAuthModal } from '@/contexts/AuthModalContext'
 
 const signUpSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -39,6 +40,7 @@ type SignUpValues = z.infer<typeof signUpSchema>
 const Signup = () => {
   const { toast } = useToast()
   const router = useRouter()
+  const { onClose } = useAuthModal()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [firebaseError, setFirebaseError] = useState<string | null>(null)
   const [createUserWithEmailAndPassword, userCred] =
@@ -93,6 +95,8 @@ const Signup = () => {
       }
 
       await setDoc(doc(fireStore, 'users', newUser.uid), userData)
+
+      onClose()
 
       toast({
         title: 'Success',
