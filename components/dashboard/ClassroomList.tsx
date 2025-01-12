@@ -27,18 +27,8 @@ export function ClassroomList({
               Program: {classroom.curriculumName || 'N/A'}
             </p>
             <div className='flex justify-between items-center'>
-              <span
-                className={`text-sm ${
-                  classroom.activeSession ? 'text-green-500' : 'text-gray-500'
-                }`}
-              >
-                {classroom.activeSession
-                  ? 'Active Session'
-                  : 'No Active Session'}
-              </span>
               <Button
                 onClick={() => onJoinClassroom(classroom.id)}
-                disabled={userRole === 'student' && !classroom.activeSession}
               >
                 Join {userRole === 'teacher' ? 'Class' : 'Session'}
               </Button>

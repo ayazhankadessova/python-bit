@@ -107,15 +107,13 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
               actionButton={
                 <Button
                   onClick={() => startLesson(classroom.id)}
-                  disabled={!classroom.activeSession || isStarting}
+                  disabled={isStarting}
                 >
-                  {classroom.activeSession ? (
+                  {(
                     <>
                       <Play className='mr-2 h-4 w-4' />
                       {isStarting ? 'Joining...' : 'Join Session'}
                     </>
-                  ) : (
-                    'Waiting for teacher'
                   )}
                 </Button>
               }

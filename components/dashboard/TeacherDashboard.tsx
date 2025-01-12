@@ -19,7 +19,7 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
   const { classrooms, isLoading, error} = useTeacherClassrooms(
     user!.uid
   )
-  const activeClassrooms = classrooms.filter((c) => c.activeSession)
+  const activeClassrooms = classrooms.filter((c) => c)
   const totalStudents = classrooms.reduce(
     (acc, classroom) => acc + (classroom.students?.length || 0),
     0

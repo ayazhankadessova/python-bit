@@ -438,10 +438,12 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 ## Jan 12
 
+- [ ] ui for management of classrooms
+- [ ] backticks ui
 - [ ] depreciate test code for assignments
 - [ ] security for firestire stuff
 - [x] join session then u should pre select week task
-- [ ] ui for management of classrooms
+- [ ] show solution to teachers
 - [ ] handle complete assignment
 - [ ] add students when they connect 
 - [x] deploy to vercel
@@ -494,6 +496,7 @@ tutrials data or every tutorials
 
 ## BackLog
 - [ ] GitHub, Logo icons
+- [ ] In Live Session, Markdown rendered renders backticks and ``` in a weird way. Figure out how rehype pretty code is messing is in conflict
 - [ ] Dont send expectedOutput and testCases, they should be in Backend
 - [ ] Search Button Functionality
 - [ ] logo

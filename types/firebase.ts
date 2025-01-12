@@ -93,7 +93,6 @@ export interface ClassroomTC {
   curriculumName: string // yes
   classCode: string // yes
   lastTaughtWeek: number // yes
-  activeSession?: boolean
   createdAt: number //yes
   updatedAt: number //yes
   school: string // yes

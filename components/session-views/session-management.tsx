@@ -1,5 +1,16 @@
-// export default SessionManagement
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
+import { Loader2 } from 'lucide-react'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   collection,
   query,
@@ -13,13 +24,9 @@ import {
   limit,
   arrayUnion,
 } from 'firebase/firestore'
-import type { LiveSession } from '@/types/classrooms/live-session'
 import { fireStore } from '@/firebase/firebase'
-import { Loader2 } from 'lucide-react'
+import type { LiveSession } from '@/types/classrooms/live-session'
 import { formatDate, calculateDuration } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/AuthContext'
-
 
 interface SessionManagementProps {
   classroomId: string
@@ -43,7 +50,6 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  // Monitor active session and session history
   useEffect(() => {
     const fetchSessions = async () => {
       try {
@@ -52,7 +58,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
           `classrooms/${classroomId}/sessions`
         )
 
-        // Set up listener for active session
+        // Active session listener
         const activeSessionQuery = query(
           sessionsRef,
           where('endedAt', '==', null),
@@ -84,11 +90,11 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
           }
         )
 
-        // Fetch session history
+        // Session history listener
         const historyQuery = query(
           sessionsRef,
           orderBy('endedAt', 'desc'),
-          limit(10)
+          // limit(10)
         )
 
         const unsubscribeHistory = onSnapshot(
@@ -123,7 +129,6 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     fetchSessions()
   }, [classroomId])
 
-  // Create new session with complete LiveSession interface
   const createSession = async () => {
     if (activeSession) {
       setError('A session is already in progress')
@@ -140,10 +145,10 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
       const newSession: Omit<LiveSession, 'id'> = {
         startedAt: Date.now(),
         endedAt: null,
-        weekNumber: 1, // You might want to pass this as a prop or calculate it
-        activeTask: '', // Initial empty task
-        students: {}, // Initialize empty students record
-        activeStudents: [], // Initialize empty active students array
+        weekNumber: 1,
+        activeTask: '',
+        students: {},
+        activeStudents: [],
       }
 
       await addDoc(sessionRef, newSession)
@@ -156,7 +161,6 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     }
   }
 
-  // End current session
   const endSession = async () => {
     if (!activeSession) return
 
@@ -184,14 +188,12 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     try {
       setIsLoading(true)
 
-      // First update the activeStudents array in the session document
       if (!isTeacher) {
         const sessionRef = doc(
           fireStore,
           `classrooms/${classroomId}/sessions/${activeSession.id}`
         )
 
-        // Add the student to activeStudents array if they're not already in it
         await updateDoc(sessionRef, {
           activeStudents: arrayUnion(user?.displayName),
           [`students.${user?.displayName}`]: {
@@ -202,7 +204,6 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
         })
       }
 
-      // Then navigate to the session page
       router.push(`/classrooms/${classroomId}/session/${activeSession.id}`)
     } catch (err) {
       console.error('Error joining session:', err)
@@ -212,126 +213,131 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     }
   }
 
-    if (isLoading) {
-      return (
-        <div className='flex items-center justify-center p-4'>
-          <Loader2 className='h-6 w-6 animate-spin' />
-        </div>
-      )
-    }
-
-    if (error) {
-      return <div className='p-4 text-red-600'>Error: {error}</div>
-    }
+  if (isLoading) {
+    return (
+      <div className='flex items-center justify-center p-4'>
+        <Loader2 className='h-6 w-6 animate-spin' />
+      </div>
+    )
+  }
 
   return (
     <div className='space-y-6'>
-      {/* Active Session Management */}
-      <div className='p-4 border rounded-lg bg-white shadow-sm'>
-        <h3 className='text-lg font-medium mb-4'>Session Management </h3>
-        {activeSession ? (
-          <div className='space-y-4'>
-            <div className='text-green-600 font-medium'>
-              Session in progress (Started {formatDate(activeSession.startedAt)}
-              )
-              <div className='text-sm text-gray-500'>
-                Duration: {calculateDuration(activeSession.startedAt, null)}
+      {error && (
+        <Alert variant='destructive'>
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Session Management</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {activeSession ? (
+            <div className='space-y-4'>
+              <div>
+                <h4 className='text-green-600 font-medium'>
+                  Session in progress
+                </h4>
+                <p className='text-sm text-muted-foreground'>
+                  Started {formatDate(activeSession.startedAt)}
+                </p>
+                <p className='text-sm text-muted-foreground'>
+                  Duration: {calculateDuration(activeSession.startedAt, null)}
+                </p>
+                <p className='text-sm text-muted-foreground'>
+                  Week: {activeSession.weekNumber}
+                </p>
+                {activeSession.activeTask && (
+                  <p className='text-sm text-muted-foreground'>
+                    Current Task: {activeSession.activeTask}
+                  </p>
+                )}
               </div>
-              <div className='text-sm text-gray-500'>
-                Week: {activeSession.weekNumber}
+
+              <div className='space-x-4'>
+                <Button onClick={joinSession} disabled={isLoading}>
+                  {isLoading ? (
+                    <Loader2 className='h-4 w-4 animate-spin mr-2' />
+                  ) : null}
+                  Join Session
+                </Button>
+
+                {isTeacher && (
+                  <Button
+                    onClick={endSession}
+                    disabled={isLoading}
+                    variant='destructive'
+                  >
+                    {isLoading ? (
+                      <Loader2 className='h-4 w-4 animate-spin mr-2' />
+                    ) : null}
+                    End Session
+                  </Button>
+                )}
               </div>
-              {activeSession.activeTask && (
-                <div className='text-sm text-gray-500'>
-                  Current Task: {activeSession.activeTask}
-                </div>
+            </div>
+          ) : (
+            <div className='space-y-4'>
+              <p className='text-muted-foreground'>No Active Session</p>
+              {isTeacher && (
+                <Button onClick={createSession} disabled={isLoading}>
+                  {isLoading ? (
+                    <Loader2 className='h-4 w-4 animate-spin mr-2' />
+                  ) : null}
+                  Start New Session
+                </Button>
               )}
             </div>
+          )}
+        </CardContent>
+      </Card>
 
-            {isTeacher && (
-              <button
-                onClick={endSession}
-                disabled={isLoading}
-                className='bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors disabled:opacity-50'
-              >
-                {isLoading ? (
-                  <Loader2 className='h-4 w-4 animate-spin' />
-                ) : (
-                  'End Session'
-                )}
-              </button>
-            )}
-
-            <button
-              onClick={joinSession}
-              disabled={isLoading}
-              className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors disabled:opacity-50'
-            >
-              {isLoading ? (
-                <Loader2 className='h-4 w-4 animate-spin' />
-              ) : (
-                'Join Session'
-              )}
-            </button>
-          </div>
-        ) : (
-          <div className='space-y-4'>
-            <div className='text-gray-600 font-medium'>No Active Session</div>
-            {isTeacher && (
-              <button
-                onClick={createSession}
-                disabled={isLoading}
-                className='bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors disabled:opacity-50'
-              >
-                {isLoading ? (
-                  <Loader2 className='h-4 w-4 animate-spin' />
-                ) : (
-                  'Start New Session'
-                )}
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Session History */}
-      <div className='p-4 border rounded-lg bg-white shadow-sm'>
-        <h3 className='text-lg font-medium mb-4'>Recent Sessions</h3>
-        {sessionHistory.length === 0 ? (
-          <p className='text-gray-500'>No previous sessions</p>
-        ) : (
-          <div className='space-y-2'>
-            {sessionHistory.map((session) => (
-              <div
-                key={session.id}
-                className='p-3 border rounded bg-gray-50 hover:bg-gray-100 transition-colors'
-              >
-                <div className='flex justify-between items-start'>
-                  <div>
-                    <div className='font-medium'>
-                      Week {session.weekNumber} -{' '}
-                      {formatDate(session.startedAt)}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Sessions</CardTitle>
+          <CardDescription>History of past sessions</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {sessionHistory.length === 0 ? (
+            <p className='text-muted-foreground'>No previous sessions</p>
+          ) : (
+            <div className='space-y-2'>
+              {sessionHistory.map((session) => (
+                <div
+                  key={session.id}
+                  className='p-4 rounded-lg border bg-card hover:bg-accent transition-colors'
+                >
+                  <div className='flex justify-between items-start'>
+                    <div>
+                      <h4 className='font-medium'>
+                        Week {session.weekNumber} -{' '}
+                        {formatDate(session.startedAt)}
+                      </h4>
+                      <p className='text-sm text-muted-foreground'>
+                        {formatDate(session.startedAt)} -{' '}
+                        {session.endedAt
+                          ? formatDate(session.endedAt)
+                          : 'In Progress'}
+                      </p>
+                      {session.activeTask && (
+                        <p className='text-sm text-muted-foreground'>
+                          Task: {session.activeTask}
+                        </p>
+                      )}
                     </div>
-                    <div className='text-sm text-gray-500'>
-                      {formatDate(session.startedAt)} -{' '}
-                      {session.endedAt
-                        ? formatDate(session.endedAt)
-                        : 'In Progress'}
-                    </div>
-                    {session.activeTask && (
-                      <div className='text-sm text-gray-500'>
-                        Task: {session.activeTask}
-                      </div>
-                    )}
-                  </div>
-                  <div className='text-sm font-medium text-gray-600'>
-                    {session.duration}
+                    <span className='text-sm font-medium text-muted-foreground'>
+                      {session.duration}
+                    </span>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }
