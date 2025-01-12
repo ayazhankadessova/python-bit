@@ -22,20 +22,16 @@ import {
 } from '@/components/ui/select'
 import {
   collection,
-  query,
-  orderBy,
   addDoc,
   updateDoc,
   doc,
-  onSnapshot,
   FirestoreError,
-  where,
-  limit,
   arrayUnion,
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import type { LiveSession } from '@/types/classrooms/live-session'
 import { formatDate, calculateDuration } from '@/lib/utils'
+import { useSessions } from '@/hooks/classroom/sessions/useSessions'
 
 interface SessionManagementProps {
   classroomId: string
@@ -51,94 +47,18 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
   isTeacher,
 }) => {
   const { user } = useAuth()
-  const [activeSession, setActiveSession] = useState<LiveSession | null>(null)
-  const [sessionHistory, setSessionHistory] = useState<SessionWithDuration[]>(
-    []
-  )
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  // const [activeSession, setActiveSession] = useState<LiveSession | null>(null)
+  // const [sessionHistory, setSessionHistory] = useState<SessionWithDuration[]>(
+  //   []
+  // )
+  // const [isLoading, setIsLoading] = useState(false)
+  // const [error, setError] = useState<string | null>(null)
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('newest')
   const router = useRouter()
 
-  useEffect(() => {
-    const fetchSessions = async () => {
-      try {
-        const sessionsRef = collection(
-          fireStore,
-          `classrooms/${classroomId}/sessions`
-        )
-
-        // Active session listener
-        const activeSessionQuery = query(
-          sessionsRef,
-          where('endedAt', '==', null),
-          orderBy('startedAt', 'desc'),
-          limit(1)
-        )
-
-        const unsubscribeActive = onSnapshot(
-          activeSessionQuery,
-          (snapshot) => {
-            if (!snapshot.empty) {
-              const sessionData = snapshot.docs[0].data() as Omit<
-                LiveSession,
-                'id'
-              >
-              setActiveSession({
-                id: snapshot.docs[0].id,
-                ...sessionData,
-              })
-            } else {
-              setActiveSession(null)
-            }
-            setIsLoading(false)
-          },
-          (error) => {
-            console.error('Error listening to active session:', error)
-            setError(error.message)
-            setIsLoading(false)
-          }
-        )
-
-        // Session history listener
-        const historyQuery = query(
-          sessionsRef,
-          where('endedAt', '!=', null),
-          orderBy('endedAt', 'desc')
-        )
-
-        const unsubscribeHistory = onSnapshot(
-          historyQuery,
-          (snapshot) => {
-            const sessions = snapshot.docs.map((doc) => {
-              const data = doc.data() as Omit<LiveSession, 'id'>
-              return {
-                id: doc.id,
-                ...data,
-                duration: calculateDuration(data.startedAt, data.endedAt),
-              }
-            })
-            setSessionHistory(sessions)
-          },
-          (error) => {
-            console.error('Error listening to session history:', error)
-          }
-        )
-
-        return () => {
-          unsubscribeActive()
-          unsubscribeHistory()
-        }
-      } catch (err) {
-        const firebaseError = err as FirestoreError
-        setError(firebaseError.message)
-        setIsLoading(false)
-      }
-    }
-
-    fetchSessions()
-  }, [classroomId])
+  const { activeSession, sessionHistory, isLoading, error } =
+    useSessions(classroomId)
 
   // Filter and sort sessions
   const filteredSessions = sessionHistory.filter((session) => {

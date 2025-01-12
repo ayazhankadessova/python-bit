@@ -441,14 +441,19 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [x] ui for management of classrooms
 - [x] backticks ui
 - [x] depreciate test code for assignments
-- [ ] security for firestire stuff
+- [ ] security for firestore stuff
 - [x] join session then u should pre select week task
 - [x] del active session from classroom interface
+
+
+## Jan 13
+
+- [ ] del session
+- [ ]  add more weeks
+- [ ]  think of sys des for handle complete assignment
 - [ ] show solution to teachers
-- [ ] handle complete assignment
 - [ ] add students when they connect 
 - [x] deploy to vercel
-- [ ] add more weeks
 - [x] remove selectedStudent
 - [ ] get project progress information
 - [ ] add like uncomment this code 
