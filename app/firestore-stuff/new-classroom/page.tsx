@@ -26,7 +26,6 @@ const CurriculumManager = () => {
     starterCode: '',
     starterFunctionName: '',
     examples: [],
-    testCode: '',
   })
 
   const handleCurriculumSubmit = async (e: React.FormEvent) => {
@@ -105,114 +104,6 @@ const CurriculumManager = () => {
               <CardTitle>Create Curriculum</CardTitle>
             </CardHeader>
             <CardContent>
-              {/* <form onSubmit={handleCurriculumSubmit} className='space-y-6'>
-                <div className='space-y-2'>
-                  <Label>Title</Label>
-                  <Input
-                    value={curriculum.title}
-                    onChange={(e) =>
-                      setCurriculum((prev) => ({
-                        ...prev,
-                        title: e.target.value,
-                      }))
-                    }
-                    placeholder='Python for Beginners'
-                  />
-                </div>
-
-                <div className='space-y-2'>
-                  <Label>Description</Label>
-                  <Textarea
-                    value={curriculum.description}
-                    onChange={(e) =>
-                      setCurriculum((prev) => ({
-                        ...prev,
-                        description: e.target.value,
-                      }))
-                    }
-                    placeholder='Course description...'
-                  />
-                </div>
-
-                <div className='space-y-4'>
-                  <div className='flex justify-between items-center'>
-                    <Label>Weeks</Label>
-                    <Button
-                      type='button'
-                      onClick={addWeek}
-                      variant='outline'
-                      size='sm'
-                    >
-                      <Plus className='w-4 h-4 mr-2' />
-                      Add Week
-                    </Button>
-                  </div>
-
-                  {curriculum.weeks.map((week, index) => (
-                    <Card key={index} className='p-4'>
-                      <div className='space-y-4'>
-                        <div className='flex justify-between items-center'>
-                          <h3 className='font-medium'>
-                            Week {week.weekNumber}
-                          </h3>
-                          <Button
-                            variant='ghost'
-                            size='sm'
-                            onClick={() => {
-                              setCurriculum((prev) => ({
-                                ...prev,
-                                weeks: prev.weeks.filter((_, i) => i !== index),
-                              }))
-                            }}
-                          >
-                            <Trash className='w-4 h-4' />
-                          </Button>
-                        </div>
-
-                        <Input
-                          value={week.title}
-                          onChange={(e) => {
-                            setCurriculum((prev) => ({
-                              ...prev,
-                              weeks: prev.weeks.map((w, i) =>
-                                i === index
-                                  ? { ...w, title: e.target.value }
-                                  : w
-                              ),
-                            }))
-                          }}
-                          placeholder='Week title'
-                        />
-
-                        <Textarea
-                          value={week.tutorialContent.theory}
-                          onChange={(e) => {
-                            setCurriculum((prev) => ({
-                              ...prev,
-                              weeks: prev.weeks.map((w, i) =>
-                                i === index
-                                  ? {
-                                      ...w,
-                                      tutorialContent: {
-                                        ...w.tutorialContent,
-                                        theory: e.target.value,
-                                      },
-                                    }
-                                  : w
-                              ),
-                            }))
-                          }}
-                          placeholder='Theory content (markdown)'
-                        />
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-
-                <Button type='submit' className='w-full'>
-                  Save Curriculum
-                </Button>
-              </form> */}
 
               <form onSubmit={handleCurriculumSubmit} className='space-y-6'>
                 <div className='space-y-2'>
@@ -739,21 +630,6 @@ const CurriculumManager = () => {
                       </div>
                     </Card>
                   ))}
-                </div>
-
-                <div className='space-y-2'>
-                  <Label>Test Code</Label>
-                  <Textarea
-                    value={assignment.testCode}
-                    onChange={(e) =>
-                      setAssignment((prev) => ({
-                        ...prev,
-                        testCode: e.target.value,
-                      }))
-                    }
-                    placeholder='def test_solution():'
-                    className='font-mono min-h-[200px]'
-                  />
                 </div>
 
                 <Button type='submit' className='w-full'>

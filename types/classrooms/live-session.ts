@@ -67,7 +67,6 @@ export interface Assignment {
   starterCode: string
   starterFunctionName: string
   examples: Example[]
-  testCode: string
 }
 
 export interface Example {

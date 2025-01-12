@@ -19,7 +19,6 @@ class Assignment:
     starterCode: str
     starterFunctionName: str
     examples: List[Example]
-    testCode: Optional[str] = None
 
 class AssignmentLoader:
     _instance = None
@@ -64,7 +63,6 @@ class AssignmentLoader:
                         starterCode=assignment_data['starterCode'],
                         starterFunctionName=assignment_data['starterFunctionName'],
                         examples=examples,
-                        testCode=assignment_data.get('testCode')
                     )
 
         # print success message

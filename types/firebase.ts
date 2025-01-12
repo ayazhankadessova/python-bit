@@ -76,12 +76,6 @@ interface WeeklyProgress {
   endedAt?: number
 }
 
-
-interface StudentClassroom {
-  classroomId: string
-  joinedAt: number
-}
-
 // Classes in files
 
 export interface ClassroomTC {
