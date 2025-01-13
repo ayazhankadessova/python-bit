@@ -9,7 +9,12 @@ interface UseSessionActionsReturn {
   endSession: (sessionId: string) => Promise<boolean>
   joinSession: (sessionId: string) => Promise<boolean>
   deleteSession: (sessionId: string) => Promise<boolean>
-  isLoading: boolean
+  isLoadingActions: {
+    createSession: boolean
+    endSession: boolean
+    joinSession: boolean
+    deleteSession: boolean
+  }
   error: string | null
 }
 
@@ -18,7 +23,10 @@ export function useSessionActions(
   username: string | undefined,
   isTeacher: boolean
 ): UseSessionActionsReturn {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingCreateSession, setIsLoadingCreateSession] = useState(false)
+  const [isLoadingEndSession, setIsLoadingEndSession] = useState(false)
+  const [isLoadingJoinSession, setIsLoadingJoinSession] = useState(false)
+  const [isLoadingDeleteSession, setIsLoadingDeleteSession] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const createSession = async (): Promise<boolean> => {
@@ -28,7 +36,7 @@ export function useSessionActions(
     }
 
     try {
-      setIsLoading(true)
+      setIsLoadingCreateSession(true)
       setError(null)
 
       const newSession: Omit<LiveSession, 'id'> = {
@@ -47,7 +55,7 @@ export function useSessionActions(
       setError(error.message)
       return false
     } finally {
-      setIsLoading(false)
+      setIsLoadingCreateSession(false)
     }
   }
 
@@ -58,7 +66,7 @@ export function useSessionActions(
     }
 
     try {
-      setIsLoading(true)
+      setIsLoadingEndSession(true)
       setError(null)
 
       await sessionsService.endSession(classroomId, sessionId)
@@ -68,7 +76,7 @@ export function useSessionActions(
       setError(error.message)
       return false
     } finally {
-      setIsLoading(false)
+      setIsLoadingEndSession(false)
     }
   }
 
@@ -79,7 +87,7 @@ export function useSessionActions(
     }
 
     try {
-      setIsLoading(true)
+      setIsLoadingJoinSession(true)
       setError(null)
 
       if (!isTeacher) {
@@ -95,7 +103,7 @@ export function useSessionActions(
       setError('Failed to join session' + error)
       return false
     } finally {
-      setIsLoading(false)
+      setIsLoadingJoinSession(false)
     }
   }
 
@@ -106,7 +114,7 @@ export function useSessionActions(
     }
 
     try {
-      setIsLoading(true)
+      setIsLoadingDeleteSession(true)
       setError(null)
       await sessionsService.deleteSession(classroomId, sessionId)
       return true
@@ -115,7 +123,7 @@ export function useSessionActions(
       setError(error.message)
       return false
     } finally {
-      setIsLoading(false)
+      setIsLoadingDeleteSession(false)
     }
   }
 
@@ -124,7 +132,12 @@ export function useSessionActions(
     endSession,
     joinSession,
     deleteSession,
-    isLoading,
+    isLoadingActions: {
+      createSession: isLoadingCreateSession,
+      endSession: isLoadingEndSession,
+      joinSession: isLoadingJoinSession,
+      deleteSession: isLoadingDeleteSession,
+    },
     error,
   }
 }
