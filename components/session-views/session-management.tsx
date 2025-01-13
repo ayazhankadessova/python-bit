@@ -23,7 +23,8 @@ import {
 import { useSessionActions } from '@/hooks/classroom/sessions/useSessionActions'
 import { formatDate, calculateDuration } from '@/lib/utils'
 import { useSessions } from '@/hooks/classroom/sessions/useSessions'
-import { useSessionFiltering } from '@/hooks/classroom/sessions/useSessionFiltering'
+import { useSessionFiltering, SortMethod } from '@/hooks/classroom/sessions/useSessionFiltering'
+import { useToast } from '@/hooks/use-toast'
 
 interface SessionManagementProps {
   classroomId: string
@@ -36,6 +37,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
 }) => {
   const { user } = useAuth()
   const router = useRouter()
+  const { toast } = useToast()
 
   const { activeSession, sessionHistory, isLoading, error } =
     useSessions(classroomId)
@@ -59,6 +61,12 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     const success = await joinSession(activeSession.id)
     if (success) {
       router.push(`/classrooms/${classroomId}/session/${activeSession.id}`)
+    } else {
+      toast({
+        title: 'Error',
+        description: 'Failed to join session',
+        variant: 'destructive',
+      })
     }
   }
 
@@ -151,7 +159,10 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
               <CardTitle>Recent Sessions</CardTitle>
               <CardDescription>History of past sessions</CardDescription>
             </div>
-            <Select onValueChange={setSortMethod} value={sortMethod}>
+            <Select
+              onValueChange={(value) => setSortMethod(value as SortMethod)}
+              value={sortMethod}
+            >
               <SelectTrigger className='w-[180px]'>
                 <SelectValue placeholder='Sort By' />
               </SelectTrigger>

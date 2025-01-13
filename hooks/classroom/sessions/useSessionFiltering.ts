@@ -2,7 +2,7 @@
 import { useState, useMemo } from 'react'
 import type { SessionWithDuration } from '@/types/classrooms/live-session'
 
-type SortMethod = 'newest' | 'week'
+export type SortMethod = 'newest' | 'week'
 
 const normalizeText = (text: string): string => {
   return text

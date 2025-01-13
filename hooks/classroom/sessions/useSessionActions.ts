@@ -91,7 +91,7 @@ export function useSessionActions(
       return true
     } catch (err) {
       const error = err as FirestoreError
-      setError('Failed to join session')
+      setError('Failed to join session' + error)
       return false
     } finally {
       setIsLoading(false)
