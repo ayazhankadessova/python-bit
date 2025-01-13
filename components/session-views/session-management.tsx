@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, CalendarDays, Clock } from 'lucide-react'
+import { Loader2, CalendarDays, Clock, Trash2 } from 'lucide-react'
 import {
   Card,
   CardHeader,
@@ -23,7 +23,10 @@ import {
 import { useSessionActions } from '@/hooks/classroom/sessions/useSessionActions'
 import { formatDate, calculateDuration } from '@/lib/utils'
 import { useSessions } from '@/hooks/classroom/sessions/useSessions'
-import { useSessionFiltering, SortMethod } from '@/hooks/classroom/sessions/useSessionFiltering'
+import {
+  useSessionFiltering,
+  SortMethod,
+} from '@/hooks/classroom/sessions/useSessionFiltering'
 import { useToast } from '@/hooks/use-toast'
 
 interface SessionManagementProps {
@@ -38,6 +41,33 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
   const { user } = useAuth()
   const router = useRouter()
   const { toast } = useToast()
+  const [deletingSessionId, setDeletingSessionId] = useState<string | null>(
+    null
+  )
+
+  const handleDelete =
+    (sessionId: string) =>
+    async (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault()
+      setDeletingSessionId(sessionId)
+      try {
+        const success = await deleteSession(sessionId)
+        if (success) {
+          toast({
+            title: 'Success',
+            description: 'Session deleted successfully',
+          })
+        } else {
+          toast({
+            title: 'Error',
+            description: 'Failed to delete session',
+            variant: 'destructive',
+          })
+        }
+      } finally {
+        setDeletingSessionId(null)
+      }
+    }
 
   const { activeSession, sessionHistory, isLoading, error } =
     useSessions(classroomId)
@@ -50,11 +80,8 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     filteredAndSortedSessions,
   } = useSessionFiltering(sessionHistory)
 
-  const { createSession, endSession, joinSession } = useSessionActions(
-    classroomId,
-    user?.displayName,
-    isTeacher
-  )
+  const { createSession, endSession, joinSession, deleteSession } =
+    useSessionActions(classroomId, user?.displayName, isTeacher)
 
   const handleJoinSession = async () => {
     if (!activeSession) return
@@ -69,6 +96,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
       })
     }
   }
+
 
   if (isLoading) {
     return (
@@ -225,6 +253,23 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
                     <span className='text-sm font-medium text-muted-foreground'>
                       {session.duration}
                     </span>
+                    {isTeacher &&
+                      session.endedAt && ( // Only show delete button for ended sessions
+                        <Button
+                          variant='ghost'
+                          size='sm'
+                          className='text-destructive hover:text-destructive hover:bg-destructive/10'
+                          onClick={handleDelete(session.id)}
+                          disabled={deletingSessionId === session.id}
+                        >
+                          {deletingSessionId === session.id ? (
+                            <Loader2 className='h-4 w-4 animate-spin' />
+                          ) : (
+                            <Trash2 className='h-4 w-4' />
+                          )}
+                          <span className='sr-only'>Delete session</span>
+                        </Button>
+                      )}
                   </div>
                 </div>
               ))}

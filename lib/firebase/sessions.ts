@@ -10,6 +10,7 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  deleteDoc,
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import type { LiveSession } from '@/types/classrooms/live-session'
@@ -121,4 +122,12 @@ export const sessionsService = {
       },
     })
   },
+
+  deleteSession: async(classroomId: string, documentId: string) => {
+    const sessionRef = doc(
+      fireStore,
+      `classrooms/${classroomId}/sessions/${documentId}`
+    )
+    await deleteDoc(sessionRef)
+  }
 }

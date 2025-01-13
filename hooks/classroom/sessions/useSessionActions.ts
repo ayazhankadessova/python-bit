@@ -8,6 +8,7 @@ interface UseSessionActionsReturn {
   createSession: () => Promise<boolean>
   endSession: (sessionId: string) => Promise<boolean>
   joinSession: (sessionId: string) => Promise<boolean>
+  deleteSession: (sessionId: string) => Promise<boolean>
   isLoading: boolean
   error: string | null
 }
@@ -98,10 +99,31 @@ export function useSessionActions(
     }
   }
 
+  const deleteSession = async (sessionId: string): Promise<boolean> => {
+    if (!isTeacher) {
+      setError('Only teachers can delete sessions')
+      return false
+    }
+
+    try {
+      setIsLoading(true)
+      setError(null)
+      await sessionsService.deleteSession(classroomId, sessionId)
+      return true
+    } catch (err) {
+      const error = err as FirestoreError
+      setError(error.message)
+      return false
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return {
     createSession,
     endSession,
     joinSession,
+    deleteSession,
     isLoading,
     error,
   }
