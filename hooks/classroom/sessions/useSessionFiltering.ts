@@ -4,39 +4,68 @@ import type { SessionWithDuration } from '@/types/classrooms/live-session'
 
 type SortMethod = 'newest' | 'week'
 
-interface UseSessionFilteringReturn {
-  searchText: string
-  setSearchText: (text: string) => void
-  sortMethod: SortMethod
-  setSortMethod: (method: SortMethod) => void
-  filteredAndSortedSessions: SessionWithDuration[]
+const normalizeText = (text: string): string => {
+  return text
+    .toLowerCase()
+    .replace(/-/g, ' ') // Replace hyphens with spaces
+    .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+    .trim()
 }
 
-export function useSessionFiltering(
-  sessions: SessionWithDuration[]
-): UseSessionFilteringReturn {
+// Helper function to convert week numbers to text and vice versa
+// 1, week 1, week one, one
+const weekNumberVariations = (weekNum: number): string[] => {
+  const variations = [
+    weekNum.toString(),                   
+    `week ${weekNum}`,                  
+    `week ${numberToWord(weekNum)}`,       
+    numberToWord(weekNum)                 
+  ]
+  return variations
+}
+
+// Helper to convert numbers to words (for common use cases 1-12)
+const numberToWord = (num: number): string => {
+  const words = [
+    'zero', 'one', 'two', 'three', 'four', 
+    'five', 'six', 'seven', 'eight', 'nine',
+    'ten', 'eleven', 'twelve'
+  ]
+  return words[num] || num.toString()
+}
+
+export function useSessionFiltering(sessions: SessionWithDuration[]) {
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState<SortMethod>('newest')
 
-  // Use useMemo to avoid recalculating on every render
   const filteredAndSortedSessions = useMemo(() => {
-    // First filter
-    const filteredSessions = sessions.filter((session) => {
-      if (searchText === '') return true
+    const filtered = sessions.filter((session) => {
+      if (!searchText) return true
 
-      const searchLower = searchText.toLowerCase()
-      const weekMatch = session.weekNumber.toString().includes(searchLower)
-      const taskMatch = session.activeTask?.toLowerCase().includes(searchLower)
+      const normalizedSearch = normalizeText(searchText)
+      const searchLower = searchText.toLowerCase().trim()
 
-      return weekMatch || taskMatch
+      // Check all possible variations of the week number
+      const weekMatches = weekNumberVariations(session.weekNumber).some(
+        (variation) => variation.toLowerCase().includes(searchLower)
+      )
+
+      // Check task name
+      const taskMatch = session.activeTask
+        ? normalizeText(session.activeTask).includes(normalizedSearch)
+        : false
+
+      return weekMatches || taskMatch
     })
 
-    // Then sort
-    return [...filteredSessions].sort((a, b) => {
-      if (sortMethod === 'newest') {
-        return b.startedAt - a.startedAt
-      } else {
-        return a.weekNumber - b.weekNumber
+    return filtered.sort((a, b) => {
+      switch (sortMethod) {
+        case 'newest':
+          return b.startedAt - a.startedAt
+        case 'week':
+          return a.weekNumber - b.weekNumber
+        default:
+          return 0
       }
     })
   }, [sessions, searchText, sortMethod])
