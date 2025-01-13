@@ -6,6 +6,10 @@ import {
   orderBy,
   limit,
   onSnapshot,
+  addDoc,
+  doc,
+  updateDoc,
+  arrayUnion,
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import type { LiveSession } from '@/types/classrooms/live-session'
@@ -30,7 +34,7 @@ export const sessionsService = {
     return query(ref, where('endedAt', '!=', null), orderBy('endedAt', 'desc'))
   },
 
-  // Subscription helpers
+  // Active & History helper
   subscribeToActiveSession: (
     classroomId: string,
     onData: (session: LiveSession | null) => void,
@@ -72,5 +76,49 @@ export const sessionsService = {
       },
       onError
     )
+  },
+
+
+  // Create, Join, End Sessions
+
+  createSession: async (
+    classroomId: string,
+    sessionData: Omit<LiveSession, 'id'>
+  ) => {
+    const sessionsRef = collection(
+      fireStore,
+      `classrooms/${classroomId}/sessions`
+    )
+    const docRef = await addDoc(sessionsRef, sessionData)
+    return docRef.id
+  },
+
+  endSession: async (classroomId: string, sessionId: string) => {
+    const sessionRef = doc(
+      fireStore,
+      `classrooms/${classroomId}/sessions/${sessionId}`
+    )
+    await updateDoc(sessionRef, {
+      endedAt: Date.now(),
+    })
+  },
+
+  addStudentToSession: async (
+    classroomId: string,
+    sessionId: string,
+    username: string
+  ) => {
+    const sessionRef = doc(
+      fireStore,
+      `classrooms/${classroomId}/sessions/${sessionId}`
+    )
+    await updateDoc(sessionRef, {
+      activeStudents: arrayUnion(username),
+      [`students.${username}`]: {
+        code: '',
+        lastUpdated: Date.now(),
+        submissions: [],
+      },
+    })
   },
 }

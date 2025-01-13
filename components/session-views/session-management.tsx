@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, CalendarDays, Clock } from 'lucide-react'
@@ -20,26 +20,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  doc,
-  FirestoreError,
-  arrayUnion,
-} from 'firebase/firestore'
-import { fireStore } from '@/firebase/firebase'
-import type { LiveSession } from '@/types/classrooms/live-session'
+import { useSessionActions } from '@/hooks/classroom/sessions/useSessionActions'
 import { formatDate, calculateDuration } from '@/lib/utils'
 import { useSessions } from '@/hooks/classroom/sessions/useSessions'
+import { useSessionFiltering } from '@/hooks/classroom/sessions/useSessionFiltering'
 
 interface SessionManagementProps {
   classroomId: string
   isTeacher: boolean
-}
-
-interface SessionWithDuration extends LiveSession {
-  duration?: string
 }
 
 export const SessionManagement: React.FC<SessionManagementProps> = ({
@@ -47,118 +35,30 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
   isTeacher,
 }) => {
   const { user } = useAuth()
-  // const [activeSession, setActiveSession] = useState<LiveSession | null>(null)
-  // const [sessionHistory, setSessionHistory] = useState<SessionWithDuration[]>(
-  //   []
-  // )
-  // const [isLoading, setIsLoading] = useState(false)
-  // const [error, setError] = useState<string | null>(null)
-  const [searchText, setSearchText] = useState('')
-  const [sortMethod, setSortMethod] = useState('newest')
   const router = useRouter()
 
   const { activeSession, sessionHistory, isLoading, error } =
     useSessions(classroomId)
 
-  // Filter and sort sessions
-  const filteredSessions = sessionHistory.filter((session) => {
-    const searchLower = searchText.toLowerCase()
-    const weekMatch = session.weekNumber.toString().includes(searchLower)
-    const taskMatch = session.activeTask?.toLowerCase().includes(searchLower)
-    return searchText === '' || weekMatch || taskMatch
-  })
+  const {
+    searchText,
+    setSearchText,
+    sortMethod,
+    setSortMethod,
+    filteredAndSortedSessions,
+  } = useSessionFiltering(sessionHistory)
 
-  const sortedSessions = [...filteredSessions].sort((a, b) => {
-    if (sortMethod === 'newest') {
-      return b.startedAt - a.startedAt
-    } else {
-      return a.weekNumber - b.weekNumber
-    }
-  })
+  const { createSession, endSession, joinSession } = useSessionActions(
+    classroomId,
+    user?.displayName,
+    isTeacher
+  )
 
-  const createSession = async () => {
-    if (activeSession) {
-      setError('A session is already in progress')
-      return
-    }
-
-    try {
-      setIsLoading(true)
-      const sessionRef = collection(
-        fireStore,
-        `classrooms/${classroomId}/sessions`
-      )
-
-      const newSession: Omit<LiveSession, 'id'> = {
-        startedAt: Date.now(),
-        endedAt: null,
-        weekNumber: 1,
-        activeTask: '',
-        students: {},
-        activeStudents: [],
-      }
-
-      await addDoc(sessionRef, newSession)
-      setError(null)
-    } catch (err) {
-      const firebaseError = err as FirestoreError
-      setError(firebaseError.message)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const endSession = async () => {
+  const handleJoinSession = async () => {
     if (!activeSession) return
-
-    try {
-      setIsLoading(true)
-      const sessionRef = doc(
-        fireStore,
-        `classrooms/${classroomId}/sessions/${activeSession.id}`
-      )
-      await updateDoc(sessionRef, {
-        endedAt: Date.now(),
-      })
-      setError(null)
-    } catch (err) {
-      const firebaseError = err as FirestoreError
-      setError(firebaseError.message)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const joinSession = async () => {
-    if (!activeSession) return
-
-    try {
-      setIsLoading(true)
-
-      if (!isTeacher) {
-        const sessionRef = doc(
-          fireStore,
-          `classrooms/${classroomId}/sessions/${activeSession.id}`
-        )
-
-        await updateDoc(sessionRef, {
-          // Add student to activeStudents array
-          activeStudents: arrayUnion(user?.displayName),
-          // Store student details in students object
-          [`students.${user?.displayName}`]: {
-            code: '',
-            lastUpdated: Date.now(),
-            submissions: [],
-          },
-        })
-      }
-
+    const success = await joinSession(activeSession.id)
+    if (success) {
       router.push(`/classrooms/${classroomId}/session/${activeSession.id}`)
-    } catch (err) {
-      console.error('Error joining session:', err)
-      setError('Failed to join session')
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -175,7 +75,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
       {error && (
         <Alert variant='destructive'>
           <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{error.message}</AlertDescription>
         </Alert>
       )}
 
@@ -207,7 +107,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
               </div>
 
               <div className='space-x-4'>
-                <Button onClick={joinSession} disabled={isLoading}>
+                <Button onClick={handleJoinSession} disabled={isLoading}>
                   {isLoading ? (
                     <Loader2 className='h-4 w-4 animate-spin mr-2' />
                   ) : null}
@@ -216,7 +116,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
 
                 {isTeacher && (
                   <Button
-                    onClick={endSession}
+                    onClick={() => endSession(activeSession.id)}
                     disabled={isLoading}
                     variant='destructive'
                   >
@@ -284,11 +184,11 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
           </div>
         </CardHeader>
         <CardContent>
-          {sortedSessions.length === 0 ? (
+          {sessionHistory.length === 0 ? (
             <p className='text-muted-foreground'>No sessions found</p>
           ) : (
             <div className='space-y-2'>
-              {sortedSessions.map((session) => (
+              {filteredAndSortedSessions.map((session) => (
                 <div
                   key={session.id}
                   className='p-4 rounded-lg border bg-card hover:bg-accent transition-colors'
