@@ -117,9 +117,13 @@ export function StudentSessionView({
           setCurrentWeek(session.weekNumber)
         }
 
-        // Set student code if available
-        if (user?.displayName && session.students[user.displayName]) {
-          setStudentCode(session.students[user.displayName].code)
+        // Update student code if it exists in the session
+        if (user?.displayName && session.students?.[user.displayName]) {
+          const studentData = session.students[user?.displayName]
+          // Only update if the code is different to prevent endless loops
+          setStudentCode(studentData.code)
+          setEditorInitialCode(studentData.code)  
+         
         }
       }
     })
