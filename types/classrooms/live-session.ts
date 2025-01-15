@@ -26,6 +26,10 @@ export interface LiveSession {
   activeStudents: string[]
 }
 
+export interface SessionWithDuration extends LiveSession {
+  duration?: string
+}
+
 export interface Submission {
   classroomId: string
   sessionId: string

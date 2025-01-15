@@ -441,20 +441,30 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [x] ui for management of classrooms
 - [x] backticks ui
 - [x] depreciate test code for assignments
-- [ ] security for firestire stuff
+- [ ] security for firestore stuff
 - [x] join session then u should pre select week task
 - [x] del active session from classroom interface
+
+
+## Jan 13
+
+- [x] del session
+- [ ]  add more weeks
+- [ ]  think of sys des for handle complete assignment
 - [ ] show solution to teachers
-- [ ] handle complete assignment
 - [ ] add students when they connect 
 - [x] deploy to vercel
-- [ ] add more weeks
 - [x] remove selectedStudent
+- [ ] have to upd the code before sending?
+- [ ] 
 - [ ] get project progress information
 - [ ] add like uncomment this code 
 
 
 - add caching to all firestore opers
+
+- Avatar circles (students) https://magicui.design/docs/components/avatar-circles
+- confetti https://magicui.design/docs/components/confetti
 
 ## jan 11 
 

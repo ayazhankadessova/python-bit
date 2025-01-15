@@ -7,6 +7,7 @@ import {
   useState,
   useCallback,
   useRef,
+  useMemo,
 } from 'react'
 import { auth, fireStore } from '@/firebase/firebase'
 import { doc, onSnapshot } from 'firebase/firestore'
@@ -133,14 +134,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await subscribeToUserData(auth.currentUser.uid)
   }, [subscribeToUserData])
 
-  const value: AuthContextType = {
+  const value: AuthContextType = useMemo(() => ({
     user: userData,
     loading,
     signOut,
     refreshUserData,
-  }
+  }), [userData, loading, signOut, refreshUserData])
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {
