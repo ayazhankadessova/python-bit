@@ -221,7 +221,7 @@ export default function HomePage() {
 
             <Card className='p-6 border border-blue-500/20'>
               <p className='text-muted-foreground text-lg leading-relaxed'>
-                We're revolutionizing Python learning through{' '}
+                We are revolutionizing Python learning through 
                 <HighlightedText>three powerful pillars</HighlightedText>:
                 <HighlightedText>engaging tutorials</HighlightedText> that make
                 concepts click,
@@ -231,7 +231,7 @@ export default function HomePage() {
                 code to life. Students master Python through hands-on
                 experiences that feel like adventures, not lessons. By combining
                 these three core elements with immediate guidance anywhere,
-                we're building confident programmers who can turn their ideas
+                we are building confident programmers who can turn their ideas
                 into reality.
               </p>
 
