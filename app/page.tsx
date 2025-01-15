@@ -66,6 +66,21 @@ const FeatureItem = ({
   </div>
 )
 
+const HighlightedText = ({ children }) => (
+  <span className='bg-gradient-to-r from-blue-500/20 to-purple-500/20 px-1 rounded font-semibold'>
+    {children}
+  </span>
+)
+
+const StatsCard = ({ number, text }) => (
+  <div className='bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-primary font-medium shadow-sm border border-blue-200/50 hover:shadow-md hover:from-blue-200 hover:via-blue-300 hover:to-blue-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-blue-900/70 dark:via-blue-800/70 dark:to-blue-900/70 dark:border-blue-700/20 dark:hover:from-blue-800/70 dark:hover:via-blue-700/70 dark:hover:to-blue-800/70 p-4 rounded-lg text-center'>
+    <div className='text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent'>
+      {number}
+    </div>
+    <div className='text-sm text-muted-foreground'>{text}</div>
+  </div>
+)
+
 export default function HomePage() {
   const { user, loading, signOut } = useAuth()
   const router = useRouter()
@@ -166,51 +181,93 @@ export default function HomePage() {
       {/* Why Python Bit Section */}
       <section className='container mx-auto px-4 py-16 md:py-20'>
         <div className='flex flex-col items-center gap-12 max-w-4xl mx-auto'>
+          {/* Problem Section */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className='space-y-6 text-center'
+            className='space-y-6'
           >
-            <h2 className='text-3xl font-bold'>
-              Why are young coders stuck between blocks and real programming?
-            </h2>
-            <p className='text-muted-foreground text-lg'>
-              The leap from block to text programming leaves 50% of students
-              behind, crushing their confidence and creativity. Traditional
-              learning methods force students to choose between engaging
-              block-based coding or intimidating text syntax, making Python's
-              power seem out of reach.
-            </p>
-            <div className='relative w-full max-w-2xl mx-auto'>
-              <div className='shadow-2xl shadow-primary/50 bg-gradient-to-r from-primary to-purple-600 rounded-2xl p-1'>
-                <Image
-                  src='/home/student.png'
-                  alt='Students struggling with programming'
-                  width={800}
-                  height={500}
-                  className='object-cover w-full h-auto rounded-xl'
-                />
-              </div>
+            <div className='flex flex-col items-center text-center space-y-4'>
+              <h2 className='text-3xl font-bold'>
+                Why do students fear real programming?
+              </h2>
             </div>
+
+            <Card className='p-6 border border-blue-500/20'>
+              <p className='text-muted-foreground text-lg leading-relaxed'>
+                <HighlightedText>Millions of students</HighlightedText> hit a
+                wall when moving from block-based to text programming, with{' '}
+                <HighlightedText>50% losing confidence</HighlightedText> in the
+                transition. While block coding makes programming accessible, the
+                leap to
+                <HighlightedText> professional languages</HighlightedText> like
+                Python feels like stepping into darkness. Their creative
+                potential gets trapped between colorful blocks and intimidating
+                text syntax, often crushing their dreams of becoming real
+                developers.
+              </p>
+
+              <div className='grid grid-cols-2 gap-4 mt-6'>
+                <StatsCard number='50%' text='Students Lose Confidence' />
+                <StatsCard number='35M+' text='Affected Students' />
+              </div>
+            </Card>
+
+            <motion.div
+              initial={{ filter: 'blur(10px)', opacity: 0 }}
+              whileInView={{ filter: 'blur(0px)', opacity: 1 }}
+              transition={{ duration: 1 }}
+              className='max-w-lg mx-auto'
+            >
+              <Image
+                src='/home/student.png'
+                alt='Students struggling with programming'
+                width={300}
+                height={500}
+                className='object-cover w-full h-auto rounded-xl shadow-2xl shadow-blue-500/50 transition-all duration-700 ease-in-out'
+              />
+            </motion.div>
           </motion.div>
 
+          {/* Solution Section */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className='space-y-6 text-center'
+            className='space-y-6'
           >
-            <h2 className='text-3xl font-bold'>
-              Where blocks meet Python, confidence grows
-            </h2>
-            <p className='text-muted-foreground text-lg'>
-              Our platform seamlessly blends the intuitive nature of block
-              programming with Python's professional power. We're building the
-              missing bridge that transforms block-based skills into real coding
-              confidence, keeping the creativity alive while mastering
-              industry-standard Python.
-            </p>
+            <div className='flex flex-col items-center text-center space-y-4'>
+              <Badge className='bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0'>
+                The Solution
+              </Badge>
+              <h2 className='text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent'>
+                Master Python with joy and support
+              </h2>
+            </div>
+
+            <Card className='p-6 border border-blue-500/20'>
+              <p className='text-muted-foreground text-lg leading-relaxed'>
+                We're revolutionizing Python learning through{' '}
+                <HighlightedText>three powerful pillars</HighlightedText>:
+                <HighlightedText>engaging tutorials</HighlightedText> that make
+                concepts click,
+                <HighlightedText>real-time classrooms</HighlightedText> with
+                instant AI and teacher feedback, and
+                <HighlightedText>creative projects</HighlightedText> that bring
+                code to life. Students master Python through hands-on
+                experiences that feel like adventures, not lessons. By combining
+                these three core elements with immediate guidance anywhere,
+                we're building confident programmers who can turn their ideas
+                into reality.
+              </p>
+
+              <div className='grid grid-cols-3 gap-4 mt-6'>
+                <StatsCard number='24/7' text='Instant Support' />
+                <StatsCard number='100+' text='Projects' />
+                <StatsCard number='50+' text='Tutorials' />
+              </div>
+            </Card>
           </motion.div>
         </div>
       </section>
@@ -231,7 +288,7 @@ export default function HomePage() {
           className='grid md:grid-cols-2 gap-12 mb-24 items-center'
         >
           {/* Student Features */}
-          <div className='space-y-8'>
+          <div className='space-y-8 pr-8 md:pr-16'>
             <h3 className='text-2xl font-semibold mb-6'>For Students</h3>
             <FeatureItem
               icon={<PlayCircle className='h-6 w-6 text-primary' />}
@@ -260,14 +317,17 @@ export default function HomePage() {
           </div>
 
           {/* Student Image with gradient card */}
-          <GradientCard className='h-[500px] overflow-hidden'>
-            <Image
-              src='/home/tutorials.png'
-              alt='Student learning Python'
-              fill
-              className='object-cover'
-            />
-          </GradientCard>
+          <div className='flex justify-end'>
+            <div className='w-4/5'>
+              <Image
+                src='/home/tutorials.png'
+                alt='Student learning Python'
+                width={300}
+                height={500}
+                className='object-cover w-full h-auto rounded-xl shadow-2xl shadow-blue-500 transition-all duration-700 ease-in-out'
+              />
+            </div>
+          </div>
         </motion.div>
 
         {/* Teacher Features Section */}
@@ -278,17 +338,20 @@ export default function HomePage() {
           className='grid md:grid-cols-2 gap-12 items-center'
         >
           {/* Teacher Image with gradient card */}
-          <GradientCard className='h-[500px] overflow-hidden'>
-            <Image
-              src='/home/real-time-classroom.png'
-              alt='Teacher teaching students'
-              fill
-              className='object-cover'
-            />
-          </GradientCard>
+          <div className='flex justify-start'>
+            <div className='w-4/5'>
+              <Image
+                src='/home/real-time-classroom.png'
+                alt='Teacher teaching students'
+                width={300}
+                height={500}
+                className='object-cover w-full h-auto rounded-xl shadow-2xl shadow-blue-500 transition-all duration-700 ease-in-out'
+              />
+            </div>
+          </div>
 
           {/* Teacher Features */}
-          <div className='space-y-8'>
+          <div className='space-y-8 pl-8 md:pl-16'>
             <h3 className='text-2xl font-semibold mb-6'>For Teachers</h3>
             <FeatureItem
               icon={<GraduationCap className='h-6 w-6 text-primary' />}
