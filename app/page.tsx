@@ -30,9 +30,41 @@ import { themes } from '@/config/themes'
 import { Badge } from '@/components/ui/badge'
 import { ThemeImage } from '@/components/theme-image'
 import { ChevronRight } from 'lucide-react'
-import AnimatedGradientText from "@/components/ui/animated-gradient-text"
-import {LineShadowText} from '@/components/ui/line-shadow-text'
+import AnimatedGradientText from '@/components/ui/animated-gradient-text'
+import { LineShadowText } from '@/components/ui/line-shadow-text'
 import { useTheme } from 'next-themes'
+import { motion } from 'framer-motion'
+import GradientCard from '@/components/ui/gradient-card'
+import TextReveal from '@/components/ui/text-reveal'
+
+const FeatureItem = ({
+  icon,
+  title,
+  description,
+  buttonText,
+  buttonLink,
+  router,
+}) => (
+  <div className='flex gap-6 items-start'>
+    <div className='flex-shrink-0 p-3 rounded-lg shadow-md shadow-blue-200'>
+      {icon}
+    </div>
+    <div className='space-y-4'>
+      <div>
+        <h4 className='text-xl font-semibold mb-2'>{title}</h4>
+        <p className='text-muted-foreground'>{description}</p>
+      </div>
+      <Button
+        className='group'
+        variant='softBlue'
+        onClick={() => router.push(buttonLink)}
+      >
+        {buttonText}
+        <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+      </Button>
+    </div>
+  </div>
+)
 
 export default function HomePage() {
   const { user, loading, signOut } = useAuth()
@@ -131,174 +163,159 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Why Python Bit Section */}
+      <section className='container mx-auto px-4 py-16 md:py-20'>
+        <div className='flex flex-col items-center gap-12 max-w-4xl mx-auto'>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className='space-y-6 text-center'
+          >
+            <h2 className='text-3xl font-bold'>
+              Why are young coders stuck between blocks and real programming?
+            </h2>
+            <p className='text-muted-foreground text-lg'>
+              The leap from block to text programming leaves 50% of students
+              behind, crushing their confidence and creativity. Traditional
+              learning methods force students to choose between engaging
+              block-based coding or intimidating text syntax, making Python's
+              power seem out of reach.
+            </p>
+            <div className='relative w-full max-w-2xl mx-auto'>
+              <div className='shadow-2xl shadow-primary/50 bg-gradient-to-r from-primary to-purple-600 rounded-2xl p-1'>
+                <Image
+                  src='/home/student.png'
+                  alt='Students struggling with programming'
+                  width={800}
+                  height={500}
+                  className='object-cover w-full h-auto rounded-xl'
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className='space-y-6 text-center'
+          >
+            <h2 className='text-3xl font-bold'>
+              Where blocks meet Python, confidence grows
+            </h2>
+            <p className='text-muted-foreground text-lg'>
+              Our platform seamlessly blends the intuitive nature of block
+              programming with Python's professional power. We're building the
+              missing bridge that transforms block-based skills into real coding
+              confidence, keeping the creativity alive while mastering
+              industry-standard Python.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Integrated Features Section */}
       <section className='container mx-auto px-4 py-16 md:py-20'>
-        {/* <div className='max-w-6xl mx-auto'> */}
         <h2 className='text-3xl font-bold text-center mb-6'>
           Learning Together
         </h2>
         <p className='text-muted-foreground text-center mb-12 text-lg'>
-          Features for students and teachers to make Python learning engaging
+          Features for students and teachers
         </p>
 
-        <div className='grid md:grid-cols-2 gap-12'>
-          {/* Grid Container for Feature Rows */}
-          <div className='grid grid-rows-3 gap-8 content-start'>
-            <div className='flex gap-6 items-start'>
-              <div className='flex-shrink-0 p-3 rounded-lg shadow-md shadow-blue-200'>
-                <PlayCircle className='h-6 w-6 text-primary' />
-              </div>
-              <div className='space-y-4'>
-                <div>
-                  <h4 className='text-xl font-semibold mb-2'>
-                    Interactive Learning
-                  </h4>
-                  <p className='text-muted-foreground'>
-                    Create fun projects and see results instantly in our
-                    interactive environment.
-                  </p>
-                </div>
-                <Button
-                  className='group'
-                  variant='softBlue'
-                  onClick={() => router.push('/projects')}
-                >
-                  Explore Projects
-                  <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
-                </Button>
-              </div>
-            </div>
-
-            <div className='flex gap-6 items-start'>
-              <div className='flex-shrink-0 p-3 rounded-lg shadow-md shadow-blue-200'>
-                <Users2 className='h-6 w-6 text-primary' />
-              </div>
-              <div className='space-y-4'>
-                <div>
-                  <h4 className='text-xl font-semibold mb-2'>
-                    Virtual Classrooms
-                  </h4>
-                  <p className='text-muted-foreground'>
-                    Learn real-time with teachers and peers.
-                  </p>
-                </div>
-                <Button
-                  className='group'
-                  variant='softBlue'
-                  onClick={() => router.push('/classrooms')}
-                >
-                  Join Classroom
-                  <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
-                </Button>
-              </div>
-            </div>
-
-            <div className='flex gap-6 items-start'>
-              <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
-                <BookOpen className='h-6 w-6 text-primary' />
-              </div>
-              <div className='space-y-4'>
-                <div>
-                  <h4 className='text-xl font-semibold mb-2'>
-                    Guided Tutorials
-                  </h4>
-                  <p className='text-muted-foreground'>
-                    Step-by-step tutorials to become a confident Python
-                    programmer.
-                  </p>
-                </div>
-                <Button
-                  className='group'
-                  variant='softBlue'
-                  onClick={() => router.push('/tutorials')}
-                >
-                  Start Learning
-                  <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
-                </Button>
-              </div>
-            </div>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className='grid md:grid-cols-2 gap-12 mb-24 items-center'
+        >
+          {/* Student Features */}
+          <div className='space-y-8'>
+            <h3 className='text-2xl font-semibold mb-6'>For Students</h3>
+            <FeatureItem
+              icon={<PlayCircle className='h-6 w-6 text-primary' />}
+              title='Interactive Learning'
+              description='Create fun projects and see results instantly in our interactive environment.'
+              buttonText='Explore Projects'
+              buttonLink='/projects'
+              router={router}
+            />
+            <FeatureItem
+              icon={<Users2 className='h-6 w-6 text-primary' />}
+              title='Virtual Classrooms'
+              description='Learn real-time with teachers and peers.'
+              buttonText='Join Classroom'
+              buttonLink='/classrooms'
+              router={router}
+            />
+            <FeatureItem
+              icon={<BookOpen className='h-6 w-6 text-primary' />}
+              title='Guided Tutorials'
+              description='Step-by-step tutorials to become a confident Python programmer.'
+              buttonText='Start Learning'
+              buttonLink='/tutorials'
+              router={router}
+            />
           </div>
 
-          <div className='grid grid-rows-3 gap-8 content-start'>
-            <div className='flex gap-6 items-start'>
-              <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
-                <GraduationCap className='h-6 w-6 text-primary' />
-              </div>
-              <div className='space-y-4'>
-                <div>
-                  <h4 className='text-xl font-semibold mb-2'>
-                    Create Virtual Classrooms
-                  </h4>
-                  <p className='text-muted-foreground'>
-                    Set up interactive learning environments and track progress
-                    in real-time.
-                  </p>
-                </div>
-                <Button
-                  className='group'
-                  variant='softBlue'
-                  onClick={() => router.push('/classrooms')}
-                >
-                  Create Classroom
-                  <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
-                </Button>
-              </div>
-            </div>
+          {/* Student Image with gradient card */}
+          <GradientCard className='h-[500px] overflow-hidden'>
+            <Image
+              src='/home/tutorials.png'
+              alt='Student learning Python'
+              fill
+              className='object-cover'
+            />
+          </GradientCard>
+        </motion.div>
 
-            <div className='flex gap-6 items-start'>
-              <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
-                <Code className='h-6 w-6 text-primary' />
-              </div>
-              <div className='space-y-4'>
-                <div>
-                  <h4 className='text-xl font-semibold mb-2'>
-                    Real-time Code Sharing
-                  </h4>
-                  <p className='text-muted-foreground'>
-                    Share code snippets and provide instant feedback to
-                    students.
-                  </p>
-                </div>
-                <Button
-                  className='group'
-                  variant='softBlue'
-                  onClick={() => router.push('/classrooms')}
-                >
-                  Learn More
-                  <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
-                </Button>
-              </div>
-            </div>
+        {/* Teacher Features Section */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className='grid md:grid-cols-2 gap-12 items-center'
+        >
+          {/* Teacher Image with gradient card */}
+          <GradientCard className='h-[500px] overflow-hidden'>
+            <Image
+              src='/home/real-time-classroom.png'
+              alt='Teacher teaching students'
+              fill
+              className='object-cover'
+            />
+          </GradientCard>
 
-            <div className='flex gap-6 items-start'>
-              <div className='flex-shrink-0 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md shadow-blue-200'>
-                <BookMarked className='h-6 w-6 text-primary' />
-              </div>
-              <div className='space-y-4'>
-                <div>
-                  <h4 className='text-xl font-semibold mb-2'>
-                    Teaching Resources
-                  </h4>
-                  <p className='text-muted-foreground'>
-                    Access our curated collection of lesson plans and curriculum
-                    guides.
-                  </p>
-                </div>
-                <Button
-                  className='group'
-                  variant='softBlue'
-                  onClick={() =>
-                    router.push('/teaching-content/learning-topics')
-                  }
-                >
-                  View Resources
-                  <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
-                </Button>
-              </div>
-            </div>
+          {/* Teacher Features */}
+          <div className='space-y-8'>
+            <h3 className='text-2xl font-semibold mb-6'>For Teachers</h3>
+            <FeatureItem
+              icon={<GraduationCap className='h-6 w-6 text-primary' />}
+              title='Create Virtual Classrooms'
+              description='Set up interactive learning environments and track progress in real-time.'
+              buttonText='Create Classroom'
+              buttonLink='/classrooms'
+              router={router}
+            />
+            <FeatureItem
+              icon={<Code className='h-6 w-6 text-primary' />}
+              title='Real-time Code Sharing'
+              description='Share code snippets and provide instant feedback to students.'
+              buttonText='Learn More'
+              buttonLink='/classrooms'
+              router={router}
+            />
+            <FeatureItem
+              icon={<BookMarked className='h-6 w-6 text-primary' />}
+              title='Teaching Resources'
+              description='Access our curated collection of lesson plans and curriculum guides.'
+              buttonText='View Resources'
+              buttonLink='/teaching-content/learning-topics'
+              router={router}
+            />
           </div>
-        </div>
-        {/* </div> */}
+        </motion.div>
       </section>
 
       {/* Project Themes Section */}
