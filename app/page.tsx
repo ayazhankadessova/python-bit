@@ -31,12 +31,16 @@ import { Badge } from '@/components/ui/badge'
 import { ThemeImage } from '@/components/theme-image'
 import { ChevronRight } from 'lucide-react'
 import AnimatedGradientText from "@/components/ui/animated-gradient-text"
+import {LineShadowText} from '@/components/ui/line-shadow-text'
+import { useTheme } from 'next-themes'
 
 export default function HomePage() {
   const { user, loading, signOut } = useAuth()
   const router = useRouter()
   const { onOpen } = useAuthModal()
   const sortedTutorials = sortTutorialsByTime(tutorials)
+  const theme = useTheme()
+  const shadowColor = theme.resolvedTheme === 'dark' ? 'white' : 'black'
 
   if (loading) {
     return (
@@ -51,8 +55,11 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className='container mx-auto px-4 pt-12 pb-6 md:pt-18 md:pb-4'>
         <div className='flex flex-col items-center text-center max-w-3xl mx-auto space-y-6'>
-          <h1 className='text-4xl md:text-6xl font-bold tracking-tight'>
-            PythonBit ()
+          <h1 className='text-balance text-5xl font-semibold leading-none tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl'>
+            Python
+            <LineShadowText className='italic' shadowColor={shadowColor}>
+              Bit
+            </LineShadowText>
           </h1>
           <p className='text-xl md:text-2xl text-muted-foreground'>
             Learn Python through guided tutorials and real-time classrooms
@@ -388,8 +395,13 @@ export default function HomePage() {
               Ready to start learning?
             </h2>
             <div className='flex gap-4 justify-center'>
-              <Button size='lg' onClick={() => onOpen('register')}>
-                Get Started Free
+              <Button
+                size='lg'
+                variant='animated'
+                onClick={() => onOpen('register')}
+              >
+                🎉 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
+                <AnimatedGradientText text='Get Started Free' />
               </Button>
               <Button
                 size='lg'
