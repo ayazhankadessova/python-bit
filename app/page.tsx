@@ -25,18 +25,17 @@ import {
 import { useAuthModal } from '@/contexts/AuthModalContext'
 import Image from 'next/image'
 import { tutorials } from '#site/content'
-import {
-  sortTutorialsByTime,
-} from '@/lib/tutorials/utils'
+import { sortTutorialsByTime } from '@/lib/tutorials/utils'
 import { themes } from '@/config/themes'
 import { Badge } from '@/components/ui/badge'
 import { ThemeImage } from '@/components/theme-image'
-
+import { ChevronRight } from 'lucide-react'
+import AnimatedGradientText from "@/components/ui/animated-gradient-text"
 
 export default function HomePage() {
   const { user, loading, signOut } = useAuth()
   const router = useRouter()
-  const { onOpen } = useAuthModal()  
+  const { onOpen } = useAuthModal()
   const sortedTutorials = sortTutorialsByTime(tutorials)
 
   if (loading) {
@@ -60,8 +59,14 @@ export default function HomePage() {
           </p>
           {!user && (
             <div className='flex gap-4 mt-8'>
-              <Button size='lg' onClick={() => onOpen('register')}>
-                Get Started Free
+              <Button
+                size='lg'
+                variant='animated'
+                onClick={() => onOpen('register')}
+              >
+                🎉 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
+                <AnimatedGradientText text='Get Started Free' />
+                <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
               </Button>
             </div>
           )}
@@ -77,9 +82,11 @@ export default function HomePage() {
               Start your Python journey with our latest content
             </p>
           </div>
-          <Button variant='softBlue' onClick={() => router.push('/tutorials')}>
-            View All Tutorials
-            <ArrowRight className='ml-2 h-4 w-4' />
+
+          <Button variant='animated' onClick={() => router.push('/tutorials')}>
+            🧑‍🎓 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
+            <AnimatedGradientText text='View All Tutorials' />
+            <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
           </Button>
         </div>
 
@@ -297,9 +304,10 @@ export default function HomePage() {
               Build exciting projects based on your interests
             </p>
           </div>
-          <Button variant='softBlue' onClick={() => router.push('/projects')}>
-            View All Projects
-            <ArrowRight className='ml-2 h-4 w-4' />
+          <Button variant='animated' onClick={() => router.push('/projects')}>
+            😎 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
+            <AnimatedGradientText text='View All Projects' />
+            <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
           </Button>
         </div>
 

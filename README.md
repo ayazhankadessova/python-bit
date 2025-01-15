@@ -448,18 +448,23 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 ## Jan 13
 
-- [ ] del session
+- [x] del session
 - [ ]  add more weeks
 - [ ]  think of sys des for handle complete assignment
 - [ ] show solution to teachers
 - [ ] add students when they connect 
 - [x] deploy to vercel
 - [x] remove selectedStudent
+- [ ] have to upd the code before sending?
+- [ ] 
 - [ ] get project progress information
 - [ ] add like uncomment this code 
 
 
 - add caching to all firestore opers
+
+- Avatar circles (students) https://magicui.design/docs/components/avatar-circles
+- confetti https://magicui.design/docs/components/confetti
 
 ## jan 11 
 
