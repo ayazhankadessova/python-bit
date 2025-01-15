@@ -34,52 +34,9 @@ import AnimatedGradientText from '@/components/ui/animated-gradient-text'
 import { LineShadowText } from '@/components/ui/line-shadow-text'
 import { useTheme } from 'next-themes'
 import { motion } from 'framer-motion'
-import GradientCard from '@/components/ui/gradient-card'
-import TextReveal from '@/components/ui/text-reveal'
-
-const FeatureItem = ({
-  icon,
-  title,
-  description,
-  buttonText,
-  buttonLink,
-  router,
-}) => (
-  <div className='flex gap-6 items-start'>
-    <div className='flex-shrink-0 p-3 rounded-lg shadow-md shadow-blue-200'>
-      {icon}
-    </div>
-    <div className='space-y-4'>
-      <div>
-        <h4 className='text-xl font-semibold mb-2'>{title}</h4>
-        <p className='text-muted-foreground'>{description}</p>
-      </div>
-      <Button
-        className='group'
-        variant='softBlue'
-        onClick={() => router.push(buttonLink)}
-      >
-        {buttonText}
-        <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
-      </Button>
-    </div>
-  </div>
-)
-
-const HighlightedText = ({ children }) => (
-  <span className='bg-gradient-to-r from-blue-500/20 to-purple-500/20 px-1 rounded font-semibold'>
-    {children}
-  </span>
-)
-
-const StatsCard = ({ number, text }) => (
-  <div className='bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-primary font-medium shadow-sm border border-blue-200/50 hover:shadow-md hover:from-blue-200 hover:via-blue-300 hover:to-blue-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-blue-900/70 dark:via-blue-800/70 dark:to-blue-900/70 dark:border-blue-700/20 dark:hover:from-blue-800/70 dark:hover:via-blue-700/70 dark:hover:to-blue-800/70 p-4 rounded-lg text-center'>
-    <div className='text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent'>
-      {number}
-    </div>
-    <div className='text-sm text-muted-foreground'>{text}</div>
-  </div>
-)
+import { FeatureItem } from '@/components/feature-item'
+import { HighlightedText } from '@/components/ui/highlighted-text'
+import { StatsCard } from '@/components/stats-card'
 
 export default function HomePage() {
   const { user, loading, signOut } = useAuth()
@@ -144,38 +101,51 @@ export default function HomePage() {
           </Button>
         </div>
 
-        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {sortedTutorials.slice(0, 3).map((tutorial) => (
-            <Card key={tutorial.slug} className='flex flex-col overflow-hidden'>
-              <div className='relative w-full aspect-[2/1]'>
-                <Image
-                  src={`/tutorials/${tutorial.firestoreId}.webp`}
-                  alt={tutorial.title}
-                  fill
-                  className='object-cover'
-                  sizes='(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className='line-clamp-2'>{tutorial.title}</CardTitle>
-              </CardHeader>
-              <CardContent className='flex-grow'>
-                <p className='text-muted-foreground line-clamp-2'>
-                  {tutorial.description}
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Button
-                  variant='softBlue'
-                  className='w-full'
-                  onClick={() => router.push(`/${tutorial.slug}`)}
-                >
-                  Start Tutorial
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.2 }}
+          className='space-y-6'
+          viewport={{ once: true }}
+        >
+          <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {sortedTutorials.slice(0, 3).map((tutorial) => (
+              <Card
+                key={tutorial.slug}
+                className='flex flex-col overflow-hidden'
+              >
+                <div className='relative w-full aspect-[2/1]'>
+                  <Image
+                    src={`/tutorials/${tutorial.firestoreId}.webp`}
+                    alt={tutorial.title}
+                    fill
+                    className='object-cover'
+                    sizes='(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className='line-clamp-2'>
+                    {tutorial.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className='flex-grow'>
+                  <p className='text-muted-foreground line-clamp-2'>
+                    {tutorial.description}
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button
+                    variant='softBlue'
+                    className='w-full'
+                    onClick={() => router.push(`/${tutorial.slug}`)}
+                  >
+                    Start Tutorial
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </motion.div>
       </section>
 
       {/* Why Python Bit Section */}
@@ -189,6 +159,9 @@ export default function HomePage() {
             className='space-y-6'
           >
             <div className='flex flex-col items-center text-center space-y-4'>
+              <Badge className='bg-gradient-to-r from-blue-500 to-purple-500 p-1'>
+                The Challenge
+              </Badge>
               <h2 className='text-3xl font-bold'>
                 Why do students fear real programming?
               </h2>
@@ -238,10 +211,10 @@ export default function HomePage() {
             className='space-y-6'
           >
             <div className='flex flex-col items-center text-center space-y-4'>
-              <Badge className='bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0'>
+              <Badge className='bg-gradient-to-r from-blue-500 to-purple-500 p-1'>
                 The Solution
               </Badge>
-              <h2 className='text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent'>
+              <h2 className='text-3xl font-bold'>
                 Master Python with joy and support
               </h2>
             </div>
@@ -271,7 +244,6 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
-
       {/* Integrated Features Section */}
       <section className='container mx-auto px-4 py-16 md:py-20'>
         <h2 className='text-3xl font-bold text-center mb-6'>
@@ -398,60 +370,68 @@ export default function HomePage() {
           </Button>
         </div>
 
-        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {themes.slice(0, 3).map((theme, index) => (
-            <Card
-              key={index}
-              className='flex flex-col hover:shadow-lg transition-shadow'
-            >
-              <div className='relative w-full h-48 overflow-hidden'>
-                <ThemeImage
-                  src={theme.image}
-                  // alt={theme.title}
-                  // fill
-                  // className='object-cover rounded-t-lg'
-                />
-              </div>
-              <CardHeader>
-                <div className='flex items-center gap-3 mb-2'>
-                  {theme.icon}
-                  <CardTitle>{theme.title}</CardTitle>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.2 }}
+          className='space-y-6'
+          viewport={{ once: true }}
+        >
+          <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {themes.slice(0, 3).map((theme, index) => (
+              <Card
+                key={index}
+                className='flex flex-col hover:shadow-lg transition-shadow'
+              >
+                <div className='relative w-full h-48 overflow-hidden'>
+                  <ThemeImage
+                    src={theme.image}
+                    // alt={theme.title}
+                    // fill
+                    // className='object-cover rounded-t-lg'
+                  />
                 </div>
-                <CardDescription>{theme.description}</CardDescription>
-              </CardHeader>
-              <CardContent className='flex-grow'>
-                <div className='flex gap-2 mb-4'>
-                  <Badge variant='outline'>{theme.difficulty}</Badge>
-                  <Badge variant='outline'>{theme.estimatedTime}</Badge>
-                </div>
-                <ul className='list-disc ml-4 space-y-1'>
-                  {theme.projects.slice(0, 3).map((project, idx) => (
-                    <li key={idx} className='text-sm text-muted-foreground'>
-                      {project}
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-              <CardFooter className='pt-2'>
-                <Button
-                  className='w-full group'
-                  variant='softBlue'
-                  onClick={() =>
-                    router.push(
-                      `/projects/${theme.title
-                        .toLowerCase()
-                        .replace(/\s+/g, '-')}`
-                    )
-                  }
-                >
-                  Explore Theme
-                  <ArrowRight className='ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1' />
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-          {/* </div> */}
-        </div>
+                <CardHeader>
+                  <div className='flex items-center gap-3 mb-2'>
+                    {theme.icon}
+                    <CardTitle>{theme.title}</CardTitle>
+                  </div>
+                  <CardDescription>{theme.description}</CardDescription>
+                </CardHeader>
+                <CardContent className='flex-grow'>
+                  <div className='flex gap-2 mb-4'>
+                    <Badge variant='outline'>{theme.difficulty}</Badge>
+                    <Badge variant='outline'>{theme.estimatedTime}</Badge>
+                  </div>
+                  <ul className='list-disc ml-4 space-y-1'>
+                    {theme.projects.slice(0, 3).map((project, idx) => (
+                      <li key={idx} className='text-sm text-muted-foreground'>
+                        {project}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+                <CardFooter className='pt-2'>
+                  <Button
+                    className='w-full group'
+                    variant='softBlue'
+                    onClick={() =>
+                      router.push(
+                        `/projects/${theme.title
+                          .toLowerCase()
+                          .replace(/\s+/g, '-')}`
+                      )
+                    }
+                  >
+                    Explore Theme
+                    <ArrowRight className='ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1' />
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+            {/* </div> */}
+          </div>
+        </motion.div>
       </section>
 
       {/* Call to Action */}
