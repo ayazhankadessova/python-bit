@@ -1,6 +1,5 @@
 // export default ClassroomPage
 'use client'
-// import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { SessionManagement } from '@/components/session-views/session-management'
@@ -13,8 +12,6 @@ interface PageProps {
 
 const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
   const { user } = useAuth() // Firebase Auth context
-
-  // const [error, setError] = useState<string | null>(null)
 
   const classroomId = params.id
 
