@@ -24,7 +24,6 @@ export default function RootLayout({
         className={cn('min-h-screen font-mono antialiased', inter.variable)}
       >
         <Providers>
-          {/* <div className='relative flex min-h-dvh flex-col bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] px-4'> */}
           <AuthProvider>
             <AuthModalProvider>
               <div className='bg-popover'>

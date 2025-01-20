@@ -247,17 +247,6 @@ const CurriculumForm = () => {
           onSubmit={handleSubmit}
           className='space-y-6 bg-white p-8 rounded-xl shadow-lg border border-gray-200'
         >
-          {/* <div className='space-y-2'>
-            <Label htmlFor='id'>Curriculum ID (Optional)</Label>
-            <Input
-              id='id'
-              name='id'
-              value={inputs.id}
-              onChange={handleInputChange}
-              placeholder='unique-curriculum-id'
-              className='bg-gray-50 border-gray-300'
-            />
-          </div> */}
 
           <div className='space-y-2'>
             <Label htmlFor='name'>Name</Label>

@@ -56,7 +56,7 @@ class VeliteWebpackPlugin {
       VeliteWebpackPlugin.started = true
       const dev = compiler.options.mode === 'development'
       await build({ watch: dev, clean: !dev })
-    })
+    }) 
   }
 }
 

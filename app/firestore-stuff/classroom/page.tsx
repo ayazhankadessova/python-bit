@@ -215,10 +215,6 @@ useEffect(() => {
 
       await batch.commit()
 
-      // Optional: Create the compound index programmatically
-      // Note: This requires additional security rules configuration
-      // You might want to create the index manually in the Firebase Console instead
-
       const indexRef = doc(
         fireStore,
         `classrooms/${classroomId}/.indexes/sessions`

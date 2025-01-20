@@ -465,10 +465,14 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 - Avatar circles (students) https://magicui.design/docs/components/avatar-circles
 - confetti https://magicui.design/docs/components/confetti
-
+- particles
+- cool mode for btns https://magicui.design/docs/components/cool-mode
 ## jan 11 
 
 - [ ] implement magic js somehwee
+
+## Jan 20
+- Delete Canva Pro
 
 
 ## Later
