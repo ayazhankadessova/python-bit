@@ -6,6 +6,7 @@ import { siteConfig } from '@/config/site'
 import BackButton from '@/components/ui/backbutton'
 import { TutorialStatus } from '@/components/tutorials/tutorial-status'
 import '@/styles/mdx-style.css'
+import ScrollProgress from '@/components/ui/scroll-progress'
 
 interface PostPageProps {
   params: {
@@ -40,6 +41,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
   return (
     <div className='container mx-auto px-6 py-8 max-w-5xl'>
+      <ScrollProgress className='top-[81px]' />
       <div className='flex items-start justify-between mb-4'>
         <BackButton />
         <SharePost fullLink={fullLinkGenerated} />

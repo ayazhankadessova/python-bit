@@ -32,87 +32,88 @@ const activeStyles =
 
 export function SiteHeader() {
   const pathname = usePathname()
-
-  // flex flex-col gap-4 items-center justify-center pb-8 container
   const headerClass =
-    'container mx-auto flex px-6 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-popover mb-4'
+    'sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
 
   return (
     <header className={headerClass}>
       {/* Desktop Navigation */}
-      <div className='hidden min-[850px]:flex items-center gap-4'>
-        <MainNav />
-        <NavigationMenu className='hidden min-[850px]:inline-flex'>
-          <NavigationMenuList className='flex gap-0'>
-            {Object.values(headerNavLinks).map((dialog) => (
-              <NavigationMenuItem key={dialog.title}>
-                {dialog.toggle ? (
-                  <>
-                    <NavigationMenuTrigger
-                      className={cn(
-                        'transition-all duration-200 lg:text-lg relative rounded-md',
-                        (isPathActive(pathname, dialog.href) ||
-                          dialog.dropdown?.some((item) =>
-                            isPathActive(pathname, item.href)
-                          )) &&
-                          activeStyles
-                      )}
-                    >
-                      {dialog.title}
-                      <ChevronDown
-                        className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
-                        aria-hidden='true'
-                      />
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]'>
-                        {dialog.dropdown?.map((component) => (
-                          <ListItem
-                            key={component.title}
-                            title={component.title}
-                            href={component.href}
-                          >
-                            {component.description}
-                          </ListItem>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </>
-                ) : (
-                  <Link href={dialog.href}>
-                    <NavigationMenuTrigger
-                      className={cn(
-                        'transition-all duration-200 lg:text-lg relative rounded-md hover:bg-accent/50',
-                        isPathActive(pathname, dialog.href) && activeStyles
-                      )}
-                    >
-                      {dialog.title}
-                    </NavigationMenuTrigger>
-                  </Link>
-                )}
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-      </div>
+      <div className='container mx-auto flex h-20 items-center justify-between px-6'>
+        {/* Your existing header content */}
+        <div className='hidden min-[850px]:flex items-center gap-4'>
+          <MainNav />
+          <NavigationMenu className='hidden min-[850px]:inline-flex'>
+            <NavigationMenuList className='flex gap-0'>
+              {Object.values(headerNavLinks).map((dialog) => (
+                <NavigationMenuItem key={dialog.title}>
+                  {dialog.toggle ? (
+                    <>
+                      <NavigationMenuTrigger
+                        className={cn(
+                          'transition-all duration-200 lg:text-lg relative rounded-md',
+                          (isPathActive(pathname, dialog.href) ||
+                            dialog.dropdown?.some((item) =>
+                              isPathActive(pathname, item.href)
+                            )) &&
+                            activeStyles
+                        )}
+                      >
+                        {dialog.title}
+                        <ChevronDown
+                          className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
+                          aria-hidden='true'
+                        />
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]'>
+                          {dialog.dropdown?.map((component) => (
+                            <ListItem
+                              key={component.title}
+                              title={component.title}
+                              href={component.href}
+                            >
+                              {component.description}
+                            </ListItem>
+                          ))}
+                        </ul>
+                      </NavigationMenuContent>
+                    </>
+                  ) : (
+                    <Link href={dialog.href}>
+                      <NavigationMenuTrigger
+                        className={cn(
+                          'transition-all duration-200 lg:text-lg relative rounded-md hover:bg-accent/50',
+                          isPathActive(pathname, dialog.href) && activeStyles
+                        )}
+                      >
+                        {dialog.title}
+                      </NavigationMenuTrigger>
+                    </Link>
+                  )}
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
 
-      {/* Mobile Navigation */}
-      <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
-        <MainNav />
-      </div>
+        {/* Mobile Navigation */}
+        <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
+          <MainNav />
+        </div>
 
-      <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
-        <ResponsiveSearch />
-        {/* <UserMenu /> */}
-        {/* <ThemeToggle /> */}
-        <MobileNav />
-      </div>
+        <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
+          <ResponsiveSearch />
+          {/* <UserMenu /> */}
+          {/* <ThemeToggle /> */}
+          <MobileNav />
+        </div>
 
-      {/* Desktop Right Section */}
-      <div className='hidden min-[850px]:flex items-center gap-4'>
-        <ResponsiveSearch />
-        <UserMenu />
-        <ThemeToggle />
+        {/* Desktop Right Section */}
+        <div className='hidden min-[850px]:flex items-center gap-4'>
+          <ResponsiveSearch />
+          <UserMenu />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   )

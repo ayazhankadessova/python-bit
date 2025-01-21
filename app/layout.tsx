@@ -26,9 +26,8 @@ export default function RootLayout({
         <Providers>
           <AuthProvider>
             <AuthModalProvider>
-              <div className='bg-popover'>
-                <SiteHeader />
-              </div>
+              <SiteHeader />
+
               <div className='relative flex min-h-dvh flex-col px-4'>
                 <main className='flex-1'>{children}</main>
               </div>
