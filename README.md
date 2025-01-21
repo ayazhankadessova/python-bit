@@ -569,3 +569,10 @@ users/
             timestamp: number
             success: boolean
 ```
+
+
+## Color Palette
+1. #D7F4EE
+2.  #E0D7F4
+2. #F4D7DD
+3. #EBF4D7
