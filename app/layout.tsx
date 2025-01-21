@@ -27,7 +27,6 @@ export default function RootLayout({
           <AuthProvider>
             <AuthModalProvider>
               <SiteHeader />
-
               <div className='relative flex min-h-dvh flex-col px-4'>
                 <main className='flex-1'>{children}</main>
               </div>
