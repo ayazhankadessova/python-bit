@@ -159,7 +159,7 @@ export default function HomePage() {
             className='space-y-6'
           >
             <div className='flex flex-col items-center text-center space-y-4'>
-              <Badge className='bg-gradient-to-r from-blue-500 to-purple-500 p-1'>
+              <Badge className='bg-gradient-to-r from-purple-500 to-purple-500 p-1'>
                 The Challenge
               </Badge>
               <h2 className='text-3xl font-bold'>
@@ -167,7 +167,7 @@ export default function HomePage() {
               </h2>
             </div>
 
-            <Card className='p-6 border border-blue-500/20'>
+            <Card className='p-6 border border-purple-500/20'>
               <p className='text-muted-foreground text-lg leading-relaxed'>
                 <HighlightedText>Millions of students</HighlightedText> hit a
                 wall when moving from block-based to text programming, with{' '}
@@ -198,7 +198,7 @@ export default function HomePage() {
                 alt='Students struggling with programming'
                 width={300}
                 height={500}
-                className='object-cover w-full h-auto rounded-xl shadow-2xl shadow-blue-500/50 transition-all duration-700 ease-in-out'
+                className='object-cover w-full h-auto rounded-xl shadow-2xl shadow-purple-500/50 transition-all duration-700 ease-in-out'
               />
             </motion.div>
           </motion.div>
@@ -211,7 +211,7 @@ export default function HomePage() {
             className='space-y-6'
           >
             <div className='flex flex-col items-center text-center space-y-4'>
-              <Badge className='bg-gradient-to-r from-blue-500 to-purple-500 p-1'>
+              <Badge className='bg-gradient-to-r from-purple-500 to-purple-500 p-1'>
                 The Solution
               </Badge>
               <h2 className='text-3xl font-bold'>
@@ -219,7 +219,7 @@ export default function HomePage() {
               </h2>
             </div>
 
-            <Card className='p-6 border border-blue-500/20'>
+            <Card className='p-6 border border-purple-500/20'>
               <p className='text-muted-foreground text-lg leading-relaxed'>
                 We are revolutionizing Python learning through 
                 <HighlightedText>three powerful pillars</HighlightedText>:
@@ -296,7 +296,7 @@ export default function HomePage() {
                 alt='Student learning Python'
                 width={300}
                 height={500}
-                className='object-cover w-full h-auto rounded-xl shadow-2xl shadow-blue-500 transition-all duration-700 ease-in-out'
+                className='object-cover w-full h-auto rounded-xl shadow-2xl shadow-purple-500 transition-all duration-700 ease-in-out'
               />
             </div>
           </div>
@@ -317,7 +317,7 @@ export default function HomePage() {
                 alt='Teacher teaching students'
                 width={300}
                 height={500}
-                className='object-cover w-full h-auto rounded-xl shadow-2xl shadow-blue-500 transition-all duration-700 ease-in-out'
+                className='object-cover w-full h-auto rounded-xl shadow-2xl shadow-purple-500 transition-all duration-700 ease-in-out'
               />
             </div>
           </div>

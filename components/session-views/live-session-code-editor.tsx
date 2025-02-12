@@ -250,7 +250,7 @@ export function PythonEditor({
                   onUpdateCode && (
                     <Button
                       onClick={handleUpdateCode}
-                      className='ml-auto bg-blue-600 hover:bg-blue-700'
+                      className='ml-auto bg-purple-600 hover:bg-purple-700'
                       disabled={isUpdating}
                     >
                       {isUpdating ? (

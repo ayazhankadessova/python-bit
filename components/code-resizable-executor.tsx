@@ -220,7 +220,7 @@ const PythonResizableCodeEditor = ({
                 {(expectedOutput || isProject) && (
                   <Button
                     onClick={() => executeCode(true)}
-                    className='bg-blue-600 hover:bg-blue-700 text-white'
+                    className='bg-purple-600 hover:bg-purple-700 text-white'
                     disabled={isExecuting}
                   >
                     {isSubmitting ? (

@@ -59,9 +59,9 @@ export function TutorialStatus({
           ) : (
             <>
               <BookOpen
-                className={cn('h-5 w-5 text-blue-500', iconClassName)}
+                className={cn('h-5 w-5 text-purple-500', iconClassName)}
               />
-              <span className={cn('text-blue-500 font-medium', textClassName)}>
+              <span className={cn('text-purple-500 font-medium', textClassName)}>
                 Not Started
               </span>
             </>
@@ -89,7 +89,7 @@ export function TutorialStatus({
       ) : progress > 0 ? (
         <Clock className={cn('h-5 w-5 text-yellow-500', iconClassName)} />
       ) : (
-        <BookOpen className={cn('h-5 w-5 text-blue-500', iconClassName)} />
+        <BookOpen className={cn('h-5 w-5 text-purple-500', iconClassName)} />
       )}
     </>
   )
