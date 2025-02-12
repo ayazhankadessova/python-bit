@@ -25,60 +25,115 @@ You'll build a calculator that:
 - Understanding of classes and methods
 - Familiarity with lists and dictionaries
 
-## Getting Started
-First, let's create the basic structure for our Character class:
+## Getting Started  
+### 1. Let's create the basic structure for our `Character` class:  
+
+Before adding game mechanics, we need a foundational class to represent our characters. Each character will have:  
+
+
+- A `name` to identify them.  
+- A `base_aura`, which is their starting aura level (default is 100).  
+- A `current_aura` that tracks their aura as it changes during the game.  
+- Two lists, `buffs` and `debuffs`, to store any temporary effects that strengthen or weaken the character.  
+
+Here's how it should look start like:  
 
 ```python
 class Character:
     def __init__(self, name, base_aura=100):
         self.name = name
-        self.base_aura = base_aura
-        self.current_aura = base_aura
-        self.buffs = []
-        self.debuffs = []
+        .
+        .
+        .
+```
+
+### 2. Adding Buffs and Debuffs  
+
+Now that we have a basic `Character` class, let's add functionality to apply buffs (power-ups) and debuffs (power-downs) that modify a character's aura.  
+
+#### 2.1 Adding Buffs  
+
+Buffs increase the character’s aura. The `add_buff` method:  
+- Takes a `name` and a `power_increase` value.  
+- Appends the `name` and the `power_increase` as a set to the `buffs` list.  
+- Recalculates the character’s current aura.  
+
+```python
+def add_buff(self, name, power_increase):
+    """Add a power-up buff to the character"""
+    .
+    .
+    .
+```
+
+#### 2.2 Adding Debuffs  
+
+Debuffs decrease the character’s aura. The `add_debuff` method:  
+- Takes a `name` and a `power_decrease` value.  
+- Adds the` name` and `power_decrease` as a set to the `debuffs` list.  
+- Recalculates the character’s current aura.  
+
+```python
+def add_debuff(self, name, power_decrease):
+    """Add a power-down debuff to the character"""
+    .
+    .
+    .
+```
+
+### 3. Calculating Aura  
+
+Every time a buff or debuff is applied, the aura needs to be recalculated. The `calculate_current_aura` method:  
+- Starts with the `base_aura` value.  
+- Adds all buff effects.  
+- Subtracts all debuff effects.  
+- Ensures the aura never goes below 0.  
+
+```python
+def calculate_current_aura(self):
+    """Calculate total aura points including buffs and debuffs"""
+    total = self.base_aura
     
-    def add_buff(self, name, power_increase):
-        """Add a power-up buff to the character"""
-        self.buffs.append({"name": name, "power": power_increase})
-        self.calculate_current_aura()
-    
-    def add_debuff(self, name, power_decrease):
-        """Add a power-down debuff to the character"""
-        self.debuffs.append({"name": name, "power": power_decrease})
-        self.calculate_current_aura()
-    
-    def calculate_current_aura(self):
-        """Calculate total aura points including buffs and debuffs"""
-        total = self.base_aura
+    # Add all buff effects
+    for buff in self.buffs:
+        .
+        .
+        .
         
-        # Add all buff effects
+    # Subtract all debuff effects
+    for debuff in self.debuffs:
+        .
+        .
+        .
+    
+    # Ensure aura doesn't go below 0
+    self.current_aura = max(0, total)
+    return self.current_aura
+```
+
+### 4. Displaying Character Status  
+
+To check a character’s current aura, buffs, and debuffs, we add the `display_status` method:  
+- Prints the base and current aura.  
+- Lists active buffs and debuffs (if any).  
+
+```python
+def display_status(self):
+    """Display character's current status"""
+    print(f"\nCharacter Status: ")
+    print("=" * 30)
+    print(f"Base Aura: ")
+    print(f"Current Aura: ")
+    
+    if self.buffs:
+        print("\nActive Buffs:")
         for buff in self.buffs:
-            total += buff["power"]
+            print(f"- {?}: + {?}")
             
-        # Subtract all debuff effects
+    if self.debuffs:
+        print("\nActive Debuffs:")
         for debuff in self.debuffs:
-            total -= debuff["power"]
-        
-        # Ensure aura doesn't go below 0
-        self.current_aura = max(0, total)
-        return self.current_aura
-    
-    def display_status(self):
-        """Display character's current status"""
-        print(f"\nCharacter Status: {self.name}")
-        print("=" * 30)
-        print(f"Base Aura: {self.base_aura}")
-        print(f"Current Aura: {self.current_aura}")
-        
-        if self.buffs:
-            print("\nActive Buffs:")
-            for buff in self.buffs:
-                print(f"- {buff['name']}: +{buff['power']}")
-                
-        if self.debuffs:
-            print("\nActive Debuffs:")
-            for debuff in self.debuffs:
-                print(f"- {debuff['name']}: -{debuff['power']}")
+            print(f"- {?}: -{?}")
 ```
 
 ## Visual Representation

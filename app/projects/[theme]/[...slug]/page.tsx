@@ -1,3 +1,5 @@
+'use client'
+
 import { projects } from '#site/content'
 import { notFound } from 'next/navigation'
 import { MDXContent } from '@/components/mdx-components'
@@ -8,6 +10,7 @@ import PythonResizableCodeEditor from '@/components/code-resizable-executor'
 import { getExerciseById } from '@/lib/projects/utils'
 import { ProjectStatus } from '@/components/projects/project-status'
 import '@/styles/mdx-style.css'
+import { useState, useEffect } from 'react'
 
 interface PostPageProps {
   params: {
@@ -15,6 +18,7 @@ interface PostPageProps {
   }
 }
 
+// Modified function to fetch post data based on params
 async function getPostFromParams(params: PostPageProps['params']) {
   const slug = params?.slug?.join('/')
   const post = projects.find((post) => post.slugAsParams === slug)
@@ -22,24 +26,42 @@ async function getPostFromParams(params: PostPageProps['params']) {
   return post
 }
 
-// if slug is same as slugAsParams of one of the pages
-export async function generateStaticParams(): Promise<
-  { slug: string[]; revalidate?: number }[]
-> {
-  return projects.map((post) => ({
-    slug: post.slugAsParams.split('/'),
-    revalidate: 7200,
-  }))
-}
+// No need for generateStaticParams anymore, dynamic rendering on demand
+export default function ProjectPage({ params }: PostPageProps) {
+  const [post, setPost] = useState<any>(null)
+  const [exercise, setExercise] = useState<any>(null)
+  const [currentStep, setCurrentStep] = useState(0)
 
-export default async function ProjectPage({ params }: PostPageProps) {
-  const post = await getPostFromParams(params)
-  const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme.trim().replace("", '-')}/${params?.slug?.join('/')}`
-  const exercise = getExerciseById(post!.id)
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedPost = await getPostFromParams(params)
 
-  if (!post || !post.published) {
-    notFound()
+      if (!fetchedPost || !fetchedPost.published) {
+        notFound()
+      }
+
+      setPost(fetchedPost)
+      console.log(fetchedPost.body) // Log the post body content
+
+      // Fetch exercise data after post data is loaded
+      if (fetchedPost) {
+        const fetchedExercise = getExerciseById(fetchedPost.id)
+        setExercise(fetchedExercise)
+      }
+    }
+
+    fetchData()
+  }, [params]) // Depend on params to refetch when they change
+
+  const handleNextStep = () => {
+    setCurrentStep((prevStep) => prevStep + 1)
   }
+
+  if (!post) {
+    return <div>Loading...</div> // Optional loading state
+  }
+
+  const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme.trim().replace("", '-')}/${params?.slug?.join('/')}`
 
   return (
     <div className='flex flex-col h-screen'>
@@ -53,7 +75,6 @@ export default async function ProjectPage({ params }: PostPageProps) {
 
       {/* Split screen container */}
       <div className='flex flex-1 min-h-0'>
-        {' '}
         {/* Left side - Tutorial content */}
         <div className='w-1/2 overflow-y-auto border-r p-6'>
           <div className='max-w-3xl mx-auto'>
@@ -65,18 +86,22 @@ export default async function ProjectPage({ params }: PostPageProps) {
                 <ProjectStatus projectId={post.slugAsParams} detailed={true}/>
               </div>
               {post.description && (
-                <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>
+                <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground '>
                   {post.description}
                 </p>
               )}
               <hr className='my-4' />
-              <MDXContent code={post.body} />
+              {/* <div className={currentStep === 0 ? 'blur-sm' : ''}> */}
+                <MDXContent code={post.body} />
+              {/* </div> */}
             </article>
+            {/* <button onClick={handleNextStep} className='mt-4 px-4 py-2 bg-blue-500 text-white rounded'>
+              Next
+            </button> */}
           </div>
         </div>
         {/* Right side - Code editor */}
-        <div className='w-1/2 overflow-hidden'>
-          {' '}
+        <div className={`w-1/2 overflow-hidden `}>
           {exercise && (
             <PythonResizableCodeEditor
               initialCode={exercise?.starterCode}
