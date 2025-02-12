@@ -511,7 +511,7 @@ tutrials data or every tutorials
 - [ ] For teacher, add panel to monitor each classroom
 
 ## BackLog
-- [ ] GitHub, Logo icons
+- [x] GitHub, Logo icons
 - [ ] In Live Session, Markdown rendered renders backticks and ``` in a weird way. Figure out how rehype pretty code is messing is in conflict
 - [ ] Dont send expectedOutput and testCases, they should be in Backend
 - [ ] Search Button Functionality

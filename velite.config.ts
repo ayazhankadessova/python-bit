@@ -41,7 +41,7 @@ const projects = defineCollection({
       theme: s.string().max(99),
       difficulty: s.string().max(99),
       estimatedTime: s.string().max(99),
-      tags: s.array(s.string()).optional(),
+      tags: s.array(s.string()),
       image: s.string().max(99),
       published: s.boolean().default(true),
       body: s.mdx(),
