@@ -471,9 +471,12 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 - [ ] implement magic js somehwee
 
-## Jan 20
-- Delete Canva Pro
+## Feb 12
 
+- Global search: tutorials, pages, 
+- [x] Search projecs
+- [ ] Check project types: eg there is one from velite and one that i created
+- [ ] beautiful 404
 
 ## Later
 

@@ -64,7 +64,6 @@ const buttonVariants = cva(
           text-slate-700 font-medium 
           shadow-sm border border-slate-200/50 
           hover:shadow-md hover:from-slate-200 hover:via-slate-300 hover:to-slate-200 
-          hover:-translate-y-0.5 active:translate-y-0
           dark:from-slate-800/80 dark:via-slate-700/80 dark:to-slate-800/80 
           dark:text-slate-200 dark:border-slate-600/30 
           dark:hover:from-slate-700/80 dark:hover:via-slate-600/80 dark:hover:to-slate-700/80

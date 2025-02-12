@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation'
 import { MainNav } from './main-nav'
 import MobileNav from './ui/mobile-nav'
 import { UserMenu } from '@/components/user/user-menu'
-// import { Input } from '@/components/ui/input'
 import { ThemeToggle } from './ui/theme-toggle'
 import { cn } from '@/lib/utils'
 import {
@@ -17,7 +16,8 @@ import {
 } from '@/components/ui/navigation-menu'
 import headerNavLinks from '@/config/headerNavLinks'
 import { ChevronDown } from 'lucide-react'
-import { ResponsiveSearch } from '@/components/ui/responsive-search' // Add this import
+import { ResponsiveSearch } from '@/components/ui/responsive-search' 
+import { useMediaQuery } from 'react-responsive'
 
 const activeStyles =
   'bg-gradient-to-r from-purple-100 via-purple-200 to-purple-100 text-purple-900 dark:from-purple-800 dark:via-purple-700 dark:to-purple-800 dark:text-white shadow-sm border text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary dark:from-purple-900/70 dark:via-purple-800/70 dark:to-purple-900/70 dark:text-white dark:border-purple-700/20 dark:hover:from-purple-800/70 dark:hover:via-purple-700/70 dark:hover:to-purple-800/70'
@@ -32,6 +32,9 @@ const activeStyles =
 
 export function SiteHeader() {
   const pathname = usePathname()
+  const isLargeScreen = useMediaQuery({
+    query: '(min-width: 850px)',
+  })
   const headerClass =
     'sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
 
@@ -101,19 +104,18 @@ export function SiteHeader() {
           <MainNav />
         </div>
 
-        <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
-          <ResponsiveSearch />
-          {/* <UserMenu /> */}
-          {/* <ThemeToggle /> */}
-          <MobileNav />
-        </div>
-
-        {/* Desktop Right Section */}
-        <div className='hidden min-[850px]:flex items-center gap-4'>
-          <ResponsiveSearch />
-          <UserMenu />
-          <ThemeToggle />
-        </div>
+        {isLargeScreen ? (
+          <div className='flex items-center gap-4'>
+            <ResponsiveSearch />
+            <UserMenu />
+            <ThemeToggle />
+          </div>
+        ) : (
+          <div className='flex items-center justify-between gap-2'>
+            <ResponsiveSearch />
+            <MobileNav />
+          </div>
+        )}
       </div>
     </header>
   )

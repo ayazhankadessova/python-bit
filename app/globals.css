@@ -79,7 +79,7 @@
   .bg-gradient-custom {
     @apply bg-gradient-to-r from-background-start via-background-end to-background-start;
   }
-  
+
   .bg-gradient-soft {
     @apply bg-gradient-to-r from-background-start/50 via-background-end to-background-start/50;
   }
