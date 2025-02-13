@@ -35,7 +35,7 @@ export async function generateStaticParams(): Promise<
 export default async function ProjectPage({ params }: PostPageProps) {
   const post = await getPostFromParams(params)
   const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme.trim().replace("", '-')}/${params?.slug?.join('/')}`
-  const exercise = getExerciseById(post!.id)
+  const exercise = getExerciseById(post?.slugAsParams)
 
   if (!post || !post.published) {
     notFound()
@@ -62,11 +62,11 @@ export default async function ProjectPage({ params }: PostPageProps) {
                 {post.title}
               </h1>
               <div className='my-4'>
-                <ProjectStatus projectId={post.slugAsParams} detailed={true}/>
+                <ProjectStatus projectId={post.slugAsParams} detailed={true} />
               </div>
-              {post.description && (
+              {exercise?.description && (
                 <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>
-                  {post.description}
+                  {exercise?.description}
                 </p>
               )}
               <hr className='my-4' />

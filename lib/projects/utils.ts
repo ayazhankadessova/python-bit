@@ -7,7 +7,8 @@ import { PROJECTS } from '@/config/projects'
  * @param id - The unique identifier of the exercise
  * @returns The exercise object if found, undefined otherwise
  */
-export function getExerciseById(id: string): Project | undefined {
+export function getExerciseById(id?: string): Project | undefined {
+  if (!id) return undefined
   // First try direct lookup since we know the key structure
   const directLookup = Object.entries(PROJECTS as ProjectCollection).find(
     ([, project]) => project.id === id
@@ -25,7 +26,7 @@ export function getExerciseById(id: string): Project | undefined {
  */
 export function getProjectByTags(
   projects: Array<Projects>, tags: string[]
-): Project[] {
+): Projects[] {
   return projects.filter((project) =>
     tags.every((tag) => project.tags.includes(tag))
   )
@@ -36,14 +37,14 @@ export function getProjectByTags(
  * @param difficulty - The difficulty level to filter by
  * @returns Array of exercises matching the difficulty
  */
-export function getProjectsByDifficulty(
-  projects: Array<Projects>,
-  difficulty: Project['difficulty']
-): Project[] {
-  return projects.filter(
-    (project) => project.difficulty === difficulty
-  )
-}
+// export function getProjectsByDifficulty(
+//   projects: Array<Projects>,
+//   difficulty: Project['difficulty']
+// ): Project[] {
+//   return projects.filter(
+//     (project) => project.difficulty === difficulty
+//   )
+// }
 
 export function filterProjectsBySearchTerm(
   projects: Array<Projects>,

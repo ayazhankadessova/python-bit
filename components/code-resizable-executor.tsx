@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Play, Loader2, Code2, RotateCcw } from 'lucide-react'
+import { Play, Loader2, Code2, RotateCcw, CloudUpload } from 'lucide-react'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
@@ -219,13 +219,12 @@ const PythonResizableCodeEditor = ({
                   <Button
                     variant='whiteGray'
                     onClick={() => executeCode(true)}
-                    className='bg-purple-600 hover:bg-purple-700 text-white'
                     disabled={isExecuting}
                   >
                     {isSubmitting ? (
                       <Loader2 className='w-4 h-4 mr-2 animate-spin' />
                     ) : (
-                      <Play className='w-4 h-4 mr-2' />
+                      <CloudUpload className='w-4 h-4 mr-2' />
                     )}
                     Submit
                   </Button>

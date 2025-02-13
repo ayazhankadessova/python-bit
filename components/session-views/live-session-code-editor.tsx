@@ -3,7 +3,15 @@ import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { Button } from '@/components/ui/button'
-import { Play, Send, Code2, Loader2, RefreshCw, RotateCcw } from 'lucide-react'
+import {
+  Play,
+  Send,
+  Code2,
+  Loader2,
+  RefreshCw,
+  RotateCcw,
+  CloudUpload,
+} from 'lucide-react'
 import {
   ResizableHandle,
   ResizablePanelGroup,
@@ -233,7 +241,7 @@ export function PythonEditor({
                     {isSubmitting ? (
                       <Loader2 className='w-4 h-4 mr-2 animate-spin' />
                     ) : (
-                      <Play className='w-4 h-4 mr-2' />
+                      <CloudUpload className='w-4 h-4 mr-2' />
                     )}
                     Submit
                   </Button>
