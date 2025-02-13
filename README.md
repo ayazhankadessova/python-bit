@@ -480,9 +480,8 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [x] Make Run Code and Submit Btns different
 - [x] light+Dark mode header btns remove bg
 - [x] hydration issues solved
-- [ ] create week 2 assignments 
+- [x] create week 2 assignments 
 - [ ] create week 3 assignments
-- [ ] add one week to real time classrooms
 - [ ] Check project types: eg there is one from velite and one that i created
 - [ ] beautiful 404
 

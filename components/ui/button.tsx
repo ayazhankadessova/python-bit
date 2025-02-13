@@ -52,14 +52,14 @@ const buttonVariants = cva(
           dark:hover:from-amber-700/70 dark:hover:via-amber-600/70 dark:hover:to-amber-700/70
         `,
         oceanBlue: `
-          bg-gradient-to-r from-cyan-100 via-purple-200 to-cyan-100 
-          text-purple-900 font-medium 
+          bg-gradient-to-r from-cyan-100 via-cyan-200 to-cyan-100 
+          text-blue-900 font-medium 
           shadow-sm border border-purple-200/50 
-          hover:shadow-md hover:from-cyan-200 hover:via-purple-300 hover:to-cyan-200 
+          hover:shadow-md hover:from-cyan-200 hover:via-cyan-300 hover:to-cyan-200 
           hover:-translate-y-0.5 active:translate-y-0
-          dark:from-cyan-900/70 dark:via-purple-800/70 dark:to-cyan-900/70 
-          dark:text-purple-100 dark:border-purple-700/30 
-          dark:hover:from-cyan-800/70 dark:hover:via-purple-700/70 dark:hover:to-cyan-800/70
+          dark:from-cyan-900/70 dark:via-cyan-800/70 dark:to-cyan-900/70 
+          dark:text-cyan-100 dark:border-cyan-700/30 
+          dark:hover:from-cyan-800/70 dark:hover:via-cyan-700/70 dark:hover:to-cyan-800/70
         `,
         slate: `
           bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 
