@@ -29,7 +29,6 @@ collection: 'assignments' {
       outputText: string,
       explanation: string
     }],
-    testCode: string     // Python code with asserts for testing
   }
 }
 

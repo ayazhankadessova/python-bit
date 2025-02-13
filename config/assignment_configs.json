@@ -23,7 +23,7 @@
   "hello-world-task-2": {
     "id": "hello-world-task-2",
     "title": "Create a Fun Message Generator",
-    "problemStatement": "hi",
+    "problemStatement": "# Message Repeater Challenge! 🔄Your task is to create a function called `create_message` that generates a fun, repeated message.## Function Requirements:1. Take two parameters:   - `text` (a string): The message to repeat   - `times` (a number): How many times to repeat the message2. Return a single string that contains:   - First line: The original message   - Second line: The message repeated the specified number of times   - Third line: The total character count in all messages combined## Example:When you call:> create_message(\"Hi\", 3)It should return:> Original message: Hi\nRepeated message: HiHiHi\nTotal characters: 8Which when displayed looks like:```Original message: HiRepeated message: HiHiHiTotal characters: 8```## Notes:- Use string concatenation (+) for the first two lines- Use string multiplication (*) for the repeated message- Count all characters in both the original and repeated message- Make sure to include the newline characters (\\n) between lines",
     "starterCode": "def create_message(text, times):\n    # Write your code here\n    pass",
     "starterFunctionName": "create_message",
     "examples": [
@@ -38,6 +38,49 @@
         "inputText": "create_message('Python!', 2)",
         "outputText": "Original message: Python!\nRepeated message: Python!Python!\nTotal characters: 14",
         "explanation": "The function works with any string input, including numbers in the name"
+      }
+    ]
+  },
+
+  "python-variables-task-1": {
+    "id": "python-variables-task-1",
+    "title": "Student Information Card Generator",
+    "problemStatement": "# Student Information Card Generator 📚\n\nCreate a function called `create_student_card` that generates a formatted student information card.\n\n## Function Requirements:\n1. Take four parameters:\n   - `name` (string): Student's name\n   - `age` (integer): Student's age\n   - `grade` (float): Student's grade average\n   - `is_active` (boolean): Student's active status\n\n2. Return a formatted string that displays:\n   - A header line with '== STUDENT CARD =='\n   - Student's name\n   - Student's age (converted to string)\n   - Student's grade with exactly one decimal place\n   - Student's active status\n   - A footer line with '================'\n\n## Important Notes:\n- Use proper variable types for each piece of information\n- Convert numbers to strings when concatenating\n- Format the grade to show exactly one decimal place\n- Use string concatenation to build the card\n- Make sure each piece of information is on its own line\n\n## Tips:\n- Remember to use str() for number conversions\n- Use string formatting for the grade\n- Pay attention to line breaks (\\n)",
+    "starterCode": "def create_student_card(name, age, grade, is_active):\n    # Write your code here\n    pass",
+    "starterFunctionName": "create_student_card",
+    "examples": [
+      {
+        "id": "example1",
+        "inputText": "create_student_card('Alice Smith', 15, 92.5, True)",
+        "outputText": "== STUDENT CARD ==\nName: Alice Smith\nAge: 15\nGrade: 92.5\nActive: True\n================",
+        "explanation": "Creates a properly formatted student card with all information"
+      },
+      {
+        "id": "example2",
+        "inputText": "create_student_card('Bob Jones', 14, 88.7, False)",
+        "outputText": "== STUDENT CARD ==\nName: Bob Jones\nAge: 14\nGrade: 88.7\nActive: False\n================",
+        "explanation": "Shows how the function handles different types of input values"
+      }
+    ]
+  },
+  "python-variables-task-2": {
+    "id": "python-variables-task-2",
+    "title": "Score Calculator",
+    "problemStatement": "# Game Score Calculator 🎮\n\nCreate a function called `calculate_game_stats` that processes game scores and generates a statistics summary.\n\n## Function Requirements:\n1. Take three parameters:\n   - `player_name` (string): Name of the player\n   - `scores` (list of 3 integers): Three round scores\n   - `bonus_multiplier` (float): Bonus point multiplier\n\n2. Calculate and return a formatted string containing:\n   - Player's name\n   - Individual round scores\n   - Average score (as a float with 1 decimal place)\n   - Total score after applying bonus multiplier\n   - Whether the player achieved a high score (True if total > 100)\n\n## Calculations:\n- Average = sum of scores / number of scores\n- Final total = average * bonus_multiplier\n- High score = True if final total > 100\n\n## Notes:\n- Use appropriate variable types for calculations\n- Format decimals to one place\n- Convert numbers to strings for output\n- Include all required information in output",
+    "starterCode": "def calculate_game_stats(player_name, scores, bonus_multiplier):\n    # Write your code here\n    pass",
+    "starterFunctionName": "calculate_game_stats",
+    "examples": [
+      {
+        "id": "example1",
+        "inputText": "calculate_game_stats('Mario', [30, 45, 25], 1.5)",
+        "outputText": "Player: Mario\nRounds: 30, 45, 25\nAverage: 33.3\nFinal Score: 50.0\nHigh Score: False",
+        "explanation": "Shows calculation of game statistics with bonus multiplier"
+      },
+      {
+        "id": "example2",
+        "inputText": "calculate_game_stats('Luigi', [75, 80, 95], 1.2)",
+        "outputText": "Player: Luigi\nRounds: 75, 80, 95\nAverage: 83.3\nFinal Score: 100.0\nHigh Score: True",
+        "explanation": "Demonstrates handling of high scores and different input values"
       }
     ]
   }

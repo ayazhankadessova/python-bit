@@ -22,7 +22,7 @@ const CurriculumManager = () => {
   const [assignment, setAssignment] = useState<Assignment>({
     id: '',
     title: '',
-    problemStatement: '',
+    problemStatement: ``,
     starterCode: '',
     starterFunctionName: '',
     examples: [],
