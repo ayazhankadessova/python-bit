@@ -19,6 +19,8 @@ class Assignment:
     starterCode: str
     starterFunctionName: str
     examples: List[Example]
+    outputType: str 
+    
 
 class AssignmentLoader:
     _instance = None
@@ -63,6 +65,7 @@ class AssignmentLoader:
                         starterCode=assignment_data['starterCode'],
                         starterFunctionName=assignment_data['starterFunctionName'],
                         examples=examples,
+                        outputType=assignment_data['outputType']
                     )
 
         # print success message
@@ -125,7 +128,10 @@ class AssignmentService:
             example = assignment.examples[0]  # Just use the first example for now
             
             # Create test code that will run the function and compare output
-            test_code = f"""
+            # Create test code based on output type
+            # Create test code based on output type
+            if assignment.outputType == "string":
+                test_code = f"""
 {code}
 
 try:
@@ -142,7 +148,24 @@ try:
 except Exception as e:
     print(f'Error running code: {{str(e)}}')
 """
-            
+            else:  # dict or other object comparison
+                test_code = f"""
+{code}
+
+try:
+    result = {example.inputText}
+    expected = {example.outputText}
+    
+    print(f'Your output: {{result}}')
+    print(f'Expected: {{expected}}')
+    
+    if result == expected:
+        print('✅ Correct!')
+    else:
+        print('❌ Not quite right yet.')
+except Exception as e:
+    print(f'Error running code: {{str(e)}}')
+"""
             # Execute the test code
             result = await self.code_execution.execute_python_code(test_code)
             

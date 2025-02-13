@@ -5,6 +5,7 @@
     "problemStatement": "# Custom Greeting Generator\n\nWrite a function called `create_greeting` that creates a personalized greeting message. The function should:\n\n1. Take a single parameter `name` (string)\n2. Print exactly three lines:\n - First line: 'Hello, Python!'\n - Second line: The provided name\n - Third line: 'I'm ready to code!'\n\n## Requirements:\n- Use the print() function for each line\n- Maintain exact spacing and punctuation\n- Handle any input name correctly\n\n## Note:\n- Pay attention to the exact text and punctuation\n- Each message should be on its own line\n- The function should work for any valid input name",
     "starterCode": "def create_greeting(name):\n    # Write your code here\n    pass",
     "starterFunctionName": "create_greeting",
+    "outputType": "string",
     "examples": [
       {
         "id": "example1",
@@ -26,6 +27,7 @@
     "problemStatement": "# Message Repeater Challenge! 🔄Your task is to create a function called `create_message` that generates a fun, repeated message.## Function Requirements:1. Take two parameters:   - `text` (a string): The message to repeat   - `times` (a number): How many times to repeat the message2. Return a single string that contains:   - First line: The original message   - Second line: The message repeated the specified number of times   - Third line: The total character count in all messages combined## Example:When you call:> create_message(\"Hi\", 3)It should return:> Original message: Hi\nRepeated message: HiHiHi\nTotal characters: 8Which when displayed looks like:```Original message: HiRepeated message: HiHiHiTotal characters: 8```## Notes:- Use string concatenation (+) for the first two lines- Use string multiplication (*) for the repeated message- Count all characters in both the original and repeated message- Make sure to include the newline characters (\\n) between lines",
     "starterCode": "def create_message(text, times):\n    # Write your code here\n    pass",
     "starterFunctionName": "create_message",
+    "outputType": "string",
     "examples": [
       {
         "id": "example1",
@@ -41,13 +43,13 @@
       }
     ]
   },
-
   "python-variables-task-1": {
     "id": "python-variables-task-1",
     "title": "Student Information Card Generator",
     "problemStatement": "# Student Information Card Generator 📚\n\nCreate a function called `create_student_card` that generates a formatted student information card.\n\n## Function Requirements:\n1. Take four parameters:\n   - `name` (string): Student's name\n   - `age` (integer): Student's age\n   - `grade` (float): Student's grade average\n   - `is_active` (boolean): Student's active status\n\n2. Return a formatted string that displays:\n   - A header line with '== STUDENT CARD =='\n   - Student's name\n   - Student's age (converted to string)\n   - Student's grade with exactly one decimal place\n   - Student's active status\n   - A footer line with '================'\n\n## Important Notes:\n- Use proper variable types for each piece of information\n- Convert numbers to strings when concatenating\n- Format the grade to show exactly one decimal place\n- Use string concatenation to build the card\n- Make sure each piece of information is on its own line\n\n## Tips:\n- Remember to use str() for number conversions\n- Use string formatting for the grade\n- Pay attention to line breaks (\\n)",
     "starterCode": "def create_student_card(name, age, grade, is_active):\n    # Write your code here\n    pass",
     "starterFunctionName": "create_student_card",
+    "outputType": "string",
     "examples": [
       {
         "id": "example1",
@@ -69,6 +71,7 @@
     "problemStatement": "# Game Score Calculator 🎮\n\nCreate a function called `calculate_game_stats` that processes game scores and generates a statistics summary.\n\n## Function Requirements:\n1. Take three parameters:\n   - `player_name` (string): Name of the player\n   - `scores` (list of 3 integers): Three round scores\n   - `bonus_multiplier` (float): Bonus point multiplier\n\n2. Calculate and return a formatted string containing:\n   - Player's name\n   - Individual round scores\n   - Average score (as a float with 1 decimal place)\n   - Total score after applying bonus multiplier\n   - Whether the player achieved a high score (True if total > 100)\n\n## Calculations:\n- Average = sum of scores / number of scores\n- Final total = average * bonus_multiplier\n- High score = True if final total > 100\n\n## Notes:\n- Use appropriate variable types for calculations\n- Format decimals to one place\n- Convert numbers to strings for output\n- Include all required information in output",
     "starterCode": "def calculate_game_stats(player_name, scores, bonus_multiplier):\n    # Write your code here\n    pass",
     "starterFunctionName": "calculate_game_stats",
+    "outputType": "string",
     "examples": [
       {
         "id": "example1",
@@ -81,6 +84,58 @@
         "inputText": "calculate_game_stats('Luigi', [75, 80, 95], 1.2)",
         "outputText": "Player: Luigi\nRounds: 75, 80, 95\nAverage: 83.3\nFinal Score: 100.0\nHigh Score: True",
         "explanation": "Demonstrates handling of high scores and different input values"
+      }
+    ]
+  },
+  "python-collections-task-1": {
+    "id": "python-collections-task-1",
+    "title": "Pet Shop Manager 🐾",
+    "problemStatement": "# Pet Shop Manager 🐾\n\nCreate a function called `manage_pet_shop` that helps organize a virtual pet shop inventory!\n\n## Function Requirements:\n1. Take three parameters:\n - `new_pet` (string): Name of new pet to add\n - `pet_ages` (dictionary): Dictionary of pet names and their ages\n - `adopted_pets` (list): List of pets that found new homes\n\n2. Your function should:\n - Add the new pet to pet_ages with age 1\n - Remove adopted pets from pet_ages\n - Return a dictionary with:\n   * 'current_pets': List of remaining pets (sorted alphabetically)\n   * 'total_pets': Number of pets left\n   * 'average_age': Average age of remaining pets (rounded to 1 decimal)\n\n## Important Notes:\n- Handle cases where adopted pets aren't in the shop\n- If no pets remain, average_age should be 0.0\n- Remember to sort the current_pets list\n- Use proper dictionary operations\n\n## Tips:\n- Use list and dictionary methods\n- Remember to handle missing keys\n- Keep track of pets and ages carefully",
+    "starterCode": "def manage_pet_shop(new_pet, pet_ages, adopted_pets):\n    # Write your code here\n    pass",
+    "starterFunctionName": "manage_pet_shop",
+    "outputType": "dict",
+    "examples": [
+      {
+        "id": "example1",
+        "inputText": "manage_pet_shop('Buddy', {'Max': 3, 'Luna': 2}, ['Max'])",
+        "outputText": {
+          "current_pets": ["Buddy", "Luna"],
+          "total_pets": 2,
+          "average_age": 1.5
+        },
+        "explanation": "Adds Buddy (age 1), removes Max, calculates stats"
+      },
+      {
+        "id": "example2",
+        "inputText": "manage_pet_shop('Charlie', {'Rocky': 4}, ['Rocky', 'Missing'])",
+        "outputText": {
+          "current_pets": ["Charlie"],
+          "total_pets": 1,
+          "average_age": 1.0
+        },
+        "explanation": "Handles missing pets and recalculates with only new pet"
+      }
+    ]
+  },
+  "python-collections-task-2": {
+    "id": "python-collections-task-2",
+    "title": "Treasure Chest Sorter 🏴‍☠️",
+    "problemStatement": "# Treasure Chest Sorter 🏴‍☠️\n\nCreate a function called `sort_treasure` that helps organize items in a pirate's treasure chest!\n\n## Function Requirements:\n1. Take three parameters:\n - `new_items` (list): New treasures to add\n - `chest` (set): Current items in chest\n - `magic_items` (tuple): Special items that multiply (each counts as 2)\n\n2. Your function should:\n - Add new items to the chest (remember, sets don't allow duplicates!)\n - Count magic items twice\n - Return a dictionary with:\n   * 'unique_items': Number of different items\n   * 'total_items': Total count (including doubled magic items)\n   * 'has_crown': Boolean showing if 'crown' is in items\n   * 'items_list': Sorted list of all items\n\n## Important Notes:\n- Use appropriate set operations\n- Remember that magic_items is a tuple (can't be changed)\n- Sort the final items list alphabetically\n- Count magic items twice in total_items\n\n## Tips:\n- Convert between sets and lists when needed\n- Use set methods like add() and update()\n- Remember to check for magic items",
+    "starterCode": "def sort_treasure(new_items, chest, magic_items):\n    # Write your code here\n    pass",
+    "starterFunctionName": "sort_treasure",
+    "outputType": "dict",
+    "examples": [
+      {
+        "id": "example1",
+        "inputText": "sort_treasure(['coin', 'gem'], {'map'}, ('gem',))",
+        "outputText": {"unique_items": 3, "total_items": 4, "has_crown": false, "items_list": ["coin", "gem", "map"]},
+        "explanation": "Adds new items, counts gem twice because it's magical"
+      },
+      {
+        "id": "example2",
+        "inputText": "sort_treasure(['crown', 'crown'], {'crown'}, ())",
+        "outputText": {"unique_items": 1, "total_items": 1, "has_crown": true, "items_list": ["crown"]},
+        "explanation": "Handles duplicates and crown checking"
       }
     ]
   }
