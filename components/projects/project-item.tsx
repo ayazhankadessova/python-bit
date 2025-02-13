@@ -10,18 +10,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ProjectStatus } from './project-status'
-
-interface Project {
-  title: string
-  description: string
-  difficulty: string
-  estimatedTime: string
-  slugAsParams: string
-  theme: string
-}
+import {Projects} from "#site/content"
 
 interface ProjectItemProps {
-  project: Project
+  project: Projects
 }
 
 export function ProjectItem({ project }: ProjectItemProps) {

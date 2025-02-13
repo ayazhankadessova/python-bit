@@ -23,8 +23,10 @@ export function getExerciseById(id: string): Project | undefined {
  * @param tags - Array of tags to filter by
  * @returns Array of exercises that contain all specified tags
  */
-export function getProjectByTags(tags: string[]): Project[] {
-  return Object.values(PROJECTS as ProjectCollection).filter((project) =>
+export function getProjectByTags(
+  projects: Array<Projects>, tags: string[]
+): Project[] {
+  return projects.filter((project) =>
     tags.every((tag) => project.tags.includes(tag))
   )
 }
@@ -35,20 +37,11 @@ export function getProjectByTags(tags: string[]): Project[] {
  * @returns Array of exercises matching the difficulty
  */
 export function getProjectsByDifficulty(
+  projects: Array<Projects>,
   difficulty: Project['difficulty']
 ): Project[] {
-  return Object.values(PROJECTS as ProjectCollection).filter(
+  return projects.filter(
     (project) => project.difficulty === difficulty
-  )
-}
-
-/**
- * Get all published exercises
- * @returns Array of all published exercises
- */
-export function getPublishedExercises(): Project[] {
-  return Object.values(PROJECTS as ProjectCollection).filter(
-    (project) => project.published
   )
 }
 

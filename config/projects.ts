@@ -1,10 +1,3 @@
-// config/exercises.ts
-// import { Exercise } from '@/types/utils'
-
-// export type ExerciseCollection = {
-//   [key: string]: Exercise;
-// };
-
 import {ProjectCollection } from '@/types/utils'
 import projectConfigs from '@/config/project_configs.json'
 
