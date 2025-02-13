@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { MainNav } from './main-nav'
@@ -16,13 +16,12 @@ import {
 } from '@/components/ui/navigation-menu'
 import headerNavLinks from '@/config/headerNavLinks'
 import { ChevronDown } from 'lucide-react'
-import { ResponsiveSearch } from '@/components/ui/responsive-search' 
-import { useMediaQuery } from 'react-responsive'
+import { ResponsiveSearch } from '@/components/ui/responsive-search'
 
 const activeStyles =
   'bg-gradient-to-r from-purple-100 via-purple-200 to-purple-100 text-purple-900 dark:from-purple-800 dark:via-purple-700 dark:to-purple-800 dark:text-white shadow-sm border text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary dark:from-purple-900/70 dark:via-purple-800/70 dark:to-purple-900/70 dark:text-white dark:border-purple-700/20 dark:hover:from-purple-800/70 dark:hover:via-purple-700/70 dark:hover:to-purple-800/70'
 
-  const isPathActive = (currentPath: string, href: string) => {
+const isPathActive = (currentPath: string, href: string) => {
   if (href === '/') return currentPath === href
   // Split both paths and compare the first segment
   const currentSegment = currentPath.split('/')[1]
@@ -32,11 +31,8 @@ const activeStyles =
 
 export function SiteHeader() {
   const pathname = usePathname()
-  const isLargeScreen = useMediaQuery({
-    query: '(min-width: 850px)',
-  })
   const headerClass =
-    'sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
+    'sticky top-0 z-50 w-full border-b border-border/40 bg-background'
 
   return (
     <header className={headerClass}>
@@ -104,18 +100,17 @@ export function SiteHeader() {
           <MainNav />
         </div>
 
-        {isLargeScreen ? (
-          <div className='flex items-center gap-4'>
-            <ResponsiveSearch />
+        {/* Right Section with Responsive Search */}
+        <div className='flex items-center gap-2 min-[850px]:gap-4'>
+          <ResponsiveSearch />
+          <div className='hidden min-[850px]:flex items-center gap-4'>
             <UserMenu />
             <ThemeToggle />
           </div>
-        ) : (
-          <div className='flex items-center justify-between gap-2'>
-            <ResponsiveSearch />
+          <div className='min-[850px]:hidden'>
             <MobileNav />
           </div>
-        )}
+        </div>
       </div>
     </header>
   )

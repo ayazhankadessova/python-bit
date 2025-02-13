@@ -475,6 +475,10 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 - Global search: tutorials, pages, 
 - [x] Search projecs
+
+## Feb 13
+- [x] Make Run Code and Submit Btns different
+- [ ] light+Dark mode header btns remove bg
 - [ ] Check project types: eg there is one from velite and one that i created
 - [ ] beautiful 404
 

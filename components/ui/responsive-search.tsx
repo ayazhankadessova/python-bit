@@ -66,7 +66,7 @@ export function ResponsiveSearch() {
   console.log('Tutorials to display:', filteredTutorials)
 
   return (
-    <>
+    <div>
       <Button
         variant='slate'
         className='relative h-9 w-9 p-0 xl:h-10 xl:w-60 xl:justify-start xl:px-3 xl:py-2'
@@ -244,6 +244,6 @@ export function ResponsiveSearch() {
           )}
         </CommandList>
       </CommandDialog>
-    </>
+    </div>
   )
 }
