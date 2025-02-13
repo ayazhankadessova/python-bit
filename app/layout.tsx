@@ -35,7 +35,6 @@ export default function RootLayout({
               <BlogFooter />
             </AuthModalProvider>
           </AuthProvider>
-          {/* </div> */}
         </Providers>
       </body>
     </html>

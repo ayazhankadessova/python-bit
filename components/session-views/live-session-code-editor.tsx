@@ -228,7 +228,7 @@ export function PythonEditor({
                   <Button
                     onClick={handleSubmitCode}
                     disabled={isExecuting}
-                    variant='softTealSecondary'
+                    variant='whiteGray'
                   >
                     {isSubmitting ? (
                       <Loader2 className='w-4 h-4 mr-2 animate-spin' />

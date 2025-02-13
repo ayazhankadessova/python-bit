@@ -14,7 +14,9 @@ const buttonVariants = cva(
         outline:
           'border border-input bg-gradient-soft shadow-sm hover:bg-gradient-custom hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200',
         secondary:
-          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
+          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 hover:-translate-y-0.5 active:translate-y-0',
+        whiteGray:
+          'bg-zinc-100 text-secondary-foreground shadow-sm hover:bg-zinc-100/90 dark:bg-zinc-700 dark:hover:bg-zinc-700/90 hover:-translate-y-0.5 active:translate-y-0',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         softBlue:
@@ -30,14 +32,14 @@ const buttonVariants = cva(
           dark:hover:from-teal-500 dark:hover:via-teal-400 dark:hover:to-teal-500
         `,
         softTealSecondary: `
-        bg-gradient-to-r from-teal-100/90 via-teal-200/90 to-teal-100/90 
+        bg-teal-100
         text-teal-700 font-medium 
         shadow-sm border border-teal-200/30 
-        hover:shadow-md hover:from-teal-100 hover:via-teal-200 hover:to-teal-100 
+        hover:shadow-md hover:bg-teal-100/90
         hover:-translate-y-0.5 active:translate-y-0
-        dark:from-teal-900/40 dark:via-teal-800/40 dark:to-teal-900/40 
-        dark:text-teal-300 dark:border-teal-700/20 
-        dark:hover:from-teal-800/40 dark:hover:via-teal-700/40 dark:hover:to-teal-800/40
+        dark:bg-teal-300
+        dark:text-teal-900 dark:border-teal-700/20 
+        dark:hover:bg-teal-300/90
       `,
         warmYellow: `
           bg-gradient-to-r from-amber-100 via-yellow-200 to-amber-100 
