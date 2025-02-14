@@ -369,7 +369,6 @@ const CurriculumManager = () => {
 
                           <div className='space-y-2'>
                             <Label>Assignments</Label>
-                            // Find this section in the code:
                             <div className='flex gap-2'>
                               <Input
                                 placeholder='Assignment ID'
