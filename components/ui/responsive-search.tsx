@@ -62,8 +62,8 @@ export function ResponsiveSearch() {
   }
 
   // Right before the return statement
-  console.log('Search term present:', !!searchTerm)
-  console.log('Tutorials to display:', filteredTutorials)
+  // console.log('Search term present:', !!searchTerm)
+  // console.log('Tutorials to display:', filteredTutorials)
 
   return (
     <div>

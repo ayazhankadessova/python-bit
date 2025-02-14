@@ -59,6 +59,7 @@ export interface Week {
   assignmentIds: string[]
 }
 export interface Curriculum {
+  id?: string
   name: string
   description: string
   weeks: Week[]

@@ -7,7 +7,7 @@ class ProjectService:
         self.code_execution = CodeExecutionService()
 
     async def test_project(self, code: str, project_id: str) -> dict:
-        print(project_id)
+        # print(project_id)
         project = get_project(project_id)
         if not project:
             print("NOT FOUND")
@@ -26,7 +26,7 @@ class ProjectService:
                 )
                 
                 result = await self.code_execution.execute_python_code(full_code)
-                print(result)
+                # print(result)
                 return {
                     'error': result['error'],
                     'success': 'All tests passed!' in result['output'] and not result['error'],
