@@ -19,38 +19,45 @@ interface PostPageProps {
 }
 
 // --- Section Component ---
-// Renders each JSON section with an Unlock button overlay.
-// The section content is initially blurred until the user clicks "Unlock".
-function Section({ item, index }: { item: any; index: number }) {
-  const [unlocked, setUnlocked] = useState(index === 0);
+// The section content is initially blurred until the user clicks "next".
+function Section({ 
+  item, 
+  index, 
+  unlocked, 
+  setUnlockedSections, 
+  totalSections,
+  hiddenButtons, 
+  setHiddenButtons
+}: { 
+  item: any; 
+  index: number; 
+  unlocked: boolean; 
+  setUnlockedSections: React.Dispatch<React.SetStateAction<{ [key: number]: boolean }>>; 
+  totalSections: number; 
+  hiddenButtons: { [key: number]: boolean };
+  setHiddenButtons: React.Dispatch<React.SetStateAction<{ [key: number]: boolean }>>;
+}) {
+  const handleNext = () => {
+    setUnlockedSections(prev => ({ ...prev, [index + 1]: true}));
+    setHiddenButtons(prev => ({ ...prev, [index]: true }));
+  };  
 
   return (
-    <div className="relative mb-4" key={`section-${index}`}>
-      {index !== 0 && <br />}
-      {/* Wrap section content in a container that is blurred if not unlocked */}
+    <div className="relative mb-8" key={`section-${index}`}>
+      {index !== 0 }
+      
+      {/* blur content if locked */}
       <div className={`${!unlocked ? 'filter blur-sm' : ''}`}>
         {item.title && (
-          <h2
-            className={
-              item.title.trim().toLowerCase() === "conclusion"
-                ? "text-2xl font-semibold my-4"
-                : "text-lg font-semibold my-4"
-            }
-          >
+          <h2 className={item.title.trim().toLowerCase() === "conclusion" ? "text-2xl font-semibold my-4" : "text-lg font-semibold my-4"}>
             {item.title}
           </h2>
         )}
-        {item.description && (
-          <p className="text-base mt-2">
-            {item.description}
-          </p>
-        )}
+        {item.description && <p className="text-base mt-2">{item.description}</p>}
         {item.features && Array.isArray(item.features) && (
           <ul className="list-disc ml-6 my-2">
             {item.features.map((feature: string, idx: number) => (
-              <li key={`feature-${index}-${idx}`} className="text-base">
-                {feature}
-              </li>
+              <li key={`feature-${index}-${idx}`} className="text-base">{feature}</li>
             ))}
           </ul>
         )}
@@ -69,35 +76,31 @@ function Section({ item, index }: { item: any; index: number }) {
         {item.tips && Array.isArray(item.tips) && (
           <ul className="list-disc ml-6 my-2">
             {item.tips.map((tip: string, idx: number) => (
-              <li key={`tip-${index}-${idx}`} className="text-xl">
-                {tip}
-              </li>
+              <li key={`tip-${index}-${idx}`} className="text-xl">{tip}</li>
             ))}
           </ul>
         )}
-        {item.final_note && (
-          <>
-            <br />
-            <p className="text-xl mt-2">
-              {item.final_note}
-            </p>
-          </>
-        )}
+        {item.final_note && <p className="text-xl mt-6">{item.final_note}</p>}
       </div>
-      {/* Overlay unlock button if section is locked */}
-      {!unlocked && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-            onClick={() => setUnlocked(true)}
-          >
-            Unlock
-          </button>
+
+      {/* next btn - only if unlocked & not last section */}
+      {unlocked && index !== totalSections - 1 && !hiddenButtons[index] && (
+        <div className="flex justify-end mt-4">
+        <button   className="mt-4 px-3.5 py-1.5 bg-gradient-to-r from-green-500 to-green-700 
+        text-white font-medium rounded-md
+        transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+           onClick={handleNext}>
+          next ->
+        </button>
         </div>
       )}
+
+
+
     </div>
   );
 }
+
 
 // --- Data Fetching Functions ---
 async function getPostFromParams(params: PostPageProps['params']) {
@@ -127,12 +130,14 @@ export default function ProjectPage({ params }: PostPageProps) {
   const [post, setPost] = useState<any>(null);
   const [exercise, setExercise] = useState<any>(null);
   const [jsonData, setJsonData] = useState<any>(null);
+  const [unlockedSections, setUnlockedSections] = useState<{ [key: number]: boolean }>({ 0: true });
+  const [hiddenButtons, setHiddenButtons] = useState<{ [key: number]: boolean }>({});
+
 
   useEffect(() => {
     const fetchData = async () => {
       const fetchedPost = await getPostFromParams(params);
       const fetchedJson = await getJsonFromParams(params);
-      console.log("this is inside useEffect's json: ", fetchedJson);
 
       if (!fetchedPost || !fetchedPost.published) {
         notFound();
@@ -154,56 +159,51 @@ export default function ProjectPage({ params }: PostPageProps) {
     return <div>Loading...</div>;
   }
 
-  const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme.trim().replace("", '-')}/${params?.slug?.join('/')}`;
+  const totalSections = jsonData?.sections?.length || 0;
 
   return (
     <div className='flex flex-col h-screen'>
-      {/* Navigation bar */}
       <div className='flex-none px-4 py-4 border-b'>
         <div className='flex items-start justify-between'>
           <BackButton />
-          <SharePost fullLink={fullLinkGenerated} />
+          <SharePost fullLink={`${siteConfig.url}/projects/${post.theme.trim().replace("", '-')}/${params?.slug?.join('/')}`} />
         </div>
       </div>
 
-      {/* Split screen container */}
       <div className='flex flex-1 min-h-0'>
-        {/* Left side - Tutorial content */}
         <div className='w-1/2 overflow-y-auto border-r p-6'>
           <div className='max-w-3xl mx-auto'>
             <article className='prose prose-img:rounded-xl prose dark:prose-invert'>
-              <h1 className='mb-2 text-foreground dark:text-foreground'>
-                {post.title}
-              </h1>
+              <h1 className='mb-2 text-foreground dark:text-foreground'>{post.title}</h1>
               <div className='my-4'>
                 <ProjectStatus projectId={post.slugAsParams} detailed={true} />
               </div>
               {post.description && (
-                <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>
-                  {post.description}
-                </p>
+                <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>{post.description}</p>
               )}
               <hr className='my-4' />
               <MDXContent code={post.body} />
               <div className="json-display">
-                {jsonData &&
-                  jsonData.sections &&
-                  Array.isArray(jsonData.sections) &&
-                  jsonData.sections.map((section: any, index: number) => (
-                    <Section key={index} item={section} index={index} />
-                  ))}
+                {jsonData?.sections?.map((section: any, index: number) => (
+                  <Section
+                    key={index}
+                    item={section}
+                    index={index}
+                    unlocked={!!unlockedSections[index]}
+                    setUnlockedSections={setUnlockedSections}
+                    totalSections={totalSections}  
+                    hiddenButtons={hiddenButtons}
+                    setHiddenButtons={setHiddenButtons}
+                  />
+                ))}
               </div>
             </article>
           </div>
         </div>
-        {/* Right side - Code editor */}
+
         <div className='w-1/2 overflow-hidden'>
           {exercise && (
-            <PythonResizableCodeEditor
-              initialCode={exercise?.starterCode}
-              project_id={exercise?.id}
-              isProject={true}
-            />
+            <PythonResizableCodeEditor initialCode={exercise?.starterCode} project_id={exercise?.id} isProject={true} />
           )}
         </div>
       </div>
