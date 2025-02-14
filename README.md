@@ -490,8 +490,10 @@ invalidateCache() // This will drop the cache and trigger a refetch
 ## Feb 14
 
 - [x] create week 4 assignments
-- [ ] create week 5 assignments
-- [ ] Add 5 weeks to curricula
+- [x] When creating curricula, make sure assignment is added
+- [x] Fix week selector!, make sure assignments properly shown
+- [x] remove useless stuff from currcilim. which fields u dont need?
+- [x] Add 5 weeks to curricula
 
 
 ## Feb 15 

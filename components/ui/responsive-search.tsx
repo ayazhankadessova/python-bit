@@ -46,15 +46,9 @@ export function ResponsiveSearch() {
     setSearchTerm(term || '')
   }, [])
 
-  // Filter projects and tutorials based on search term
-  console.log('All projects:', projects) // Log all available projects
-  console.log('All tutorials:', tutorials) // Log all available tutorials
-
   const filteredProjects = filterProjectsBySearchTerm(projects, searchTerm)
-  console.log('Filtered projects:', filteredProjects) // Log filtered projects
 
   const filteredTutorials = filterTutorialsBySearchTerm(tutorials, searchTerm)
-  console.log('Filtered tutorials:', filteredTutorials) // Log filtered tutorials
 
   const handleSelect = (href: string) => {
     setOpen(false)

@@ -102,11 +102,6 @@ useEffect(() => {
           weeks: data.weeks.map((week: Week) => ({
             weekNumber: week.weekNumber,
             title: week.title,
-            tutorialContent: {
-              theory: week.tutorialContent.theory,
-              examples: week.tutorialContent.examples,
-              resources: week.tutorialContent.resources,
-            },
             assignmentIds: week.assignmentIds,
           })),
         } as CurriculumWithId;

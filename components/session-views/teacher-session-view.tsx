@@ -511,7 +511,7 @@ export function TeacherSessionView({
           <div className='flex items-center space-x-4'>
             {classroom && curriculum && (
               <WeekSelector
-                selectedWeek={1}
+                selectedWeek={currentWeek?.weekNumber ?? 1}
                 totalWeeks={curriculum?.weeks.length ?? 1}
                 onSelectWeek={handleWeekSelect}
               />

@@ -28,7 +28,7 @@ type LoginInputs = z.infer<typeof loginSchema>
 export default function LoginForm() {
   const router = useRouter()
   const { toast } = useToast()
-  const [signInWithEmailAndPassword, loading] =
+  const [signInWithEmailAndPassword, userCred, loading] =
     useSignInWithEmailAndPassword(auth)
 
   const { onOpen, onClose } = useAuthModal()
@@ -48,7 +48,7 @@ export default function LoginForm() {
 
       toast({
         title: 'Success',
-        description: 'Successfully signed in! ',
+        description: 'Successfully signed in!' + userCred?.user.email,
         variant: 'success',
       })
 
