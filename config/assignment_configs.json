@@ -128,14 +128,128 @@
       {
         "id": "example1",
         "inputText": "sort_treasure(['coin', 'gem'], {'map'}, ('gem',))",
-        "outputText": {"unique_items": 3, "total_items": 4, "has_crown": false, "items_list": ["coin", "gem", "map"]},
+        "outputText": {
+          "unique_items": 3,
+          "total_items": 4,
+          "has_crown": false,
+          "items_list": ["coin", "gem", "map"]
+        },
         "explanation": "Adds new items, counts gem twice because it's magical"
       },
       {
         "id": "example2",
         "inputText": "sort_treasure(['crown', 'crown'], {'crown'}, ())",
-        "outputText": {"unique_items": 1, "total_items": 1, "has_crown": true, "items_list": ["crown"]},
+        "outputText": {
+          "unique_items": 1,
+          "total_items": 1,
+          "has_crown": true,
+          "items_list": ["crown"]
+        },
         "explanation": "Handles duplicates and crown checking"
+      }
+    ]
+  },
+  "python-operators-task-1": {
+    "id": "python-operators-task-1",
+    "title": "Power-Up Calculator 🎮",
+    "problemStatement": "# Power-Up Calculator 🎮\n\nCreate a function called `calculate_power` that helps calculate a player's power level in a game!\n\n## Function Requirements:\n1. Take three parameters:\n - `base_power` (integer): Player's base power level\n - `multipliers` (list): List of power multipliers (numbers)\n - `has_special_item` (boolean): Whether player has a special item\n\n2. Your function should:\n - Multiply base_power by the product of all multipliers\n - Add 50 bonus power if has_special_item is True\n - Return a dictionary with:\n   * 'final_power': Final calculated power level\n   * 'is_super_power': True if final power > 100\n   * 'power_category': 'Novice' if < 50, 'Advanced' if < 100, 'Master' if >= 100\n\n## Important Notes:\n- Calculate multiplication before adding bonus\n- Use proper arithmetic operators\n- Handle empty multiplier lists (treat as [1])\n- Round all numbers to integers\n\n## Tips:\n- Use the product of a list: multiple all numbers together\n- Remember to add bonus after multiplication\n- Use if/else for power categories",
+    "starterCode": "def calculate_power(base_power, multipliers, has_special_item):\n    # Write your code here\n    pass",
+    "starterFunctionName": "calculate_power",
+    "outputType": "dict",
+    "examples": [
+      {
+        "id": "example1",
+        "inputText": "calculate_power(10, [2, 2], True)",
+        "outputText": {
+          "final_power": 90,
+          "is_super_power": false,
+          "power_category": "Advanced"
+        },
+        "explanation": "Base(10) * 2 * 2 + Special(50) = 90"
+      },
+      {
+        "id": "example2",
+        "inputText": "calculate_power(20, [3], False)",
+        "outputText": {
+          "final_power": 60,
+          "is_super_power": false,
+          "power_category": "Advanced"
+        },
+        "explanation": "Base(20) * 3 = 60, no special bonus"
+      }
+    ]
+  },
+  "python-operators-task-2": {
+    "id": "python-operators-task-2",
+    "title": "Battle Score Calculator ⚔️",
+    "problemStatement": "# Battle Score Calculator ⚔️\n\nCreate a function called `calculate_battle_score` that determines a player's battle performance!\n\n## Function Requirements:\n1. Take four parameters:\n - `hits` (integer): Number of successful hits\n - `critical_hits` (integer): Number of critical hits\n - `time_bonus` (integer): Remaining time in seconds\n - `difficulty` (string): 'easy', 'medium', or 'hard'\n\n2. Your function should:\n - Calculate base score: (hits * 10) + (critical_hits * 25)\n - Apply time multiplier: 1.5x if time_bonus > 30\n - Apply difficulty multiplier: easy = 1x, medium = 1.5x, hard = 2x\n - Return a dictionary with:\n   * 'total_score': Final score (rounded to integer)\n   * 'perfect_battle': True if hits > 0 and no misses (hits == critical_hits)\n   * 'bonus_achieved': True if total_score > 100\n\n## Important Notes:\n- Use proper order of operations\n- Apply multipliers in correct order\n- Round the final score to nearest integer\n- Handle all difficulty levels\n\n## Tips:\n- Calculate base score first\n- Apply time bonus before difficulty multiplier\n- Use comparison operators for bonuses",
+    "starterCode": "def calculate_battle_score(hits, critical_hits, time_bonus, difficulty):\n    # Write your code here\n    pass",
+    "starterFunctionName": "calculate_battle_score",
+    "outputType": "dict",
+    "examples": [
+      {
+        "id": "example1",
+        "inputText": "calculate_battle_score(5, 2, 40, 'medium')",
+        "outputText": {
+          "total_score": 169,
+          "perfect_battle": false,
+          "bonus_achieved": true
+        },
+        "explanation": "((5*10 + 2*25) * 1.5) * 1.5 = 169"
+      },
+      {
+        "id": "example2",
+        "inputText": "calculate_battle_score(3, 3, 20, 'easy')",
+        "outputText": {
+          "total_score": 105,
+          "perfect_battle": true,
+          "bonus_achieved": true
+        },
+        "explanation": "All hits are critical (perfect), (3*10 + 3*25) * 1 = 105"
+      }
+    ]
+  },
+  "python-string-formatting-task-1": {
+    "id": "python-string-formatting-task-1",
+    "title": "Game Card Generator 🎮",
+    "problemStatement": "# Game Card Generator 🎮\n\nCreate a function called `create_game_card` that generates a formatted game character card.\n\n## Function Requirements:\n1. Take four parameters:\n - `character_name` (string): Name of the character\n - `health` (float): Current health points\n - `items` (list): List of inventory items\n - `is_boss` (boolean): Whether character is a boss\n\n2. Return a formatted string containing:\n - A header '== CHARACTER CARD =='\n - Character name with title (add '[BOSS]' prefix if is_boss is True)\n - Health bar: Uses '■' for each 10% health (rounded down), '□' for empty\n - Health percentage with exactly one decimal place\n - Inventory list with items separated by commas\n - A footer line with '=================='\n\n## Important Notes:\n- Health bar should be exactly 10 characters long\n- Health percentage should include % symbol\n- Format numbers to one decimal place\n- Include all required information on separate lines\n\n## Tips:\n- Use string formatting (%s, %d, %.1f)\n- Remember to add newlines (\\n) between sections\n- Create health bar using string multiplication",
+    "starterCode": "def create_game_card(character_name, health, items, is_boss):\n    # Write your code here\n    pass",
+    "starterFunctionName": "create_game_card",
+    "outputType": "string",
+    "examples": [
+      {
+        "id": "example1",
+        "inputText": "create_game_card('Dragon', 85.5, ['sword', 'shield'], True)",
+        "outputText": "== CHARACTER CARD ==\n[BOSS] Dragon\nHealth: ■■■■■■■■□□ (85.5%)\nInventory: sword, shield\n==================",
+        "explanation": "Shows boss character with health bar and inventory"
+      },
+      {
+        "id": "example2",
+        "inputText": "create_game_card('Knight', 30.0, ['potion'], False)",
+        "outputText": "== CHARACTER CARD ==\nKnight\nHealth: ■■■□□□□□□□ (30.0%)\nInventory: potion\n==================",
+        "explanation": "Shows regular character with low health"
+      }
+    ]
+  },
+  "python-string-formatting-task-2": {
+    "id": "python-string-formatting-task-2",
+    "title": "Shop Receipt Generator 🛍️",
+    "problemStatement": "# Shop Receipt Generator 🛍️\n\nCreate a function called `create_receipt` that generates a formatted shopping receipt.\n\n## Function Requirements:\n1. Take four parameters:\n - `shop_name` (string): Name of the shop\n - `items` (list of strings): Names of items purchased\n - `prices` (list of floats): Prices of items\n - `discount` (float): Discount percentage\n\n2. Return a formatted string containing:\n - Shop name in a header with border\n - List of items with prices (one per line)\n - Subtotal of all prices\n - Discount amount (discount % of subtotal)\n - Final total after discount\n - All money values formatted with 2 decimal places\n\n## Important Notes:\n- Format all prices with currency symbol ($)\n- Align prices to the right\n- Show discount even if it's 0\n- Include a border at top and bottom\n\n## Tips:\n- Use string formatting for alignment\n- Remember to calculate totals correctly\n- Format all money values consistently",
+    "starterCode": "def create_receipt(shop_name, items, prices, discount):\n    # Write your code here\n    pass",
+    "starterFunctionName": "create_receipt",
+    "outputType": "string",
+    "examples": [
+      {
+        "id": "example1",
+        "inputText": "create_receipt('Magic Shop', ['Potion', 'Sword'], [10.0, 25.5], 10.0)",
+        "outputText": "====================\nMAGIC SHOP\n====================\nPotion $10.00\nSword $25.50\n--------------------\nSubtotal: $35.50\nDiscount (10%): $3.55\nTotal: $31.95\n====================",
+        "explanation": "Shows receipt with multiple items and discount"
+      },
+      {
+        "id": "example2",
+        "inputText": "create_receipt('Market', ['Apple'], [1.50], 0.0)",
+        "outputText": "====================\nMARKET\n====================\nApple $1.50\n--------------------\nSubtotal: $1.50\nDiscount (0%): $0.00\nTotal: $1.50\n====================",
+        "explanation": "Shows receipt with single item and no discount"
       }
     ]
   }

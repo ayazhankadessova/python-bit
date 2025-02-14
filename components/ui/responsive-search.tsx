@@ -95,7 +95,7 @@ export function ResponsiveSearch() {
               <CommandGroup heading='Recent Projects'>
                 {recentProjects.map((project) => (
                   <CommandItem
-                    key={project.id}
+                    key={project.slugAsParams}
                     onSelect={() =>
                       handleSelect(
                         `/projects/${project.theme}/${project.slugAsParams}`
@@ -220,7 +220,7 @@ export function ResponsiveSearch() {
                 <CommandGroup heading='Projects'>
                   {filteredProjects.map((project) => (
                     <CommandItem
-                      key={project.id}
+                      key={project.slugAsParams}
                       onSelect={() =>
                         handleSelect(
                           `/projects/${project.theme}/${project.slugAsParams}`

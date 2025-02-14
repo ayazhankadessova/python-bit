@@ -483,7 +483,15 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [x] create week 2 assignments 
 - [x] create week 3 assignments
 - [ ] Check project types: eg there is one from velite and one that i created
-- [ ] beautiful 404
+- [x] beautiful 404
+- [ ] what stuff should be in velite projects?
+- [x] create week 3 assignments
+  
+## Feb 14
+
+- [x] create week 4 assignments
+- [ ] create week 5 assignments
+- [ ] Add 5 weeks to curricula
 
 
 ## Feb 15 
