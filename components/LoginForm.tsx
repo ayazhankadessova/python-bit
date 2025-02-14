@@ -48,14 +48,14 @@ export default function LoginForm() {
 
       toast({
         title: 'Success',
-        description: 'Successfully signed in!' + userCred?.user.email,
+        description: 'Successfully signed in!',
         variant: 'success',
       })
 
       onClose() 
       router.push('/dashboard')
     } catch (error) {
-      console.error('Error signing in:', error)
+      console.error('Error signing in:', error, userCred?.user.email)
       toast({
         title: 'Error',
         description: 'Failed to sign in',
