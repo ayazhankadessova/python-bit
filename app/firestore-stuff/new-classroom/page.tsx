@@ -32,15 +32,20 @@ const CurriculumManager = () => {
   const handleCurriculumSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      let curriculumId
-
       if (!curriculum.id) {
-        curriculumId = crypto.randomUUID()
-      } else {
-        curriculumId = curriculum.id
+        alert('Please provide a curriculum ID')
+        return
       }
 
-      await setDoc(doc(fireStore, 'curricula', curriculumId), curriculum)
+      console.log('Saving curriculum with ID:', curriculum.id)
+      console.log('Curriculum data:', curriculum)
+
+      await setDoc(doc(fireStore, 'curricula', curriculum.id), {
+        ...curriculum,
+        updatedAt: new Date().toISOString(),
+      })
+
+      console.log('Curriculum saved successfully')
       alert('Curriculum saved successfully!')
     } catch (error) {
       console.error('Error saving curriculum:', error)
