@@ -504,6 +504,11 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [ ] get assignment expectedOutput from firestore [fastapi]
 - [ ] Should I show progress for assignment ?
 
+## Feb 16 
+
+- [ ] create new pics for tutorials
+- [ ] what do i need when i create a classroom ?
+
 ## Project Test cases
 
 - [ ] Add test cases to 2-3 projects
