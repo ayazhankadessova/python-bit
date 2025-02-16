@@ -498,11 +498,17 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 ## Feb 15 
 
+- [x] how does lastTaught week get updated?
+- [ ] add solved Assignments
 - [ ] Remove headers from assignments
 - [ ] list of schools in HK
 - [ ] lesson progress -> just show if student has this assignment as completed assignment 
+- [x] fetch classrooms doesnt get updated
+
+
+## Feb 17
+
 - [ ] fetchClassroomAndCurriculum twice -> hooks
-- [ ] fetch classrooms doesnt get updated
 
 ## Later
 

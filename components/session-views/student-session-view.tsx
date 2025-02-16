@@ -10,6 +10,7 @@ import { MarkdownRenderer } from '@/components/markdown-renderer'
 import { formatCode } from '@/lib/utils'
 import { PythonEditor } from '@/components/session-views/live-session-code-editor'
 import { useAuth } from '@/contexts/AuthContext'
+import { handleAssignmentCompletion } from '@/lib/live-classroom/utils'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -122,8 +123,7 @@ export function StudentSessionView({
           const studentData = session.students[user?.displayName]
           // Only update if the code is different to prevent endless loops
           setStudentCode(studentData.code)
-          setEditorInitialCode(studentData.code)  
-         
+          setEditorInitialCode(studentData.code)
         }
       }
     })
@@ -270,22 +270,15 @@ export function StudentSessionView({
         setIsCorrect(data.success)
       }
 
-      // Handle exercise completion
-      //   if (user && isSubmission && !isProject && code) {
-      //     await handleExerciseSubmission(
-      //       user,
-      //       tutorial_id,
-      //       exercise_number,
-      //       data.success,
-      //       code
-      //     )
-      //     // In any component
-      //     await invalidateTutorialProgress(user.uid, tutorial_id)
-      //   }
-
-      //   if (user && !isSubmission && !isProject && code) {
-      //     await handleExerciseRun(user, tutorial_id)
-      //   }
+      // Handle exercise submission
+      if (user && id &&  isSubmission && code) {
+        await handleAssignmentCompletion(
+          user,
+          id,
+          code,
+          data.success,
+        )
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
       if (isSubmission) {
