@@ -32,6 +32,19 @@ class TestProjectRequest(BaseModel):
     code: str
     project_id: Optional[str] = "default"
 
+@router.get("/health")
+async def health_check():
+    """Health check endpoint to verify API status"""
+    return {
+        "status": "healthy",
+        "services": {
+            "code_execution": "available",
+            "exercise": "available",
+            "project": "available",
+            "assignment": "available"
+        }
+    }
+
 @router.post("/execute")
 @limiter.limit("5/minute")
 async def execute_code(request: Request, code_request: CodeExecutionRequest):
