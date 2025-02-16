@@ -57,35 +57,33 @@ export function isValidUserData(data: any): data is FirebaseUserData {
   )
 }
 
-interface WeeklyProgress {
-  weekNumber: number
-  classroomId: string
-  studentProgress: {
-    [studentId: string]: {
-      problemProgress: {
-        [problemId: string]: {
-          completed: boolean
-          startedAt?: number
-          completedAt?: number
-          attempts: number
-        }
-      }
-    }
-  }
-  startedAt: number
-  endedAt?: number
-}
+// interface WeeklyProgress {
+//   weekNumber: number
+//   classroomId: string
+//   studentProgress: {
+//     [studentId: string]: {
+//       problemProgress: {
+//         [problemId: string]: {
+//           completed: boolean
+//           startedAt?: number
+//           completedAt?: number
+//           attempts: number
+//         }
+//       }
+//     }
+//   }
+//   startedAt: number
+//   endedAt?: number
+// }
 
 // Classes in files
 
 export interface ClassroomTC {
-  id: string //yes
+  id: string
   name: string // yes
   teacherId: string  // yes
   curriculumId: string // //yes
   students: string[] // yes
-  curriculumName: string // yes
-  classCode: string // yes
   lastTaughtWeek: number // yes
   createdAt: number //yes
   updatedAt: number //yes
@@ -98,12 +96,12 @@ export interface Week {
   assignmentIds: string[] // Array of problem IDs
 }
 
-interface CurriculumInputs {
-  id: string
-  name: string
-  description: string
-  weeks: Week[]
-}
+// interface CurriculumInputs {
+//   id: string
+//   name: string
+//   description: string
+//   weeks: Week[]
+// }
 
 export interface TutorialProgress {
   exerciseId: string

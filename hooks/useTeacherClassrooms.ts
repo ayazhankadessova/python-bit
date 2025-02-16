@@ -24,7 +24,7 @@ export function useTeacherClassrooms(
     },
     {
       revalidateOnFocus: false, // Don't revalidate on window focus
-      revalidateIfStale: false, // Don't revalidate stale data automatically
+      revalidateIfStale: true,
       keepPreviousData: true, // Keep showing previous data while loading
       dedupingInterval: 5000, // Dedupe requests within 5 seconds
     }

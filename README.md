@@ -499,6 +499,11 @@ invalidateCache() // This will drop the cache and trigger a refetch
 ## Feb 15 
 
 - [ ] Remove headers from assignments
+- [ ] list of schools in HK
+- [ ] lesson progress -> just show if student has this assignment as completed assignment 
+- [ ] fetchClassroomAndCurriculum twice -> hooks
+- [ ] fetch classrooms doesnt get updated
+
 ## Later
 
 - [ ] get assignment expectedOutput from firestore [fastapi]
@@ -508,6 +513,7 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 - [ ] create new pics for tutorials
 - [ ] what do i need when i create a classroom ?
+- [ ] Should i add dashboard page?
 
 ## Project Test cases
 

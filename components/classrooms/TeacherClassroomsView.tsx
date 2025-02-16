@@ -84,7 +84,6 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
             <ClassroomCard
               key={classroom.id}
               classroom={classroom}
-              showClassCode={true}
               actionButton={
                 <Button
                   onClick={() => startLesson(classroom.id)}

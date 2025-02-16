@@ -116,18 +116,17 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
       const batch = writeBatch(fireStore)
 
       const classroomId = nanoid()
-      const classCode = nanoid(6).toUpperCase()
 
       // Create classroom document
       const classroomRef = doc(fireStore, 'classrooms', classroomId)
       batch.set(classroomRef, {
-        id: classroomId,
+        // id: classroomId,
         name: data.name,
         teacherId,
         curriculumId: data.curriculumId,
-        curriculumName: curricula.find((c) => c.id === data.curriculumId)?.name,
+        // curriculumName: curricula.find((c) => c.id === data.curriculumId)?.name,
         studentIds: data.students, // Using studentIds instead of students for clarity
-        code: classCode,
+        // code: classCode,
         lastTaughtWeek: 0,
         createdAt: Date.now(),
         updatedAt: Date.now(),

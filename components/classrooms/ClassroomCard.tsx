@@ -7,31 +7,67 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card'
+import React, { useEffect, useState } from 'react'
+import { fireStore } from '@/firebase/firebase'
+import { getDoc, doc } from 'firebase/firestore'
+import { Curriculum } from '@/types/classrooms/live-session'
 
 interface ClassroomCardProps {
   classroom: ClassroomTC
   actionButton: React.ReactNode
-  showClassCode?: boolean
 }
 
 export function ClassroomCard({
   classroom,
   actionButton,
-  showClassCode,
 }: ClassroomCardProps) {
+
+  const [curriculumName, setCurriculumName] = useState('')
+
+    useEffect(() => {
+      const fetchClassroomAndCurriculum = async () => {
+        try {
+          // Fetch classroom data first
+          const classroomDoc = await getDoc(
+            doc(fireStore, 'classrooms', classroom.id)
+          )
+
+          if (!classroomDoc.exists()) {
+            throw new Error('Classroom not found')
+          }
+
+          const classroomData = classroomDoc.data() as ClassroomTC
+
+          // Fetch curriculum using the classroom's curriculumId
+          const curriculumDoc = await getDoc(
+            doc(fireStore, 'curricula', classroomData.curriculumId)
+          )
+
+          if (!curriculumDoc.exists()) {
+            throw new Error('Curriculum not found')
+          }
+
+          const curriculumData = curriculumDoc.data() as Curriculum
+          setCurriculumName(curriculumData.name)
+          
+        } catch (error) {
+          console.error('Error fetching data:', error)
+        }
+      }
+
+      if (classroom) {
+        fetchClassroomAndCurriculum()
+      }
+    }, [classroom])
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>{classroom.name}</CardTitle>
-        <CardDescription>{classroom.curriculumName}</CardDescription>
+        <CardDescription>{curriculumName}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className='space-y-2'>
-          {showClassCode && (
-            <p className='text-muted-foreground'>
-              Classroom Code: {classroom.classCode}
-            </p>
-          )}
           <p className='text-muted-foreground'>
             Last taught: Week {classroom.lastTaughtWeek || 0}
           </p>
