@@ -117,7 +117,7 @@ export function TeacherSessionView({
 
         // Set initial week based on lastTaughtWeek
         const initialWeek = curriculumData.weeks.find(
-          (week) => week.weekNumber === classroomData.lastTaughtWeek + 1
+          (week) => week.weekNumber === classroomData.lastTaughtWeek
         )
 
         // after u choose initial week, if it exists set if in `classrooms/${classroomId}/sessions/${sessionId}` too

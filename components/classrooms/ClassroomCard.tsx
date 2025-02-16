@@ -69,7 +69,7 @@ export function ClassroomCard({
       <CardContent>
         <div className='space-y-2'>
           <p className='text-muted-foreground'>
-            Last taught: Week {classroom.lastTaughtWeek || 0}
+            Last taught: Week {classroom.lastTaughtWeek || 1}
           </p>
           <p className='text-muted-foreground'>
             Students: {classroom.students?.length || 0}
