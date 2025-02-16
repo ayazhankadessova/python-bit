@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ClassroomTC } from '@/types/firebase'
+import { Play } from 'lucide-react'
 
 interface ClassroomListProps {
   classrooms: ClassroomTC[]
@@ -27,10 +28,9 @@ export function ClassroomList({
               Program: {classroom.curriculumName || 'N/A'}
             </p>
             <div className='flex justify-between items-center'>
-              <Button
-                onClick={() => onJoinClassroom(classroom.id)}
-              >
-                Join {userRole === 'teacher' ? 'Class' : 'Session'}
+              <Button onClick={() => onJoinClassroom(classroom.id)}>
+                <Play className='mr-2 h-4 w-4' />
+                Enter {userRole === 'teacher' ? 'Classroom' : 'Session'}
               </Button>
             </div>
           </div>

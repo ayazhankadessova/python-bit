@@ -56,7 +56,7 @@ class ProjectLoader:
 
             # print(self._projects)
         except Exception as e:
-            print(f"Error loading project configs: {e}")
+            # print(f"Error loading project configs: {e}")
             self._projects = {}
 
     def get_project(self, project_id: str) -> Optional[Project]:
@@ -68,7 +68,7 @@ class ProjectLoader:
 project_loader = ProjectLoader()
 
 def get_project(project_id: str) -> Optional[Project]:
-    print("getting project")
+    # print("getting project")
     return project_loader.get_project(project_id)
 
 def get_all_projects() -> Dict[str, Project]:

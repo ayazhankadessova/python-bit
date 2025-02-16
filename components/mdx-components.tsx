@@ -14,9 +14,9 @@ const useMDXComponent = (code: string) => {
 const components = {
   Image,
   PythonCodeEditor,
-  li: ({ children }: { children: React.ReactNode }) => (
-    <li className='text-lg mb-2'>{children}</li>
-  ),
+  // li: ({ children }: { children: React.ReactNode }) => (
+  //   <li className='text-lg mb-2'>{children}</li>
+  // ),
 }
 
 interface MdxProps {

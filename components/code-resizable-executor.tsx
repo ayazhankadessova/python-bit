@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Play, Loader2, Code2, RotateCcw } from 'lucide-react'
+import { Play, Loader2, Code2, RotateCcw, CloudUpload } from 'lucide-react'
 import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
@@ -32,7 +32,7 @@ const PythonResizableCodeEditor = ({
   project_id,
   isProject = false,
 }: CodeEditorProps) => {
-  const {user} = useAuth()
+  const { user } = useAuth()
   const [code, setCode] = useState(initialCode)
   const [output, setOutput] = useState('')
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
@@ -56,61 +56,59 @@ const PythonResizableCodeEditor = ({
   }
 
   const executeCode = async (isSubmission: boolean) => {
-      setIsExecuting(true)
-      setError(null)
-      setOutput('')
-      setIsCorrect(null)
-  
-      if (isSubmission) {
-        setIsSubmitting(true)
-      } else {
-        setIsRunning(true)
-      }
-  
-      try {
-        const requestPayload = {
-          code,
-          project_id
-        }
-  
-        const endpoint = isSubmission
-          ? '/api/py/test-project'
-          : '/api/py/execute'
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestPayload),
-        })
-  
-        const data = await response.json()
-  
-        // Set output and error states
-        setOutput(data.output)
-        setError(data.error ? data.output : null)
-  
-        // Set correctness for submissions
-        if (isSubmission) {
-          setIsCorrect(data.success)
-          invalidateCache()
-        }
-  
-        // Handle project completion
-        if (data.success && user && isSubmission) {
-          await handleProjectCompletion(user, project_id, code!, true)
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred')
-        if (isSubmission) {
-          setIsCorrect(false)
-        }
-      } finally {
-        setIsExecuting(false)
-        setIsSubmitting(false)
-        setIsRunning(false)
-      }
+    setIsExecuting(true)
+    setError(null)
+    setOutput('')
+    setIsCorrect(null)
+
+    if (isSubmission) {
+      setIsSubmitting(true)
+    } else {
+      setIsRunning(true)
     }
+
+    try {
+      const requestPayload = {
+        code,
+        project_id,
+      }
+
+      const endpoint = isSubmission ? '/api/py/test-project' : '/api/py/execute'
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestPayload),
+      })
+
+      const data = await response.json()
+
+      // Set output and error states
+      setOutput(data.output)
+      setError(data.error ? data.output : null)
+
+      // Set correctness for submissions
+      if (isSubmission) {
+        setIsCorrect(data.success)
+        invalidateCache()
+      }
+
+      // Handle project completion
+      if (data.success && user && isSubmission) {
+        await handleProjectCompletion(user, project_id, code!, true)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+      if (isSubmission) {
+        setIsCorrect(false)
+      }
+    } finally {
+      setIsExecuting(false)
+      setIsSubmitting(false)
+      setIsRunning(false)
+    }
+  }
 
   const handleReset = () => {
     setCode(initialCode)
@@ -219,14 +217,14 @@ const PythonResizableCodeEditor = ({
 
                 {(expectedOutput || isProject) && (
                   <Button
+                    variant='whiteGray'
                     onClick={() => executeCode(true)}
-                    className='bg-blue-600 hover:bg-blue-700 text-white'
                     disabled={isExecuting}
                   >
                     {isSubmitting ? (
                       <Loader2 className='w-4 h-4 mr-2 animate-spin' />
                     ) : (
-                      <Play className='w-4 h-4 mr-2' />
+                      <CloudUpload className='w-4 h-4 mr-2' />
                     )}
                     Submit
                   </Button>

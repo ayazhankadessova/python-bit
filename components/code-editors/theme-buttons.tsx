@@ -28,8 +28,8 @@ const ThemeButtons: React.FC<ThemeButtonsProps> = ({ theme, setTheme }) => {
         onClick={() => setTheme('dark')}
         className={
           theme === 'dark'
-            ? 'bg-blue-500 text-white hover:bg-blue-600'
-            : 'text-blue-500/90 hover:text-blue-500'
+            ? 'bg-purple-500 text-white hover:bg-purple-600'
+            : 'text-purple-500/90 hover:text-purple-500'
         }
       >
         <Moon className='w-4 h-4' />

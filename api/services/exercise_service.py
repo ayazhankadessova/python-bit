@@ -74,7 +74,7 @@ class TutorialLoader:
     def get_tutorial(self, tutorial_id: str) -> Optional[Tutorial]:
         """Get a tutorial by ID"""
         # print(self._tutorials.get(tutorial_id))
-        return self._tutorials.get(tutorial_id)
+        # return self._tutorials.get(tutorial_id)
 
     def get_exercise(self, tutorial_id: str, exercise_number: int) -> Optional[Exercise]:
         """Get a specific exercise from a tutorial"""

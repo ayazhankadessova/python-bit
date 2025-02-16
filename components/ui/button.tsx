@@ -12,14 +12,15 @@ const buttonVariants = cva(
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:-translate-y-0.5',
         outline:
-          'border border-input bg-gradient-soft shadow-sm hover:bg-gradient-custom hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200',
+          'border border-input shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200',
         secondary:
-          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
-        ghost:
-          'bg-white/40 hover:bg-accent hover:text-accent-foreground dark:bg-black/40',
+          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 hover:-translate-y-0.5 active:translate-y-0',
+        whiteGray:
+          'bg-zinc-100 text-secondary-foreground shadow-sm hover:bg-zinc-100/90 dark:bg-zinc-700 dark:hover:bg-zinc-700/90 hover:-translate-y-0.5 active:translate-y-0',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         softBlue:
-          'bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-primary font-medium shadow-sm border border-blue-200/50 hover:shadow-md hover:from-blue-200 hover:via-blue-300 hover:to-blue-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-blue-900/70 dark:via-blue-800/70 dark:to-blue-900/70 dark:border-blue-700/20 dark:hover:from-blue-800/70 dark:hover:via-blue-700/70 dark:hover:to-blue-800/70',
+          'bg-gradient-to-r from-purple-100 via-purple-200 to-purple-100 text-primary font-medium shadow-sm border border-purple-200/50 hover:shadow-md hover:from-purple-200 hover:via-purple-300 hover:to-purple-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-purple-900/70 dark:via-purple-800/70 dark:to-purple-900/70 dark:border-purple-700/20 dark:hover:from-purple-800/70 dark:hover:via-purple-700/70 dark:hover:to-purple-800/70',
         softTeal: `
           bg-gradient-to-r from-teal-300 via-teal-400 to-teal-300 
           text-primary font-medium 
@@ -31,14 +32,14 @@ const buttonVariants = cva(
           dark:hover:from-teal-500 dark:hover:via-teal-400 dark:hover:to-teal-500
         `,
         softTealSecondary: `
-        bg-gradient-to-r from-teal-100/90 via-teal-200/90 to-teal-100/90 
+        bg-teal-100
         text-teal-700 font-medium 
         shadow-sm border border-teal-200/30 
-        hover:shadow-md hover:from-teal-100 hover:via-teal-200 hover:to-teal-100 
+        hover:shadow-md hover:bg-teal-100/90
         hover:-translate-y-0.5 active:translate-y-0
-        dark:from-teal-900/40 dark:via-teal-800/40 dark:to-teal-900/40 
-        dark:text-teal-300 dark:border-teal-700/20 
-        dark:hover:from-teal-800/40 dark:hover:via-teal-700/40 dark:hover:to-teal-800/40
+        dark:bg-teal-300
+        dark:text-teal-900 dark:border-teal-700/20 
+        dark:hover:bg-teal-300/90
       `,
         warmYellow: `
           bg-gradient-to-r from-amber-100 via-yellow-200 to-amber-100 
@@ -51,21 +52,20 @@ const buttonVariants = cva(
           dark:hover:from-amber-700/70 dark:hover:via-amber-600/70 dark:hover:to-amber-700/70
         `,
         oceanBlue: `
-          bg-gradient-to-r from-cyan-100 via-blue-200 to-cyan-100 
+          bg-gradient-to-r from-cyan-100 via-cyan-200 to-cyan-100 
           text-blue-900 font-medium 
-          shadow-sm border border-blue-200/50 
-          hover:shadow-md hover:from-cyan-200 hover:via-blue-300 hover:to-cyan-200 
+          shadow-sm border border-purple-200/50 
+          hover:shadow-md hover:from-cyan-200 hover:via-cyan-300 hover:to-cyan-200 
           hover:-translate-y-0.5 active:translate-y-0
-          dark:from-cyan-900/70 dark:via-blue-800/70 dark:to-cyan-900/70 
-          dark:text-blue-100 dark:border-blue-700/30 
-          dark:hover:from-cyan-800/70 dark:hover:via-blue-700/70 dark:hover:to-cyan-800/70
+          dark:from-cyan-900/70 dark:via-cyan-800/70 dark:to-cyan-900/70 
+          dark:text-cyan-100 dark:border-cyan-700/30 
+          dark:hover:from-cyan-800/70 dark:hover:via-cyan-700/70 dark:hover:to-cyan-800/70
         `,
         slate: `
           bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 
           text-slate-700 font-medium 
           shadow-sm border border-slate-200/50 
           hover:shadow-md hover:from-slate-200 hover:via-slate-300 hover:to-slate-200 
-          hover:-translate-y-0.5 active:translate-y-0
           dark:from-slate-800/80 dark:via-slate-700/80 dark:to-slate-800/80 
           dark:text-slate-200 dark:border-slate-600/30 
           dark:hover:from-slate-700/80 dark:hover:via-slate-600/80 dark:hover:to-slate-700/80
@@ -95,10 +95,10 @@ const buttonVariants = cva(
           before:w-full
           before:animate-gradient
           before:bg-gradient-to-r
-          before:from-blue-500
+          before:from-purple-500
           before:via-teal-400
           before:via-amber-300
-          before:to-blue-500
+          before:to-purple-500
           before:bg-[length:var(--bg-size)_100%]
           before:p-[1px]
           before:![mask-composite:subtract]
@@ -106,7 +106,7 @@ const buttonVariants = cva(
           before:[mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]
         `,
         default:
-          'relative bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-500 text-white shadow-lg hover:from-blue-700 hover:via-indigo-600 hover:to-blue-600 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0',
+          'relative bg-gradient-to-r from-purple-600 via-purple-500 to-purple-400 text-white shadow-lg hover:from-purple-700 hover:via-purple-600 hover:to-purple-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0',
       },
       size: {
         default: 'h-9 px-4 py-2',

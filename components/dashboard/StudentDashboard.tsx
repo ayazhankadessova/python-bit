@@ -62,7 +62,7 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
             </div>
             <div>
               <p className='text-sm font-medium'>Active Classes</p>
-              <p className='text-2xl font-bold text-blue-600'>
+              <p className='text-2xl font-bold text-purple-600'>
                 {classrooms.length}
               </p>
             </div>

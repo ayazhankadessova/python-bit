@@ -37,15 +37,15 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       <p className='mb-4 text-base leading-relaxed'>{children}</p>
     ),
     // Custom list styles
-    ul: ({ children }) => (
-      <ul className='list-disc list-inside mb-4 space-y-2'>{children}</ul>
-    ),
-    ol: ({ children }) => (
-      <ol className='list-decimal list-inside mb-4 space-y-2'>{children}</ol>
-    ),
-    li: ({ children }) => (
-      <li className='text-base leading-relaxed'>{children}</li>
-    ),
+    // ul: ({ children }) => (
+    //   <ul className='list-disc list-inside mb-4 space-y-2'>{children}</ul>
+    // ),
+    // ol: ({ children }) => (
+    //   <ol className='list-decimal list-inside mb-4 space-y-2'>{children}</ol>
+    // ),
+    // li: ({ children }) => (
+    //   <li className='text-base leading-relaxed'>{children}</li>
+    // ),
     // Custom blockquote style
     blockquote: ({ children }) => (
       <blockquote className='border-l-4 border-gray-300 pl-4 italic my-4'>

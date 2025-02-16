@@ -4,13 +4,13 @@ export interface Project {
   description: string
   date: number
   theme?: string
-  difficulty: 'beginner' | 'intermediate' | 'advanced'
+  difficulty: string
   estimatedTime: string
   tags: string[]
   image?: string
   published: boolean
-  starterCode: string
-  testCode: string
+  starterCode?: string
+  testCode?: string
   solution?: string
 }
 

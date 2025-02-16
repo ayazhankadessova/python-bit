@@ -17,6 +17,7 @@ import BackButton from '@/components/ui/backbutton'
 import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
 import { ProjectItem } from '@/components/projects/project-item'
+import { filterProjectsBySearchTerm } from '@/lib/projects/utils'
 
 interface ThemePageProps {
   params: {
@@ -33,12 +34,12 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   const [sortMethod, setSortMethod] = useState('createdAt')
 
   // Filter projects by theme
-  const themeProjects = projects.filter(
+  const themeProjectsOne = projects.filter(
     (project) => project.theme === params.theme
   )
 
   // Filter by search
-  // const filteredProjects = filterPostsBySearchTerm(themeProjects, searchText)
+  const themeProjects = filterProjectsBySearchTerm(themeProjectsOne, searchText)
 
   // Sort projects
   const sortedProjects =

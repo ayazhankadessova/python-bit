@@ -471,13 +471,43 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 - [ ] implement magic js somehwee
 
-## Jan 20
-- Delete Canva Pro
+## Feb 12
+
+- Global search: tutorials, pages, 
+- [x] Search projecs
+
+## Feb 13
+- [x] Make Run Code and Submit Btns different
+- [x] light+Dark mode header btns remove bg
+- [x] hydration issues solved
+- [x] create week 2 assignments 
+- [x] create week 3 assignments
+- [ ] Check project types: eg there is one from velite and one that i created
+- [x] beautiful 404
+- [ ] what stuff should be in velite projects?
+- [x] create week 3 assignments
+  
+## Feb 14
+
+- [x] create week 4 assignments
+- [x] When creating curricula, make sure assignment is added
+- [x] Fix week selector!, make sure assignments properly shown
+- [x] remove useless stuff from currcilim. which fields u dont need?
+- [x] Add 5 weeks to curricula
 
 
+## Feb 15 
+
+- [ ] Remove headers from assignments
 ## Later
 
 - [ ] get assignment expectedOutput from firestore [fastapi]
+- [ ] Should I show progress for assignment ?
+
+## Feb 16 
+
+- [ ] create new pics for tutorials
+- [ ] what do i need when i create a classroom ?
 
 ## Project Test cases
 
@@ -511,7 +541,7 @@ tutrials data or every tutorials
 - [ ] For teacher, add panel to monitor each classroom
 
 ## BackLog
-- [ ] GitHub, Logo icons
+- [x] GitHub, Logo icons
 - [ ] In Live Session, Markdown rendered renders backticks and ``` in a weird way. Figure out how rehype pretty code is messing is in conflict
 - [ ] Dont send expectedOutput and testCases, they should be in Backend
 - [ ] Search Button Functionality
@@ -569,3 +599,10 @@ users/
             timestamp: number
             success: boolean
 ```
+
+
+## Color Palette
+1. #D7F4EE
+2.  #E0D7F4
+2. #F4D7DD
+3. #EBF4D7

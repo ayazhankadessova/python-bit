@@ -3,7 +3,15 @@ import CodeMirror from '@uiw/react-codemirror'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { Button } from '@/components/ui/button'
-import { Play, Send, Code2, Loader2, RefreshCw, RotateCcw } from 'lucide-react'
+import {
+  Play,
+  Send,
+  Code2,
+  Loader2,
+  RefreshCw,
+  RotateCcw,
+  CloudUpload,
+} from 'lucide-react'
 import {
   ResizableHandle,
   ResizablePanelGroup,
@@ -228,12 +236,12 @@ export function PythonEditor({
                   <Button
                     onClick={handleSubmitCode}
                     disabled={isExecuting}
-                    variant='softTealSecondary'
+                    variant='whiteGray'
                   >
                     {isSubmitting ? (
                       <Loader2 className='w-4 h-4 mr-2 animate-spin' />
                     ) : (
-                      <Play className='w-4 h-4 mr-2' />
+                      <CloudUpload className='w-4 h-4 mr-2' />
                     )}
                     Submit
                   </Button>
@@ -250,7 +258,7 @@ export function PythonEditor({
                   onUpdateCode && (
                     <Button
                       onClick={handleUpdateCode}
-                      className='ml-auto bg-blue-600 hover:bg-blue-700'
+                      className='ml-auto bg-purple-600 hover:bg-purple-700'
                       disabled={isUpdating}
                     >
                       {isUpdating ? (

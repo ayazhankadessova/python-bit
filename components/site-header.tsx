@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation'
 import { MainNav } from './main-nav'
 import MobileNav from './ui/mobile-nav'
 import { UserMenu } from '@/components/user/user-menu'
-// import { Input } from '@/components/ui/input'
 import { ThemeToggle } from './ui/theme-toggle'
 import { cn } from '@/lib/utils'
 import {
@@ -17,12 +16,12 @@ import {
 } from '@/components/ui/navigation-menu'
 import headerNavLinks from '@/config/headerNavLinks'
 import { ChevronDown } from 'lucide-react'
-import { ResponsiveSearch } from '@/components/ui/responsive-search' // Add this import
+import { ResponsiveSearch } from '@/components/ui/responsive-search'
 
 const activeStyles =
-  'bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-blue-900 dark:from-blue-800 dark:via-blue-700 dark:to-blue-800 dark:text-white shadow-sm border text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary dark:from-blue-900/70 dark:via-blue-800/70 dark:to-blue-900/70 dark:text-white dark:border-blue-700/20 dark:hover:from-blue-800/70 dark:hover:via-blue-700/70 dark:hover:to-blue-800/70'
+  'bg-gradient-to-r from-purple-100 via-purple-200 to-purple-100 text-purple-900 dark:from-purple-800 dark:via-purple-700 dark:to-purple-800 dark:text-white shadow-sm border text-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary dark:from-purple-900/70 dark:via-purple-800/70 dark:to-purple-900/70 dark:text-white dark:border-purple-700/20 dark:hover:from-purple-800/70 dark:hover:via-purple-700/70 dark:hover:to-purple-800/70'
 
-  const isPathActive = (currentPath: string, href: string) => {
+const isPathActive = (currentPath: string, href: string) => {
   if (href === '/') return currentPath === href
   // Split both paths and compare the first segment
   const currentSegment = currentPath.split('/')[1]
@@ -32,87 +31,86 @@ const activeStyles =
 
 export function SiteHeader() {
   const pathname = usePathname()
-
-  // flex flex-col gap-4 items-center justify-center pb-8 container
   const headerClass =
-    'container mx-auto flex px-6 h-20 z-10 flex flex-row justify-between gap-2 items-center sticky top-0 bg-popover mb-4'
+    'sticky top-0 z-50 w-full border-b border-border/40 bg-background'
 
   return (
     <header className={headerClass}>
       {/* Desktop Navigation */}
-      <div className='hidden min-[850px]:flex items-center gap-4'>
-        <MainNav />
-        <NavigationMenu className='hidden min-[850px]:inline-flex'>
-          <NavigationMenuList className='flex gap-0'>
-            {Object.values(headerNavLinks).map((dialog) => (
-              <NavigationMenuItem key={dialog.title}>
-                {dialog.toggle ? (
-                  <>
-                    <NavigationMenuTrigger
-                      className={cn(
-                        'transition-all duration-200 lg:text-lg relative rounded-md',
-                        (isPathActive(pathname, dialog.href) ||
-                          dialog.dropdown?.some((item) =>
-                            isPathActive(pathname, item.href)
-                          )) &&
-                          activeStyles
-                      )}
-                    >
-                      {dialog.title}
-                      <ChevronDown
-                        className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
-                        aria-hidden='true'
-                      />
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]'>
-                        {dialog.dropdown?.map((component) => (
-                          <ListItem
-                            key={component.title}
-                            title={component.title}
-                            href={component.href}
-                          >
-                            {component.description}
-                          </ListItem>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </>
-                ) : (
-                  <Link href={dialog.href}>
-                    <NavigationMenuTrigger
-                      className={cn(
-                        'transition-all duration-200 lg:text-lg relative rounded-md hover:bg-accent/50',
-                        isPathActive(pathname, dialog.href) && activeStyles
-                      )}
-                    >
-                      {dialog.title}
-                    </NavigationMenuTrigger>
-                  </Link>
-                )}
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-      </div>
+      <div className='container mx-auto flex h-20 items-center justify-between px-6'>
+        {/* Your existing header content */}
+        <div className='hidden min-[850px]:flex items-center gap-4'>
+          <MainNav />
+          <NavigationMenu className='hidden min-[850px]:inline-flex'>
+            <NavigationMenuList className='flex gap-0'>
+              {Object.values(headerNavLinks).map((dialog) => (
+                <NavigationMenuItem key={dialog.title}>
+                  {dialog.toggle ? (
+                    <>
+                      <NavigationMenuTrigger
+                        className={cn(
+                          'transition-all duration-200 lg:text-lg relative rounded-md',
+                          (isPathActive(pathname, dialog.href) ||
+                            dialog.dropdown?.some((item) =>
+                              isPathActive(pathname, item.href)
+                            )) &&
+                            activeStyles
+                        )}
+                      >
+                        {dialog.title}
+                        <ChevronDown
+                          className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
+                          aria-hidden='true'
+                        />
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]'>
+                          {dialog.dropdown?.map((component) => (
+                            <ListItem
+                              key={component.title}
+                              title={component.title}
+                              href={component.href}
+                            >
+                              {component.description}
+                            </ListItem>
+                          ))}
+                        </ul>
+                      </NavigationMenuContent>
+                    </>
+                  ) : (
+                    <Link href={dialog.href}>
+                      <NavigationMenuTrigger
+                        className={cn(
+                          'transition-all duration-200 lg:text-lg relative rounded-md hover:bg-accent/50',
+                          isPathActive(pathname, dialog.href) && activeStyles
+                        )}
+                      >
+                        {dialog.title}
+                      </NavigationMenuTrigger>
+                    </Link>
+                  )}
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
 
-      {/* Mobile Navigation */}
-      <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
-        <MainNav />
-      </div>
+        {/* Mobile Navigation */}
+        <div className='min-[850px]:hidden flex items-center justify-between gap-4'>
+          <MainNav />
+        </div>
 
-      <div className='min-[850px]:hidden flex items-center justify-between gap-2'>
-        <ResponsiveSearch />
-        {/* <UserMenu /> */}
-        {/* <ThemeToggle /> */}
-        <MobileNav />
-      </div>
-
-      {/* Desktop Right Section */}
-      <div className='hidden min-[850px]:flex items-center gap-4'>
-        <ResponsiveSearch />
-        <UserMenu />
-        <ThemeToggle />
+        {/* Right Section with Responsive Search */}
+        <div className='flex items-center gap-2 min-[850px]:gap-4'>
+          <ResponsiveSearch />
+          <div className='hidden min-[850px]:flex items-center gap-4'>
+            <UserMenu />
+            <ThemeToggle />
+          </div>
+          <div className='min-[850px]:hidden'>
+            <MobileNav />
+          </div>
+        </div>
       </div>
     </header>
   )

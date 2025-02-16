@@ -51,14 +51,10 @@ export interface ExecutionResult {
 export interface Week {
   weekNumber: number
   title: string
-  tutorialContent: {
-    theory: string
-    examples: string
-    resources: string[]
-  }
   assignmentIds: string[]
 }
 export interface Curriculum {
+  id?: string
   name: string
   description: string
   weeks: Week[]

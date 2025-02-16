@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -9,11 +9,12 @@ import { Label } from '@/components/ui/label'
 import { Plus, Trash } from 'lucide-react'
 import { doc, setDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
-import {Assignment, Curriculum} from '@/types/classrooms/live-session'
+import { Assignment, Curriculum } from '@/types/classrooms/live-session'
 
 const CurriculumManager = () => {
   const [activeTab, setActiveTab] = useState('curriculum')
   const [curriculum, setCurriculum] = useState<Curriculum>({
+    id: '',
     name: '',
     description: '',
     weeks: [],
@@ -22,7 +23,7 @@ const CurriculumManager = () => {
   const [assignment, setAssignment] = useState<Assignment>({
     id: '',
     title: '',
-    problemStatement: '',
+    problemStatement: ``,
     starterCode: '',
     starterFunctionName: '',
     examples: [],
@@ -31,15 +32,26 @@ const CurriculumManager = () => {
   const handleCurriculumSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const curriculumId = crypto.randomUUID()
-      await setDoc(doc(fireStore, 'curricula', curriculumId), curriculum)
+      if (!curriculum.id) {
+        alert('Please provide a curriculum ID')
+        return
+      }
+
+      console.log('Saving curriculum with ID:', curriculum.id)
+      console.log('Curriculum data:', curriculum)
+
+      await setDoc(doc(fireStore, 'curricula', curriculum.id), {
+        ...curriculum,
+        updatedAt: new Date().toISOString(),
+      })
+
+      console.log('Curriculum saved successfully')
       alert('Curriculum saved successfully!')
     } catch (error) {
       console.error('Error saving curriculum:', error)
       alert('Error saving curriculum')
     }
   }
-
 
   const handleAssignmentSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -60,11 +72,6 @@ const CurriculumManager = () => {
         {
           weekNumber: prev.weeks.length + 1,
           title: '',
-          tutorialContent: {
-            theory: '',
-            examples: '',
-            resources: [],
-          },
           assignmentIds: [],
         },
       ],
@@ -104,8 +111,20 @@ const CurriculumManager = () => {
               <CardTitle>Create Curriculum</CardTitle>
             </CardHeader>
             <CardContent>
-
               <form onSubmit={handleCurriculumSubmit} className='space-y-6'>
+                <div className='space-y-2'>
+                  <Label>ID</Label>
+                  <Input
+                    value={curriculum.id}
+                    onChange={(e) =>
+                      setCurriculum((prev) => ({
+                        ...prev,
+                        id: e.target.value,
+                      }))
+                    }
+                    placeholder='python-for-beginners'
+                  />
+                </div>
                 <div className='space-y-2'>
                   <Label>Title</Label>
                   <Input
@@ -113,7 +132,7 @@ const CurriculumManager = () => {
                     onChange={(e) =>
                       setCurriculum((prev) => ({
                         ...prev,
-                        title: e.target.value,
+                        name: e.target.value,
                       }))
                     }
                     placeholder='Python for Beginners'
@@ -189,167 +208,6 @@ const CurriculumManager = () => {
                           </div>
 
                           <div className='space-y-2'>
-                            <Label>Theory Content</Label>
-                            <Textarea
-                              value={week.tutorialContent.theory}
-                              onChange={(e) => {
-                                setCurriculum((prev) => ({
-                                  ...prev,
-                                  weeks: prev.weeks.map((w, i) =>
-                                    i === index
-                                      ? {
-                                          ...w,
-                                          tutorialContent: {
-                                            ...w.tutorialContent,
-                                            theory: e.target.value,
-                                          },
-                                        }
-                                      : w
-                                  ),
-                                }))
-                              }}
-                              placeholder='Theory content (markdown)'
-                              className='min-h-[100px]'
-                            />
-                          </div>
-
-                          <div className='space-y-2'>
-                            <Label>Code Examples</Label>
-                            <Textarea
-                              value={week.tutorialContent.examples}
-                              onChange={(e) => {
-                                setCurriculum((prev) => ({
-                                  ...prev,
-                                  weeks: prev.weeks.map((w, i) =>
-                                    i === index
-                                      ? {
-                                          ...w,
-                                          tutorialContent: {
-                                            ...w.tutorialContent,
-                                            examples: e.target.value,
-                                          },
-                                        }
-                                      : w
-                                  ),
-                                }))
-                              }}
-                              placeholder='Code examples'
-                              className='font-mono min-h-[100px]'
-                            />
-                          </div>
-
-                          <div className='space-y-2'>
-                            <Label>Resources</Label>
-                            <div className='flex gap-2'>
-                              <Input
-                                placeholder='Add resource URL'
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    e.preventDefault()
-                                    const input = e.target as HTMLInputElement
-                                    if (input.value.trim()) {
-                                      setCurriculum((prev) => ({
-                                        ...prev,
-                                        weeks: prev.weeks.map((w, i) =>
-                                          i === index
-                                            ? {
-                                                ...w,
-                                                tutorialContent: {
-                                                  ...w.tutorialContent,
-                                                  resources: [
-                                                    ...w.tutorialContent
-                                                      .resources,
-                                                    input.value.trim(),
-                                                  ],
-                                                },
-                                              }
-                                            : w
-                                        ),
-                                      }))
-                                      input.value = ''
-                                    }
-                                  }
-                                }}
-                              />
-                              <Button
-                                type='button'
-                                variant='outline'
-                                size='sm'
-                                className='shrink-0'
-                                onClick={(e) => {
-                                  const input = e.currentTarget
-                                    .previousElementSibling as HTMLInputElement
-                                  if (input.value.trim()) {
-                                    setCurriculum((prev) => ({
-                                      ...prev,
-                                      weeks: prev.weeks.map((w, i) =>
-                                        i === index
-                                          ? {
-                                              ...w,
-                                              tutorialContent: {
-                                                ...w.tutorialContent,
-                                                resources: [
-                                                  ...w.tutorialContent
-                                                    .resources,
-                                                  input.value.trim(),
-                                                ],
-                                              },
-                                            }
-                                          : w
-                                      ),
-                                    }))
-                                    input.value = ''
-                                  }
-                                }}
-                              >
-                                Add
-                              </Button>
-                            </div>
-                            <div className='flex flex-wrap gap-2 mt-2'>
-                              {week.tutorialContent.resources.map(
-                                (resource, resourceIndex) => (
-                                  <div
-                                    key={resourceIndex}
-                                    className='flex items-center gap-1 bg-secondary rounded-full px-3 py-1'
-                                  >
-                                    <span className='text-sm truncate max-w-[200px]'>
-                                      {resource}
-                                    </span>
-                                    <Button
-                                      type='button'
-                                      variant='ghost'
-                                      size='sm'
-                                      className='h-4 w-4 p-0 hover:bg-transparent'
-                                      onClick={() => {
-                                        setCurriculum((prev) => ({
-                                          ...prev,
-                                          weeks: prev.weeks.map((w, i) =>
-                                            i === index
-                                              ? {
-                                                  ...w,
-                                                  tutorialContent: {
-                                                    ...w.tutorialContent,
-                                                    resources:
-                                                      w.tutorialContent.resources.filter(
-                                                        (_, ri) =>
-                                                          ri !== resourceIndex
-                                                      ),
-                                                  },
-                                                }
-                                              : w
-                                          ),
-                                        }))
-                                      }}
-                                    >
-                                      ×
-                                    </Button>
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          </div>
-
-                          <div className='space-y-2'>
                             <Label>Assignments</Label>
                             <div className='flex gap-2'>
                               <Input
@@ -358,26 +216,41 @@ const CurriculumManager = () => {
                                   if (e.key === 'Enter') {
                                     e.preventDefault()
                                     const input = e.target as HTMLInputElement
+                                    const value = input.value.trim()
+                                    console.log(
+                                      'Enter key - Input value:',
+                                      value
+                                    )
+                                    console.log(
+                                      'Enter key - Current assignmentIds:',
+                                      week.assignmentIds
+                                    )
+
                                     if (
-                                      input.value.trim() &&
-                                      !week.assignmentIds.includes(
-                                        input.value.trim()
-                                      )
+                                      value &&
+                                      !week.assignmentIds.includes(value)
                                     ) {
-                                      setCurriculum((prev) => ({
-                                        ...prev,
-                                        weeks: prev.weeks.map((w, i) =>
-                                          i === index
-                                            ? {
-                                                ...w,
-                                                assignmentIds: [
-                                                  ...w.assignmentIds,
-                                                  input.value.trim(),
-                                                ],
-                                              }
-                                            : w
-                                        ),
-                                      }))
+                                      setCurriculum((prev) => {
+                                        const newState = {
+                                          ...prev,
+                                          weeks: prev.weeks.map((w, i) =>
+                                            i === index
+                                              ? {
+                                                  ...w,
+                                                  assignmentIds: [
+                                                    ...w.assignmentIds,
+                                                    value,
+                                                  ],
+                                                }
+                                              : w
+                                          ),
+                                        }
+                                        console.log(
+                                          'Enter key - New curriculum state:',
+                                          newState
+                                        )
+                                        return newState
+                                      })
                                       input.value = ''
                                     }
                                   }
@@ -391,26 +264,41 @@ const CurriculumManager = () => {
                                 onClick={(e) => {
                                   const input = e.currentTarget
                                     .previousElementSibling as HTMLInputElement
+                                  const value = input.value.trim()
+                                  console.log(
+                                    'Add button - Input value:',
+                                    value
+                                  )
+                                  console.log(
+                                    'Add button - Current assignmentIds:',
+                                    week.assignmentIds
+                                  )
+
                                   if (
-                                    input.value.trim() &&
-                                    !week.assignmentIds.includes(
-                                      input.value.trim()
-                                    )
+                                    value &&
+                                    !week.assignmentIds.includes(value)
                                   ) {
-                                    setCurriculum((prev) => ({
-                                      ...prev,
-                                      weeks: prev.weeks.map((w, i) =>
-                                        i === index
-                                          ? {
-                                              ...w,
-                                              assignmentIds: [
-                                                ...w.assignmentIds,
-                                                input.value.trim(),
-                                              ],
-                                            }
-                                          : w
-                                      ),
-                                    }))
+                                    setCurriculum((prev) => {
+                                      const newState = {
+                                        ...prev,
+                                        weeks: prev.weeks.map((w, i) =>
+                                          i === index
+                                            ? {
+                                                ...w,
+                                                assignmentIds: [
+                                                  ...w.assignmentIds,
+                                                  value,
+                                                ],
+                                              }
+                                            : w
+                                        ),
+                                      }
+                                      console.log(
+                                        'Add button - New curriculum state:',
+                                        newState
+                                      )
+                                      return newState
+                                    })
                                     input.value = ''
                                   }
                                 }}
