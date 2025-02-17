@@ -106,15 +106,16 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
               classroom={classroom}
               actionButton={
                 <Button
+                  variant='softBlue'
                   onClick={() => startLesson(classroom.id)}
                   disabled={isStarting}
                 >
-                  {(
+                  {
                     <>
                       <Play className='mr-2 h-4 w-4' />
                       {isStarting ? 'Joining...' : 'Join Session'}
                     </>
-                  )}
+                  }
                 </Button>
               }
             />

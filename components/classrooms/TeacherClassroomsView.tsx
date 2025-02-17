@@ -48,7 +48,6 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
   return (
     <div className='container mx-auto p-6'>
       <ClassroomHeader title='My Classrooms' />
-
       <ClassroomSearch
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -74,7 +73,6 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
           </Dialog>
         }
       />
-
       {filteredClassrooms.length === 0 ? (
         <EmptyClassrooms userRole='teacher' />
       ) : (
@@ -86,11 +84,12 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
               classroom={classroom}
               actionButton={
                 <Button
+                  variant='softBlue'
                   onClick={() => startLesson(classroom.id)}
                   disabled={isStarting}
                 >
                   <Play className='mr-2 h-4 w-4' />
-                  {'Enter Classroom'}
+                  Enter Classroom
                 </Button>
               }
             />
