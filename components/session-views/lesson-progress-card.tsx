@@ -5,11 +5,19 @@ import { Progress } from '@/components/ui/progress'
 import { Clock, CheckCircle2, XCircle } from 'lucide-react'
 import { AssignmentProgressProps } from '@/types/classrooms/live-session'
 import { StudentProgress } from '@/types/classrooms/live-session'
+import { Card, CardHeader, CardTitle } from '@/components/ui/card'
+
+interface ExtendedAssignmentProgressProps extends AssignmentProgressProps {
+  selectedStudent: string | null
+  onStudentSelect: (username: string) => void
+}
 
 const AssignmentProgress = ({
   assignmentId,
   activeStudents,
-}: AssignmentProgressProps) => {
+  selectedStudent,
+  onStudentSelect,
+}: ExtendedAssignmentProgressProps) => {
   const [progressData, setProgressData] = useState<
     Record<string, StudentProgress>
   >({})
@@ -30,7 +38,6 @@ const AssignmentProgress = ({
   }, [progressData, activeStudents.length])
 
   useEffect(() => {
-    // Reset progress data when active students change
     setProgressData({})
 
     if (!assignmentId || activeStudents.length === 0) {
@@ -62,7 +69,6 @@ const AssignmentProgress = ({
               },
             }))
           } else {
-            // If document doesn't exist, set default values
             setProgressData((prev) => ({
               ...prev,
               [student.uid]: {
@@ -82,11 +88,10 @@ const AssignmentProgress = ({
       )
     })
 
-    // Cleanup subscriptions
     return () => {
       unsubscribers.forEach((unsubscribe) => unsubscribe())
     }
-  }, [assignmentId, activeStudents]) // Dependency on activeStudents array
+  }, [assignmentId, activeStudents])
 
   if (!assignmentId) return null
 
@@ -103,16 +108,21 @@ const AssignmentProgress = ({
   }
 
   return (
-    <div className='bg-muted/50 p-4'>
+    <div className='border-t bg-muted/50 p-4'>
       <div className='mb-4'>
-        <h3 className='font-semibold mb-2'>Assignment Progress</h3>
-        <Progress value={completionPercentage} className='h-2' />
-        <p className='text-sm text-muted-foreground mt-1'>
-          {studentsCompleted} of {activeStudents.length} students completed
+        <div className='flex justify-between items-center mb-2'>
+          <h3 className='font-semibold'>Assignment Progress</h3>
+          <p className='text-sm text-muted-foreground'>
+            {studentsCompleted} of {activeStudents.length} completed
+          </p>
+        </div>
+        <p className='text-sm text-muted-foreground'>
+          Click on a student to view their code
         </p>
+        <Progress value={completionPercentage} className='h-2' />
       </div>
 
-      <div className='space-y-2'>
+      <div className='space-y-2 max-h-[40vh] overflow-y-auto'>
         {activeStudents.map((student) => {
           const progress = progressData[student.uid] || {
             completed: false,
@@ -121,32 +131,41 @@ const AssignmentProgress = ({
             lastAttempt: null,
           }
 
+          const isSelected = selectedStudent === student.displayName
+
           return (
-            <div
+            <Card
               key={student.uid}
-              className='flex items-center justify-between p-2 bg-background rounded-lg'
+              className={`cursor-pointer hover:bg-accent transition-colors ${
+                isSelected ? 'border-primary bg-accent' : ''
+              }`}
+              onClick={() => onStudentSelect(student.displayName)}
             >
-              <div className='flex items-center space-x-3'>
-                {progress.completed ? (
-                  <CheckCircle2 className='w-4 h-4 text-green-500' />
-                ) : (
-                  <XCircle className='w-4 h-4 text-gray-400' />
+              <CardHeader className='p-3 flex flex-row items-center justify-between space-y-0'>
+                <div className='flex items-center space-x-3'>
+                  {progress.completed ? (
+                    <CheckCircle2 className='w-4 h-4 text-green-500' />
+                  ) : (
+                    <XCircle className='w-4 h-4 text-gray-400' />
+                  )}
+                  <div>
+                    <CardTitle className='text-sm font-medium'>
+                      {student.displayName}
+                    </CardTitle>
+                    <p className='text-xs text-muted-foreground'>
+                      Attempts: {Number(progress.successfulAttempts)}/
+                      {Number(progress.totalAttempts)}
+                    </p>
+                  </div>
+                </div>
+                {progress.lastAttempt && (
+                  <div className='flex items-center text-xs text-muted-foreground'>
+                    <Clock className='w-3 h-3 mr-1' />
+                    {new Date(progress.lastAttempt).toLocaleTimeString()}
+                  </div>
                 )}
-                <div>
-                  <p className='text-sm font-medium'>{student.displayName}</p>
-                  <p className='text-xs text-muted-foreground'>
-                    Attempts: {Number(progress.successfulAttempts)}/
-                    {Number(progress.totalAttempts)}
-                  </p>
-                </div>
-              </div>
-              {progress.lastAttempt && (
-                <div className='flex items-center text-xs text-muted-foreground'>
-                  <Clock className='w-3 h-3 mr-1' />
-                  {new Date(progress.lastAttempt).toLocaleTimeString()}
-                </div>
-              )}
-            </div>
+              </CardHeader>
+            </Card>
           )
         })}
       </div>

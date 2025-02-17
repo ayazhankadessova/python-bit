@@ -11,7 +11,6 @@ import {
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/hooks/use-toast'
 import { LogOut } from 'lucide-react'
 import { WeekSelector } from './WeekSelector'
@@ -555,31 +554,10 @@ export function TeacherSessionView({
             <AssignmentProgress
               assignmentId={selectedAssignmentId}
               activeStudents={activeStudents}
+              selectedStudent={selectedStudentUsername}
+              onStudentSelect={handleStudentSelect}
             />
           )}
-          {/* Connected Students - Always visible */}
-          {/* <div className='border-t bg-muted/50 p-4 max-h-[40vh] flex flex-col'>
-            <h3 className='font-semibold mb-3'>Connected Students</h3>
-            <div className='space-y-2 overflow-y-auto flex-1'>
-              {activeStudents.map((student) => (
-                <Card
-                  key={student.uid}
-                  className={`cursor-pointer hover:bg-accent transition-colors ${
-                    selectedStudentUsername === student.displayName
-                      ? 'border-primary bg-accent'
-                      : ''
-                  }`}
-                  onClick={() => handleStudentSelect(student.displayName)}
-                >
-                  <CardHeader className='py-2 px-3'>
-                    <CardTitle className='text-sm'>
-                      {student.displayName}
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-              ))}
-            </div>
-          </div> */}
         </div>
 
         {/* Right Panel: Code Editor */}
