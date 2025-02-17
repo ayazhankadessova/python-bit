@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Progress } from '@/components/ui/progress'
 import { Clock, CheckCircle2, XCircle } from 'lucide-react'
-import {
-  AssignmentProgressProps,
-} from '@/types/classrooms/live-session'
+import { AssignmentProgressProps } from '@/types/classrooms/live-session'
 import { StudentProgress } from '@/types/classrooms/live-session'
 
 const AssignmentProgress = ({
@@ -17,7 +15,24 @@ const AssignmentProgress = ({
   >({})
   const [loading, setLoading] = useState(true)
 
+  // Memoize progress calculations
+  const { studentsCompleted, completionPercentage } = useMemo(() => {
+    const completed = Object.values(progressData).filter(
+      (data) => data.completed
+    ).length
+    return {
+      studentsCompleted: completed,
+      completionPercentage:
+        activeStudents.length > 0
+          ? (completed / activeStudents.length) * 100
+          : 0,
+    }
+  }, [progressData, activeStudents.length])
+
   useEffect(() => {
+    // Reset progress data when active students change
+    setProgressData({})
+
     if (!assignmentId || activeStudents.length === 0) {
       setLoading(false)
       return
@@ -71,7 +86,7 @@ const AssignmentProgress = ({
     return () => {
       unsubscribers.forEach((unsubscribe) => unsubscribe())
     }
-  }, [assignmentId, activeStudents])
+  }, [assignmentId, activeStudents]) // Dependency on activeStudents array
 
   if (!assignmentId) return null
 
@@ -86,11 +101,6 @@ const AssignmentProgress = ({
       </div>
     )
   }
-
-  const studentsCompleted = Object.values(progressData).filter(
-    (data) => data.completed
-  ).length
-  const completionPercentage = (studentsCompleted / activeStudents.length) * 100
 
   return (
     <div className='bg-muted/50 p-4'>

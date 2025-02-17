@@ -372,22 +372,6 @@ export function TeacherSessionView({
         setIsCorrect(data.success)
       }
 
-      // Handle exercise completion
-      //   if (user && isSubmission && !isProject && code) {
-      //     await handleExerciseSubmission(
-      //       user,
-      //       tutorial_id,
-      //       exercise_number,
-      //       data.success,
-      //       code
-      //     )
-      //     // In any component
-      //     await invalidateTutorialProgress(user.uid, tutorial_id)
-      //   }
-
-      //   if (user && !isSubmission && !isProject && code) {
-      //     await handleExerciseRun(user, tutorial_id)
-      //   }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
       if (isSubmission) {
@@ -566,7 +550,6 @@ export function TeacherSessionView({
               </div>
             )}
           </div>
-
           {/* Assignment Progress */}
           {currentAssignment && (
             <AssignmentProgress
@@ -574,9 +557,8 @@ export function TeacherSessionView({
               activeStudents={activeStudents}
             />
           )}
-
           {/* Connected Students - Always visible */}
-          <div className='border-t bg-muted/50 p-4 max-h-[40vh] flex flex-col'>
+          {/* <div className='border-t bg-muted/50 p-4 max-h-[40vh] flex flex-col'>
             <h3 className='font-semibold mb-3'>Connected Students</h3>
             <div className='space-y-2 overflow-y-auto flex-1'>
               {activeStudents.map((student) => (
@@ -597,7 +579,7 @@ export function TeacherSessionView({
                 </Card>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Right Panel: Code Editor */}
