@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { FirestoreError } from 'firebase/firestore'
 import { sessionsService } from '@/lib/firebase/sessions'
 import type { LiveSession } from '@/types/classrooms/live-session'
+import { User } from '@/types/firebase'
 
 interface UseSessionActionsReturn {
   createSession: () => Promise<boolean>
@@ -20,7 +21,7 @@ interface UseSessionActionsReturn {
 
 export function useSessionActions(
   classroomId: string,
-  username: string | undefined,
+  user: User | null,
   isTeacher: boolean
 ): UseSessionActionsReturn {
   const [isLoadingCreateSession, setIsLoadingCreateSession] = useState(false)
@@ -81,7 +82,7 @@ export function useSessionActions(
   }
 
   const joinSession = async (sessionId: string): Promise<boolean> => {
-    if (!username) {
+    if (!user) {
       setError('User not authenticated')
       return false
     }
@@ -94,7 +95,7 @@ export function useSessionActions(
         await sessionsService.addStudentToSession(
           classroomId,
           sessionId,
-          username
+          user
         )
       }
       return true

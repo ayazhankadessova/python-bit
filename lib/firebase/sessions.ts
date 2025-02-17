@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import type { LiveSession } from '@/types/classrooms/live-session'
+import { User } from '@/types/firebase'
 
 export const sessionsService = {
   // Get refs and queries
@@ -79,7 +80,6 @@ export const sessionsService = {
     )
   },
 
-
   // Create, Join, End Sessions
 
   createSession: async (
@@ -107,27 +107,35 @@ export const sessionsService = {
   addStudentToSession: async (
     classroomId: string,
     sessionId: string,
-    username: string
+    user: User
   ) => {
     const sessionRef = doc(
       fireStore,
       `classrooms/${classroomId}/sessions/${sessionId}`
     )
+
+    // Create ActiveStudent object
+    const activeStudent = {
+      uid: user.uid,
+      displayName: user.displayName || user.email?.split('@')[0] || user.uid,
+    }
+
     await updateDoc(sessionRef, {
-      activeStudents: arrayUnion(username),
-      [`students.${username}`]: {
+      activeStudents: arrayUnion(activeStudent),
+      [`students.${user.uid}`]: {
         code: '',
         lastUpdated: Date.now(),
         submissions: [],
+        displayName: activeStudent.displayName,
       },
     })
   },
 
-  deleteSession: async(classroomId: string, documentId: string) => {
+  deleteSession: async (classroomId: string, documentId: string) => {
     const sessionRef = doc(
       fireStore,
       `classrooms/${classroomId}/sessions/${documentId}`
     )
     await deleteDoc(sessionRef)
-  }
+  },
 }

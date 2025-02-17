@@ -499,6 +499,7 @@ invalidateCache() // This will drop the cache and trigger a refetch
 ## Feb 15 
 
 - [x] how does lastTaught week get updated?
+- [ ] lessonprogresscard
 - [ ] add solved Assignments
 - [ ] Remove headers from assignments
 - [ ] list of schools in HK

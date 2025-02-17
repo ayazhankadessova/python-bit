@@ -33,6 +33,8 @@ import {
 import { MarkdownRenderer } from '@/components/markdown-renderer'
 import { formatCode } from '@/lib/utils'
 import { PythonEditor } from '@/components/session-views/live-session-code-editor'
+import { ActiveStudent } from '@/types/classrooms/live-session'
+import AssignmentProgress from '@/components/lesson-progress-card'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -70,7 +72,7 @@ export function TeacherSessionView({
   >(null)
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
-  const [activeStudents, setActiveStudents] = useState<string[]>([])
+  const [activeStudents, setActiveStudents] = useState<ActiveStudent[]>([])
 
   // Add this effect to manage the editor's initial code
   useEffect(() => {
@@ -163,7 +165,7 @@ export function TeacherSessionView({
                 ),
                 {
                   weekNumber: firstWeek.weekNumber,
-                  activeTask: firstAssignmentId || "",
+                  activeTask: firstAssignmentId || '',
                 }
               )
             } catch (error) {
@@ -565,22 +567,32 @@ export function TeacherSessionView({
             )}
           </div>
 
+          {/* Assignment Progress */}
+          {currentAssignment && (
+            <AssignmentProgress
+              assignmentId={selectedAssignmentId}
+              activeStudents={activeStudents}
+            />
+          )}
+
           {/* Connected Students - Always visible */}
           <div className='border-t bg-muted/50 p-4 max-h-[40vh] flex flex-col'>
             <h3 className='font-semibold mb-3'>Connected Students</h3>
             <div className='space-y-2 overflow-y-auto flex-1'>
               {activeStudents.map((student) => (
                 <Card
-                  key={student}
+                  key={student.uid}
                   className={`cursor-pointer hover:bg-accent transition-colors ${
-                    selectedStudentUsername === student
+                    selectedStudentUsername === student.displayName
                       ? 'border-primary bg-accent'
                       : ''
                   }`}
-                  onClick={() => handleStudentSelect(student)}
+                  onClick={() => handleStudentSelect(student.displayName)}
                 >
                   <CardHeader className='py-2 px-3'>
-                    <CardTitle className='text-sm'>{student}</CardTitle>
+                    <CardTitle className='text-sm'>
+                      {student.displayName}
+                    </CardTitle>
                   </CardHeader>
                 </Card>
               ))}

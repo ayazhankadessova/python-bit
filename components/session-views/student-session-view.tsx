@@ -11,6 +11,7 @@ import { formatCode } from '@/lib/utils'
 import { PythonEditor } from '@/components/session-views/live-session-code-editor'
 import { useAuth } from '@/contexts/AuthContext'
 import { handleAssignmentCompletion } from '@/lib/live-classroom/utils'
+import {ActiveStudent} from "@/types/classrooms/live-session"
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -26,7 +27,7 @@ export function StudentSessionView({
   const { user } = useAuth()
   const { toast } = useToast()
   const [studentCode, setStudentCode] = useState<string>('')
-  const [students, setStudents] = useState<string[]>([])
+  const [students, setStudents] = useState<ActiveStudent[]>([])
   const [output, setOutput] = useState<string>('')
   const [currentSession, setCurrentSession] = useState<LiveSession | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -211,7 +212,7 @@ export function StudentSessionView({
       // Remove the student from activeStudents array using arrayRemove
       await updateDoc(sessionRef, {
         activeStudents: currentSession.activeStudents.filter(
-          (student) => student !== user.displayName
+          (student) => student.displayName !== user.displayName
         ),
       })
 
@@ -342,12 +343,12 @@ export function StudentSessionView({
             <div className='space-y-2 overflow-y-auto flex-1'>
               {students.map((student) => (
                 <Card
-                  key={student}
+                  key={student.uid}
                   className={`cursor-pointer hover:bg-accent transition-colors ${'border-softBlue bg-accent'}`}
                 >
                   <CardHeader className='py-2 px-3'>
                     <CardTitle className='text-sm'>
-                      {student === user?.displayName ? 'Me' : student}
+                      {student.displayName === user?.displayName ? 'Me' : student.displayName}
                     </CardTitle>
                   </CardHeader>
                 </Card>

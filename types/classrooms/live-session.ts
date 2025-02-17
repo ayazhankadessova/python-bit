@@ -1,4 +1,3 @@
-
 export interface StudentCode {
   code: string
   lastUpdated: number
@@ -16,6 +15,11 @@ export interface SessionStudent {
   submissions: CodeSubmission[]
 }
 
+export interface ActiveStudent {
+  uid: string
+  displayName: string
+}
+
 export interface LiveSession {
   id: string
   startedAt: number
@@ -23,7 +27,7 @@ export interface LiveSession {
   weekNumber: number
   activeTask: string
   students: Record<string, SessionStudent>
-  activeStudents: string[]
+  activeStudents: ActiveStudent[] 
 }
 
 export interface SessionWithDuration extends LiveSession {
