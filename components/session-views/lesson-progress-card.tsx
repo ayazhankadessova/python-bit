@@ -113,7 +113,7 @@ const AssignmentProgress = ({
         <div className='flex justify-between items-center mb-2'>
           <h3 className='font-semibold'>Assignment Progress</h3>
           <p className='text-sm text-muted-foreground'>
-            {studentsCompleted} of {activeStudents.length} completed
+            {studentsCompleted} of {activeStudents.length} online completed
           </p>
         </div>
         <p className='text-sm text-muted-foreground'>

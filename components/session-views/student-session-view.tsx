@@ -273,6 +273,7 @@ export function StudentSessionView({
 
       // Handle exercise submission
       if (user && id &&  isSubmission && code) {
+        handleUpdateCode()
         await handleAssignmentCompletion(
           user,
           id,
