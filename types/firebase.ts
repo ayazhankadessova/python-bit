@@ -1,5 +1,3 @@
-// Firebase Types
-
 // Firebase Types - Some fields might be missing in the raw data
 export interface FirebaseUserData {
   classrooms?: string[]
@@ -46,17 +44,6 @@ export interface Student {
   code: string
 }
 
-// Helper function to validate required user data
-export function isValidUserData(data: any): data is FirebaseUserData {
-  return (
-    data &&
-    typeof data.email === 'string' &&
-    typeof data.displayName === 'string' &&
-    (data.role === 'student' || data.role === 'teacher') &&
-    typeof data.school === 'string'
-  )
-}
-
 export interface ClassroomTC {
   id: string
   name: string 
@@ -74,13 +61,6 @@ export interface Week {
   topic: string
   assignmentIds: string[] // Array of problem IDs
 }
-
-// interface CurriculumInputs {
-//   id: string
-//   name: string
-//   description: string
-//   weeks: Week[]
-// }
 
 export interface TutorialProgress {
   exerciseId: string

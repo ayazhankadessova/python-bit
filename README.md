@@ -500,6 +500,7 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 - [x] how does lastTaught week get updated?
 - [ ] lessonprogresscard
+- [ ] why students: 0 ?
 - [ ] add solved Assignments
 - [ ] Remove headers from assignments
 - [ ] list of schools in HK

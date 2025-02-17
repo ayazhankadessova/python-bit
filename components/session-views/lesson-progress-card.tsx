@@ -3,19 +3,10 @@ import { doc, onSnapshot } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Progress } from '@/components/ui/progress'
 import { Clock, CheckCircle2, XCircle } from 'lucide-react'
-import { ActiveStudent } from '@/types/classrooms/live-session'
-
-interface AssignmentProgressProps {
-  assignmentId: string | null
-  activeStudents: ActiveStudent[]
-}
-
-interface StudentProgress {
-  completed: boolean
-  totalAttempts: number
-  successfulAttempts: number
-  lastAttempt: number | null
-}
+import {
+  AssignmentProgressProps,
+} from '@/types/classrooms/live-session'
+import { StudentProgress } from '@/types/classrooms/live-session'
 
 const AssignmentProgress = ({
   assignmentId,
@@ -134,8 +125,8 @@ const AssignmentProgress = ({
                 <div>
                   <p className='text-sm font-medium'>{student.displayName}</p>
                   <p className='text-xs text-muted-foreground'>
-                    Attempts: {progress.successfulAttempts}/
-                    {progress.totalAttempts}
+                    Attempts: {Number(progress.successfulAttempts)}/
+                    {Number(progress.totalAttempts)}
                   </p>
                 </div>
               </div>

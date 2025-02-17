@@ -124,9 +124,7 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
         name: data.name,
         teacherId,
         curriculumId: data.curriculumId,
-        // curriculumName: curricula.find((c) => c.id === data.curriculumId)?.name,
-        studentIds: data.students, // Using studentIds instead of students for clarity
-        // code: classCode,
+        students: data.students, // Using studentIds instead of students for clarity
         lastTaughtWeek: 1,
         createdAt: Date.now(),
         updatedAt: Date.now(),

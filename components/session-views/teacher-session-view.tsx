@@ -34,7 +34,7 @@ import { MarkdownRenderer } from '@/components/markdown-renderer'
 import { formatCode } from '@/lib/utils'
 import { PythonEditor } from '@/components/session-views/live-session-code-editor'
 import { ActiveStudent } from '@/types/classrooms/live-session'
-import AssignmentProgress from '@/components/lesson-progress-card'
+import AssignmentProgress from '@/components/session-views/lesson-progress-card'
 
 interface TeacherSessionViewProps {
   classroomId: string
