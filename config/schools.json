@@ -1,0 +1,71 @@
+{
+  "districts": [
+    {
+      "name": "Central and Western",
+      "schools": [
+        "Island School",
+        "King's College",
+        "Sacred Heart Canossian College",
+        "St. Clare's Girls' School",
+        "St. Joseph's College",
+        "St. Louis School",
+        "St. Paul's Co-educational College",
+        "St. Paul's College",
+        "St. Stephen's Girls' College",
+        "Ying Wa Girls' School",
+        "Others"
+      ]
+    },
+    {
+      "name": "Eastern",
+      "schools": [
+        "Belilios Public School",
+        "Canossa College",
+        "Chinese International School",
+        "Clementi Secondary School",
+        "Lingnan Secondary School",
+        "Munsang College (Hong Kong Island)",
+        "St. Mark's School",
+         "Others"
+      ]
+    },
+    {
+      "name": "Southern",
+      "schools": [
+        "Aberdeen Baptist Lui Ming Choi College",
+        "Aberdeen Technical School",
+        "Hong Kong International School",
+        "South Island School",
+        "St. Stephen's College",
+        "West Island School",
+         "Others"
+      ]
+    },
+    {
+      "name": "Wan Chai",
+      "schools": [
+        "Queen's College",
+        "St. Paul's Convent School",
+        "Wah Yan College Hong Kong",
+        "Marymount Secondary School",
+        "True Light Middle School of Hong Kong",
+         "Others"
+      ]
+    },
+    {
+      "name": "Kowloon City",
+      "schools": [
+        "Diocesan Boys' School",
+        "Diocesan Girls' School",
+        "La Salle College",
+        "Maryknoll Convent School",
+        "Ying Wa College",
+         "Others"
+      ]
+    },
+    {
+      "name": "Others",
+      "schools": ["Others"]
+    }
+  ]
+}

@@ -550,14 +550,14 @@ export function TeacherSessionView({
             )}
           </div>
           {/* Assignment Progress */}
-          {currentAssignment && (
+          {/* {currentAssignment && (
             <AssignmentProgress
               assignmentId={selectedAssignmentId}
               activeStudents={activeStudents}
               selectedStudent={selectedStudentUsername}
               onStudentSelect={handleStudentSelect}
             />
-          )}
+          )} */}
         </div>
 
         {/* Right Panel: Code Editor */}

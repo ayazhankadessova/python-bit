@@ -23,10 +23,10 @@ export function useTeacherClassrooms(
       return res.json()
     },
     {
-      revalidateOnFocus: false, // Don't revalidate on window focus
+      revalidateOnFocus: true, // Don't revalidate on window focus
       revalidateIfStale: true,
       keepPreviousData: true, // Keep showing previous data while loading
-      dedupingInterval: 5000, // Dedupe requests within 5 seconds
+      dedupingInterval: 10, // Dedupe requests within 5 seconds
     }
   )
 

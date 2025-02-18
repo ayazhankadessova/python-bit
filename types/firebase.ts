@@ -1,19 +1,3 @@
-// Firebase Types - Some fields might be missing in the raw data
-export interface FirebaseUserData {
-  classrooms?: string[]
-  createdAt: number
-  dislikedProblems?: string[]
-  displayName: string
-  email: string
-  likedProblems?: string[]
-  role: 'student' | 'teacher'
-  school: string
-  solvedProblems?: string[]
-  starredProblems?: string[]
-  uid: string
-  updatedAt: number
-}
-
 // Application Types - All fields are required in processed data
 export interface User {
   uid: string
@@ -27,6 +11,7 @@ export interface User {
   dislikedProblems: string[]
   starredProblems: string[]
   createdAt: number
+  updatedAt: number
 }
 
 export interface Student {

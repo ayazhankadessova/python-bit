@@ -523,6 +523,17 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [ ] what do i need when i create a classroom ?
 - [ ] Should i add dashboard page?
 
+## Feb 18
+
+- [x] school list Show
+- https://en.wikipedia.org/wiki/List_of_secondary_schools_in_Hong_Kong
+- [x] login error show. 
+- [ ] classrooms not updated!  
+- [ ] tutrials: show where to press on tutorial (underline). 
+- [ ] exercises not found. dark theme remove. next tutorial button.back not working. 
+- [ ] not started should not be there if there is last Attempt. add images to projects. 
+- [ ] indexof TypeError: undefined is not an object (evaluating 'n.indexOf') assignmentProgress
+
 ## Project Test cases
 
 - [ ] Add test cases to 2-3 projects
