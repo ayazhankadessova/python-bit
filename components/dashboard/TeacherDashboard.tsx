@@ -7,7 +7,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { ClassroomList } from '@/components/dashboard/ClassroomList'
-import { useTeacherClassrooms } from '@/hooks/useTeacherClassrooms'
+import { useClassrooms } from '@/hooks/useClassrooms'
 
 interface TeacherDashboardProps {
   onSignOut: () => void
@@ -16,7 +16,7 @@ interface TeacherDashboardProps {
 export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
   const router = useRouter()
   const { user } = useAuth()
-  const { classrooms, isLoading, error} = useTeacherClassrooms(
+  const { classrooms, isLoading, error} = useClassrooms(
     user!.uid
   )
   const activeClassrooms = classrooms.filter((c) => c)

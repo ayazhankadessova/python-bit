@@ -33,6 +33,7 @@ export interface ClassroomTC {
   id: string
   name: string 
   teacherId: string  
+  classCode: string
   curriculumId: string 
   students: string[] 
   lastTaughtWeek: number 

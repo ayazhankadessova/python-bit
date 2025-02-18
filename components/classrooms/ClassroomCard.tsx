@@ -1,22 +1,28 @@
 import { ClassroomTC } from '@/types/firebase'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import React, { useEffect, useState } from 'react'
 import { fireStore } from '@/firebase/firebase'
 import { getDoc, doc } from 'firebase/firestore'
 import { Curriculum } from '@/types/classrooms/live-session'
+import { Copy } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 
 interface ClassroomCardProps {
   classroom: ClassroomTC
   actionButton: React.ReactNode
   variant?: 'default' | 'dashboard'
+  role: 'student' | 'teacher'
 }
 
 export function ClassroomCard({
   classroom,
   actionButton,
   variant = 'default',
+  role = 'student'
 }: ClassroomCardProps) {
   const [curriculumName, setCurriculumName] = useState('')
+  const { toast } = useToast()
 
   useEffect(() => {
     const fetchClassroomAndCurriculum = async () => {
@@ -47,6 +53,36 @@ export function ClassroomCard({
     }
   }, [classroom])
 
+  const copyClassCode = () => {
+    if (classroom.classCode) {
+      navigator.clipboard.writeText(classroom.classCode)
+      toast({
+        title: 'Copied!',
+        description: 'Class code copied to clipboard',
+      })
+    }
+  }
+
+  const ClassCodeSection = () => {
+    if (role !== 'teacher' || !classroom.classCode) return null
+
+    return (
+      <div className='flex items-center gap-2'>
+        <p className='text-sm text-muted-foreground'>
+          Class Code: {classroom.classCode}
+        </p>
+        <Button
+          variant='ghost'
+          size='sm'
+          className='h-6 w-6 p-0'
+          onClick={copyClassCode}
+        >
+          <Copy className='h-4 w-4' />
+        </Button>
+      </div>
+    )
+  }
+
   if (variant === 'dashboard') {
     return (
       <Card className='p-4'>
@@ -56,6 +92,7 @@ export function ClassroomCard({
             <p className='text-sm text-muted-foreground'>
               Program: {curriculumName}
             </p>
+            <ClassCodeSection />
           </div>
           <div className='pt-2 flex justify-end'>{actionButton}</div>
         </div>
@@ -73,6 +110,7 @@ export function ClassroomCard({
           <p className='text-sm text-muted-foreground'>
             Program: {curriculumName}
           </p>
+          <ClassCodeSection />
         </div>
       </CardHeader>
       <CardContent className='flex-1'>

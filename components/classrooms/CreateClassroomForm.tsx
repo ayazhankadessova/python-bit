@@ -13,7 +13,6 @@ import {
   arrayUnion,
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
-import { nanoid } from 'nanoid'
 import {
   Form,
   FormControl,
@@ -56,6 +55,33 @@ const formSchema = z.object({
   curriculumId: z.string().min(1, 'Curriculum is required'),
   students: z.array(z.string()).min(1, 'At least one student must be selected'),
 })
+
+const generateClassCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString()
+}
+
+// Function to ensure the generated code is unique
+const getUniqueClassCode = async () => {
+  let code = generateClassCode()
+  let isUnique = false
+
+  while (!isUnique) {
+    // Check if code exists in Firestore
+    const codeQuery = query(
+      collection(fireStore, 'classrooms'),
+      where('classCode', '==', code)
+    )
+    const codeSnapshot = await getDocs(codeQuery)
+
+    if (codeSnapshot.empty) {
+      isUnique = true
+    } else {
+      code = generateClassCode()
+    }
+  }
+
+  return code
+}
 
 export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
   const [curricula, setCurricula] = useState<Curriculum[]>([])
@@ -115,12 +141,12 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
       setLoading(true)
       const batch = writeBatch(fireStore)
 
-      const classroomId = nanoid()
+      const classCode = await getUniqueClassCode()
 
       // Create classroom document
-      const classroomRef = doc(fireStore, 'classrooms', classroomId)
+      const classroomRef = doc(collection(fireStore, 'classrooms'))
       batch.set(classroomRef, {
-        // id: classroomId,
+        classCode: classCode,
         name: data.name,
         teacherId,
         curriculumId: data.curriculumId,
@@ -133,14 +159,14 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
       // Update teacher's classrooms array
       const teacherRef = doc(fireStore, 'users', teacherId)
       batch.update(teacherRef, {
-        classrooms: arrayUnion(classroomId),
+        classrooms: arrayUnion(classroomRef.id),
       })
 
       // Update students' classrooms arrays
       data.students.forEach((studentId) => {
         const studentRef = doc(fireStore, 'users', studentId)
         batch.update(studentRef, {
-          classrooms: arrayUnion(classroomId),
+          classrooms: arrayUnion(classroomRef.id),
         })
       })
 

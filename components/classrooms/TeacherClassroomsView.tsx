@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { useTeacherClassrooms } from '@/hooks/useTeacherClassrooms'
+import { useClassrooms } from '@/hooks/useClassrooms'
 import { useStartLesson } from '@/hooks/useStartLesson'
 import { User } from '@/types/firebase'
 import { ClassroomHeader } from '@/components/classrooms/ClassroomHeader'
@@ -26,7 +26,7 @@ interface TeacherClassroomsViewProps {
 }
 
 export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
-  const { classrooms, isLoading, error } = useTeacherClassrooms(user.uid)
+  const { classrooms, isLoading, error } = useClassrooms(user.uid)
   const { startLesson, isStarting } = useStartLesson()
   const [searchTerm, setSearchTerm] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -82,6 +82,7 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
             <ClassroomCard
               key={classroom.id}
               classroom={classroom}
+              role='teacher'
               actionButton={
                 <Button
                   variant='softBlue'

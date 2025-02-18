@@ -28,6 +28,7 @@ export function ClassroomList({
         <ClassroomCard
           key={classroom.id}
           classroom={classroom}
+          role={userRole}
           actionButton={
             <Button
               variant='softBlue'

@@ -1,16 +1,16 @@
 import useSWR from 'swr'
 import { ClassroomTC } from '@/types/firebase'
 
-interface UseTeacherClassroomsReturn {
+interface useClassroomsReturn {
   classrooms: ClassroomTC[]
   isLoading: boolean
   error: Error | null
   mutate: () => void
 }
 
-export function useTeacherClassrooms(
+export function useClassrooms(
   userId: string
-): UseTeacherClassroomsReturn {
+): useClassroomsReturn {
   const { data, error, isLoading, mutate } = useSWR<{
     classrooms: ClassroomTC[]
   }>(
@@ -23,10 +23,12 @@ export function useTeacherClassrooms(
       return res.json()
     },
     {
-      revalidateOnFocus: true, // Don't revalidate on window focus
-      revalidateIfStale: true,
-      keepPreviousData: true, // Keep showing previous data while loading
-      dedupingInterval: 10, // Dedupe requests within 5 seconds
+      revalidateOnFocus: false, // Don't revalidate on focus
+      revalidateIfStale: true, // Still revalidate stale data
+      keepPreviousData: true, // Keep old data while loading
+      dedupingInterval: 5000, // Dedupe requests within 5 seconds
+      errorRetryCount: 3, // Only retry 3 times
+      refreshInterval: 30000,
     }
   )
 
