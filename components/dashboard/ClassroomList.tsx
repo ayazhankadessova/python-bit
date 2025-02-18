@@ -1,7 +1,9 @@
+// ClassroomList.tsx
+import React from 'react'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { ClassroomTC } from '@/types/firebase'
 import { Play } from 'lucide-react'
+import { ClassroomTC } from '@/types/firebase'
+import { ClassroomCard } from '@/components/classrooms/ClassroomCard'
 
 interface ClassroomListProps {
   classrooms: ClassroomTC[]
@@ -15,26 +17,28 @@ export function ClassroomList({
   userRole,
 }: ClassroomListProps) {
   if (classrooms.length === 0) {
-    return <p className='text-sm text-gray-500'>No classrooms available</p>
+    return (
+      <p className='text-sm text-muted-foreground'>No classrooms available</p>
+    )
   }
 
   return (
     <div className='space-y-4'>
       {classrooms.map((classroom) => (
-        <Card key={classroom.id} className='p-4'>
-          <div className='space-y-2'>
-            <h3 className='font-semibold'>{classroom.name}</h3>
-            <p className='text-sm text-gray-500'>
-              Program: {classroom.curriculumName || 'N/A'}
-            </p>
-            <div className='flex justify-between items-center'>
-              <Button onClick={() => onJoinClassroom(classroom.id)}>
-                <Play className='mr-2 h-4 w-4' />
-                Enter {userRole === 'teacher' ? 'Classroom' : 'Session'}
-              </Button>
-            </div>
-          </div>
-        </Card>
+        <ClassroomCard
+          key={classroom.id}
+          classroom={classroom}
+          role={userRole}
+          actionButton={
+            <Button
+              variant='softBlue'
+              onClick={() => onJoinClassroom(classroom.id)}
+            >
+              <Play className='mr-2 h-4 w-4' />
+              Enter {userRole === 'teacher' ? 'Classroom' : 'Session'}
+            </Button>
+          }
+        />
       ))}
     </div>
   )

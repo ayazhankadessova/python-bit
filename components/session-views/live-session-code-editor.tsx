@@ -136,7 +136,7 @@ export function PythonEditor({
     if (initialCode && initialCode !== code) {
       setCode(initialCode)
     }
-  }, [initialCode])
+  }, [initialCode, code])
 
   return (
     <>

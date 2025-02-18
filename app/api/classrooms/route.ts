@@ -12,32 +12,40 @@ interface ClassroomsResponse {
 
 async function _fetchClassroomData(userId: string) {
   try {
+    // Get user document
     const userDoc = await getDoc(doc(fireStore, 'users', userId))
-    if (!userDoc.exists()) {
-      return { classrooms: [], error: 'User not found' }
-    }
 
-    const userData = userDoc.data()
-    if (!userData.classrooms || userData.classrooms.length === 0) {
+    if (!userDoc.exists()) {
+      console.log(`User ${userId} not found`)
       return { classrooms: [] }
     }
 
+    const userData = userDoc.data()
+    // If no classrooms, return empty array (not an error condition)
+    if (!userData.classrooms || userData.classrooms.length === 0) {
+      console.log(`No classrooms found for user ${userId}`)
+      return { classrooms: [] }
+    }
+
+    // Fetch all classroom documents
     const classroomsData = await Promise.all(
       userData.classrooms.map(async (classroomId: string) => {
         try {
           const classroomDoc = await getDoc(
             doc(fireStore, 'classrooms', classroomId)
           )
-          if (!classroomDoc.exists()) return null
-
-          const classroomData = classroomDoc.data()
-
-          return {
-            id: classroomDoc.id,
-            ...classroomData,
-          } as ClassroomTC
+          
+          if (!classroomDoc.exists()) {
+            console.log(`Classroom ${classroomId} not found`)
+            return null
+          }
+          const classroomData = classroomDoc.data() as ClassroomTC
+          return classroomData
         } catch (error) {
-          console.error(`Error fetching classroom ${classroomId}:`, error)
+          console.error(
+            `Error fetching classroom ${classroomId}:`,
+            error instanceof Error ? error.message : 'Unknown error'
+          )
           return null
         }
       })
@@ -46,36 +54,58 @@ async function _fetchClassroomData(userId: string) {
     const validClassrooms = classroomsData.filter(
       (c): c is ClassroomTC => c !== null
     )
+
+    console.log(
+      `Successfully fetched ${validClassrooms.length} classrooms for user ${userId}`
+    )
     return { classrooms: validClassrooms }
   } catch (error) {
-    return { classrooms: [], error: 'Failed to fetch classroom data' + error }
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
+    console.error(`Failed to fetch classroom data: ${errorMessage}`)
+    throw error
   }
 }
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const userId = searchParams.get('userId')
+export const dynamic = 'force-dynamic' // Mark this route as dynamic
+export const revalidate = 0 // Disable static page generation
 
-  if (!userId) {
-    return new Response('User ID is required', { status: 400 })
-  }
+export async function GET(request: Request) {
+  try {
+    const userId = new URL(request.url).searchParams.get('userId')
 
-  const cacheKey = `/api/classrooms?userId=${userId}`
-  const result = await unstable_cache(
-    async () => _fetchClassroomData(userId),
-    [cacheKey],
-    { revalidate: 600 } // Cache for 10 mins
-  )()
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User ID is required' },
+        { status: 400 }
+      )
+    }
 
-  if (result.error) {
-    // Convert error to string
-    return new Response(JSON.stringify({ error: result.error }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const cacheKey = `classrooms-${userId}`
+    const result = await unstable_cache(
+      async () => _fetchClassroomData(userId),
+      [cacheKey],
+      {
+        revalidate: 60, // Cache for 1 minute
+        tags: [`user-${userId}`],
+      }
+    )()
+
+    return NextResponse.json<ClassroomsResponse>({
+      classrooms: result.classrooms,
     })
-  }
+  } catch (error) {
+    console.error(
+      'API Error:',
+      error instanceof Error ? error.message : 'Unknown error'
+    )
 
-  return NextResponse.json<ClassroomsResponse>(result)
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch classroom data',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    )
+  }
 }

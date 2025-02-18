@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { useTeacherClassrooms } from '@/hooks/useTeacherClassrooms'
+import { useClassrooms } from '@/hooks/useClassrooms'
 import { useStartLesson } from '@/hooks/useStartLesson'
 import { User } from '@/types/firebase'
 import { ClassroomHeader } from '@/components/classrooms/ClassroomHeader'
@@ -26,7 +26,7 @@ interface TeacherClassroomsViewProps {
 }
 
 export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
-  const { classrooms, isLoading, error } = useTeacherClassrooms(user.uid)
+  const { classrooms, isLoading, error } = useClassrooms(user.uid)
   const { startLesson, isStarting } = useStartLesson()
   const [searchTerm, setSearchTerm] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -48,7 +48,6 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
   return (
     <div className='container mx-auto p-6'>
       <ClassroomHeader title='My Classrooms' />
-
       <ClassroomSearch
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -74,7 +73,6 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
           </Dialog>
         }
       />
-
       {filteredClassrooms.length === 0 ? (
         <EmptyClassrooms userRole='teacher' />
       ) : (
@@ -84,14 +82,15 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
             <ClassroomCard
               key={classroom.id}
               classroom={classroom}
-              showClassCode={true}
+              role='teacher'
               actionButton={
                 <Button
+                  variant='softBlue'
                   onClick={() => startLesson(classroom.id)}
                   disabled={isStarting}
                 >
                   <Play className='mr-2 h-4 w-4' />
-                  {'Enter Classroom'}
+                  Enter Classroom
                 </Button>
               }
             />

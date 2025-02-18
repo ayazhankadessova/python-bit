@@ -62,7 +62,7 @@ export function TutorialStatus({
                 className={cn('h-5 w-5 text-purple-500', iconClassName)}
               />
               <span className={cn('text-purple-500 font-medium', textClassName)}>
-                Not Started
+                No Submissions
               </span>
             </>
           )}
@@ -74,7 +74,7 @@ export function TutorialStatus({
         )}
         {lastUpdated && lastUpdated > 1704449954 && (
           <div className='text-muted-foreground'>
-            Last attempt: {formatDate(lastUpdated)}
+            Last Submission: {formatDate(lastUpdated)}
           </div>
         )}
       </div>

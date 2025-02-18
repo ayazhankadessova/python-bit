@@ -171,7 +171,7 @@ useEffect(() => {
         curriculumName: curricula.find((c) => c.id === data.curriculumId)?.name,
         students: data.students,
         classCode,
-        lastTaughtWeek: 0,
+        lastTaughtWeek: 1,
         createdAt: Date.now(),
         updatedAt: Date.now(),
         school: user.school,

@@ -63,7 +63,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
     joinSession,
     deleteSession,
     isLoadingActions,
-  } = useSessionActions(classroomId, user?.displayName, isTeacher)
+  } = useSessionActions(classroomId, user, isTeacher)
 
   const handleJoinSession = async () => {
     if (!activeSession) return

@@ -1,4 +1,4 @@
-
+import { FieldValue } from 'firebase/firestore'
 export interface StudentCode {
   code: string
   lastUpdated: number
@@ -16,6 +16,11 @@ export interface SessionStudent {
   submissions: CodeSubmission[]
 }
 
+export interface ActiveStudent {
+  uid: string
+  displayName: string
+}
+
 export interface LiveSession {
   id: string
   startedAt: number
@@ -23,23 +28,11 @@ export interface LiveSession {
   weekNumber: number
   activeTask: string
   students: Record<string, SessionStudent>
-  activeStudents: string[]
+  activeStudents: ActiveStudent[] 
 }
 
 export interface SessionWithDuration extends LiveSession {
   duration?: string
-}
-
-export interface Submission {
-  classroomId: string
-  sessionId: string
-  studentId: string
-  taskId: string
-  code: string
-  submittedAt: number
-  weekNumber: number
-  executionResult: string
-  passed: boolean
 }
 
 export interface ExecutionResult {
@@ -53,6 +46,7 @@ export interface Week {
   title: string
   assignmentIds: string[]
 }
+
 export interface Curriculum {
   id?: string
   name: string
@@ -74,4 +68,16 @@ export interface Example {
   inputText: string
   outputText: string
   explanation?: string
+}
+
+export interface AssignmentProgressProps {
+  assignmentId: string | null
+  activeStudents: ActiveStudent[]
+}
+
+export interface StudentProgress {
+  completed: boolean
+  totalAttempts: number | FieldValue
+  successfulAttempts: number | FieldValue
+  lastAttempt: number | null
 }

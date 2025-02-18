@@ -11,7 +11,6 @@ import {
 } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/hooks/use-toast'
 import { LogOut } from 'lucide-react'
 import { WeekSelector } from './WeekSelector'
@@ -33,6 +32,8 @@ import {
 import { MarkdownRenderer } from '@/components/markdown-renderer'
 import { formatCode } from '@/lib/utils'
 import { PythonEditor } from '@/components/session-views/live-session-code-editor'
+import { ActiveStudent } from '@/types/classrooms/live-session'
+import AssignmentProgress from '@/components/session-views/lesson-progress-card'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -70,7 +71,7 @@ export function TeacherSessionView({
   >(null)
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
-  const [activeStudents, setActiveStudents] = useState<string[]>([])
+  const [activeStudents, setActiveStudents] = useState<ActiveStudent[]>([])
 
   // Add this effect to manage the editor's initial code
   useEffect(() => {
@@ -117,7 +118,7 @@ export function TeacherSessionView({
 
         // Set initial week based on lastTaughtWeek
         const initialWeek = curriculumData.weeks.find(
-          (week) => week.weekNumber === classroomData.lastTaughtWeek + 1
+          (week) => week.weekNumber === classroomData.lastTaughtWeek
         )
 
         // after u choose initial week, if it exists set if in `classrooms/${classroomId}/sessions/${sessionId}` too
@@ -163,7 +164,7 @@ export function TeacherSessionView({
                 ),
                 {
                   weekNumber: firstWeek.weekNumber,
-                  activeTask: firstAssignmentId || "",
+                  activeTask: firstAssignmentId || '',
                 }
               )
             } catch (error) {
@@ -370,22 +371,6 @@ export function TeacherSessionView({
         setIsCorrect(data.success)
       }
 
-      // Handle exercise completion
-      //   if (user && isSubmission && !isProject && code) {
-      //     await handleExerciseSubmission(
-      //       user,
-      //       tutorial_id,
-      //       exercise_number,
-      //       data.success,
-      //       code
-      //     )
-      //     // In any component
-      //     await invalidateTutorialProgress(user.uid, tutorial_id)
-      //   }
-
-      //   if (user && !isSubmission && !isProject && code) {
-      //     await handleExerciseRun(user, tutorial_id)
-      //   }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
       if (isSubmission) {
@@ -564,28 +549,14 @@ export function TeacherSessionView({
               </div>
             )}
           </div>
-
-          {/* Connected Students - Always visible */}
-          <div className='border-t bg-muted/50 p-4 max-h-[40vh] flex flex-col'>
-            <h3 className='font-semibold mb-3'>Connected Students</h3>
-            <div className='space-y-2 overflow-y-auto flex-1'>
-              {activeStudents.map((student) => (
-                <Card
-                  key={student}
-                  className={`cursor-pointer hover:bg-accent transition-colors ${
-                    selectedStudentUsername === student
-                      ? 'border-primary bg-accent'
-                      : ''
-                  }`}
-                  onClick={() => handleStudentSelect(student)}
-                >
-                  <CardHeader className='py-2 px-3'>
-                    <CardTitle className='text-sm'>{student}</CardTitle>
-                  </CardHeader>
-                </Card>
-              ))}
-            </div>
-          </div>
+          {currentAssignment && (
+            <AssignmentProgress
+              assignmentId={selectedAssignmentId}
+              activeStudents={activeStudents}
+              selectedStudent={selectedStudentUsername}
+              onStudentSelect={handleStudentSelect}
+            />
+          )}
         </div>
 
         {/* Right Panel: Code Editor */}

@@ -1,5 +1,4 @@
-// @/contexts/AuthContext.tsx
-'use client'
+// AuthContext.tsx
 import {
   createContext,
   useContext,
@@ -11,7 +10,7 @@ import {
 } from 'react'
 import { auth, fireStore } from '@/firebase/firebase'
 import { doc, onSnapshot } from 'firebase/firestore'
-import { FirebaseUserData, User } from '@/types/firebase'
+import { User } from '@/types/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 
 interface AuthContextType {
@@ -26,34 +25,28 @@ const AuthContext = createContext<AuthContextType | null>(null)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userData, setUserData] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  // Use refs to store unsubscribe functions
   const authUnsubscribe = useRef<(() => void) | null>(null)
   const userDocUnsubscribe = useRef<(() => void) | null>(null)
 
-  // Fetch and subscribe to user data
   const subscribeToUserData = useCallback(async (uid: string) => {
     try {
-      // Clean up previous subscription if exists
       if (userDocUnsubscribe.current) {
         userDocUnsubscribe.current()
       }
 
-      // Set up real-time listener for user document
       const userRef = doc(fireStore, 'users', uid)
       userDocUnsubscribe.current = onSnapshot(
         userRef,
         (doc) => {
           if (doc.exists()) {
-            const data = doc.data() as FirebaseUserData
+            const data = doc.data() as User
 
-            // Validate required fields
             if (
               !data.email ||
               !data.displayName ||
               !data.role ||
               !data.school
             ) {
-              console.error('Missing required user data')
               setUserData(null)
               return
             }
@@ -70,9 +63,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               starredProblems: data.starredProblems || [],
               classrooms: data.classrooms || [],
               createdAt: data.createdAt || Date.now(),
+              updatedAt: data.updatedAt || Date.now(),
             })
           } else {
-            console.error('User document not found')
             setUserData(null)
           }
         },
@@ -87,24 +80,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // Initialize auth state listener
   useEffect(() => {
-    setLoading(true)
-
     authUnsubscribe.current = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        await subscribeToUserData(firebaseUser.uid)
-      } else {
-        setUserData(null)
-        if (userDocUnsubscribe.current) {
-          userDocUnsubscribe.current()
-          userDocUnsubscribe.current = null
+      try {
+        if (firebaseUser) {
+          await subscribeToUserData(firebaseUser.uid)
+        } else {
+          setUserData(null)
+          if (userDocUnsubscribe.current) {
+            userDocUnsubscribe.current()
+            userDocUnsubscribe.current = null
+          }
         }
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     })
 
-    // Cleanup function
     return () => {
       if (authUnsubscribe.current) {
         authUnsubscribe.current()
@@ -115,7 +107,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [subscribeToUserData])
 
-  // Sign out handler
   const signOut = useCallback(async () => {
     try {
       await auth.signOut()
@@ -126,26 +117,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // Manually refresh user data
   const refreshUserData = useCallback(async () => {
-    if (!auth.currentUser) {
-      return
-    }
+    if (!auth.currentUser) return
     await subscribeToUserData(auth.currentUser.uid)
   }, [subscribeToUserData])
 
-  const value: AuthContextType = useMemo(() => ({
-    user: userData,
-    loading,
-    signOut,
-    refreshUserData,
-  }), [userData, loading, signOut, refreshUserData])
-
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      user: userData,
+      loading,
+      signOut,
+      refreshUserData,
+    }),
+    [userData, loading, signOut, refreshUserData]
   )
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

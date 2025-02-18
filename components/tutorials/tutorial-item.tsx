@@ -3,7 +3,17 @@ import { Tag } from '../ui/tag'
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { User } from '@/types/firebase'
-import {TutorialStatus} from '@/components/tutorials/tutorial-status'
+import { TutorialStatus } from '@/components/tutorials/tutorial-status'
+import { Play } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from '@/components/ui/card'
 
 interface TutorialItemProps {
   post: {
@@ -23,53 +33,62 @@ export function TutorialItem({ post }: TutorialItemProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   return (
-    <article className='flex-1 flex flex-col gap-2 border-border border-b py-3'>
-      <div className='flex flex-col-reverse sm:flex-row justify-between'>
-        <div className='flex-1'>
-          <div className='flex items-center gap-2'>
-            <h2 className='text-2xl font-bold'>
-              <Link href={'/' + slug}>{title}</Link>
-            </h2>
-          </div>
-          <div className='max-w-none text-muted-foreground'>{description}</div>
-          <div className='flex gap-2 mt-2'>
-            {tags?.map((tag) => (
-              <Tag tag={tag} key={tag} />
-            ))}
-          </div>
-          <TutorialStatus
-            tutorialId={firestoreId}
-            exerciseCount={exercises}
-            detailed={true}
-            className='my-6'
-          />
-        </div>
-        <div className='mb-4 sm:mb-0 overflow-hidden rounded-lg bg-muted'>
+    <Card className='flex flex-col h-full'>
+      <div className='flex flex-col sm:flex-row gap-2 h-full'>
+        <div className='w-full sm:w-auto overflow-hidden rounded-xl'>
           <div className={`relative ${isLoading ? 'animate-pulse' : ''}`}>
             <Image
               src={`/tutorials/${firestoreId}.webp`}
               alt={title}
-              width={500} // Increased base width for better quality
-              height={300} // Adjusted height to maintain aspect ratio
+              width={500}
+              height={300}
               onLoad={() => setIsLoading(false)}
               className={`
-                w-full        // Full width on mobile
-                sm:w-[9rem]   // Specific width on small screens
-                md:w-[12rem]  // Slightly larger on medium screens
-                lg:w-[15rem]  // Larger on large screens
-                xl:w-[18rem]  // Largest on extra large screens
-                2xl:w-[20rem] // Even larger for 2xl screens
-                object-cover  // Ensures image covers area without distortion
-                rounded-lg    // Matching your existing rounded corners
+                w-full
+                sm:w-72
+                xl:w-72
+                2xl:w-80
+                rounded-xl
                 transition-all duration-700 ease-in-out
                 ${isLoading ? 'opacity-0' : 'opacity-100'}
+                object-cover
               `}
               priority={false}
             />
           </div>
         </div>
+
+        <div className='flex-1 flex flex-col min-h-full'>
+          <CardHeader className='pb-2'>
+            <CardTitle className='text-2xl'>{title}</CardTitle>
+            <CardDescription>{description}</CardDescription>
+          </CardHeader>
+
+          <CardContent className='flex-1'>
+            <div className='flex flex-wrap gap-2 mb-6'>
+              {tags?.map((tag) => (
+                <Tag tag={tag} key={tag} />
+              ))}
+            </div>
+
+            <TutorialStatus
+              tutorialId={firestoreId}
+              exerciseCount={exercises}
+              detailed={true}
+            />
+          </CardContent>
+
+          <CardFooter className='mt-auto pt-4'>
+            <Link href={'/' + slug} className='w-full'>
+              <Button variant='softBlue' className='gap-2 w-full'>
+                <Play className='h-5 w-5' />
+                Start Tutorial
+              </Button>
+            </Link>
+          </CardFooter>
+        </div>
       </div>
-    </article>
+    </Card>
   )
 }
 

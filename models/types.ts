@@ -62,19 +62,6 @@ export interface StudentCompletion {
 }
 
 // models/types.ts
-export interface Classroom {
-  _id: string
-  name: string
-  teacherId: string
-  curriculumId: string
-  curriculumName: string
-  students: string[]
-  lastTaughtWeek: number
-  classCode: string
-  createdAt: Date
-  updatedAt: Date
-}
-
 export interface Week {
   weekNumber: number
   topic: string
@@ -112,9 +99,9 @@ export interface Task {
   }>
 }
 
-export interface LessonProgressCardProps {
-  classroomId: string
-  weekNumber: number | null
-  tasks: Task[]
-  classroom: Classroom | null
-}
+// export interface LessonProgressCardProps {
+//   classroomId: string
+//   weekNumber: number | null
+//   tasks: Task[]
+//   classroom: Classroom | null
+// }

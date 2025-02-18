@@ -498,7 +498,20 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 ## Feb 15 
 
+- [x] how does lastTaught week get updated?
+- [ ] lessonprogresscard
+- [ ] why students: 0 ?
+- [ ] add solved Assignments
 - [ ] Remove headers from assignments
+- [ ] list of schools in HK
+- [ ] lesson progress -> just show if student has this assignment as completed assignment 
+- [x] fetch classrooms doesnt get updated
+
+
+## Feb 17
+
+- [ ] fetchClassroomAndCurriculum twice -> hooks
+
 ## Later
 
 - [ ] get assignment expectedOutput from firestore [fastapi]
@@ -508,6 +521,20 @@ invalidateCache() // This will drop the cache and trigger a refetch
 
 - [ ] create new pics for tutorials
 - [ ] what do i need when i create a classroom ?
+- [ ] Should i add dashboard page?
+
+## Feb 18
+
+- [x] school list Show
+- https://en.wikipedia.org/wiki/List_of_secondary_schools_in_Hong_Kong
+- [x] login error show. 
+- [x] why do we need id in useClassrooms
+- [ ] API Error: Dynamic server usage: Route /api/classrooms couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+- [ ] classrooms not updated!  
+- [x] tutorials: show where to press on tutorial (underline). 
+- [ ] exercises not found. dark theme remove. next tutorial button.back not working. 
+- [ ] not started should not be there if there is last Attempt. add images to projects. 
+- [ ] indexof TypeError: undefined is not an object (evaluating 'n.indexOf') assignmentProgress
 
 ## Project Test cases
 

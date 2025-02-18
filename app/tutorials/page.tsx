@@ -80,7 +80,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({
       </div>
 
       {/* Header Section */}
-      <div className='flex justify-between items-center mb-4'>
+      <div className='flex justify-between items-center mb-8'>
         <h1 className='font-black text-3xl lg:text-4xl'>Tutorials</h1>
         <Select onValueChange={handleSortMethodChange} value={sortMethod}>
           <SelectTrigger className='w-[180px]'>
@@ -95,9 +95,6 @@ const TutorialPage: React.FC<TutorialPageProps> = ({
           </SelectContent>
         </Select>
       </div>
-
-      <hr className='my-4' />
-
       {/* Posts List */}
       {displayTutorials?.length > 0 ? (
         <ul className='flex flex-col space-y-4'>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import schoolsConfig from '@/config/schools.json'
 import {
   Form,
   FormControl,
@@ -31,7 +32,8 @@ const signUpSchema = z.object({
   email: z.string().email('Invalid email address'),
   displayName: z.string().min(3, 'Display name must be at least 3 characters'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  school: z.string().optional(),
+  district: z.string().min(1, 'Please select a district'),
+  school: z.string().min(1, 'Please select a school'),
   role: z.enum(['student', 'teacher']),
 })
 
@@ -43,6 +45,8 @@ const Signup = () => {
   const { onClose } = useAuthModal()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [firebaseError, setFirebaseError] = useState<string | null>(null)
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('')
+  const [availableSchools, setAvailableSchools] = useState<string[]>([])
   const [createUserWithEmailAndPassword, userCred] =
     useCreateUserWithEmailAndPassword(auth)
 
@@ -52,10 +56,25 @@ const Signup = () => {
       email: '',
       displayName: '',
       password: '',
+      district: '',
       school: '',
       role: 'student',
     },
   })
+
+  // Update available schools when district changes
+  useEffect(() => {
+    if (selectedDistrict) {
+      const district = schoolsConfig.districts.find(
+        (d) => d.name === selectedDistrict
+      )
+      if (district) {
+        setAvailableSchools(district.schools)
+        // Reset school selection when district changes
+        form.setValue('school', '')
+      }
+    }
+  }, [selectedDistrict, form])
 
   // Close form if we already have user credentials
   useEffect(() => {
@@ -92,6 +111,7 @@ const Signup = () => {
         dislikedProblems: [],
         solvedProblems: [],
         starredProblems: [],
+        classrooms: []
       }
 
       await setDoc(doc(fireStore, 'users', newUser.uid), userData)
@@ -181,8 +201,8 @@ const Signup = () => {
                 <FormControl>
                   <Input
                     type='password'
-                    placeholder='••••••••'
                     {...field}
+                    placeholder='Enter your password'
                     className='border-gray-500'
                     disabled={isSubmitting}
                   />
@@ -220,18 +240,60 @@ const Signup = () => {
 
           <FormField
             control={form.control}
+            name='district'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>District</FormLabel>
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value)
+                    setSelectedDistrict(value)
+                  }}
+                  defaultValue={field.value}
+                  disabled={isSubmitting}
+                >
+                  <FormControl>
+                    <SelectTrigger className='border-gray-500'>
+                      <SelectValue placeholder='Select your district' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {schoolsConfig.districts.map((district) => (
+                      <SelectItem key={district.name} value={district.name}>
+                        {district.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name='school'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>School (Optional)</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder='Your school name'
-                    {...field}
-                    className='border-gray-500'
-                    disabled={isSubmitting}
-                  />
-                </FormControl>
+                <FormLabel>School</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={isSubmitting || !selectedDistrict}
+                >
+                  <FormControl>
+                    <SelectTrigger className='border-gray-500'>
+                      <SelectValue placeholder='Select your school' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {availableSchools.map((school) => (
+                      <SelectItem key={school} value={school}>
+                        {school}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

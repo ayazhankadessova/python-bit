@@ -19,7 +19,7 @@ import { ClassroomCard } from '@/components/classrooms/ClassroomCard'
 import { ClassroomGrid } from '@/components/classrooms/ClassroomGrid'
 import { ClassroomSearch } from '@/components/classrooms/ClassroomSearch'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
-import { useTeacherClassrooms } from '@/hooks/useTeacherClassrooms'
+import { useClassrooms } from '@/hooks/useClassrooms'
 import { useJoinClassroom } from '@/hooks/classroom/useJoinClassroom'
 import { useStartStudentLesson } from '@/hooks/classroom/useStartStudentLesson'
 
@@ -28,7 +28,7 @@ interface StudentClassroomsViewProps {
 }
 
 export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
-  const { classrooms, isLoading, error, mutate } = useTeacherClassrooms(
+  const { classrooms, isLoading, error, mutate } = useClassrooms(
     user.uid
   )
   const { startLesson, isStarting } = useStartStudentLesson()
@@ -104,17 +104,19 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
             <ClassroomCard
               key={classroom.id}
               classroom={classroom}
+              role='student'
               actionButton={
                 <Button
+                  variant='softBlue'
                   onClick={() => startLesson(classroom.id)}
                   disabled={isStarting}
                 >
-                  {(
+                  {
                     <>
                       <Play className='mr-2 h-4 w-4' />
                       {isStarting ? 'Joining...' : 'Join Session'}
                     </>
-                  )}
+                  }
                 </Button>
               }
             />

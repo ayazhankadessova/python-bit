@@ -58,7 +58,7 @@ export default function LoginForm() {
       console.error('Error signing in:', error, userCred?.user.email)
       toast({
         title: 'Error',
-        description: 'Failed to sign in',
+        description: 'Failed to sign in :( Check your email and password.',
         variant: 'destructive',
       })
     }
