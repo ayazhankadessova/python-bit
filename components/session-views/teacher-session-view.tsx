@@ -32,8 +32,8 @@ import {
 import { MarkdownRenderer } from '@/components/markdown-renderer'
 import { formatCode } from '@/lib/utils'
 import { PythonEditor } from '@/components/session-views/live-session-code-editor'
-// import { ActiveStudent } from '@/types/classrooms/live-session'
-// import AssignmentProgress from '@/components/session-views/lesson-progress-card'
+import { ActiveStudent } from '@/types/classrooms/live-session'
+import AssignmentProgress from '@/components/session-views/lesson-progress-card'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -71,7 +71,7 @@ export function TeacherSessionView({
   >(null)
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
-  // const [activeStudents, setActiveStudents] = useState<ActiveStudent[]>([])
+  const [activeStudents, setActiveStudents] = useState<ActiveStudent[]>([])
 
   // Add this effect to manage the editor's initial code
   useEffect(() => {
@@ -254,7 +254,7 @@ export function TeacherSessionView({
             })
           )
           setStudents(studentArray)
-          // setActiveStudents(sessionData.activeStudents)
+          setActiveStudents(sessionData.activeStudents)
 
           // Update selected student's code if needed
           if (
@@ -277,36 +277,36 @@ export function TeacherSessionView({
     return () => unsubscribe()
   }, [classroomId, sessionId, selectedStudentUsername])
 
-  // const handleStudentSelect = async (
-  //   studentUsername: string
-  // ): Promise<void> => {
-  //   console.log('handleStudentSelect called with:', studentUsername)
-  //   console.log('Current selectedStudentUsername:', selectedStudentUsername)
+  const handleStudentSelect = async (
+    studentUsername: string
+  ): Promise<void> => {
+    console.log('handleStudentSelect called with:', studentUsername)
+    console.log('Current selectedStudentUsername:', selectedStudentUsername)
 
-  //   // If clicking on already selected student, deselect them
-  //   if (selectedStudentUsername === studentUsername) {
-  //     console.log('Attempting to deselect student')
-  //     setSelectedStudentUsername(null)
-  //     console.log('Current assignment:', currentAssignment)
-  //     if (currentAssignment) {
-  //       console.log('Setting teacher code to starter code')
-  //       setTeacherCode(formatCode(currentAssignment.starterCode))
-  //     }
-  //     return
-  //   }
+    // If clicking on already selected student, deselect them
+    if (selectedStudentUsername === studentUsername) {
+      console.log('Attempting to deselect student')
+      setSelectedStudentUsername(null)
+      console.log('Current assignment:', currentAssignment)
+      if (currentAssignment) {
+        console.log('Setting teacher code to starter code')
+        setTeacherCode(formatCode(currentAssignment.starterCode))
+      }
+      return
+    }
 
-  //   // Otherwise, select the new student
-  //   setSelectedStudentUsername(studentUsername)
-  //   if (currentSession) {
-  //     const sessionDoc = await getDoc(
-  //       doc(fireStore, `classrooms/${classroomId}/sessions`, currentSession.id)
-  //     )
-  //     const data = sessionDoc.data() as LiveSession
-  //     if (data.students[studentUsername]) {
-  //       setStudentCode(data.students[studentUsername].code)
-  //     }
-  //   }
-  // }
+    // Otherwise, select the new student
+    setSelectedStudentUsername(studentUsername)
+    if (currentSession) {
+      const sessionDoc = await getDoc(
+        doc(fireStore, `classrooms/${classroomId}/sessions`, currentSession.id)
+      )
+      const data = sessionDoc.data() as LiveSession
+      if (data.students[studentUsername]) {
+        setStudentCode(data.students[studentUsername].code)
+      }
+    }
+  }
 
   const endSession = async () => {
     try {
@@ -549,15 +549,14 @@ export function TeacherSessionView({
               </div>
             )}
           </div>
-          {/* Assignment Progress */}
-          {/* {currentAssignment && (
+          {currentAssignment && (
             <AssignmentProgress
               assignmentId={selectedAssignmentId}
               activeStudents={activeStudents}
               selectedStudent={selectedStudentUsername}
               onStudentSelect={handleStudentSelect}
             />
-          )} */}
+          )}
         </div>
 
         {/* Right Panel: Code Editor */}
