@@ -146,6 +146,7 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
       // Create classroom document
       const classroomRef = doc(collection(fireStore, 'classrooms'))
       batch.set(classroomRef, {
+        id: classroomRef.id,
         classCode: classCode,
         name: data.name,
         teacherId,

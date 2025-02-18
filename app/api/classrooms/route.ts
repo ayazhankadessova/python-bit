@@ -42,10 +42,7 @@ async function _fetchClassroomData(userId: string) {
           }
 
           const classroomData = classroomDoc.data()
-          return {
-            id: classroomDoc.id,
-            ...classroomData,
-          } as ClassroomTC
+          return classroomData as ClassroomTC
         } catch (error) {
           console.error(
             `Error fetching classroom ${classroomId}:`,

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { fireStore } from '@/firebase/firebase'
 import { getDoc, doc } from 'firebase/firestore'
 import { Curriculum } from '@/types/classrooms/live-session'
-import { Copy } from 'lucide-react'
+import { Copy, Users, BookOpenText, QrCode } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 
 interface ClassroomCardProps {
@@ -19,7 +19,7 @@ export function ClassroomCard({
   classroom,
   actionButton,
   variant = 'default',
-  role = 'student'
+  role = 'student',
 }: ClassroomCardProps) {
   const [curriculumName, setCurriculumName] = useState('')
   const { toast } = useToast()
@@ -34,7 +34,6 @@ export function ClassroomCard({
           throw new Error('Classroom not found')
         }
         const classroomData = classroomDoc.data() as ClassroomTC
-
         const curriculumDoc = await getDoc(
           doc(fireStore, 'curricula', classroomData.curriculumId)
         )
@@ -47,7 +46,6 @@ export function ClassroomCard({
         console.error('Error fetching data:', error)
       }
     }
-
     if (classroom) {
       fetchClassroomAndCurriculum()
     }
@@ -65,12 +63,12 @@ export function ClassroomCard({
 
   const ClassCodeSection = () => {
     if (role !== 'teacher' || !classroom.classCode) return null
-
     return (
       <div className='flex items-center gap-2'>
-        <p className='text-sm text-muted-foreground'>
-          Class Code: {classroom.classCode}
-        </p>
+        <div className='flex items-center gap-2 text-muted-foreground'>
+          <QrCode className='h-4 w-4' />
+          <p className='text-sm'>Class Code: {classroom.classCode}</p>
+        </div>
         <Button
           variant='ghost'
           size='sm'
@@ -83,16 +81,32 @@ export function ClassroomCard({
     )
   }
 
+  const StudentCountSection = () => {
+    if (role !== 'teacher') return null
+    return (
+      <div className='flex items-center gap-2 text-muted-foreground'>
+        <Users className='h-4 w-4' />
+        <p className='text-sm'>{classroom.students?.length || 0} Students</p>
+      </div>
+    )
+  }
+
+  const ProgramSection = () => (
+    <div className='flex items-center gap-2 text-muted-foreground'>
+      <BookOpenText className='h-4 w-4' />
+      <p className='text-sm'>Program: {curriculumName}</p>
+    </div>
+  )
+
   if (variant === 'dashboard') {
     return (
       <Card className='p-4'>
         <div className='space-y-3'>
           <div className='space-y-2'>
             <h3 className='font-semibold'>{classroom.name}</h3>
-            <p className='text-sm text-muted-foreground'>
-              Program: {curriculumName}
-            </p>
+            <ProgramSection />
             <ClassCodeSection />
+            <StudentCountSection />
           </div>
           <div className='pt-2 flex justify-end'>{actionButton}</div>
         </div>
@@ -107,15 +121,13 @@ export function ClassroomCard({
           <h3 className='font-semibold tracking-tight text-lg'>
             {classroom.name}
           </h3>
-          <p className='text-sm text-muted-foreground'>
-            Program: {curriculumName}
-          </p>
+          <ProgramSection />
           <ClassCodeSection />
         </div>
       </CardHeader>
       <CardContent className='flex-1'>
         <div className='space-y-2'>
-          <p className='text-sm'>Students: {classroom.students?.length || 0}</p>
+          <StudentCountSection />
         </div>
       </CardContent>
       <CardFooter className='mt-auto pt-2'>
