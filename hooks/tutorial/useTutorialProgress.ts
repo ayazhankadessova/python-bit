@@ -19,7 +19,7 @@ export function useTutorialProgress(
   const {
     revalidateOnFocus = false,
     revalidateOnReconnect = true,
-    dedupingInterval = 600000, // 10 minutes
+    dedupingInterval = 5000,
   } = options
 
   // Only fetch if we have both tutorialId and user

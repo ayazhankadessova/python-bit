@@ -529,9 +529,9 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - https://en.wikipedia.org/wiki/List_of_secondary_schools_in_Hong_Kong
 - [x] login error show. 
 - [ ] check caching of classrooms
-- [ ] why do we need id in useClassrooms
+- [x] why do we need id in useClassrooms
 - [ ] classrooms not updated!  
-- [ ] tutrials: show where to press on tutorial (underline). 
+- [ ] tutorials: show where to press on tutorial (underline). 
 - [ ] exercises not found. dark theme remove. next tutorial button.back not working. 
 - [ ] not started should not be there if there is last Attempt. add images to projects. 
 - [ ] indexof TypeError: undefined is not an object (evaluating 'n.indexOf') assignmentProgress
