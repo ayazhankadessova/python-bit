@@ -33,7 +33,7 @@ import { MarkdownRenderer } from '@/components/markdown-renderer'
 import { formatCode } from '@/lib/utils'
 import { PythonEditor } from '@/components/session-views/live-session-code-editor'
 import { ActiveStudent } from '@/types/classrooms/live-session'
-import AssignmentProgress from '@/components/session-views/lesson-progress-card'
+// import AssignmentProgress from '@/components/session-views/lesson-progress-card'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -71,7 +71,7 @@ export function TeacherSessionView({
   >(null)
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
-  const [activeStudents, setActiveStudents] = useState<ActiveStudent[]>([])
+  // const [activeStudents, setActiveStudents] = useState<ActiveStudent[]>([])
 
   // Add this effect to manage the editor's initial code
   useEffect(() => {
@@ -254,7 +254,7 @@ export function TeacherSessionView({
             })
           )
           setStudents(studentArray)
-          setActiveStudents(sessionData.activeStudents)
+          // setActiveStudents(sessionData.activeStudents)
 
           // Update selected student's code if needed
           if (

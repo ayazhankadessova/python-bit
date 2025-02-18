@@ -90,7 +90,7 @@ export function StudentSessionView({
       setEditorInitialCode('') // Fallback empty string
     }
     handleUpdateCode()
-  }, [currentAssignment])
+  }, [currentAssignment, handleUpdateCode])
 
   // Listen to specific session using sessionId
   useEffect(() => {
