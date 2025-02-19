@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Play, Loader2, Code2, RotateCcw, CloudUpload } from 'lucide-react'
 import CodeMirror from '@uiw/react-codemirror'
-import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { useAuth } from '@/contexts/AuthContext'
 import { handleExerciseSubmission, handleExerciseRun } from '@/lib/tutorials/utils'
@@ -20,6 +19,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import ThemeButtons from '@/components/code-editors/theme-buttons'
+import { getTheme } from '@/lib/general/codeEditors'
 
 const PythonCodeEditor = ({
   initialCode,
@@ -38,14 +38,6 @@ const PythonCodeEditor = ({
   const [isRunning, setIsRunning] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
-
-  const getTheme = () => {
-    if (theme === 'dark') {
-      return vscodeDark;
-    } else {
-      return vscodeLight;
-    }
-  }
 
   const executeCode = async (isSubmission: boolean) => {
     setIsExecuting(true)
@@ -165,7 +157,7 @@ const PythonCodeEditor = ({
               value={code}
               height='100%'
               width='100%'
-              theme={getTheme()}
+              theme={getTheme(theme)}
               extensions={[python()]}
               onChange={(value) => setCode(value)}
               className='h-full'

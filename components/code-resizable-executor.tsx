@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Play, Loader2, Code2, RotateCcw, CloudUpload } from 'lucide-react'
 import CodeMirror from '@uiw/react-codemirror'
-import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { useAuth } from '@/contexts/AuthContext'
 import { handleProjectCompletion } from './session-views/helpers'
@@ -25,6 +24,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import ThemeButtons from '@/components/code-editors/theme-buttons'
+import { getTheme } from '@/lib/general/codeEditors'
 
 const PythonResizableCodeEditor = ({
   initialCode,
@@ -43,14 +43,6 @@ const PythonResizableCodeEditor = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { invalidateCache } = useProjectProgress(project_id, user)
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
-
-  const getTheme = () => {
-    if (theme === 'dark') {
-      return vscodeDark
-    } else {
-      return vscodeLight
-    }
-  }
 
   const executeCode = async (isSubmission: boolean) => {
     setIsExecuting(true)
@@ -154,7 +146,7 @@ const PythonResizableCodeEditor = ({
                 value={code}
                 height='100%'
                 width='100%'
-                theme={getTheme()}
+                theme={getTheme(theme)}
                 extensions={[python()]}
                 onChange={(value) => setCode(value)}
                 className='h-full'

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import CodeMirror from '@uiw/react-codemirror'
-import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { Button } from '@/components/ui/button'
 import {
@@ -28,6 +27,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import ThemeButtons from '@/components/code-editors/theme-buttons'
+import { getTheme } from '@/lib/general/codeEditors'
 
 interface PythonEditorProps {
   initialCode: string
@@ -65,14 +65,6 @@ export function PythonEditor({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
-
-  const getTheme = () => {
-    if (theme === 'dark') {
-      return vscodeDark
-    } else {
-      return vscodeLight
-    }
-  }
 
   const handleUpdateCode = async () => {
     if (!onUpdateCode) return
@@ -172,7 +164,7 @@ export function PythonEditor({
               <CodeMirror
                 value={code}
                 height='100%'
-                theme={getTheme()}
+                theme={getTheme(theme)}
                 extensions={[python()]}
                 onChange={handleCodeChange}
                 className='h-full'
