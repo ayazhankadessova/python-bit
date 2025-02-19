@@ -86,15 +86,6 @@ export function StudentSessionView({
     toast,
   ])
 
-  // Add this effect to manage the editor's initial code
-  useEffect(() => {
-    if (currentAssignment?.starterCode) {
-      setEditorInitialCode(formatCode(currentAssignment.starterCode))
-    } else {
-      setEditorInitialCode('')
-    }
-  }, [currentAssignment])
-
   // Listen to specific session using sessionId
   useEffect(() => {
     if (!sessionId || !classroomId) return
@@ -122,16 +113,19 @@ export function StudentSessionView({
           setCurrentWeek(session.weekNumber)
         }
 
-        // Only update initial code, not student code
-        if (user?.displayName && session.students?.[user.displayName]) {
-          const studentData = session.students[user?.displayName]
-          setEditorInitialCode(studentData.code)
+        if (user?.uid && session.students?.[user.uid]) {
+          const studentData = session.students[user.uid]
+          setStudentCode(studentData.code)
+          // Only set initial code if student has code
+          if (studentData.code) {
+            setEditorInitialCode(studentData.code)
+          }
         }
       }
     })
 
     return () => unsubscribe()
-  }, [sessionId, classroomId, user?.displayName])
+  }, [sessionId, classroomId, user?.displayName, user?.uid])
 
   // Fetch assignment when selected
   useEffect(() => {
@@ -147,9 +141,12 @@ export function StudentSessionView({
           const assignmentData = assignmentDoc.data() as Assignment
           setCurrentAssignment(assignmentData)
 
-          // Only set initial code, not student code
-          const formattedStarterCode = formatCode(assignmentData.starterCode)
-          setEditorInitialCode(formattedStarterCode)
+          // Only set initial code if student has no code
+          if (!studentCode) {
+            const formattedStarterCode = formatCode(assignmentData.starterCode)
+            setEditorInitialCode(formattedStarterCode)
+            setStudentCode(formattedStarterCode)
+          }
         }
       } catch (error) {
         console.error('Error fetching assignment:', error)
