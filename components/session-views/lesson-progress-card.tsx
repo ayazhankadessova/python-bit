@@ -3,13 +3,19 @@ import { doc, onSnapshot } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Progress } from '@/components/ui/progress'
 import { Clock, CheckCircle2, XCircle } from 'lucide-react'
-import { ActiveStudent, AssignmentProgressProps } from '@/types/classrooms/live-session'
+import {
+  ActiveStudent,
+  AssignmentProgressProps,
+  SessionStudent,
+} from '@/types/classrooms/live-session'
 import { StudentProgress } from '@/types/classrooms/live-session'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
+import { MonitoringIndicator } from './monitoring-state'
 
 interface ExtendedAssignmentProgressProps extends AssignmentProgressProps {
   selectedStudent: ActiveStudent | null
   onStudentSelect: (student: ActiveStudent) => void
+  sessionStudents: Record<string, SessionStudent>
 }
 
 const AssignmentProgress = ({
@@ -17,6 +23,7 @@ const AssignmentProgress = ({
   activeStudents,
   selectedStudent,
   onStudentSelect,
+  sessionStudents,
 }: ExtendedAssignmentProgressProps) => {
   const [progressData, setProgressData] = useState<
     Record<string, StudentProgress>
@@ -132,8 +139,10 @@ const AssignmentProgress = ({
           }
 
           const isSelected = selectedStudent?.uid === student.uid
+          const studentMonitoring = sessionStudents?.[student.uid]?.monitoring
 
           return (
+            // Update the Card layout to use justify-between properly
             <Card
               key={student.uid}
               className={`cursor-pointer hover:bg-accent transition-colors ${
@@ -141,29 +150,39 @@ const AssignmentProgress = ({
               }`}
               onClick={() => onStudentSelect(student)}
             >
-              <CardHeader className='p-3 flex flex-row items-center justify-between space-y-0'>
-                <div className='flex items-center space-x-3'>
-                  {progress.completed ? (
-                    <CheckCircle2 className='w-4 h-4 text-green-500' />
-                  ) : (
-                    <XCircle className='w-4 h-4 text-gray-400' />
-                  )}
-                  <div>
-                    <CardTitle className='text-sm font-medium'>
-                      {student.displayName}
-                    </CardTitle>
-                    <p className='text-xs text-muted-foreground'>
-                      Attempts: {Number(progress.successfulAttempts)}/
-                      {Number(progress.totalAttempts)}
-                    </p>
+              <CardHeader className='p-3'>
+                <div className='flex items-center justify-between'>
+                  {/* Left side with student info */}
+                  <div className='flex items-center space-x-3'>
+                    {progress.completed ? (
+                      <CheckCircle2 className='w-4 h-4 text-green-500' />
+                    ) : (
+                      <XCircle className='w-4 h-4 text-gray-400' />
+                    )}
+                    <div>
+                      <CardTitle className='text-sm font-medium'>
+                        {student.displayName}
+                      </CardTitle>
+                      <p className='text-xs text-muted-foreground'>
+                        Attempts: {Number(progress.successfulAttempts)}/
+                        {Number(progress.totalAttempts)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right side with monitoring and time */}
+                  <div className='flex items-center space-x-4'>
+                    {studentMonitoring && (
+                      <MonitoringIndicator state={studentMonitoring} />
+                    )}
+                    {progress.lastAttempt && (
+                      <div className='flex items-center text-xs text-muted-foreground'>
+                        <Clock className='w-3 h-3 mr-1' />
+                        {new Date(progress.lastAttempt).toLocaleTimeString()}
+                      </div>
+                    )}
                   </div>
                 </div>
-                {progress.lastAttempt && (
-                  <div className='flex items-center text-xs text-muted-foreground'>
-                    <Clock className='w-3 h-3 mr-1' />
-                    {new Date(progress.lastAttempt).toLocaleTimeString()}
-                  </div>
-                )}
               </CardHeader>
             </Card>
           )

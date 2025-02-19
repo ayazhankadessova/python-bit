@@ -14,11 +14,12 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { LogOut } from 'lucide-react'
 import { WeekSelector } from './WeekSelector'
-import type {
+import {
   LiveSession,
   Curriculum,
   Week,
   Assignment,
+  SessionStudent
 } from '@/types/classrooms/live-session'
 import { ClassroomTC } from '@/types/firebase'
 import {
@@ -68,6 +69,9 @@ export function TeacherSessionView({
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
   const [activeStudents, setActiveStudents] = useState<ActiveStudent[]>([])
+   const [sessionStudents, setSessionStudents] = useState<
+     Record<string, SessionStudent>
+   >({})
 
   // Add this effect to manage the editor's initial code
   useEffect(() => {
@@ -243,6 +247,7 @@ export function TeacherSessionView({
           }
           setCurrentSession(session)
           setActiveStudents(sessionData.activeStudents)
+          setSessionStudents(sessionData.students || {}) // Add fallback empty object
 
           // Update selected student's code if needed
           if (selectedStudent && sessionData.students[selectedStudent.uid]) {
@@ -537,6 +542,7 @@ export function TeacherSessionView({
               activeStudents={activeStudents}
               selectedStudent={selectedStudent}
               onStudentSelect={handleStudentSelect}
+              sessionStudents={sessionStudents}
             />
           )}
         </div>

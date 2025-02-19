@@ -12,12 +12,15 @@ import { PythonEditor } from '@/components/session-views/live-session-code-edito
 import { useAuth } from '@/contexts/AuthContext'
 import { handleAssignmentCompletion } from '@/lib/live-classroom/utils'
 import { ActiveStudent } from '@/types/classrooms/live-session'
+import { useStudentMonitoring } from '@/hooks/classroom/sessions/useStudentMonitoring'
+import { MonitoringIndicator } from './monitoring-state'
 
 interface TeacherSessionViewProps {
   classroomId: string
   onEndSession: () => void
   sessionId: string
 }
+
 
 export function StudentSessionView({
   classroomId,
@@ -42,6 +45,12 @@ export function StudentSessionView({
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
 
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
+
+  const monitoringState = useStudentMonitoring(
+    classroomId,
+    sessionId,
+    user?.uid || ''
+  )
 
   const handleUpdateCode = useCallback(async (): Promise<void> => {
     if (!currentSession || !user?.uid) return
@@ -159,7 +168,7 @@ export function StudentSessionView({
     }
 
     fetchAssignment()
-  }, [selectedAssignmentId, toast])
+  }, [selectedAssignmentId, studentCode, toast])
 
   useEffect(() => {
     const sessionRef = doc(
@@ -297,6 +306,8 @@ export function StudentSessionView({
                 Current Task: {currentAssignment.title}
               </div>
             )}
+
+            <MonitoringIndicator state={monitoringState} />
           </div>
 
           <Button

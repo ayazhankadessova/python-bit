@@ -537,6 +537,10 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [ ] indexof TypeError: undefined is not an object (evaluating 'n.indexOf') assignmentProgress
 - [ ] add tooltip to theme btns
 
+## Feb 19
+
+- [ ] how to see focused or not 
+
 ## Project Test cases
 
 - [ ] Add test cases to 2-3 projects
