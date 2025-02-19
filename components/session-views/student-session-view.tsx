@@ -11,7 +11,7 @@ import { formatCode } from '@/lib/utils'
 import { PythonEditor } from '@/components/session-views/live-session-code-editor'
 import { useAuth } from '@/contexts/AuthContext'
 import { handleAssignmentCompletion } from '@/lib/live-classroom/utils'
-import {ActiveStudent} from "@/types/classrooms/live-session"
+import { ActiveStudent } from '@/types/classrooms/live-session'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -43,24 +43,26 @@ export function StudentSessionView({
 
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
 
-  // Wrap handleUpdateCode with useCallback to stabilize the function
   const handleUpdateCode = useCallback(async (): Promise<void> => {
-    if (!currentSession || !user?.displayName) return
+    if (!currentSession || !user?.uid) return
     try {
       const sessionRef = doc(
         fireStore,
         `classrooms/${classroomId}/sessions/${sessionId}`
       )
       const now = Date.now()
+
       // Update student's code and lastUpdated timestamp
       await updateDoc(sessionRef, {
-        [`students.${user.displayName}`]: {
+        [`students.${user.uid}`]: {
           code: studentCode,
           lastUpdated: now,
-          submissions:
-            currentSession.students[user.displayName]?.submissions || [],
+          submissions: currentSession.students[user.uid]?.submissions || [],
+          displayName:
+            user.displayName || user.email?.split('@')[0] || user.uid,
         },
       })
+
       toast({
         title: 'Code Updated',
         description: 'Your code has been updated for the teacher to see.',
@@ -78,7 +80,9 @@ export function StudentSessionView({
     sessionId,
     studentCode,
     currentSession,
+    user?.uid,
     user?.displayName,
+    user?.email,
     toast,
   ])
 
@@ -87,10 +91,9 @@ export function StudentSessionView({
     if (currentAssignment?.starterCode) {
       setEditorInitialCode(formatCode(currentAssignment.starterCode))
     } else {
-      setEditorInitialCode('') // Fallback empty string
+      setEditorInitialCode('')
     }
-    handleUpdateCode()
-  }, [currentAssignment, handleUpdateCode])
+  }, [currentAssignment])
 
   // Listen to specific session using sessionId
   useEffect(() => {
@@ -119,11 +122,9 @@ export function StudentSessionView({
           setCurrentWeek(session.weekNumber)
         }
 
-        // Update student code if it exists in the session
+        // Only update initial code, not student code
         if (user?.displayName && session.students?.[user.displayName]) {
           const studentData = session.students[user?.displayName]
-          // Only update if the code is different to prevent endless loops
-          setStudentCode(studentData.code)
           setEditorInitialCode(studentData.code)
         }
       }
@@ -135,10 +136,7 @@ export function StudentSessionView({
   // Fetch assignment when selected
   useEffect(() => {
     const fetchAssignment = async () => {
-      if (!selectedAssignmentId) {
-        console.log('No selectedAssignmentId, skipping fetch')
-        return
-      }
+      if (!selectedAssignmentId) return
 
       try {
         const assignmentDoc = await getDoc(
@@ -148,9 +146,10 @@ export function StudentSessionView({
         if (assignmentDoc.exists()) {
           const assignmentData = assignmentDoc.data() as Assignment
           setCurrentAssignment(assignmentData)
-          setStudentCode(formatCode(assignmentData.starterCode))
-        } else {
-          console.log('Assignment document does not exist')
+
+          // Only set initial code, not student code
+          const formattedStarterCode = formatCode(assignmentData.starterCode)
+          setEditorInitialCode(formattedStarterCode)
         }
       } catch (error) {
         console.error('Error fetching assignment:', error)
@@ -272,14 +271,9 @@ export function StudentSessionView({
       }
 
       // Handle exercise submission
-      if (user && id &&  isSubmission && code) {
+      if (user && id && isSubmission && code) {
         handleUpdateCode()
-        await handleAssignmentCompletion(
-          user,
-          id,
-          code,
-          data.success,
-        )
+        await handleAssignmentCompletion(user, id, code, data.success)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
@@ -349,7 +343,9 @@ export function StudentSessionView({
                 >
                   <CardHeader className='py-2 px-3'>
                     <CardTitle className='text-sm'>
-                      {student.displayName === user?.displayName ? 'Me' : student.displayName}
+                      {student.displayName === user?.displayName
+                        ? 'Me'
+                        : student.displayName}
                     </CardTitle>
                   </CardHeader>
                 </Card>

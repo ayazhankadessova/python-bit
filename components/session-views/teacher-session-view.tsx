@@ -16,7 +16,6 @@ import { LogOut } from 'lucide-react'
 import { WeekSelector } from './WeekSelector'
 import type {
   LiveSession,
-  SessionStudent,
   Curriculum,
   Week,
   Assignment,
@@ -49,12 +48,9 @@ export function TeacherSessionView({
   const { toast } = useToast()
   const [studentCode, setStudentCode] = useState<string>('')
   const [teacherCode, setTeacherCode] = useState<string>('')
-  const [selectedStudentUsername, setSelectedStudentUsername] = useState<
-    string | null
-  >(null)
-  const [students, setStudents] = useState<
-    Array<{ username: string } & SessionStudent>
-  >([])
+  const [selectedStudent, setSelectedStudent] = useState<ActiveStudent | null>(
+    null
+  )
   const [output, setOutput] = useState<string>('')
   const [currentSession, setCurrentSession] = useState<LiveSession | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -75,14 +71,14 @@ export function TeacherSessionView({
 
   // Add this effect to manage the editor's initial code
   useEffect(() => {
-    if (selectedStudentUsername && studentCode) {
+    if (selectedStudent && studentCode) {
       setEditorInitialCode(studentCode)
     } else if (currentAssignment?.starterCode) {
       setEditorInitialCode(formatCode(currentAssignment.starterCode))
     } else {
       setEditorInitialCode('') // Fallback empty string
     }
-  }, [selectedStudentUsername, studentCode, currentAssignment])
+  }, [selectedStudent, studentCode, currentAssignment])
 
   useEffect(() => {
     const fetchClassroomAndCurriculum = async () => {
@@ -228,6 +224,7 @@ export function TeacherSessionView({
     fetchAssignment()
   }, [selectedAssignmentId, toast])
 
+  // Update the session listener effect:
   useEffect(() => {
     const sessionRef = doc(
       fireStore,
@@ -245,23 +242,12 @@ export function TeacherSessionView({
             ...sessionData,
           }
           setCurrentSession(session)
-
-          // Update students directly from session data
-          const studentArray = Object.entries(sessionData.students).map(
-            ([username, info]) => ({
-              username,
-              ...info,
-            })
-          )
-          setStudents(studentArray)
           setActiveStudents(sessionData.activeStudents)
 
           // Update selected student's code if needed
-          if (
-            selectedStudentUsername &&
-            sessionData.students[selectedStudentUsername]
-          ) {
-            setStudentCode(sessionData.students[selectedStudentUsername].code)
+          if (selectedStudent && sessionData.students[selectedStudent.uid]) {
+            setStudentCode(sessionData.students[selectedStudent.uid].code)
+            setTeacherCode(sessionData.students[selectedStudent.uid].code)
           }
         } else {
           setCurrentSession(null)
@@ -275,19 +261,16 @@ export function TeacherSessionView({
     )
 
     return () => unsubscribe()
-  }, [classroomId, sessionId, selectedStudentUsername])
+  }, [classroomId, sessionId, selectedStudent])
 
-  const handleStudentSelect = async (
-    studentUsername: string
-  ): Promise<void> => {
-    console.log('handleStudentSelect called with:', studentUsername)
-    console.log('Current selectedStudentUsername:', selectedStudentUsername)
+  const handleStudentSelect = async (student: ActiveStudent): Promise<void> => {
+    console.log('handleStudentSelect called with:', student)
+    console.log('Current selectedStudentId:', selectedStudent)
 
     // If clicking on already selected student, deselect them
-    if (selectedStudentUsername === studentUsername) {
+    if (selectedStudent?.uid === student.uid) {
       console.log('Attempting to deselect student')
-      setSelectedStudentUsername(null)
-      console.log('Current assignment:', currentAssignment)
+      setSelectedStudent(null)
       if (currentAssignment) {
         console.log('Setting teacher code to starter code')
         setTeacherCode(formatCode(currentAssignment.starterCode))
@@ -296,14 +279,15 @@ export function TeacherSessionView({
     }
 
     // Otherwise, select the new student
-    setSelectedStudentUsername(studentUsername)
+    setSelectedStudent(student)
     if (currentSession) {
       const sessionDoc = await getDoc(
         doc(fireStore, `classrooms/${classroomId}/sessions`, currentSession.id)
       )
       const data = sessionDoc.data() as LiveSession
-      if (data.students[studentUsername]) {
-        setStudentCode(data.students[studentUsername].code)
+      if (data.students[student.uid]) {
+        setStudentCode(data.students[student.uid].code)
+        setTeacherCode(data.students[student.uid].code)
       }
     }
   }
@@ -341,7 +325,7 @@ export function TeacherSessionView({
     setOutput('')
     setIsCorrect(null)
 
-    const code = selectedStudentUsername ? studentCode : teacherCode
+    const code = selectedStudent ? studentCode : teacherCode
     const id = currentAssignment?.id
     try {
       const requestPayload = {
@@ -370,7 +354,6 @@ export function TeacherSessionView({
       if (isSubmission) {
         setIsCorrect(data.success)
       }
-
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
       if (isSubmission) {
@@ -389,24 +372,23 @@ export function TeacherSessionView({
         currentSession.id
       )
 
-      if (selectedStudentUsername) {
+      if (selectedStudent) {
         await updateDoc(sessionRef, {
-          [`students.${selectedStudentUsername}.code`]: teacherCode,
-          [`students.${selectedStudentUsername}.lastUpdated`]:
-            serverTimestamp(),
+          [`students.${selectedStudent.uid}.code`]: teacherCode,
+          [`students.${selectedStudent.uid}.lastUpdated`]: serverTimestamp(),
         })
 
         toast({
           title: 'Code Sent',
-          description: `Code sent to ${selectedStudentUsername}`,
+          description: `Code sent to ${selectedStudent.displayName}`,
         })
       } else {
         // Use UpdateData type from Firestore
         const updates: UpdateData<LiveSession> = {}
 
-        students.forEach((student) => {
-          updates[`students.${student.username}.code`] = teacherCode
-          updates[`students.${student.username}.lastUpdated`] =
+        activeStudents.forEach((student) => {
+          updates[`students.${student.uid}.code`] = teacherCode
+          updates[`students.${student.uid}.lastUpdated`] =
             serverTimestamp()
         })
 
@@ -553,7 +535,7 @@ export function TeacherSessionView({
             <AssignmentProgress
               assignmentId={selectedAssignmentId}
               activeStudents={activeStudents}
-              selectedStudent={selectedStudentUsername}
+              selectedStudent={selectedStudent}
               onStudentSelect={handleStudentSelect}
             />
           )}
@@ -568,7 +550,7 @@ export function TeacherSessionView({
             onSubmitCode={() => handleRunCode(true)}
             onSendCode={handleSendCode}
             isTeacher={true}
-            selectedStudent={selectedStudentUsername}
+            selectedStudent={selectedStudent}
             output={output}
             error={error}
             isCorrect={isCorrect}

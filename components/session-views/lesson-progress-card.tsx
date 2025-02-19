@@ -3,13 +3,13 @@ import { doc, onSnapshot } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Progress } from '@/components/ui/progress'
 import { Clock, CheckCircle2, XCircle } from 'lucide-react'
-import { AssignmentProgressProps } from '@/types/classrooms/live-session'
+import { ActiveStudent, AssignmentProgressProps } from '@/types/classrooms/live-session'
 import { StudentProgress } from '@/types/classrooms/live-session'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface ExtendedAssignmentProgressProps extends AssignmentProgressProps {
-  selectedStudent: string | null
-  onStudentSelect: (username: string) => void
+  selectedStudent: ActiveStudent | null
+  onStudentSelect: (student: ActiveStudent) => void
 }
 
 const AssignmentProgress = ({
@@ -131,7 +131,7 @@ const AssignmentProgress = ({
             lastAttempt: null,
           }
 
-          const isSelected = selectedStudent === student.displayName
+          const isSelected = selectedStudent?.uid === student.uid
 
           return (
             <Card
@@ -139,7 +139,7 @@ const AssignmentProgress = ({
               className={`cursor-pointer hover:bg-accent transition-colors ${
                 isSelected ? 'border-primary bg-accent' : ''
               }`}
-              onClick={() => onStudentSelect(student.displayName)}
+              onClick={() => onStudentSelect(student)}
             >
               <CardHeader className='p-3 flex flex-row items-center justify-between space-y-0'>
                 <div className='flex items-center space-x-3'>

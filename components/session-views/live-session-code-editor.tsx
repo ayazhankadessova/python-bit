@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import ThemeButtons from '@/components/code-editors/theme-buttons'
 import { getTheme } from '@/lib/general/codeEditors'
+import { ActiveStudent } from '@/types/classrooms/live-session'
 
 interface PythonEditorProps {
   initialCode: string
@@ -35,9 +36,9 @@ interface PythonEditorProps {
   onRunCode: (code: string) => Promise<void>
   onSubmitCode?: (code: string) => Promise<void>
   isTeacher?: boolean
-  onSendCode?: (code: string, studentUsername?: string) => Promise<void>
+  onSendCode?: (code: string, student?: ActiveStudent) => Promise<void>
   onUpdateCode?: () => Promise<void>
-  selectedStudent?: string | null
+  selectedStudent?: ActiveStudent | null
   output: string
   error: string | null
   isCorrect?: boolean | null
@@ -122,10 +123,11 @@ export function PythonEditor({
   const isDarkTheme = theme === 'dark' || theme === 'vscode'
 
   useEffect(() => {
-    if (initialCode && initialCode !== code) {
+    // Only update code if initialCode changes and is different from current code
+    if (initialCode && !isExecuting) {
       setCode(initialCode)
     }
-  }, [initialCode, code])
+  }, [initialCode, isExecuting])
 
   return (
     <>
@@ -240,7 +242,7 @@ export function PythonEditor({
                   <Button onClick={handleSendCode} className='ml-auto'>
                     <Send className='mr-2 h-4 w-4' />
                     {selectedStudent
-                      ? `Send to ${selectedStudent}`
+                      ? `Send to ${selectedStudent.displayName}`
                       : 'Send to All'}
                   </Button>
                 ) : (
