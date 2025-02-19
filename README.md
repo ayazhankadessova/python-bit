@@ -529,7 +529,7 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - https://en.wikipedia.org/wiki/List_of_secondary_schools_in_Hong_Kong
 - [x] login error show. 
 - [x] why do we need id in useClassrooms
-- [ ] API Error: Dynamic server usage: Route /api/classrooms couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+- [x] API Error: Dynamic server usage: Route /api/classrooms couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
 - [ ] classrooms not updated!  
 - [x] tutorials: show where to press on tutorial (underline). 
 - [ ] exercises not found. dark theme remove. next tutorial button.back not working. 

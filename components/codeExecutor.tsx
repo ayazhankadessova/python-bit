@@ -34,19 +34,16 @@ const PythonCodeEditor = ({
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [isExecuting, setIsExecuting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [theme, setTheme] = useState<'light' | 'dark' | 'vscode'>('vscode')
+  const [theme, setTheme] = useState<'dark' | 'vscode'>('vscode')
   const [isRunning, setIsRunning] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
 
   const getTheme = () => {
-    switch (theme) {
-      case 'light':
-        return vscodeLight
-      case 'dark':
-        return vscodeDark
-      default:
-        return vscodeLight
+    if (theme === 'dark') {
+      return vscodeDark;
+    } else {
+      return vscodeLight;
     }
   }
 

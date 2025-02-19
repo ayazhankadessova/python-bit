@@ -59,7 +59,7 @@ export function PythonEditor({
   title = 'Python Editor',
 }: PythonEditorProps) {
   const [code, setCode] = useState(initialCode)
-  const [theme, setTheme] = useState<'light' | 'dark' | 'vscode'>('vscode')
+  const [theme, setTheme] = useState<'dark' | 'vscode'>('vscode')
   const [isExecuting, setIsExecuting] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -67,13 +67,10 @@ export function PythonEditor({
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
 
   const getTheme = () => {
-    switch (theme) {
-      case 'light':
-        return vscodeLight
-      case 'dark':
-        return vscodeDark
-      default:
-        return vscodeLight
+    if (theme === 'dark') {
+      return vscodeDark
+    } else {
+      return vscodeLight
     }
   }
 
