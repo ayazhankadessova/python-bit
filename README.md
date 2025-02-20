@@ -540,6 +540,7 @@ invalidateCache() // This will drop the cache and trigger a refetch
 ## Feb 19
 
 - [ ] how to see focused or not 
+- [ ] make limits to writes
 
 ## Project Test cases
 
