@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: 'PythonBit',
-  url: 'https://PythonBit.io',
+  url: 'https://python-bit.vercel.app',
   description:
     'PythonBit shows the real coding skills of developers✨Talk is cheap. Show me the code.',
   socials: {

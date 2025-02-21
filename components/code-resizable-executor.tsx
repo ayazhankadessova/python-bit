@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Play, Loader2, Code2, RotateCcw, CloudUpload } from 'lucide-react'
 import CodeMirror from '@uiw/react-codemirror'
-import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { useAuth } from '@/contexts/AuthContext'
 import { handleProjectCompletion } from './session-views/helpers'
@@ -25,6 +24,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import ThemeButtons from '@/components/code-editors/theme-buttons'
+import { getTheme } from '@/lib/general/codeEditors'
 
 const PythonResizableCodeEditor = ({
   initialCode,
@@ -38,22 +38,11 @@ const PythonResizableCodeEditor = ({
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [isExecuting, setIsExecuting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [theme, setTheme] = useState<'light' | 'dark' | 'vscode'>('vscode')
+  const [theme, setTheme] = useState<'dark' | 'vscode'>('vscode')
   const [isRunning, setIsRunning] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { invalidateCache } = useProjectProgress(project_id, user)
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
-
-  const getTheme = () => {
-    switch (theme) {
-      case 'light':
-        return vscodeLight
-      case 'dark':
-        return vscodeDark
-      default:
-        return vscodeLight
-    }
-  }
 
   const executeCode = async (isSubmission: boolean) => {
     setIsExecuting(true)
@@ -157,7 +146,7 @@ const PythonResizableCodeEditor = ({
                 value={code}
                 height='100%'
                 width='100%'
-                theme={getTheme()}
+                theme={getTheme(theme)}
                 extensions={[python()]}
                 onChange={(value) => setCode(value)}
                 className='h-full'

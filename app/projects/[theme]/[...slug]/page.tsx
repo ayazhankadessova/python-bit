@@ -46,7 +46,11 @@ export default async function ProjectPage({ params }: PostPageProps) {
       {/* Navigation bar */}
       <div className='flex-none px-4 py-4 border-b'>
         <div className='flex items-start justify-between'>
-          <BackButton />
+          <BackButton
+            href={`/projects/${post?.theme
+              .trim()
+              .replace(' ', '-')}/`}
+          />{' '}
           <SharePost fullLink={fullLinkGenerated} />
         </div>
       </div>

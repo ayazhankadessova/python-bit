@@ -529,12 +529,26 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - https://en.wikipedia.org/wiki/List_of_secondary_schools_in_Hong_Kong
 - [x] login error show. 
 - [x] why do we need id in useClassrooms
-- [ ] API Error: Dynamic server usage: Route /api/classrooms couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+- [x] API Error: Dynamic server usage: Route /api/classrooms couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
 - [ ] classrooms not updated!  
 - [x] tutorials: show where to press on tutorial (underline). 
-- [ ] exercises not found. dark theme remove. next tutorial button.back not working. 
-- [ ] not started should not be there if there is last Attempt. add images to projects. 
-- [ ] indexof TypeError: undefined is not an object (evaluating 'n.indexOf') assignmentProgress
+- [x] exercises not found. dark theme remove. back not working. 
+- [ ] not started should not be there if there is last Attempt. 
+- [x] add images to projects. 
+- [x] indexof TypeError: undefined is not an object (evaluating 'n.indexOf') assignmentProgress
+
+## Feb 20
+
+- [ ] how to see focused or not 
+- [x] delete old problems
+- [ ] make limits to writes
+- [ ] next tutorial button.
+- [ ] add tooltip to theme btns
+
+## Feb 21
+
+- [ ] allow users to change settings
+
 
 ## Project Test cases
 

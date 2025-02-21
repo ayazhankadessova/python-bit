@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import CodeMirror from '@uiw/react-codemirror'
-import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { python } from '@codemirror/lang-python'
 import { Button } from '@/components/ui/button'
 import {
@@ -28,6 +27,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import ThemeButtons from '@/components/code-editors/theme-buttons'
+import { getTheme } from '@/lib/general/codeEditors'
+import { ActiveStudent } from '@/types/classrooms/live-session'
 
 interface PythonEditorProps {
   initialCode: string
@@ -35,9 +36,9 @@ interface PythonEditorProps {
   onRunCode: (code: string) => Promise<void>
   onSubmitCode?: (code: string) => Promise<void>
   isTeacher?: boolean
-  onSendCode?: (code: string, studentUsername?: string) => Promise<void>
+  onSendCode?: (code: string, student?: ActiveStudent) => Promise<void>
   onUpdateCode?: () => Promise<void>
-  selectedStudent?: string | null
+  selectedStudent?: ActiveStudent | null
   output: string
   error: string | null
   isCorrect?: boolean | null
@@ -59,23 +60,12 @@ export function PythonEditor({
   title = 'Python Editor',
 }: PythonEditorProps) {
   const [code, setCode] = useState(initialCode)
-  const [theme, setTheme] = useState<'light' | 'dark' | 'vscode'>('vscode')
+  const [theme, setTheme] = useState<'dark' | 'vscode'>('vscode')
   const [isExecuting, setIsExecuting] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
-
-  const getTheme = () => {
-    switch (theme) {
-      case 'light':
-        return vscodeLight
-      case 'dark':
-        return vscodeDark
-      default:
-        return vscodeLight
-    }
-  }
 
   const handleUpdateCode = async () => {
     if (!onUpdateCode) return
@@ -133,10 +123,11 @@ export function PythonEditor({
   const isDarkTheme = theme === 'dark' || theme === 'vscode'
 
   useEffect(() => {
-    if (initialCode && initialCode !== code) {
+    // Only update code if initialCode changes and is different from current code
+    if (initialCode && !isExecuting) {
       setCode(initialCode)
     }
-  }, [initialCode, code])
+  }, [initialCode, isExecuting])
 
   return (
     <>
@@ -175,7 +166,7 @@ export function PythonEditor({
               <CodeMirror
                 value={code}
                 height='100%'
-                theme={getTheme()}
+                theme={getTheme(theme)}
                 extensions={[python()]}
                 onChange={handleCodeChange}
                 className='h-full'
@@ -251,7 +242,7 @@ export function PythonEditor({
                   <Button onClick={handleSendCode} className='ml-auto'>
                     <Send className='mr-2 h-4 w-4' />
                     {selectedStudent
-                      ? `Send to ${selectedStudent}`
+                      ? `Send to ${selectedStudent.displayName}`
                       : 'Send to All'}
                   </Button>
                 ) : (

@@ -44,7 +44,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <ScrollProgress className='top-[80px] z-50' />
       <div className='container mx-auto px-6 py-8 max-w-5xl'>
         <div className='flex items-start justify-between mb-4'>
-          <BackButton />
+          <BackButton href='/tutorials'/>
           <SharePost fullLink={fullLinkGenerated} />
         </div>
         <article className='prose prose-img:rounded-xl max-w-none mt-2 prose dark:prose-invert'>
