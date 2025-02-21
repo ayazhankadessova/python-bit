@@ -540,9 +540,14 @@ invalidateCache() // This will drop the cache and trigger a refetch
 ## Feb 20
 
 - [ ] how to see focused or not 
+- [ ] delete old problems
 - [ ] make limits to writes
 - [ ] next tutorial button.
 - [ ] add tooltip to theme btns
+
+## Feb 21
+
+- [ ] allow users to change settings
 
 
 ## Project Test cases
