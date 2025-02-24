@@ -13,6 +13,13 @@ firestoreId: python101-7-conditions
 
 Hey coding champions! Remember those awesome string powers we learned? Now it's time to learn something even cooler - how to make your code THINK and DECIDE! Just like in games where you choose different paths on your quest, conditional statements let your code make smart choices! 🧙‍♂️
 
+
+<Image
+    src="/tutorials/python101-7-confitionals-1.png"
+    alt="Python if else conditions"
+    width={500}
+    height={300}
+/>
 ## Today's Quest! 🎯
 You'll learn how to:
 - Make your code choose different paths like in an adventure game! 🗺️
@@ -22,10 +29,10 @@ You'll learn how to:
 
 ## Your First Decision Spell: if Statements! 🪄
 
-Remember our string operations? Let's use them with conditions:
+Think of `if` statements like magical gates - if something is true, you get to pass through! Let's try it:
 
-```python showLineNumbers
-player_name = "DragonSlayer"
+<PythonCodeEditor 
+  initialCode={`player_name = "DragonSlayer"
 
 # Check if the player name is long enough
 if len(player_name) >= 3:
@@ -35,13 +42,43 @@ else:
 
 # Check if it's a special character name
 if player_name.startswith("Dragon"):
-    print("🐲 You have dragon-taming powers!")
-```
+    print("🐲 You have dragon-taming powers!")`}
+  exercise_number={1}
+  expectedOutput={false}
+  tutorial_id="python101-7-conditions"
+/>
+
+🎮 **Quick Game**: Try changing the player_name to different values:
+- "Pi" (too short!)
+- "SuperWarrior" (perfect!)
+- "Zx" (too short!)
+
+## Level 2: Dragon Alert System! 🐲
+
+Now let's check for special powers:
+
+<PythonCodeEditor 
+  initialCode={`if player_name.startswith("Dragon"):
+    print("🐲 You have dragon-taming powers!")`}
+  exercise_number={1}
+  expectedOutput={false}
+  tutorial_id="python101-7-conditions"
+/>
+
+Cool, right? Your code just made its first decision! 
 
 ## Comparison Magic: Testing Conditions! ⚔️
 
-```python showLineNumbers
-player_health = 100
+🔍 **Time to learn the magical comparison symbols:**:
+- `==` : Is equal to
+- `!=` : Not equal to
+- `>` : Greater than
+- `<` : Less than
+- `>=` : Greater than or equal to
+- `<=` : Less than or equal to
+
+<PythonCodeEditor 
+  initialCode={`player_health = 100
 dragon_nearby = True
 
 # Different ways to compare things:
@@ -52,30 +89,53 @@ if player_health > 50:      # Greater than
     print("Ready for battle! ⚔️")
     
 if dragon_nearby != False:  # Not equal to
-    print("Dragon alert! 🐲")
-```
+    print("Dragon alert! 🐲")`}
+  exercise_number={2}
+  expectedOutput={false}
+  tutorial_id="python101-7-conditions"
+/>
+
+## 🎮 Mini-Game Break: Guess the Output!
+
+What do you think this code will print?
+
+<PythonCodeEditor 
+  initialCode={`wizard_power = 75
+
+if wizard_power > 50:
+    print("Super powerful! ⚡")
+if wizard_power < 100:
+    print("Still room to grow! 📚")`}
+  exercise_number={2}
+  expectedOutput={false}
+  tutorial_id="python101-7-conditions"
+/>
+
+Take a guess before trying it out!
 
 ## Secret Inventory Checker: the 'in' Operator! 🎒
 
-```python showLineNumbers
-# Using our string split power from last lesson!
+Ever wanted to check if you have an item in your backpack? Here's how:
+
+<PythonCodeEditor 
+  initialCode={`# Using our string split power from last lesson!
 inventory = "Sword,Shield,Potion,Map".split(",")
 
 if "Sword" in inventory:
-    print("You're armed and ready! ⚔️")
-    
-if "Map" in inventory:
-    print("You can find the treasure! 🗺️")
+    print("You're armed and ready! ⚔️")`}
+  exercise_number={3}
+  expectedOutput={false}
+  tutorial_id="python101-7-conditions"
+/>
 
-# Check multiple conditions
-if "Shield" in inventory and "Armor" not in inventory:
-    print("You have some defense, but could use armor! 🛡️")
-```
+🎮 **Fun Fact**: The `in` operator is like a magical detector that can find things in lists!
 
 ## Multiple Choice Paths: elif Adventures! 🗺️
 
-```python showLineNumbers
-player_class = "Mage"
+Sometimes you need more than just yes/no choices. Enter `elif` - your new best friend!
+
+<PythonCodeEditor 
+  initialCode={`player_class = "Mage"
 
 if player_class.lower() == "warrior":
     print("You charge into battle with your sword! ⚔️")
@@ -84,26 +144,35 @@ elif player_class.lower() == "mage":
 elif player_class.lower() == "archer":
     print("You attack from a distance! 🏹")
 else:
-    print("Unknown class! Create your own adventure!")
-```
+    print("Unknown class! Create your own adventure!")`}
+  exercise_number={4}
+  expectedOutput={false}
+  tutorial_id="python101-7-conditions"
+/>
+
+🎮 **Try It**: Change player_class to different values and see what happens!
 
 ## Boss Battle: Complex Conditions! 🐉
 
-```python showLineNumbers
-dragon_health = 100
+<PythonCodeEditor 
+  initialCode={`dragon_health = 100
 player_level = 5
 has_magic_sword = True
 
 if (player_level >= 5 and has_magic_sword) or dragon_health < 50:
     print("You can defeat the dragon! 🗡️")
 else:
-    print("Train more or find the magic sword! 💪")
-```
+    print("Train more or find the magic sword! 💪")`}
+  exercise_number={5}
+  expectedOutput={false}
+  tutorial_id="python101-7-conditions"
+/>
 
 ## 🎮 Mini-Game: The Quest Checker!
 
-```python showLineNumbers
-# Quest status checker
+
+<PythonCodeEditor 
+  initialCode={`# Quest status checker
 quest_status = "ACTIVE"
 quest_items_found = ["map", "compass", "key"]
 quest_level = 3
@@ -112,13 +181,16 @@ quest_level = 3
 # 1. Check if the quest is "ACTIVE"
 # 2. Check if the player has all required items
 # 3. Check if player meets minimum level (level 2)
-# Write your code here!
-```
+# Write your code here!`}
+  exercise_number={6}
+  expectedOutput={true}
+  tutorial_id="python101-7-conditions"
+/>
 
 ## 🌟 Super Challenge: Create a Game Choice System!
 
-```python showLineNumbers
-# You're at a crossroads in your adventure!
+<PythonCodeEditor 
+  initialCode={`# You're at a crossroads in your adventure!
 path_chosen = "cave"
 player_hp = 80
 has_torch = True
@@ -131,30 +203,42 @@ has_torch = True
 # 3. If player chose "forest":
 #    - Can enter anytime!
 
-# Your code here!
-```
+# Your code here!`}
+  exercise_number={7}
+  expectedOutput={true}
+  tutorial_id="python101-7-conditions"
+/>
 
 ## 🎯 Debug Mission: Fix the Game Logic!
 
 Can you spot what's wrong with these conditions?
 
-```python showLineNumbers
-# Bug 1: Why doesn't this work?
+
+<PythonCodeEditor 
+  initialCode={`# Bug 1: Why doesn't this work?
 player_power = "100"
 if player_power > 50:
-    print("Super strong!")
+    print("Super strong!")`}
+  exercise_number={8}
+  expectedOutput={true}
+  tutorial_id="python101-7-conditions"
+/>
 
-# Bug 2: What's wrong here?
-weapon = "Sword"
+Hint: Look carefully at the type of player_power!
+
+<PythonCodeEditor 
+  initialCode={`weapon = "Sword"
 if weapon = "Sword":
-    print("Armed!")
+    print("Armed!")`}
+  exercise_number={9}
+  expectedOutput={true}
+  tutorial_id="python101-7-conditions"
+/>
 
-# Bug 3: Can you spot the logic error?
-is_day = True
-has_sunglasses = True
-if is_day and has_sunglasses:
-    print("Too dark to see!")
-```
+Hint: Check the comparison operator!
+
+
+## Pro Tips for Victory! 🏆
 
 Remember:
 - Always check your comparison operators `(==, !=, >, <, >=, <=)`
@@ -165,8 +249,10 @@ Remember:
 
 ## Final Boss Challenge: Create a Complete Game Check System!
 
-```python showLineNumbers
-# Create a system that checks:
+Ready for the ultimate test? Create a complete game check system!
+
+<PythonCodeEditor 
+  initialCode={`# Create a system that checks:
 player_stats = """
 NAME: MightyHero
 LEVEL: 7
@@ -183,7 +269,18 @@ CURRENT_QUEST: DefeatDragon
 #    - Current quest must be "DefeatDragon"
 # 3. Print appropriate messages for each condition
 
-# Your code here!
-```
+# Your code here!`}
+  exercise_number={11}
+  expectedOutput={true}
+  tutorial_id="python101-7-conditions"
+/>
 
-Ready to become a Master of Decisions? Let's code! 🚀
+## 🎉 Congratulations!
+
+You've learned the power of making decisions in code! Now you can:
+- Make your programs think and choose paths 🤔
+- Check conditions like a pro 🔍
+- Create complex decision trees 🌳
+- Build awesome game logic! 🎮
+
+Ready for more coding adventures? Let's go! 🚀
