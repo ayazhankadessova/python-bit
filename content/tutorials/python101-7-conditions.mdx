@@ -38,11 +38,7 @@ Think of `if` statements like magical gates - if something is true, you get to p
 if len(player_name) >= 3:
     print("Welcome to the game, " + player_name + "!")
 else:
-    print("Name too short! Choose a longer name!")
-
-# Check if it's a special character name
-if player_name.startswith("Dragon"):
-    print("🐲 You have dragon-taming powers!")`}
+    print("Name too short! Choose a longer name!")`}
   exercise_number={1}
   expectedOutput={false}
   tutorial_id="python101-7-conditions"
@@ -60,7 +56,7 @@ Now let's check for special powers:
 <PythonCodeEditor 
   initialCode={`if player_name.startswith("Dragon"):
     print("🐲 You have dragon-taming powers!")`}
-  exercise_number={1}
+  exercise_number={2}
   expectedOutput={false}
   tutorial_id="python101-7-conditions"
 />
@@ -90,7 +86,7 @@ if player_health > 50:      # Greater than
     
 if dragon_nearby != False:  # Not equal to
     print("Dragon alert! 🐲")`}
-  exercise_number={2}
+  exercise_number={3}
   expectedOutput={false}
   tutorial_id="python101-7-conditions"
 />
@@ -106,7 +102,7 @@ if wizard_power > 50:
     print("Super powerful! ⚡")
 if wizard_power < 100:
     print("Still room to grow! 📚")`}
-  exercise_number={2}
+  exercise_number={4}
   expectedOutput={false}
   tutorial_id="python101-7-conditions"
 />
@@ -123,7 +119,7 @@ inventory = "Sword,Shield,Potion,Map".split(",")
 
 if "Sword" in inventory:
     print("You're armed and ready! ⚔️")`}
-  exercise_number={3}
+  exercise_number={5}
   expectedOutput={false}
   tutorial_id="python101-7-conditions"
 />
@@ -145,12 +141,12 @@ elif player_class.lower() == "archer":
     print("You attack from a distance! 🏹")
 else:
     print("Unknown class! Create your own adventure!")`}
-  exercise_number={4}
-  expectedOutput={false}
+  exercise_number={6}
+  expectedOutput={true}
   tutorial_id="python101-7-conditions"
 />
 
-🎮 **Try It**: Change player_class to different values and see what happens!
+🎮 **Try It**: Change player_class to a different value to get `You charge into battle with your sword! ⚔️`!
 
 ## Boss Battle: Complex Conditions! 🐉
 
@@ -163,55 +159,64 @@ if (player_level >= 5 and has_magic_sword) or dragon_health < 50:
     print("You can defeat the dragon! 🗡️")
 else:
     print("Train more or find the magic sword! 💪")`}
-  exercise_number={5}
+  exercise_number={7}
   expectedOutput={false}
   tutorial_id="python101-7-conditions"
 />
 
 ## 🎮 Mini-Game: The Quest Checker!
 
+Your mission:
+
+1. Check if the quest is "ACTIVE"
+
+2. Check if the player has all required items
+
+3. Check if player meets minimum level (level 2)
 
 <PythonCodeEditor 
   initialCode={`# Quest status checker
 quest_status = "ACTIVE"
 quest_items_found = ["map", "compass", "key"]
 quest_level = 3
-
-# Your mission:
-# 1. Check if the quest is "ACTIVE"
-# 2. Check if the player has all required items
-# 3. Check if player meets minimum level (level 2)
 # Write your code here!`}
-  exercise_number={6}
+  exercise_number={8}
   expectedOutput={true}
   tutorial_id="python101-7-conditions"
 />
 
 ## 🌟 Super Challenge: Create a Game Choice System!
 
+Create conditions to check:
+1. If player chose "cave":
+
+- Must have torch and hp > 50
+
+2. If player chose "mountain":
+
+- Must have hp > 70
+
+3. If player chose "forest":
+
+- Can enter anytime!
+
+> **Check if they can enter cave, mountain, or the forest.**
+
 <PythonCodeEditor 
   initialCode={`# You're at a crossroads in your adventure!
 path_chosen = "cave"
 player_hp = 80
 has_torch = True
-
-# Create conditions to check:
-# 1. If player chose "cave":
-#    - Must have torch and hp > 50
-# 2. If player chose "mountain":
-#    - Must have hp > 70
-# 3. If player chose "forest":
-#    - Can enter anytime!
-
 # Your code here!`}
-  exercise_number={7}
+  exercise_number={9}
   expectedOutput={true}
   tutorial_id="python101-7-conditions"
 />
 
 ## 🎯 Debug Mission: Fix the Game Logic!
 
-Can you spot what's wrong with these conditions?
+Can you spot what's wrong with these conditions? 
+Fix them here :)
 
 
 <PythonCodeEditor 
@@ -219,7 +224,7 @@ Can you spot what's wrong with these conditions?
 player_power = "100"
 if player_power > 50:
     print("Super strong!")`}
-  exercise_number={8}
+  exercise_number={10}
   expectedOutput={true}
   tutorial_id="python101-7-conditions"
 />
@@ -230,7 +235,7 @@ Hint: Look carefully at the type of player_power!
   initialCode={`weapon = "Sword"
 if weapon = "Sword":
     print("Armed!")`}
-  exercise_number={9}
+  exercise_number={11}
   expectedOutput={true}
   tutorial_id="python101-7-conditions"
 />
@@ -251,6 +256,16 @@ Remember:
 
 Ready for the ultimate test? Create a complete game check system!
 
+1. Parse the player_stats (use your string powers!)
+
+2. Check if player is ready for dragon battle:
+- Level must be 5 or higher
+- Health must be above 80
+- Must have both Sword and Shield
+- Current quest must be "DefeatDragon"
+
+3. Print appropriate messages for each condition
+
 <PythonCodeEditor 
   initialCode={`# Create a system that checks:
 player_stats = """
@@ -261,16 +276,8 @@ INVENTORY: Sword,Shield,Potion
 CURRENT_QUEST: DefeatDragon
 """
 
-# 1. Parse the player_stats (use your string powers!)
-# 2. Check if player is ready for dragon battle:
-#    - Level must be 5 or higher
-#    - Health must be above 80
-#    - Must have both Sword and Shield
-#    - Current quest must be "DefeatDragon"
-# 3. Print appropriate messages for each condition
-
 # Your code here!`}
-  exercise_number={11}
+  exercise_number={12}
   expectedOutput={true}
   tutorial_id="python101-7-conditions"
 />

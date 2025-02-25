@@ -432,5 +432,156 @@
         "difficulty": "intermediate"
       }
     }
+  },
+  "python101-7-conditions": {
+    "tutorial_id": "python101-7-conditions",
+    "title": "Conditional Statements for Decision-Making",
+    "description": "Learn how to make your code think and decide like a game master!",
+    "exercises": {
+      "1": {
+        "exercise_number": 1,
+        "description": "Practice using 'if' and 'else' statements to check player name length",
+        "test_code": "def test_player_name():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'if len(player_name)' in user_code, \"Use len() to check player_name length\"\n        assert 'else' in user_code, \"Use an else statement\"\n        assert 'Welcome to the game' in actual_output, \"Welcome message should be shown\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use len(player_name) to get the length of the string",
+          "Use >= to check if length is greater than or equal to 3",
+          "Don't forget to indent the code inside the if and else blocks"
+        ],
+        "difficulty": "beginner"
+      },
+      "2": {
+        "exercise_number": 2,
+        "description": "Practice checking for special powers with string methods",
+        "test_code": "def test_dragon_powers():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'startswith' in user_code, \"Use the startswith() method\"\n        assert 'dragon-taming powers' in actual_output.lower(), \"Check for dragon powers message\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use player_name.startswith() to check if the name starts with 'Dragon'",
+          "Make sure to match the case exactly ('Dragon' not 'dragon')",
+          "Don't forget to print the dragon taming powers message"
+        ],
+        "difficulty": "beginner"
+      },
+      "3": {
+        "exercise_number": 3,
+        "description": "Practice using comparison operators with player health and dragon detection",
+        "test_code": "def test_comparisons():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert '==' in user_code, \"Use == for equality check\"\n        assert '>' in user_code, \"Use > for greater than\"\n        assert '!=' in user_code, \"Use != for not equal to\"\n        assert 'Health is full!' in actual_output, \"Check for full health message\"\n        assert 'Dragon alert!' in actual_output, \"Check for dragon alert message\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use == to check if player_health equals 100",
+          "Use > to check if player_health is greater than 50",
+          "Use != to check if dragon_nearby is not equal to False"
+        ],
+        "difficulty": "beginner"
+      },
+      "4": {
+        "exercise_number": 4,
+        "description": "Mini-game: Predict what the code will output",
+        "expected_output": "Super powerful! ⚡\nStill room to grow! 📚",
+        "test_code": "def test_wizard_power():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"Super powerful! ⚡\\nStill room to grow! 📚\"\n        assert actual_output == expected, f\"Expected '{expected}', but got '{actual_output}'\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Both conditions are true, so both print statements will execute",
+          "75 is greater than 50, so 'Super powerful!' will print",
+          "75 is less than 100, so 'Still room to grow!' will also print"
+        ],
+        "difficulty": "beginner"
+      },
+      "5": {
+        "exercise_number": 5,
+        "description": "Practice using the 'in' operator to check inventory contents",
+        "test_code": "def test_inventory():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'in inventory' in user_code, \"Use 'in' to check inventory\"\n        assert \"You're armed and ready!\" in actual_output, \"Check for armed message\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use 'item in inventory' to check if an item exists",
+          "The inventory is already created for you using split()",
+          "Check if 'Sword' is in the inventory"
+        ],
+        "difficulty": "beginner"
+      },
+      "6": {
+        "exercise_number": 6,
+        "description": "Practice using if-elif-else chains for multiple conditions",
+        "expected_output": "You charge into battle with your sword! ⚔️",
+        "test_code": "def test_elif():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'if' in user_code, \"Use if statement\"\n        assert 'elif' in user_code, \"Use elif for additional conditions\"\n        assert 'else' in user_code, \"Use else for default case\"\n        assert actual_output == \"You cast powerful spells! 🔮\", \"Output should match expected\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use if for the first condition (warrior)",
+          "Use elif for the middle conditions (mage, archer)",
+          "Use else for the default case",
+          "Don't forget to use .lower() for case insensitivity"
+        ],
+        "difficulty": "beginner"
+      },
+      "7": {
+        "exercise_number": 7,
+        "description": "Practice using complex conditions with 'and', 'or', and parentheses",
+        "expected_output": "You can defeat the dragon! 🗡️",
+        "test_code": "def test_complex_conditions():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'and' in user_code, \"Use 'and' to combine conditions\"\n        assert 'or' in user_code, \"Use 'or' for alternative conditions\"\n        assert '(' in user_code and ')' in user_code, \"Use parentheses for grouping\"\n        assert actual_output == \"You can defeat the dragon! 🗡️\", \"Output should match expected\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use parentheses to group the 'player_level >= 5 and has_magic_sword'",
+          "Use 'or' to combine with 'dragon_health < 50'",
+          "Make sure to use the right condition for the expected output"
+        ],
+        "difficulty": "intermediate"
+      },
+      "8": {
+        "exercise_number": 8,
+        "description": "Create a quest status checker with multiple conditions",
+        "expected_output": "Quest is ACTIVE!\nYou have all required items!\nYou meet the level requirement!",
+        "test_code": "def test_quest_checker():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'quest_status == \"ACTIVE\"' in user_code, \"Check if quest is active\"\n        assert 'in quest_items_found' in user_code, \"Check for required items\"\n        assert 'quest_level >= 2' in user_code or 'quest_level > 1' in user_code, \"Check level requirement\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Check if quest_status equals \"ACTIVE\"",
+          "Check if all required items are in quest_items_found",
+          "Check if quest_level is at least 2"
+        ],
+        "difficulty": "intermediate"
+      },
+      "9": {
+        "exercise_number": 9,
+        "description": "Create a path choice system with different requirements",
+        "expected_output": "You can enter the cave!\nYou can enter the mountain!\nYou can enter the forest!",
+        "test_code": "def test_path_choice():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'path_chosen == \"cave\"' in user_code, \"Check if path is cave\"\n        assert 'has_torch' in user_code, \"Check for torch requirement\"\n        assert 'player_hp > 50' in user_code, \"Check hp requirement for cave\"\n        assert 'path_chosen == \"mountain\"' in user_code, \"Check if path is mountain\"\n        assert 'player_hp > 70' in user_code, \"Check hp requirement for mountain\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use if statements to check the value of path_chosen",
+          "For cave, check has_torch and player_hp > 50",
+          "For mountain, check player_hp > 70",
+          "For forest, no conditions needed"
+        ],
+        "difficulty": "intermediate"
+      },
+      "10": {
+        "exercise_number": 10,
+        "description": "Debug and fix comparison with string value",
+        "expected_output": "Super strong!",
+        "test_code": "def test_debug1():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'int' in user_code, \"Convert string to integer\"\n        assert actual_output == \"Super strong!\", \"Output should match expected\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "The issue is that player_power is a string (\"100\")",
+          "Convert player_power to an integer using int(player_power)",
+          "Then you can compare it with the number 50"
+        ],
+        "difficulty": "beginner"
+      },
+      "11": {
+        "exercise_number": 11,
+        "description": "Debug and fix equality check in condition",
+        "expected_output": "Armed!",
+        "test_code": "def test_debug2():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert '==' in user_code, \"Use == for equality check\"\n        assert actual_output == \"Armed!\", \"Output should match expected\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "The issue is using = (assignment) instead of == (comparison)",
+          "Change weapon = \"Sword\" to weapon == \"Sword\"",
+          "= assigns values, == compares values"
+        ],
+        "difficulty": "beginner"
+      },
+      "12": {
+        "exercise_number": 12,
+        "description": "Create a complete game check system by parsing player stats",
+        "expected_output": "Player name: MightyHero\nLevel check: PASSED (7)\nHealth check: PASSED (85)\nInventory check: PASSED (Has Sword and Shield)\nQuest check: PASSED (On correct quest)\nREADY FOR DRAGON BATTLE!",
+        "test_code": "def test_final_challenge():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'split' in user_code, \"Use split to parse stats\"\n        assert 'LEVEL: ' in user_code, \"Extract level from stats\"\n        assert 'HEALTH: ' in user_code, \"Extract health from stats\"\n        assert 'INVENTORY: ' in user_code, \"Extract inventory from stats\"\n        assert 'CURRENT_QUEST: ' in user_code, \"Extract quest from stats\"\n        assert '>= 5' in user_code or '> 4' in user_code, \"Check if level is 5 or higher\"\n        assert '> 80' in user_code or '>= 81' in user_code, \"Check if health is above 80\"\n        assert 'Sword' in user_code and 'Shield' in user_code, \"Check for both sword and shield\"\n        assert 'DefeatDragon' in user_code, \"Check if current quest is DefeatDragon\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "hints": [
+          "Use split('\\n') to separate lines in player_stats",
+          "Use split(':') to separate labels from values",
+          "Extract values for NAME, LEVEL, HEALTH, INVENTORY, and CURRENT_QUEST",
+          "Use in to check inventory items",
+          "Use comparison operators to check level and health"
+        ],
+        "difficulty": "advanced"
+      }
+    }
   }
 }

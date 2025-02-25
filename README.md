@@ -545,8 +545,11 @@ invalidateCache() // This will drop the cache and trigger a refetch
 - [ ] next tutorial button.
 - [ ] add tooltip to theme btns
 
-## Feb 21
+## Feb 24
 
+- [ ] lesson 7
+
+## Feb 25
 - [ ] allow users to change settings
 
 
