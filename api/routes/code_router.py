@@ -46,7 +46,7 @@ async def health_check():
     }
 
 @router.post("/execute")
-@limiter.limit("5/minute")
+@limiter.limit("10/minute")
 async def execute_code(request: Request, code_request: CodeExecutionRequest):
     """Main endpoint for executing Python code"""
     try:
