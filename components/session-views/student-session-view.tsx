@@ -12,8 +12,8 @@ import { PythonEditor } from '@/components/session-views/live-session-code-edito
 import { useAuth } from '@/contexts/AuthContext'
 import { handleAssignmentCompletion } from '@/lib/live-classroom/utils'
 import { ActiveStudent } from '@/types/classrooms/live-session'
-import { useStudentMonitoring } from '@/hooks/classroom/sessions/useStudentMonitoring'
-import { MonitoringIndicator } from './monitoring-state'
+// import { useStudentMonitoring } from '@/hooks/classroom/sessions/useStudentMonitoring'
+// import { MonitoringIndicator } from './monitoring-state'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -46,11 +46,11 @@ export function StudentSessionView({
 
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
 
-  const monitoringState = useStudentMonitoring(
-    classroomId,
-    sessionId,
-    user?.uid || ''
-  )
+  // const monitoringState = useStudentMonitoring(
+  //   classroomId,
+  //   sessionId,
+  //   user?.uid || ''
+  // )
 
   const handleUpdateCode = useCallback(async (): Promise<void> => {
     if (!currentSession || !user?.uid) return
@@ -307,7 +307,7 @@ export function StudentSessionView({
               </div>
             )}
 
-            <MonitoringIndicator state={monitoringState} />
+            {/* <MonitoringIndicator state={monitoringState} /> */}
           </div>
 
           <Button
