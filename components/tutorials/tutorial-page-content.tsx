@@ -1,0 +1,65 @@
+'use client'
+
+import { useState } from 'react'
+import { MDXContent } from '@/components/mdx-components'
+import { SharePost } from '@/components/share-post'
+import BackButton from '@/components/ui/backbutton'
+import { TutorialStatus } from '@/components/tutorials/tutorial-status'
+import { TutorialQuizCTA } from '@/components/tutorials/tutorial-quiz-cta'
+import ScrollProgress from '@/components/ui/scroll-progress'
+import { Button } from '@/components/ui/button'
+import { Tutorial } from '@/types/tutorial/tutorial'
+
+interface TutorialPageContentProps {
+  tutorial: Tutorial
+  fullLinkGenerated: string
+  quizSlug: string
+}
+
+export default function TutorialPageContent({
+  tutorial,
+  fullLinkGenerated,
+  quizSlug,
+}: TutorialPageContentProps) {
+  const [showQuizCTA, setShowQuizCTA] = useState(false)
+
+  const handleFinishTutorial = () => {
+    setShowQuizCTA(true)
+  }
+
+  return (
+    <>
+      <ScrollProgress className='top-[80px] z-50' />
+      <div className='container mx-auto px-6 py-8 max-w-5xl'>
+        <div className='flex items-start justify-between mb-4'>
+          <BackButton href='/tutorials' />
+          <SharePost fullLink={fullLinkGenerated} />
+        </div>
+        <article className='prose prose-img:rounded-xl max-w-none mt-2 prose dark:prose-invert'>
+          <h1 className='mb-2 text-foreground dark:text-foreground'>
+            {tutorial.title}
+          </h1>
+          <TutorialStatus
+            tutorialId={tutorial.firestoreId}
+            exerciseCount={tutorial.exercises}
+            detailed={true}
+            className='my-6'
+          />
+          {tutorial.description && (
+            <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>
+              {tutorial.description}
+            </p>
+          )}
+          <hr className='my-4' />
+          <MDXContent code={tutorial.body} />
+          {!showQuizCTA && (
+            <Button onClick={handleFinishTutorial} className='mt-4'>
+              I have finished the tutorial
+            </Button>
+          )}
+          {showQuizCTA && <TutorialQuizCTA quizSlug={quizSlug} />}
+        </article>
+      </div>
+    </>
+  )
+}

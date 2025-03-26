@@ -33,3 +33,17 @@ export interface TutorialData {
   exercises: Record<number, Exercise>
   lastUpdated: number
 }
+
+export interface Tutorial {
+  title: string
+  body: string
+  order: number
+  slug: string
+  date: number
+  published: boolean
+  exercises: number
+  firestoreId: string
+  image?: string | undefined
+  description?: string | undefined
+  tags?: string[] | undefined
+}

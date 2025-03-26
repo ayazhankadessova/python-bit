@@ -14,8 +14,7 @@ import {
 } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
-// import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { CheckCircle, AlertCircle } from 'lucide-react'
+import { CheckCircle, AlertCircle, ArrowRight, ArrowLeft } from 'lucide-react'
 
 interface QuizComponentProps {
   quiz: Quiz
@@ -26,19 +25,31 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>(
     Array(quiz.questions.length).fill(-1)
   )
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [answeredQuestions, setAnsweredQuestions] = useState<boolean[]>(
+    Array(quiz.questions.length).fill(false)
+  )
   const [showResults, setShowResults] = useState(false)
 
   const currentQuestion = quiz.questions[currentQuestionIndex]
   const isLastQuestion = currentQuestionIndex === quiz.questions.length - 1
-  const isAnswered = selectedAnswers[currentQuestionIndex] !== -1
+  const isAnswered = answeredQuestions[currentQuestionIndex]
+  const selectedAnswer = selectedAnswers[currentQuestionIndex]
+  const isCorrect = selectedAnswer === currentQuestion.correctAnswer
 
   const handleAnswerSelection = (answerIndex: number) => {
-    if (isSubmitted) return
+    if (answeredQuestions[currentQuestionIndex]) return
 
     const newSelectedAnswers = [...selectedAnswers]
     newSelectedAnswers[currentQuestionIndex] = answerIndex
     setSelectedAnswers(newSelectedAnswers)
+  }
+
+  const handleSubmitAnswer = () => {
+    if (selectedAnswers[currentQuestionIndex] === -1) return
+
+    const newAnsweredQuestions = [...answeredQuestions]
+    newAnsweredQuestions[currentQuestionIndex] = true
+    setAnsweredQuestions(newAnsweredQuestions)
   }
 
   const handleNextQuestion = () => {
@@ -54,7 +65,6 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   }
 
   const handleSubmitQuiz = () => {
-    setIsSubmitted(true)
     setShowResults(true)
   }
 
@@ -72,6 +82,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     }
   }
 
+  const allQuestionsAnswered = answeredQuestions.every((item) => item === true)
   const score = calculateScore()
 
   if (showResults) {
@@ -136,7 +147,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
         <CardFooter>
           <Button
             onClick={() => {
-              setIsSubmitted(false)
+              setAnsweredQuestions(Array(quiz.questions.length).fill(false))
               setShowResults(false)
               setCurrentQuestionIndex(0)
               setSelectedAnswers(Array(quiz.questions.length).fill(-1))
@@ -166,19 +177,70 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
           <RadioGroup
             value={selectedAnswers[currentQuestionIndex].toString()}
             onValueChange={(value) => handleAnswerSelection(parseInt(value))}
+            disabled={isAnswered}
           >
             {currentQuestion.options.map((option, index) => (
-              <div key={index} className='flex items-center space-x-2 py-2'>
+              <div
+                key={index}
+                className={`flex items-center space-x-2 p-4 ${
+                  isAnswered && index === currentQuestion.correctAnswer
+                    ? 'bg-green-100 dark:bg-green-900/20 rounded-md'
+                    : isAnswered && index === selectedAnswer && !isCorrect
+                    ? 'bg-red-100 dark:bg-red-900/20 rounded-md'
+                    : ''
+                }`}
+              >
                 <RadioGroupItem
                   value={index.toString()}
                   id={`option-${index}`}
+                  disabled={isAnswered}
                 />
-                <Label htmlFor={`option-${index}`} className='cursor-pointer'>
+                <Label
+                  htmlFor={`option-${index}`}
+                  className='cursor-pointer flex-1'
+                >
                   {option}
                 </Label>
+                {isAnswered && index === currentQuestion.correctAnswer && (
+                  <CheckCircle
+                    className='text-green-500 m-0 flex-shrink-0'
+                    size={20}
+                  />
+                )}
+                {isAnswered && index === selectedAnswer && !isCorrect && (
+                  <AlertCircle
+                    className='text-red-500 m-0 flex-shrink-0'
+                    size={20}
+                  />
+                )}
               </div>
             ))}
           </RadioGroup>
+
+          {isAnswered && (
+            <div className='mt-4 p-4 bg-muted rounded-lg'>
+              <p className='font-medium mb-2'>
+                {isCorrect ? (
+                  <div className='flex items-center'>
+                    <CheckCircle
+                      className='text-green-500 mt-1 flex-shrink-0'
+                      size={20}
+                    />
+                    <span className='ml-2'>Correct!</span>
+                  </div>
+                ) : (
+                  <div className='flex items-center'>
+                    <AlertCircle
+                      className='text-red-500 flex-shrink-0'
+                      size={20}
+                    />
+                    <span className='ml-2'>Let&apos;s Review This One!</span>
+                  </div>
+                )}
+              </p>
+              <p>{currentQuestion.explanation}</p>
+            </div>
+          )}
         </div>
       </CardContent>
       <CardFooter className='flex justify-between'>
@@ -187,20 +249,41 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
           onClick={handlePreviousQuestion}
           disabled={currentQuestionIndex === 0}
         >
+          <ArrowLeft className='mr-2 h-4 w-4' />
           Previous
         </Button>
+
         <div className='flex-1 flex justify-center'>
           <span className='px-3 py-1 bg-muted rounded-full text-xs'>
             {currentQuestionIndex + 1} / {quiz.questions.length}
           </span>
         </div>
-        {isLastQuestion ? (
-          <Button onClick={handleSubmitQuiz} disabled={!isAnswered}>
-            Submit Quiz
+
+        {!isAnswered ? (
+          <Button
+            onClick={handleSubmitAnswer}
+            disabled={selectedAnswers[currentQuestionIndex] === -1}
+          >
+            Submit Answer
+          </Button>
+        ) : isLastQuestion ? (
+          <Button
+            onClick={handleSubmitQuiz}
+            variant='default'
+            className={
+              allQuestionsAnswered ? 'bg-green-600 hover:bg-green-700' : ''
+            }
+          >
+            Finish Quiz
+            {!allQuestionsAnswered &&
+              ` (${answeredQuestions.filter((q) => q).length}/${
+                quiz.questions.length
+              })`}
           </Button>
         ) : (
-          <Button onClick={handleNextQuestion} disabled={!isAnswered}>
+          <Button onClick={handleNextQuestion}>
             Next
+            <ArrowRight className='ml-2 h-4 w-4' />
           </Button>
         )}
       </CardFooter>

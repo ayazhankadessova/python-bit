@@ -1,12 +1,8 @@
 import { tutorials } from '#site/content'
 import { notFound } from 'next/navigation'
-import { MDXContent } from '@/components/mdx-components'
-import { SharePost } from '@/components/share-post'
 import { siteConfig } from '@/config/site'
-import BackButton from '@/components/ui/backbutton'
-import { TutorialStatus } from '@/components/tutorials/tutorial-status'
+import TutorialPageContent from '@/components/tutorials/tutorial-page-content'
 import '@/styles/mdx-style.css'
-import ScrollProgress from '@/components/ui/scroll-progress'
 
 interface PostPageProps {
   params: {
@@ -33,39 +29,21 @@ export async function generateStaticParams(): Promise<
 
 export default async function PostPage({ params }: PostPageProps) {
   const tutorial = await getPostFromParams(params)
-  const fullLinkGenerated = `${siteConfig.url}/tutorials/${params?.slug?.join('/')}`
+  const fullLinkGenerated = `${siteConfig.url}/tutorials/${params?.slug?.join(
+    '/'
+  )}`
 
   if (!tutorial || !tutorial.published) {
     notFound()
   }
 
+  const quizSlug = `${tutorial.slugAsParams}-quiz`
+
   return (
-    <>
-      <ScrollProgress className='top-[80px] z-50' />
-      <div className='container mx-auto px-6 py-8 max-w-5xl'>
-        <div className='flex items-start justify-between mb-4'>
-          <BackButton href='/tutorials'/>
-          <SharePost fullLink={fullLinkGenerated} />
-        </div>
-        <article className='prose prose-img:rounded-xl max-w-none mt-2 prose dark:prose-invert'>
-          <h1 className='mb-2 text-foreground dark:text-foreground'>
-            {tutorial.title}
-          </h1>
-          <TutorialStatus
-            tutorialId={tutorial.firestoreId}
-            exerciseCount={tutorial.exercises}
-            detailed={true}
-            className='my-6'
-          />
-          {tutorial.description && (
-            <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>
-              {tutorial.description}
-            </p>
-          )}
-          <hr className='my-4' />
-          <MDXContent code={tutorial.body} />
-        </article>
-      </div>
-    </>
+    <TutorialPageContent
+      tutorial={tutorial}
+      fullLinkGenerated={fullLinkGenerated}
+      quizSlug={quizSlug}
+    />
   )
 }
