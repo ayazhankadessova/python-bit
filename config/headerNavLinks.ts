@@ -42,7 +42,7 @@ const dialogsInfo: DialogsInfo = {
       },
       {
         title: 'Quizes and tests',
-        href: '/teaching-content/quizes-tests',
+        href: '/teaching-content/quiz',
         description: 'Find a way to test students knowledge.',
       },
       {
@@ -56,6 +56,11 @@ const dialogsInfo: DialogsInfo = {
   Tutorials: {
     title: 'Tutorials',
     href: '/tutorials',
+    toggle: false,
+  },
+  Quizes: {
+    title: 'Quizzes',
+    href: '/quizzes',
     toggle: false,
   },
   Projects: {
