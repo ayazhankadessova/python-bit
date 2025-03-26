@@ -1,0 +1,98 @@
+{
+  "id": "python101-4-operators-quiz",
+  "title": "Magical Operators Quiz",
+  "description": "Test your mastery of Python's magical operators! See if you can solve these operator puzzles and level up your coding skills.",
+  "tutorialId": "python101-4-operators",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What will the output of this code be? treasure = 100 % 3",
+      "options": ["33", "1", "0", "33.33"],
+      "correctAnswer": 1,
+      "explanation": "The % operator finds the remainder after division. When 100 is divided by 3, the result is 33 with a remainder of 1."
+    },
+    {
+      "id": "q2",
+      "question": "Which operator would you use to repeat a string multiple times?",
+      "options": ["+", "*", "/", "**"],
+      "correctAnswer": 1,
+      "explanation": "The * operator repeats strings when used with a string and a number. For example, 'Hi! ' * 3 gives 'Hi! Hi! Hi! '."
+    },
+    {
+      "id": "q3",
+      "question": "What will this expression evaluate to? 2 ** 3",
+      "options": ["6", "8", "5", "23"],
+      "correctAnswer": 1,
+      "explanation": "The ** operator performs exponentiation. 2 raised to the power of 3 is 2 × 2 × 2 = 8."
+    },
+    {
+      "id": "q4",
+      "question": "What's wrong with this code? player_health = '100' + 50",
+      "options": [
+        "You can't add to player health",
+        "The variable name is invalid",
+        "You can't add a string and a number",
+        "The number 50 should be in quotes"
+      ],
+      "correctAnswer": 2,
+      "explanation": "You cannot directly add a string ('100') and a number (50) in Python. You need to convert the string to a number first with int('100') + 50, or both to strings: '100' + str(50)."
+    },
+    {
+      "id": "q5",
+      "question": "Which operator checks if two values are equal?",
+      "options": ["=", "==", "!=", "==="],
+      "correctAnswer": 1,
+      "explanation": "The == operator checks if two values are equal. The single = is for assignment, not comparison."
+    },
+    {
+      "id": "q6",
+      "question": "What will chest_1 + chest_2 do if chest_1 = ['sword', 'shield'] and chest_2 = ['potion', 'map']?",
+      "options": [
+        "Create a dictionary with items from both lists",
+        "Combine the items into a new list: ['sword', 'shield', 'potion', 'map']",
+        "Cause an error because you can't add lists",
+        "Return the total number of items (4)"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The + operator combines lists, creating a new list with all items from both lists: ['sword', 'shield', 'potion', 'map']."
+    },
+    {
+      "id": "q7",
+      "question": "What is the result of True and False?",
+      "options": ["True", "False", "None", "Error"],
+      "correctAnswer": 1,
+      "explanation": "The and operator returns True only if both conditions are True. Since one condition is False, the result is False."
+    },
+    {
+      "id": "q8",
+      "question": "What's the value of has_power in this code? has_sword = True; has_shield = True; has_power = has_sword or has_shield and False",
+      "options": ["True", "False", "None", "It depends on other factors"],
+      "correctAnswer": 0,
+      "explanation": "Due to operator precedence, 'and' is evaluated before 'or'. So this becomes: has_sword or (has_shield and False), which is True or False, resulting in True."
+    },
+    {
+      "id": "q9",
+      "question": "What will power_ups * 3 produce if power_ups = ['⭐']?",
+      "options": [
+        "['⭐⭐⭐']",
+        "['⭐', '⭐', '⭐']",
+        "Error: can't multiply lists",
+        "3"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When you multiply a list by a number, it repeats the list that many times. So ['⭐'] * 3 gives ['⭐', '⭐', '⭐']."
+    },
+    {
+      "id": "q10",
+      "question": "What's wrong with this code? is_high_score = score = high_score",
+      "options": [
+        "Variable names can't have underscores",
+        "You should use == for comparison, not =",
+        "You can't assign multiple variables at once",
+        "high_score needs to be defined first"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The = operator assigns values, it doesn't compare them. To check if score equals high_score, you should use the == operator: is_high_score = (score == high_score)."
+    }
+  ]
+}
