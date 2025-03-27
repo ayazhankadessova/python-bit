@@ -311,7 +311,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
             value={selectedAnswers[currentQuestionIndex].toString()}
             onValueChange={(value) => handleAnswerSelection(parseInt(value))}
             disabled={isAnswered}
-            className='space-y-3'
+            className='space-y-1'
           >
             {currentQuestion.options.map((option, index) => (
               <div
