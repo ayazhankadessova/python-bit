@@ -11,9 +11,19 @@ export default function QuizPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     if (error) {
-      notFound()
+      console.error(error)
     }
   }, [error])
+
+  if (error) {
+    return (
+      <main className='container mx-auto py-8 px-4'>
+        <div className='max-w-4xl mx-auto text-center py-12'>
+          <div className='text-red-500'>{error}</div>
+        </div>
+      </main>
+    )
+  }
 
   if (isLoading) {
     return (
