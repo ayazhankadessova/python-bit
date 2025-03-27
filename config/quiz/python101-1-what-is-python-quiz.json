@@ -14,7 +14,8 @@
         "echo 'Hello, World!'"
       ],
       "correctAnswer": 1,
-      "explanation": "In Python, we use the print() function to output text to the console."
+      "explanation": "In Python, we use the print() function to output text to the console.",
+      "imageUrl": "/quizzes/python101-1-what-is-python/q1.jpg"
     },
     {
       "id": "q2",
@@ -33,7 +34,8 @@
       "question": "What will ```python\nprint('Hello' * 3)``` output?",
       "options": ["Hello Hello Hello", "HelloHelloHello", "Hello3", "Error"],
       "correctAnswer": 1,
-      "explanation": "In Python, multiplying a string by a number repeats the string that many times without adding spaces."
+      "explanation": "In Python, multiplying a string by a number repeats the string that many times without adding spaces.",
+      "imageUrl": "/quizzes/python101-1-what-is-python/q3.jpg"
     },
     {
       "id": "q4",
@@ -57,7 +59,8 @@
         "HelloWorld!"
       ],
       "correctAnswer": 0,
-      "explanation": "The + operator concatenates (joins) strings together. In this case, it joins 'Hello', a space, and 'World!' to make 'Hello World!'."
+      "explanation": "The + operator concatenates (joins) strings together. In this case, it joins 'Hello', a space, and 'World!' to make 'Hello World!'.",
+      "imageUrl": "/quizzes/python101-1-what-is-python/q5.jpg"
     },
     {
       "id": "q6",
@@ -93,7 +96,8 @@
         "Tesla, IBM, Oracle"
       ],
       "correctAnswer": 1,
-      "explanation": "As mentioned in the tutorial, Instagram, Netflix, and Spotify all use Python."
+      "explanation": "As mentioned in the tutorial, Instagram, Netflix, and Spotify all use Python.",
+      "imageUrl": "/quizzes/python101-1-what-is-python/q8.jpg"
     },
     {
       "id": "q9",
@@ -105,7 +109,8 @@
         "Hello, World!"
       ],
       "correctAnswer": 3,
-      "explanation": "When you use a comma in a print statement, Python automatically adds a space between the items."
+      "explanation": "When you use a comma in a print statement, Python automatically adds a space between the items.",
+      "imageUrl": "/quizzes/python101-1-what-is-python/q9.jpg"
     },
     {
       "id": "q10",

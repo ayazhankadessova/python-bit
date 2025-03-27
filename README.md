@@ -650,3 +650,10 @@ users/
 2.  #E0D7F4
 2. #F4D7DD
 3. #EBF4D7
+
+
+images, change questions.
+
+
+- Bugs:
+quiz 5, q6: options should be code blocks

@@ -296,7 +296,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
 
           {/* Display image if available */}
           {currentQuestion.imageUrl && (
-            <div className='mb-6'>
+            <div className='flex justify-center items-center mb-6'>
               <Image
                 src={currentQuestion.imageUrl}
                 alt='Question image'

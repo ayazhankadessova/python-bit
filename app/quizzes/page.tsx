@@ -15,7 +15,7 @@ async function getQuizzes(): Promise<Quiz[]> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz`,
       {
-        next: { revalidate: 3 }, // Revalidate every hour
+        next: { revalidate: 1 }, // Revalidate every hour
       }
     )
 
