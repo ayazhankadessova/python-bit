@@ -6,25 +6,14 @@ import { notFound } from 'next/navigation'
 import { useEffect } from 'react'
 import { Loader2 } from 'lucide-react'
 
-export default function QuizPage({ params }: { params: { id: string } }) {
-  const { quiz, isLoading, error } = useQuiz(params.id)
+export default function QuizPage() {
+  const { quiz, isLoading, error } = useQuiz('python101-1-what-is-python-quiz')
 
   useEffect(() => {
     if (error) {
-      console.error(error)
-      console.log(params.id)
+      notFound()
     }
-  }, [error, params.id])
-
-  if (error) {
-    return (
-      <main className='container mx-auto py-8 px-4'>
-        <div className='max-w-4xl mx-auto text-center py-12'>
-          <div className='text-red-500'>{error}</div>
-        </div>
-      </main>
-    )
-  }
+  }, [error])
 
   if (isLoading) {
     return (
