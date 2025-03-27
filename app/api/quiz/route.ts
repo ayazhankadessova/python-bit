@@ -5,7 +5,8 @@ import { Quiz } from '@/types/quiz/quiz'
 
 export async function GET() {
   try {
-    const quizFolderPath = path.join(process.cwd(), 'config', 'quiz')
+    // Path to the /public/quiz folder
+    const quizFolderPath = path.join(process.cwd(), 'public', 'quiz')
     const quizFiles = fs.readdirSync(quizFolderPath)
 
     const quizzes: Quiz[] = quizFiles.map((file) => {

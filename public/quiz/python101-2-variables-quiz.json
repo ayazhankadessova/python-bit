@@ -1,0 +1,113 @@
+{
+  "id": "python101-2-variables-quiz",
+  "title": "Variables and Data Types",
+  "description": "Test your knowledge of Python variables and data types!",
+  "tutorialId": "python101-2-variables-types",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which of the following is a valid variable name in Python?",
+      "options": ["123_variable", "my variable", "first_variable", "@variable"],
+      "correctAnswer": 2,
+      "explanation": "Variable names must start with a letter or underscore, and can contain letters, numbers, and underscores. They cannot start with a number or contain spaces.",
+      "imageUrl": "/quizzes/python101-2-variables/q1.png"
+    },
+    {
+      "id": "q2",
+      "question": "What data type is the value 42?",
+      "options": [
+        "String (str)",
+        "Integer (int)",
+        "Float (float)",
+        "Boolean (bool)"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The value 42 is a whole number with no decimal point, which makes it an integer (int) in Python."
+    },
+    {
+      "id": "q3",
+      "question": "What data type is the value 3.14?",
+      "options": [
+        "String (str)",
+        "Integer (int)",
+        "Float (float)",
+        "Boolean (bool)"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The value 3.14 is a number with a decimal point, which makes it a floating-point number (float) in Python.",
+      "imageUrl": "/quizzes/python101-2-variables/q3.jpg"
+    },
+    {
+      "id": "q4",
+      "question": "What will the following code output? ```python\nprint(\"ha\" * 3)```",
+      "options": ["hahaha", "ha ha ha", "ha3", "Error"],
+      "correctAnswer": 0,
+      "explanation": "When you multiply a string by a number in Python, it repeats the string that many times. So 'ha' * 3 gives 'hahaha'."
+    },
+    {
+      "id": "q5",
+      "question": "Which function do you use to convert a number to a string?",
+      "options": ["int()", "float()", "bool()", "str()"],
+      "correctAnswer": 3,
+      "explanation": "The str() function converts values to strings, allowing them to be concatenated with other strings using the + operator.",
+      "imageUrl": "/quizzes/python101-2-variables/q5.png"
+    },
+    {
+      "id": "q6",
+      "question": "What's wrong with this code? ```python\nprint(\"My age is \" + 12)```",
+      "options": [
+        "The age should be in quotation marks",
+        "We need to use str(12) to convert the number to a string",
+        "We should use a comma instead of +",
+        "The variable name is missing"
+      ],
+      "correctAnswer": 1,
+      "explanation": "You can't directly concatenate a string and a number with the + operator. You need to convert the number to a string first using str()."
+    },
+    {
+      "id": "q7",
+      "question": "What data type is the value True?",
+      "options": [
+        "String (str)",
+        "Integer (int)",
+        "Float (float)",
+        "Boolean (bool)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "True is a Boolean value (bool), which can only be either True or False. Booleans are commonly used for conditions and flags.",
+      "imageUrl": "/quizzes/python101-2-variables/q7.png"
+    },
+    {
+      "id": "q8",
+      "question": "What will this code print? ```python\nname = \"Sam\"\nprint(name * 2)```",
+      "options": ["Sam Sam", "SamSam", "Sam2", "Error"],
+      "correctAnswer": 1,
+      "explanation": "When you multiply a string by a number, it repeats the string that many times without adding spaces. So 'Sam' * 2 gives 'SamSam'."
+    },
+    {
+      "id": "q9",
+      "question": "Which of these is NOT a rule for Python variable names?",
+      "options": [
+        "Variable names are case-sensitive",
+        "Variable names can start with a number",
+        "Variable names can contain underscores",
+        "Variable names can't contain spaces"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Variable names cannot start with a number. They must start with a letter or underscore, though they can contain numbers after that.",
+      "imageUrl": "/quizzes/python101-2-variables/q9.png"
+    },
+   {
+     "id": "q10",
+     "question": "What's wrong with this variable declaration? ```python\nis cool = True```",
+     "options": [
+       "The variable name contains a space",
+       "Boolean values should be lowercase (true)",
+       "You can't use 'is' in a variable name",
+       "The equals sign needs a space before it"
+     ],
+     "correctAnswer": 0,
+     "explanation": "Variable names cannot contain spaces. You should use underscores instead, such as 'is_cool = True'."
+   }
+  ]
+}
