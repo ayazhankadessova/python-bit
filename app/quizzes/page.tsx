@@ -1,67 +1,39 @@
 // app/quiz/page.tsx
-import { Suspense } from 'react'
-import { Metadata } from 'next'
+'use client'
 import QuizCard from '@/components/quiz/quiz-card'
-import { Quiz } from '@/types/quiz/quiz'
+import { useQuizzes } from '@/hooks/quiz/useQuizzes'
+// import { Spinner } from '@/components/ui/spinner'
 
-export const metadata: Metadata = {
-  title: 'All Quizzes | PythonBit',
-  description: 'Test your Python knowledge with our interactive quizzes',
-}
-
-// Function to fetch all available quizzes
-async function getQuizzes(): Promise<Quiz[]> {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz`,
-      {
-        cache: 'no-store', // Disable caching entirely
-      }
-    )
-
-    if (!response.ok) {
-      return []
-    }
-
-    return response.json()
-  } catch (error) {
-    console.error('Failed to fetch quizzes:', error)
-    return []
-  }
-}
-
-// Component to render quiz cards with data
-async function QuizGrid() {
-  const quizzes = await getQuizzes()
-
-  if (quizzes.length === 0) {
-    return (
-      <div className='text-center py-12'>
-        <h2 className='text-xl font-medium'>No quizzes available</h2>
-        <p className='text-muted-foreground mt-2'>
-          Check back later for new quizzes to test your knowledge!
-        </p>
-      </div>
-    )
-  }
-
-  return (
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-      {quizzes.map((quiz) => (
-        <QuizCard
-          key={quiz.id}
-          id={quiz.id}
-          title={quiz.title}
-          description={quiz.description}
-          tutorialId={quiz.tutorialId}
-          questionCount={quiz.questions.length}
-        />
-      ))}
-    </div>
-  )
-}
 
 export default function QuizzesPage() {
+  const { quizzes, isLoading, error } = useQuizzes()
+
+  if (isLoading) {
+    return (
+      <main className='container py-8 px-4'>
+        <div className='max-w-5xl mx-auto text-center py-12'>
+          {/* <Spinner className='mx-auto' /> */}
+          <p className='mt-4'>Loading quizzes...</p>
+        </div>
+      </main>
+    )
+  }
+
+  if (error) {
+    return (
+      <main className='container py-8 px-4'>
+        <div className='max-w-5xl mx-auto text-center py-12'>
+          <h2 className='text-xl font-medium text-red-500'>
+            Failed to load quizzes
+          </h2>
+          <p className='text-muted-foreground mt-2'>
+            Please try again later or check your connection.
+          </p>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className='container py-8 px-4'>
       <div className='max-w-5xl mx-auto'>
@@ -76,11 +48,27 @@ export default function QuizzesPage() {
           </p>
         </div>
 
-        <Suspense
-          fallback={<div className='py-12 text-center'>Loading quizzes...</div>}
-        >
-          <QuizGrid />
-        </Suspense>
+        {quizzes.length === 0 ? (
+          <div className='text-center py-12'>
+            <h2 className='text-xl font-medium'>No quizzes available</h2>
+            <p className='text-muted-foreground mt-2'>
+              Check back later for new quizzes to test your knowledge!
+            </p>
+          </div>
+        ) : (
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {quizzes.map((quiz) => (
+              <QuizCard
+                key={quiz.id}
+                id={quiz.id}
+                title={quiz.title}
+                description={quiz.description}
+                tutorialId={quiz.tutorialId}
+                questionCount={quiz.questions.length}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   )

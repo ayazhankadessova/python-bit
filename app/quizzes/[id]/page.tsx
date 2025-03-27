@@ -1,82 +1,41 @@
 // app/quiz/[id]/page.tsx
-import { Suspense } from 'react'
-import { notFound } from 'next/navigation'
+'use client'
+
+import { useQuiz } from '@/hooks/quiz/useQuizzes'
 import QuizComponent from '@/components/quiz/quiz-component'
-import { Quiz } from '@/types/quiz/quiz'
+// import { Spinner } from '@/components/ui/spinner'
+import { notFound } from 'next/navigation'
+import { useEffect } from 'react'
+// import { Metadata } from 'next'
 
-// This would typically be a database query
-// async function getQuizData(id: string): Promise<Quiz | null> {
-//   try {
-//     // In a real application, you would fetch this from your API
-//     const response = await fetch(
-//       `${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz/${id}`,
-//       {
-//         next: { revalidate: 3 }, // Revalidate every hour
-//       }
-//     )
+export default function QuizPage({ params }: { params: { id: string } }) {
+  const { quiz, isLoading, error } = useQuiz(params.id)
 
-//     if (!response.ok) {
-//       return null
-//     }
+  useEffect(() => {
+    if (error) {
+      notFound()
+    }
+  }, [error])
 
-//     return response.json()
-//   } catch (error) {
-//     console.error('Failed to fetch quiz:', error)
-//     return null
-//   }
-// }
-
-async function getQuizData(id: string): Promise<Quiz | null> {
-  try {
-    // In a real application, you would fetch this from your API
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz/${id}`,
-      {
-        cache: 'no-store', // Disable caching entirely
-      }
+  if (isLoading) {
+    return (
+      <main className='container mx-auto py-8 px-4'>
+        <div className='max-w-4xl mx-auto text-center py-12'>
+          {/* <Spinner className='mx-auto' /> */}
+          <p className='mt-4'>Loading quiz...</p>
+        </div>
+      </main>
     )
-
-    if (!response.ok) {
-      return null
-    }
-
-    return response.json()
-  } catch (error) {
-    console.error('Failed to fetch quiz:', error)
-    return null
   }
-}
-
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const quiz = await getQuizData(params.id)
 
   if (!quiz) {
-    return {
-      title: 'Quiz Not Found',
-    }
-  }
-
-  return {
-    title: `${quiz.title} | PythonBit`,
-    description: quiz.description,
-  }
-}
-
-export default async function QuizPage({ params }: { params: { id: string } }) {
-  const quiz = await getQuizData(params.id)
-
-  if (!quiz) {
-    notFound()
+    return notFound()
   }
 
   return (
     <main className='container mx-auto py-8 px-4'>
       <div className='max-w-4xl mx-auto'>
-        <Suspense
-          fallback={<div className='py-12 text-center'>Loading quiz...</div>}
-        >
-          <QuizComponent quiz={quiz} />
-        </Suspense>
+        <QuizComponent quiz={quiz} />
       </div>
     </main>
   )
