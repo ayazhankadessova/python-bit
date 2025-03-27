@@ -12,8 +12,9 @@ export default function QuizPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     if (error) {
       console.error(error)
+      console.log(params.id)
     }
-  }, [error])
+  }, [error, params.id])
 
   if (error) {
     return (
