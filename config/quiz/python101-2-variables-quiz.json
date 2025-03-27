@@ -37,7 +37,7 @@
     },
     {
       "id": "q4",
-      "question": "What will the following code output? print(\"ha\" * 3)",
+      "question": "What will the following code output? ```python\nprint(\"ha\" * 3)```",
       "options": ["hahaha", "ha ha ha", "ha3", "Error"],
       "correctAnswer": 0,
       "explanation": "When you multiply a string by a number in Python, it repeats the string that many times. So 'ha' * 3 gives 'hahaha'."
@@ -51,7 +51,7 @@
     },
     {
       "id": "q6",
-      "question": "What's wrong with this code? print(\"My age is \" + 12)",
+      "question": "What's wrong with this code? ```python\nprint(\"My age is \" + 12)```",
       "options": [
         "The age should be in quotation marks",
         "We need to use str(12) to convert the number to a string",
@@ -75,7 +75,7 @@
     },
     {
       "id": "q8",
-      "question": "What will this code print? name = \"Sam\"; print(name * 2)",
+      "question": "What will this code print? ```python\nname = \"Sam\"\nprint(name * 2)```",
       "options": ["Sam Sam", "SamSam", "Sam2", "Error"],
       "correctAnswer": 1,
       "explanation": "When you multiply a string by a number, it repeats the string that many times without adding spaces. So 'Sam' * 2 gives 'SamSam'."
@@ -92,17 +92,17 @@
       "correctAnswer": 1,
       "explanation": "Variable names cannot start with a number. They must start with a letter or underscore, though they can contain numbers after that."
     },
-    {
-      "id": "q10",
-      "question": "What's wrong with this variable declaration? is cool = True",
-      "options": [
-        "The variable name contains a space",
-        "Boolean values should be lowercase (true)",
-        "You can't use 'is' in a variable name",
-        "The equals sign needs a space before it"
-      ],
-      "correctAnswer": 0,
-      "explanation": "Variable names cannot contain spaces. You should use underscores instead, such as 'is_cool = True'."
-    }
+   {
+     "id": "q10",
+     "question": "What's wrong with this variable declaration? ```python\nis cool = True```",
+     "options": [
+       "The variable name contains a space",
+       "Boolean values should be lowercase (true)",
+       "You can't use 'is' in a variable name",
+       "The equals sign needs a space before it"
+     ],
+     "correctAnswer": 0,
+     "explanation": "Variable names cannot contain spaces. You should use underscores instead, such as 'is_cool = True'."
+   }
   ]
 }

@@ -18,7 +18,7 @@
     },
     {
       "id": "q2",
-      "question": "What will happen if you try to add 'diamond' to this set: minecraft_items = {'sword', 'pickaxe', 'diamond'}?",
+      "question": "What will happen if you try to add 'diamond' to this set? ```python\nminecraft_items = {'sword', 'pickaxe', 'diamond'}```",
       "options": [
         "It will add a second 'diamond' to the set",
         "It will raise an error because 'diamond' already exists",
@@ -42,7 +42,7 @@
     },
     {
       "id": "q4",
-      "question": "What is the correct way to access the value of 'health' in this dictionary: player = {'name': 'CoolGamer123', 'health': 100}?",
+      "question": "What is the correct way to access the value of 'health' in this dictionary? ```python\nplayer = {'name': 'CoolGamer123', 'health': 100}```",
       "options": [
         "player.health",
         "player['health']",
@@ -54,7 +54,7 @@
     },
     {
       "id": "q5",
-      "question": "What would happen if you run this code? coordinates = (37.7749, -122.4194); coordinates[0] = 38.5816",
+      "question": "What would happen if you run this code? ```python\ncoordinates = (37.7749, -122.4194)\ncoordinates[0] = 38.5816```",
       "options": [
         "The first element will be changed to 38.5816",
         "The entire tuple will be replaced with 38.5816",
@@ -66,7 +66,7 @@
     },
     {
       "id": "q6",
-      "question": "What will the following code output? fruits = ['apple', 'banana', 'orange']; print(fruits[1])",
+      "question": "What will the following code output? ```python\nfruits = ['apple', 'banana', 'orange']\nprint(fruits[1])```",
       "options": ["apple", "banana", "orange", "['apple', 'banana', 'orange']"],
       "correctAnswer": 1,
       "explanation": "In Python, list indexing starts at 0. So fruits[0] would be 'apple', fruits[1] is 'banana', and fruits[2] is 'orange'."
@@ -80,7 +80,7 @@
     },
     {
       "id": "q8",
-      "question": "What's wrong with this dictionary? player_stats = {'health': 100, 'health': 200}",
+      "question": "What's wrong with this dictionary? ```python\nplayer_stats = {'health': 100, 'health': 200}```",
       "options": [
         "Nothing, it's perfectly valid",
         "Dictionary keys can't be strings",
@@ -104,7 +104,7 @@
     },
     {
       "id": "q10",
-      "question": "What will this code output? inventory = {'health_potion': 5}; inventory['health_potion'] += 2; print(inventory['health_potion'])",
+      "question": "What will this code output? ```python\ninventory = {'health_potion': 5}\ninventory['health_potion'] += 2\nprint(inventory['health_potion'])```",
       "options": ["5", "2", "7", "Error"],
       "correctAnswer": 2,
       "explanation": "This code adds 2 to the current value of 'health_potion' (which is 5), resulting in 7. The += operator is a shorthand for inventory['health_potion'] = inventory['health_potion'] + 2."
