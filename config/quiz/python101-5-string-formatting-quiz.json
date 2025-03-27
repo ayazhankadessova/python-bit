@@ -18,7 +18,7 @@
     },
     {
       "id": "q2",
-      "question": "What will this code output? print('Level: %d' % 5)",
+      "question": "What will this code output? ```python\nprint('Level: %d' % 5)```",
       "options": [
         "Level: 5d",
         "Level: %d5",
@@ -37,7 +37,7 @@
     },
     {
       "id": "q4",
-      "question": "What's wrong with this code? print('Player %s has %d gold' % 'Alex')",
+      "question": "What's wrong with this code? ```python\nprint('Player %s has %d gold' % 'Alex')```",
       "options": [
         "The variable 'Alex' should be in quotes",
         "The format string has two specifiers but only one value is provided",
@@ -61,7 +61,7 @@
     },
     {
       "id": "q6",
-      "question": "What would this code output? print('Accuracy: %.1f%%' % 98.7654)",
+      "question": "What would this code output? ```python\nprint('Accuracy: %.1f%%' % 98.7654)```",
       "options": [
         "Accuracy: 98.8%",
         "Accuracy: 98.7%",
@@ -75,17 +75,17 @@
       "id": "q7",
       "question": "Which of these would create a correctly formatted string with multiple values?",
       "options": [
-        "print('Name: %s, Level: %d' % name, level)",
-        "print('Name: %s, Level: %d' % [name, level])",
-        "print('Name: %s, Level: %d' % (name, level))",
-        "print('Name: %s, Level: %d' % {name, level})"
+        "```python\nprint('Name: %s, Level: %d' % name, level)```",
+        "```python\nprint('Name: %s, Level: %d' % [name, level])```",
+        "```python\nprint('Name: %s, Level: %d' % (name, level))```",
+        "```python\nprint('Name: %s, Level: %d' % {name, level})```"
       ],
       "correctAnswer": 2,
       "explanation": "When formatting multiple values, you must use a tuple (with parentheses). The correct syntax is: print('Name: %s, Level: %d' % (name, level))"
     },
     {
       "id": "q8",
-      "question": "What would happen if you run this code? print('HP: %d / %d' % (50, 100, 200))",
+      "question": "What would happen if you run this code? ```python\nprint('HP: %d / %d' % (50, 100, 200))```",
       "options": [
         "It would print 'HP: 50 / 100'",
         "It would print 'HP: 50 / 100 / 200'",

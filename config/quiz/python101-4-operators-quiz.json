@@ -6,7 +6,7 @@
   "questions": [
     {
       "id": "q1",
-      "question": "What will the output of this code be? treasure = 100 % 3",
+      "question": "What will the output of this code be? ```python\ntreasure = 100 % 3```",
       "options": ["33", "1", "0", "33.33"],
       "correctAnswer": 1,
       "explanation": "The % operator finds the remainder after division. When 100 is divided by 3, the result is 33 with a remainder of 1."
@@ -27,7 +27,7 @@
     },
     {
       "id": "q4",
-      "question": "What's wrong with this code? player_health = '100' + 50",
+      "question": "What's wrong with this code? ```python\nplayer_health = '100' + 50```",
       "options": [
         "You can't add to player health",
         "The variable name is invalid",
@@ -46,7 +46,7 @@
     },
     {
       "id": "q6",
-      "question": "What will chest_1 + chest_2 do if chest_1 = ['sword', 'shield'] and chest_2 = ['potion', 'map']?",
+      "question": "What will chest_1 + chest_2 do if ```python\nchest_1 = ['sword', 'shield']\nchest_2 = ['potion', 'map']```?",
       "options": [
         "Create a dictionary with items from both lists",
         "Combine the items into a new list: ['sword', 'shield', 'potion', 'map']",
@@ -58,7 +58,7 @@
     },
     {
       "id": "q7",
-      "question": "What is the result of True and False?",
+      "question": "What is the result of ```python\nTrue and False```?",
       "options": ["True", "False", "None", "Error"],
       "correctAnswer": 1,
       "explanation": "The and operator returns True only if both conditions are True. Since one condition is False, the result is False."
@@ -72,7 +72,7 @@
     },
     {
       "id": "q9",
-      "question": "What will power_ups * 3 produce if power_ups = ['⭐']?",
+      "question": "What will ```python\npower_ups * 3``` produce if ```python\npower_ups = ['⭐']```?",
       "options": [
         "['⭐⭐⭐']",
         "['⭐', '⭐', '⭐']",
@@ -84,7 +84,7 @@
     },
     {
       "id": "q10",
-      "question": "What's wrong with this code? is_high_score = score = high_score",
+      "question": "What's wrong with this code? ```python\nis_high_score = score = high_score```",
       "options": [
         "Variable names can't have underscores",
         "You should use == for comparison, not =",
