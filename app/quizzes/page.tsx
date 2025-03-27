@@ -1,9 +1,7 @@
-// app/quiz/page.tsx
 'use client'
 import QuizCard from '@/components/quiz/quiz-card'
 import { useQuizzes } from '@/hooks/quiz/useQuizzes'
-// import { Spinner } from '@/components/ui/spinner'
-
+import { Loader2 } from 'lucide-react'
 
 export default function QuizzesPage() {
   const { quizzes, isLoading, error } = useQuizzes()
@@ -12,7 +10,7 @@ export default function QuizzesPage() {
     return (
       <main className='container py-8 px-4'>
         <div className='max-w-5xl mx-auto text-center py-12'>
-          {/* <Spinner className='mx-auto' /> */}
+          <Loader2 className='h-8 w-8 animate-spin' />
           <p className='mt-4'>Loading quizzes...</p>
         </div>
       </main>
