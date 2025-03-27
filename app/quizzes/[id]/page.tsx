@@ -11,7 +11,7 @@ async function getQuizData(id: string): Promise<Quiz | null> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz/${id}`,
       {
-        next: { revalidate: 3600 }, // Revalidate every hour
+        next: { revalidate: 3 }, // Revalidate every hour
       }
     )
 

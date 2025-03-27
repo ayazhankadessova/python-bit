@@ -1,10 +1,10 @@
-// types/quiz.ts
-export interface QuizQuestion {
+export interface Question {
   id: string
   question: string
   options: string[]
-  correctAnswer: number // Index of the correct option
-  explanation?: string
+  correctAnswer: number
+  explanation: string
+  imageUrl?: string // Optional image URL for the question
 }
 
 export interface Quiz {
@@ -12,5 +12,5 @@ export interface Quiz {
   title: string
   description: string
   tutorialId: string
-  questions: QuizQuestion[]
+  questions: Question[]
 }

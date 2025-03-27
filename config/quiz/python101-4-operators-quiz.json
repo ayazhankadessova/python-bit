@@ -65,10 +65,10 @@
     },
     {
       "id": "q8",
-      "question": "What's the value of has_power in this code? has_sword = True; has_shield = True; has_power = has_sword or has_shield and False",
-      "options": ["True", "False", "None", "It depends on other factors"],
+      "question": "What's the value of has_power in this code? ```python\nhas_sword = True\nhas_shield = True\nhas_power = has_sword or has_shield and False\n```",
+      "options": ["True", "False", "None", "Error"],
       "correctAnswer": 0,
-      "explanation": "Due to operator precedence, 'and' is evaluated before 'or'. So this becomes: has_sword or (has_shield and False), which is True or False, resulting in True."
+      "explanation": "In Python, `and` has higher precedence than `or`. So this is evaluated as: `has_power = has_sword or (has_shield and False)` which simplifies to `has_power = True or False` which equals `True`."
     },
     {
       "id": "q9",

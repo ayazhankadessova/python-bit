@@ -1,20 +1,19 @@
-// app/api/quiz/[id]/route.ts
 import { NextResponse } from 'next/server'
 import { Quiz } from '@/types/quiz/quiz'
-import path from 'path'
-import fs from 'fs'
 
-// In a real app, this would come from a database
-const getQuizData = (id: string): Quiz | null => {
-  try {
-    // This path should be adjusted based on your project structure
-    const filePath = path.join(process.cwd(), 'config', 'quiz', `${id}.json`)
-    const fileContents = fs.readFileSync(filePath, 'utf8')
-    return JSON.parse(fileContents)
-  } catch (error) {
-    console.error(`Error loading quiz ${id}:`, error)
-    return null
-  }
+import quiz1 from '@/config/quiz/python101-1-what-is-python-quiz.json'
+import quiz2 from '@/config/quiz/python101-2-variables-quiz.json'
+import quiz3 from '@/config/quiz/python101-3-collections-quiz.json'
+import quiz4 from '@/config/quiz/python101-4-operators-quiz.json'
+import quiz5 from '@/config/quiz/python101-5-string-formatting-quiz.json'
+
+
+const quizzes: Record<string, Quiz> = {
+  "python101-1-what-is-python-quiz":quiz1,
+  "python101-2-variables-quiz":quiz2,
+  "python101-3-collections-quiz":quiz3,
+  "python101-4-operators-quiz":quiz4,
+  "python101-5-string-formatting-quiz":quiz5
 }
 
 export async function GET(
@@ -22,7 +21,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const quizId = params.id
-  const quiz = getQuizData(quizId)
+  const quiz = quizzes[quizId]
 
   if (!quiz) {
     return NextResponse.json({ error: 'Quiz not found' }, { status: 404 })

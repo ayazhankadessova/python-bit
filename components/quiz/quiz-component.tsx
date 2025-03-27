@@ -1,7 +1,6 @@
-// components/Quiz/QuizComponent.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Quiz } from '@/types/quiz/quiz'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,6 +14,13 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { CheckCircle, AlertCircle, ArrowRight, ArrowLeft } from 'lucide-react'
+import Image from 'next/image'
+import Prism from 'prismjs'
+import 'prismjs/components/prism-python'
+import { useTheme } from 'next-themes'
+
+// Import both light and dark themes
+// No static imports of theme CSS - we'll apply them dynamically
 
 interface QuizComponentProps {
   quiz: Quiz
@@ -29,6 +35,44 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     Array(quiz.questions.length).fill(false)
   )
   const [showResults, setShowResults] = useState(false)
+  const { theme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Force re-render when theme changes to apply proper syntax highlighting
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Dynamically apply theme and syntax highlighting when component mounts or theme changes
+  useEffect(() => {
+    if (mounted) {
+      // Remove any previously loaded Prism themes
+      const existingThemeLinks = document.querySelectorAll(
+        'link[data-prism-theme]'
+      )
+      existingThemeLinks.forEach((link) => link.remove())
+
+      // Dynamically load the appropriate theme based on current mode
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.setAttribute('data-prism-theme', 'true')
+
+      if (resolvedTheme === 'dark') {
+        link.href =
+          'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css'
+      } else {
+        link.href =
+          'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css'
+      }
+
+      document.head.appendChild(link)
+
+      // Apply syntax highlighting
+      setTimeout(() => {
+        Prism.highlightAll()
+      }, 0)
+    }
+  }, [mounted, theme, resolvedTheme, currentQuestionIndex, showResults])
 
   const currentQuestion = quiz.questions[currentQuestionIndex]
   const isLastQuestion = currentQuestionIndex === quiz.questions.length - 1
@@ -82,8 +126,68 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     }
   }
 
+  // Check if we're in dark mode
+  const isDarkMode = resolvedTheme === 'dark'
+
+  // Function to render question text with code blocks
+  const renderQuestionText = (text: string) => {
+    if (!text || !text.includes('```python')) {
+      return text
+    }
+
+    const regex = /```python([\s\S]*?)```/g
+    let lastIndex = 0
+    const elements = []
+    let match
+    let key = 0
+
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        elements.push(
+          <span key={key++}>{text.substring(lastIndex, match.index)}</span>
+        )
+      }
+
+      const code = match[1].trim()
+      const highlightedCode = Prism.highlight(
+        code,
+        Prism.languages.python,
+        'python'
+      )
+
+      elements.push(
+        <pre
+          key={key++}
+          className={`p-3 rounded-md my-2 overflow-x-auto ${
+            isDarkMode
+              ? 'bg-zinc-800 border border-zinc-700'
+              : 'bg-zinc-100 border border-zinc-200'
+          }`}
+        >
+          <code
+            className='language-python text-sm'
+            dangerouslySetInnerHTML={{ __html: highlightedCode }}
+          />
+        </pre>
+      )
+
+      lastIndex = match.index + match[0].length
+    }
+
+    if (lastIndex < text.length) {
+      elements.push(<span key={key++}>{text.substring(lastIndex)}</span>)
+    }
+
+    return <>{elements}</>
+  }
+
   const allQuestionsAnswered = answeredQuestions.every((item) => item === true)
   const score = calculateScore()
+
+  // Don't render until we have theme information
+  if (!mounted) {
+    return null
+  }
 
   if (showResults) {
     return (
@@ -117,9 +221,23 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
                       <AlertCircle className='text-red-500 mt-1 flex-shrink-0' />
                     )}
                     <div>
-                      <h4 className='font-medium'>
-                        Question {index + 1}: {question.question}
-                      </h4>
+                      <h4 className='font-medium'>Question {index + 1}: </h4>
+                      <div className='mt-1 mb-3'>
+                        {renderQuestionText(question.question)}
+                      </div>
+
+                      {/* Display image if available */}
+                      {question.imageUrl && (
+                        <div className='my-3'>
+                          <Image
+                            src={question.imageUrl}
+                            alt={`Question ${index + 1} image`}
+                            width={400}
+                            height={300}
+                            className='rounded-md'
+                          />
+                        </div>
+                      )}
                       <div className='mt-2'>
                         <p className='font-medium'>
                           Your answer:{' '}
@@ -133,9 +251,10 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
                         )}
                       </div>
                       {question.explanation && (
-                        <p className='mt-2 text-muted-foreground'>
-                          {question.explanation}
-                        </p>
+                        <div className='mt-2 text-muted-foreground'>
+                          <strong className='block mb-1'>Explanation:</strong>
+                          {renderQuestionText(question.explanation)}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -171,9 +290,23 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
       </CardHeader>
       <CardContent>
         <div className='mb-6'>
-          <h3 className='text-lg font-medium mb-4'>
-            {currentQuestion.question}
+          <h3 className='text-md font-normal mb-4'>
+            {renderQuestionText(currentQuestion.question)}
           </h3>
+
+          {/* Display image if available */}
+          {currentQuestion.imageUrl && (
+            <div className='mb-4'>
+              <Image
+                src={currentQuestion.imageUrl}
+                alt='Question image'
+                width={400}
+                height={300}
+                className='rounded-md'
+              />
+            </div>
+          )}
+
           <RadioGroup
             value={selectedAnswers[currentQuestionIndex].toString()}
             onValueChange={(value) => handleAnswerSelection(parseInt(value))}
@@ -238,7 +371,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
                   </div>
                 )}
               </p>
-              <p>{currentQuestion.explanation}</p>
+              <div>{renderQuestionText(currentQuestion.explanation)}</div>
             </div>
           )}
         </div>
