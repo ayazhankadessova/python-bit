@@ -1,31 +1,35 @@
 import { NextResponse } from 'next/server'
+import { doc, getDoc } from 'firebase/firestore'
+import { fireStore } from '@/firebase/firebase'
 import { Quiz } from '@/types/quiz/quiz'
-
-import quiz1 from '@/config/quiz/python101-1-what-is-python-quiz.json'
-import quiz2 from '@/config/quiz/python101-2-variables-quiz.json'
-import quiz3 from '@/config/quiz/python101-3-collections-quiz.json'
-import quiz4 from '@/config/quiz/python101-4-operators-quiz.json'
-import quiz5 from '@/config/quiz/python101-5-string-formatting-quiz.json'
-
-
-const quizzes: Record<string, Quiz> = {
-  'python101-1-what-is-python-quiz': quiz1,
-  'python101-2-variables-quiz': quiz2,
-  'python101-3-collections-quiz': quiz3,
-  'python101-4-operators-quiz': quiz4,
-  'python101-5-string-formatting-quiz': quiz5,
-}
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const quizId = params.id
-  const quiz = quizzes[quizId]
+  try {
+    const quizId = params.id
 
-  if (!quiz) {
-    return NextResponse.json({ error: 'Quiz not found' }, { status: 404 })
+    // Reference to the specific quiz document in Firestore
+    const quizDocRef = doc(fireStore, 'quizzes', quizId)
+
+    // Fetch the document
+    const quizDocSnap = await getDoc(quizDocRef)
+
+    // Check if the document exists
+    if (!quizDocSnap.exists()) {
+      return NextResponse.json({ error: 'Quiz not found' }, { status: 404 })
+    }
+
+    // Get the document data and include the ID
+    const quiz: Quiz = {
+      ...quizDocSnap.data(),
+      id: quizDocSnap.id,
+    } as Quiz
+
+    return NextResponse.json(quiz)
+  } catch (error) {
+    console.error('Error fetching quiz from Firestore:', error)
+    return NextResponse.json({ error: 'Failed to fetch quiz' }, { status: 500 })
   }
-
-  return NextResponse.json(quiz)
 }

@@ -53,7 +53,7 @@ export default function TutorialPageContent({
           <hr className='my-4' />
           <MDXContent code={tutorial.body} />
           {!showQuizCTA && (
-            <Button onClick={handleFinishTutorial} className='mt-4'>
+            <Button onClick={handleFinishTutorial} className='mt-4' variant="link">
               I have finished the tutorial
             </Button>
           )}
