@@ -288,15 +288,15 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
           Question {currentQuestionIndex + 1} of {quiz.questions.length}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className='p-6 pt-0'>
         <div className='mb-6'>
-          <h3 className='text-md font-normal mb-4'>
+          <h3 className='text-md font-normal mb-6'>
             {renderQuestionText(currentQuestion.question)}
           </h3>
 
           {/* Display image if available */}
           {currentQuestion.imageUrl && (
-            <div className='mb-4'>
+            <div className='mb-6'>
               <Image
                 src={currentQuestion.imageUrl}
                 alt='Question image'
@@ -311,11 +311,12 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
             value={selectedAnswers[currentQuestionIndex].toString()}
             onValueChange={(value) => handleAnswerSelection(parseInt(value))}
             disabled={isAnswered}
+            className='space-y-3'
           >
             {currentQuestion.options.map((option, index) => (
               <div
                 key={index}
-                className={`flex items-center space-x-2 p-4 ${
+                className={`flex items-center space-x-2 p-4 border dark:border-zinc-700 border-zinc-200 rounded-md ${
                   isAnswered && index === currentQuestion.correctAnswer
                     ? 'bg-green-100 dark:bg-green-900/20 rounded-md'
                     : isAnswered && index === selectedAnswer && !isCorrect
@@ -351,7 +352,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
           </RadioGroup>
 
           {isAnswered && (
-            <div className='mt-4 p-4 bg-muted rounded-lg'>
+            <div className='mt-6 p-4 bg-muted rounded-lg'>
               <p className='font-medium mb-2'>
                 {isCorrect ? (
                   <div className='flex items-center'>
@@ -376,7 +377,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
           )}
         </div>
       </CardContent>
-      <CardFooter className='flex justify-between'>
+      <CardFooter className='flex justify-between p-6 pt-0'>
         <Button
           variant='outline'
           onClick={handlePreviousQuestion}

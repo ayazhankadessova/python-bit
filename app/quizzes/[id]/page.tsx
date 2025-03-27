@@ -5,13 +5,34 @@ import QuizComponent from '@/components/quiz/quiz-component'
 import { Quiz } from '@/types/quiz/quiz'
 
 // This would typically be a database query
+// async function getQuizData(id: string): Promise<Quiz | null> {
+//   try {
+//     // In a real application, you would fetch this from your API
+//     const response = await fetch(
+//       `${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz/${id}`,
+//       {
+//         next: { revalidate: 3 }, // Revalidate every hour
+//       }
+//     )
+
+//     if (!response.ok) {
+//       return null
+//     }
+
+//     return response.json()
+//   } catch (error) {
+//     console.error('Failed to fetch quiz:', error)
+//     return null
+//   }
+// }
+
 async function getQuizData(id: string): Promise<Quiz | null> {
   try {
     // In a real application, you would fetch this from your API
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz/${id}`,
       {
-        next: { revalidate: 3 }, // Revalidate every hour
+        cache: 'no-store', // Disable caching entirely
       }
     )
 

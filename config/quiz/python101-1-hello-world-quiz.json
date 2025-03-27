@@ -30,7 +30,7 @@
     },
     {
       "id": "q3",
-      "question": "What will print('Hello' * 3) output?",
+      "question": "What will ```python\nprint('Hello' * 3)``` output?",
       "options": ["Hello Hello Hello", "HelloHelloHello", "Hello3", "Error"],
       "correctAnswer": 1,
       "explanation": "In Python, multiplying a string by a number repeats the string that many times without adding spaces."
@@ -49,7 +49,7 @@
     },
     {
       "id": "q5",
-      "question": "What will print('Hello' + ' ' + 'World!') output?",
+      "question": "What will ```python\nprint('Hello' + ' ' + 'World!')``` output?",
       "options": [
         "Hello World!",
         "Hello+World!",
@@ -97,7 +97,7 @@
     },
     {
       "id": "q9",
-      "question": "What is the output of print('Hello,', 'World!')?",
+      "question": "What is the output of ```python\nprint('Hello,', 'World!')```?",
       "options": [
         "'Hello,World!'",
         "'Hello, World!'",
