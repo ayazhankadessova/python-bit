@@ -1,5 +1,3 @@
-// app/api/quiz/[id]/route.ts
-
 import { NextResponse } from 'next/server'
 import { doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
@@ -19,10 +17,24 @@ export async function GET(
     const quizDocRef = doc(fireStore, 'quizzes', quizId)
     const quizDocSnap = await getDoc(quizDocRef)
 
-    console.log('Document exists:', quizDocSnap.exists())
-    console.log('Document data:', quizDocSnap.data())
+    // Check if the document exists
+    if (!quizDocSnap.exists()) {
+      console.log('Quiz not found:', quizId)
+      return NextResponse.json({ error: 'Quiz not found' }, { status: 404 })
+    }
 
-    // Rest of your existing code...
+    // Log the document data
+    const quizData = quizDocSnap.data()
+    console.log('Document exists:', quizDocSnap.exists())
+    console.log('Document data:', quizData)
+
+    // Return the quiz data along with the document ID
+    const quiz = {
+      ...quizData,
+      id: quizDocSnap.id,
+    }
+
+    return NextResponse.json(quiz)
   } catch (error) {
     console.error('Full error details:', error)
     return NextResponse.json({ error: 'Failed to fetch quiz' }, { status: 500 })
