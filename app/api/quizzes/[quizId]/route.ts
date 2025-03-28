@@ -9,29 +9,43 @@ export async function GET(
 ) {
   const quizId = params.quizId
 
-  try {
-    const quizzesCollection = collection(fireStore, 'quizzes')
+    try {
 
-    const querySnapshot = await getDocs(quizzesCollection)
+      if (quizId) {
+        // If quizId is provided, fetch the specific quiz
+        const quizDocRef = doc(fireStore, 'quizzes', quizId)
+        const quizDocSnap = await getDoc(quizDocRef)
 
-    const quizDoc = querySnapshot.docs.find((doc) => doc.id === quizId)
+        if (!quizDocSnap.exists()) {
+          return NextResponse.json({ error: 'Quiz not found' }, { status: 404 })
+        }
 
-    if (!quizDoc) {
-      return NextResponse.json({ error: 'Quiz not found' }, { status: 404 })
+        const quiz: Quiz = {
+          ...quizDocSnap.data(),
+          id: quizDocSnap.id,
+        } as Quiz
+
+        return NextResponse.json(quiz)
+      } else {
+        // If no quizId is provided, fetch all quizzes
+        const quizzesCollection = collection(fireStore, 'quizzes')
+        const querySnapshot = await getDocs(quizzesCollection)
+
+        const quizzes: Quiz[] = querySnapshot.docs.map(
+          (doc) =>
+            ({
+              ...doc.data(),
+              id: doc.id,
+            } as Quiz)
+        )
+
+        return NextResponse.json(quizzes)
+      }
+    } catch (error) {
+      console.error('Error fetching quizzes from Firestore:', error)
+      return NextResponse.json(
+        { error: 'Failed to fetch quizzes' },
+        { status: 500 }
+      )
     }
-
-    const quizDocRef = doc(fireStore, 'quizzes', quizId)
-    const quizDocSnap = await getDoc(quizDocRef)
-
-    // Construct the quiz object
-    const quiz: Quiz = {
-      ...quizDocSnap.data(),
-      id: quizDocSnap.id,
-    } as Quiz
-
-    return NextResponse.json(quiz)
-  } catch (error) {
-    console.error('Error fetching quiz from Firestore:', error)
-    return NextResponse.json({ error: 'Failed to fetch quiz' }, { status: 500 })
-  }
 }
