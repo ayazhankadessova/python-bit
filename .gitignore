@@ -45,3 +45,5 @@ solutions.md
 # config/project_configs.json
 config/project_configs_answers.json
 assignment_solutions.md
+automations/firestore_quiz_uploader.py
+automations/serviceAccountKey.json

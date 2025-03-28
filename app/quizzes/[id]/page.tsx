@@ -6,8 +6,8 @@ import { notFound } from 'next/navigation'
 import { useEffect } from 'react'
 import { Loader2 } from 'lucide-react'
 
-export default function QuizPage() {
-  const { quiz, isLoading, error } = useQuiz('python101-1-what-is-python-quiz')
+export default function QuizPage({ params }: { params: { id: string } }) {
+  const { quiz, isLoading, error } = useQuiz(params.id)
 
   useEffect(() => {
     if (error) {
