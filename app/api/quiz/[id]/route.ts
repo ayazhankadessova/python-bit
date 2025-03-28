@@ -3,43 +3,28 @@
 import { NextResponse } from 'next/server'
 import { doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
-import { Quiz } from '@/types/quiz/quiz'
+// import { Quiz } from '@/types/quiz/quiz'
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   const quizId = params.id
+  console.log('Attempting to fetch quiz with ID:', quizId)
+
   try {
+    // Log the full reference path
+    console.log('Firestore reference path:', `quizzes/${quizId}`)
 
-    // Validate quizId
-    if (!quizId) {
-      return NextResponse.json(
-        { error: 'Quiz ID is required' },
-        { status: 400 }
-      )
-    }
-
-    // Reference to the specific quiz document in Firestore
     const quizDocRef = doc(fireStore, 'quizzes', quizId)
-
-    // Fetch the document
     const quizDocSnap = await getDoc(quizDocRef)
 
-    // Check if the document exists
-    if (!quizDocSnap.exists()) {
-      return NextResponse.json({ error: 'Quiz not found' }, { status: 404 })
-    }
+    console.log('Document exists:', quizDocSnap.exists())
+    console.log('Document data:', quizDocSnap.data())
 
-    // Get the document data and include the ID
-    const quiz: Quiz = {
-      ...quizDocSnap.data(),
-      id: quizDocSnap.id,
-    } as Quiz
-
-    return NextResponse.json(quiz)
+    // Rest of your existing code...
   } catch (error) {
-    console.error('Error fetching quiz from Firestore:', error, quizId)
+    console.error('Full error details:', error)
     return NextResponse.json({ error: 'Failed to fetch quiz' }, { status: 500 })
   }
 }
