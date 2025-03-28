@@ -36,7 +36,7 @@ export function useQuizzes() {
 // Hook to fetch a specific quiz
 export function useQuiz(id: string) {
   const { data, error, isLoading, mutate } = useSWR<Quiz>(
-    id ? `/api/quizzes/${id}` : null,
+    id ? `/api/quizzes?quizId=${id}` : null,
     fetcher,
     {
       revalidateOnFocus: false,
