@@ -657,3 +657,6 @@ images, change questions.
 
 - Bugs:
 quiz 5, q6: options should be code blocks
+
+- add more quizzes
+- interactivity

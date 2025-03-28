@@ -13,7 +13,7 @@ export async function GET(
 
       if (quizId) {
         // If quizId is provided, fetch the specific quiz
-        const quizDocRef = doc(fireStore, 'quizzes', quizId)
+        const quizDocRef = doc(fireStore, 'problems', quizId)
         const quizDocSnap = await getDoc(quizDocRef)
 
         if (!quizDocSnap.exists()) {
@@ -28,7 +28,7 @@ export async function GET(
         return NextResponse.json(quiz)
       } else {
         // If no quizId is provided, fetch all quizzes
-        const quizzesCollection = collection(fireStore, 'quizzes')
+        const quizzesCollection = collection(fireStore, 'problems')
         const querySnapshot = await getDocs(quizzesCollection)
 
         const quizzes: Quiz[] = querySnapshot.docs.map(
