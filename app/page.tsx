@@ -57,10 +57,10 @@ export default function HomePage() {
   }
 
   return (
-    <div>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8'>
       {/* Hero Section */}
 
-      <Section>
+      <section className='mt-8 mb-24'>
         <div className='flex flex-col items-center text-center max-w-3xl mx-auto space-y-6'>
           <h1 className='text-balance text-5xl font-semibold leading-none tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl'>
             Python
@@ -85,7 +85,7 @@ export default function HomePage() {
             </div>
           )}
         </div>
-      </Section>
+      </section>
 
       {/* Latest Tutorials Section */}
       <Section>
