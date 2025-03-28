@@ -68,7 +68,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({
   }
 
   return (
-    <div>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8'>
       {/* Search Bar Section */}
       <div className='mb-6'>
         <Input
