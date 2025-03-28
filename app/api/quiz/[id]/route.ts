@@ -9,8 +9,8 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  const quizId = params.id
   try {
-    const quizId = params.id
 
     // Validate quizId
     if (!quizId) {
@@ -39,7 +39,7 @@ export async function GET(
 
     return NextResponse.json(quiz)
   } catch (error) {
-    console.error('Error fetching quiz from Firestore:', error, { quizId })
+    console.error('Error fetching quiz from Firestore:', error, quizId)
     return NextResponse.json({ error: 'Failed to fetch quiz' }, { status: 500 })
   }
 }
