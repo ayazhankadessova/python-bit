@@ -13,7 +13,7 @@ const fetcher = async (url: string) => {
 // Hook to fetch all quizzes
 export function useQuizzes() {
   const { data, error, isLoading, mutate } = useSWR<Quiz[]>(
-    '/api/quiz',
+    '/api/quizzes',
     fetcher,
     {
       revalidateOnFocus: false,
@@ -36,7 +36,7 @@ export function useQuizzes() {
 // Hook to fetch a specific quiz
 export function useQuiz(id: string) {
   const { data, error, isLoading, mutate } = useSWR<Quiz>(
-    id ? `/api/quiz/${id}` : null,
+    id ? `/api/quizzes?quizId=${id}` : null,
     fetcher,
     {
       revalidateOnFocus: false,
