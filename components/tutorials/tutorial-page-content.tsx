@@ -1,13 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { MDXContent } from '@/components/mdx-components'
 import { SharePost } from '@/components/share-post'
 import BackButton from '@/components/ui/backbutton'
 import { TutorialStatus } from '@/components/tutorials/tutorial-status'
 import { TutorialQuizCTA } from '@/components/tutorials/tutorial-quiz-cta'
 import ScrollProgress from '@/components/ui/scroll-progress'
-import { Button } from '@/components/ui/button'
 import { Tutorial } from '@/types/tutorial/tutorial'
 
 interface TutorialPageContentProps {
@@ -21,12 +20,6 @@ export default function TutorialPageContent({
   fullLinkGenerated,
   quizSlug,
 }: TutorialPageContentProps) {
-  const [showQuizCTA, setShowQuizCTA] = useState(false)
-
-  const handleFinishTutorial = () => {
-    setShowQuizCTA(true)
-  }
-
   return (
     <>
       <ScrollProgress className='top-[80px] z-50' />
@@ -52,13 +45,15 @@ export default function TutorialPageContent({
           )}
           <hr className='my-4' />
           <MDXContent code={tutorial.body} />
-          {!showQuizCTA && (
-            <Button onClick={handleFinishTutorial} className='mt-4' variant="link">
-              I have finished the tutorial
-            </Button>
-          )}
-          {showQuizCTA && <TutorialQuizCTA quizSlug={quizSlug} />}
         </article>
+
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.5 }}
+        >
+          <TutorialQuizCTA quizSlug={quizSlug} className='w-full' />
+        </motion.div>
       </div>
     </>
   )
