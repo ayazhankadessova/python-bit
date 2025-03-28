@@ -27,8 +27,8 @@ export default function RootLayout({
           <AuthProvider>
             <AuthModalProvider>
               <SiteHeader />
-              <div className='relative flex min-h-dvh flex-col px-4'>
-                <main className='flex-1'>{children}</main>
+              <div className='relative flex min-h-dvh flex-col'>
+                <main className='flex-1 w-full py-8'>{children}</main>
               </div>
               <AuthModal />
               <Toaster />

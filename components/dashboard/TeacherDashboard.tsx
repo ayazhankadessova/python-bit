@@ -43,7 +43,7 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
   }
 
   return (
-    <div className='container mx-auto p-6'>
+    <div>
       <DashboardHeader
         title={`Welcome back, ${user.displayName || 'Teacher'}!`}
         subtitle='Here is your teaching overview'

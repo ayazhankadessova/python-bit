@@ -23,7 +23,7 @@ export default function TutorialPageContent({
   return (
     <>
       <ScrollProgress className='top-[80px] z-50' />
-      <div className='container mx-auto px-6 py-8 max-w-5xl'>
+      <div className='px-6'>
         <div className='flex items-start justify-between mb-4'>
           <BackButton href='/tutorials' />
           <SharePost fullLink={fullLinkGenerated} />

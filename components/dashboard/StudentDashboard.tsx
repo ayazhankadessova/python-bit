@@ -35,7 +35,7 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
   }
 
   return (
-    <div className='container mx-auto p-6'>
+    <div>
       <DashboardHeader
         title={`Welcome, ${user.displayName || 'Student'}!`}
         subtitle='Ready to learn Python?'

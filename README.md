@@ -660,3 +660,8 @@ quiz 5, q6: options should be code blocks
 
 - add more quizzes
 - interactivity
+
+## layout fixes
+
+
+-     <div className='container max-w-6xl mx-auto px-8 md:px-14 py-16'>
