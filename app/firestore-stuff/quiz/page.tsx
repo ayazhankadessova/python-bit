@@ -57,7 +57,7 @@ const QuizManager = () => {
         return
       }
 
-      await setDoc(doc(fireStore, 'problems', quiz.id), quiz)
+      await setDoc(doc(fireStore, 'quizzes', quiz.id), quiz)
       alert('Quiz saved successfully!')
     } catch (error) {
       console.error('Error saving quiz:', error)
