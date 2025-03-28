@@ -53,6 +53,19 @@ async def execute_code(request: Request, code_request: CodeExecutionRequest):
             detail=str(e)
         )
 
+@router.get("/health")
+async def health_check():
+    """Health check endpoint to verify API status"""
+    return {
+        "status": "healthy",
+        "services": {
+            "code_execution": "available",
+            "exercise": "available",
+            "project": "available",
+            "assignment": "available"
+        }
+    }
+
 @router.post("/test-exercise")
 @limiter.limit("30/minute")
 async def test_exercise(request: Request, test_request: TestExerciseRequest):

@@ -13,6 +13,7 @@ app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 # Add limiter to app state
 app.state.limiter = limiter
 
+
 # Handle rate limit exceeded errors
 @app.exception_handler(RateLimitExceeded)
 async def ratelimit_handler(request: Request, exc: RateLimitExceeded):

@@ -31,7 +31,8 @@ const PythonResizableCodeEditor = ({
   expectedOutput,
   project_id,
   isProject = false,
-}: CodeEditorProps) => {
+  onSuccess,
+}: CodeEditorProps & { onSuccess?: () => void }) => {
   const {user} = useAuth()
   const [code, setCode] = useState(initialCode)
   const [output, setOutput] = useState('')
@@ -85,21 +86,34 @@ const PythonResizableCodeEditor = ({
         })
   
         const data = await response.json()
+        console.log("this is response from python editor: ", data)
   
-        // Set output and error states
-        setOutput(data.output)
+        // If successful, prepend "Successfully compiled"
+        const combinedOutput = data.success
+        ? `✅ Successfully compiled\n${data.output}`
+        : data.output
+
+        setOutput(combinedOutput)
         setError(data.error ? data.output : null)
+
   
         // Set correctness for submissions
         if (isSubmission) {
           setIsCorrect(data.success)
-          invalidateCache()
+
+          // Handle project completion if it's a real project
+          if (isProject) {
+            invalidateCache()
+            if (user && data.success) {
+              await handleProjectCompletion(user, project_id, code!, true)
+            }
+          }
         }
-  
-        // Handle project completion
-        if (data.success && user && isSubmission) {
-          await handleProjectCompletion(user, project_id, code!, true)
+
+        if (onSuccess && data.success) {
+          onSuccess()
         }
+
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred')
         if (isSubmission) {
@@ -120,6 +134,8 @@ const PythonResizableCodeEditor = ({
     setIsResetDialogOpen(false)
   }
   const isDarkTheme = theme === 'dark' || theme === 'vscode'
+
+  console.log("🧩 PythonResizableCodeEditor mounted with initialCode:", initialCode)
 
   return (
     <>

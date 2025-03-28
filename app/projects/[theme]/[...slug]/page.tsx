@@ -37,17 +37,17 @@ function Section({
   hiddenButtons: { [key: number]: boolean };
   setHiddenButtons: React.Dispatch<React.SetStateAction<{ [key: number]: boolean }>>;
 }) {
-  const handleNext = () => {
-    setUnlockedSections(prev => ({ ...prev, [index + 1]: true}));
-    setHiddenButtons(prev => ({ ...prev, [index]: true }));
-  };  
+  const titleNum = /^[0-9]+/.test(item.title ?? '')
+  const shouldBlur = !unlocked && /^[0-9]+/.test(item.title ?? '')
+
+  // console.log(`Section ${index} - item.code.content:`, item.code?.content);
 
   return (
     <div className="relative mb-8" key={`section-${index}`}>
       {index !== 0 }
       
       {/* blur content if locked */}
-      <div className={`${!unlocked ? 'filter blur-sm' : ''}`}>
+
         {item.title && (
           <h2 className={item.title.trim().toLowerCase() === "conclusion" ? "text-2xl font-semibold my-4" : "text-lg font-semibold my-4"}>
             {item.title}
@@ -61,12 +61,27 @@ function Section({
             ))}
           </ul>
         )}
-        {item.code && typeof item.code === 'object' && item.code.content && (
-          <pre className="bg-black p-4 rounded-lg my-4">
-            <code className={`language-${item.code.language || 'python'}`}>
+        
+        <div className={`${shouldBlur ? 'filter blur-sm' : ''}`}>
+        {item.code && typeof item.code === 'object' && item.code.content && titleNum ? (
+          <div className="my-4" style={{ height: '350px' }}>
+            <PythonResizableCodeEditor
+              key={`editor-${index}`}
+              initialCode={item.code.content}
+              project_id={`section-${index}`} 
+              isProject={false}
+              onSuccess={() => {
+                setUnlockedSections(prev => ({ ...prev, [index + 1]: true }));
+                setHiddenButtons(prev => ({ ...prev, [index]: true }));
+              }}
+            />
+          </div>
+        ) : (
+          item.code?.content && (
+            <pre className="bg-gray-900 text-white p-4 rounded-lg my-4 font-mono whitespace-pre-wrap">
               {item.code.content}
-            </code>
-          </pre>
+            </pre>
+          )
         )}
         {item.output && Array.isArray(item.output) && (
           <pre className="bg-gray-900 text-green-400 p-4 rounded-lg my-4 font-mono whitespace-pre-wrap">
@@ -83,24 +98,9 @@ function Section({
         {item.final_note && <p className="text-xl mt-6">{item.final_note}</p>}
       </div>
 
-      {/* next btn - only if unlocked & not last section */}
-      {unlocked && index !== totalSections - 1 && !hiddenButtons[index] && (
-        <div className="flex justify-end mt-4">
-        <button   className="mt-4 px-3.5 py-1.5 bg-gradient-to-r from-green-500 to-green-700 
-        text-white font-medium rounded-md
-        transition-transform duration-300 hover:scale-105 hover:shadow-lg"
-           onClick={handleNext}>
-          next ->
-        </button>
-        </div>
-      )}
-
-
-
     </div>
   );
 }
-
 
 // --- Data Fetching Functions ---
 async function getPostFromParams(params: PostPageProps['params']) {
@@ -186,7 +186,7 @@ export default function ProjectPage({ params }: PostPageProps) {
               <div className="json-display">
                 {jsonData?.sections?.map((section: any, index: number) => (
                   <Section
-                    key={index}
+                    key={`section-${index}`}
                     item={section}
                     index={index}
                     unlocked={!!unlockedSections[index]}
