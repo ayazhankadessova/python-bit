@@ -50,7 +50,7 @@ export default function TutorialPageContent({
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.5 }}
+          transition={{ duration: 1.0 }}
         >
           <TutorialQuizCTA quizSlug={quizSlug} className='w-full' />
         </motion.div>
