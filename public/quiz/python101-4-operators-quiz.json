@@ -9,7 +9,8 @@
       "question": "What will the output of this code be? ```python\ntreasure = 100 % 3```",
       "options": ["33", "1", "0", "33.33"],
       "correctAnswer": 1,
-      "explanation": "The % operator finds the remainder after division. When 100 is divided by 3, the result is 33 with a remainder of 1."
+      "explanation": "The % operator finds the remainder after division. When 100 is divided by 3, the result is 33 with a remainder of 1.",
+      "imageUrl": "/quizzes/python101-4-operators/q1.png"
     },
     {
       "id": "q2",
@@ -23,7 +24,8 @@
       "question": "What will this expression evaluate to? 2 ** 3",
       "options": ["6", "8", "5", "23"],
       "correctAnswer": 1,
-      "explanation": "The ** operator performs exponentiation. 2 raised to the power of 3 is 2 × 2 × 2 = 8."
+      "explanation": "The ** operator performs exponentiation. 2 raised to the power of 3 is 2 × 2 × 2 = 8.",
+      "imageUrl": "/quizzes/python101-4-operators/q3.png"
     },
     {
       "id": "q4",
@@ -42,7 +44,8 @@
       "question": "Which operator checks if two values are equal?",
       "options": ["=", "==", "!=", "==="],
       "correctAnswer": 1,
-      "explanation": "The == operator checks if two values are equal. The single = is for assignment, not comparison."
+      "explanation": "The == operator checks if two values are equal. The single = is for assignment, not comparison.",
+      "imageUrl": "/quizzes/python101-4-operators/q5.jpg"
     },
     {
       "id": "q6",
@@ -61,7 +64,8 @@
       "question": "What is the result of ```python\nTrue and False```?",
       "options": ["True", "False", "None", "Error"],
       "correctAnswer": 1,
-      "explanation": "The and operator returns True only if both conditions are True. Since one condition is False, the result is False."
+      "explanation": "The and operator returns True only if both conditions are True. Since one condition is False, the result is False.",
+      "imageUrl": "/quizzes/python101-4-operators/q7.png"
     },
     {
       "id": "q8",
@@ -80,7 +84,8 @@
         "3"
       ],
       "correctAnswer": 1,
-      "explanation": "When you multiply a list by a number, it repeats the list that many times. So ['⭐'] * 3 gives ['⭐', '⭐', '⭐']."
+      "explanation": "When you multiply a list by a number, it repeats the list that many times. So ['⭐'] * 3 gives ['⭐', '⭐', '⭐'].",
+      "imageUrl": "/quizzes/python101-4-operators/q9.jpg"
     },
     {
       "id": "q10",

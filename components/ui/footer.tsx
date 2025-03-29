@@ -1,8 +1,16 @@
 import { siteConfig } from '@/config/site'
 import { Icons } from './icons'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export function BlogFooter() {
+
+  const pathname = usePathname()
+
+  if (pathname.startsWith('/quizzes/')) {
+    return null
+  }
+
   return (
     <footer className='flex flex-col gap-4 items-center justify-center pb-8 container'>
       <div className='mb-6 mt-14 flex flex-col items-center'>

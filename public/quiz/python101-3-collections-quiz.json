@@ -14,7 +14,8 @@
         "Neither tuples nor lists"
       ],
       "correctAnswer": 1,
-      "explanation": "Lists are mutable, meaning you can add, remove, or modify items after creating them. Tuples, on the other hand, are immutable - once created, you cannot change their contents."
+      "explanation": "Lists are mutable, meaning you can add, remove, or modify items after creating them. Tuples, on the other hand, are immutable - once created, you cannot change their contents.",
+      "imageUrl": "/quizzes/python101-3-collections/q1.jpg"
     },
     {
       "id": "q2",
@@ -38,7 +39,8 @@
         "list.insert()"
       ],
       "correctAnswer": 2,
-      "explanation": "The .extend() method adds multiple items to a list at once. For example, my_list.extend(['apple', 'banana']) would add both items to my_list."
+      "explanation": "The .extend() method adds multiple items to a list at once. For example, my_list.extend(['apple', 'banana']) would add both items to my_list.",
+      "imageUrl": "/quizzes/python101-3-collections/q3.png"
     },
     {
       "id": "q4",
@@ -62,7 +64,8 @@
         "It will create a new tuple with the updated value"
       ],
       "correctAnswer": 2,
-      "explanation": "Tuples are immutable, which means once created, you cannot modify their elements. Trying to change an element will raise a TypeError."
+      "explanation": "Tuples are immutable, which means once created, you cannot modify their elements. Trying to change an element will raise a TypeError.",
+      "imageUrl": "/quizzes/python101-3-collections/q5.png"
     },
     {
       "id": "q6",
@@ -76,7 +79,8 @@
       "question": "Which collection would be best for storing a user's game achievements where each achievement can only be earned once?",
       "options": ["List", "Tuple", "Dictionary", "Set"],
       "correctAnswer": 3,
-      "explanation": "Sets are perfect for storing achievements because they automatically prevent duplicates. Each achievement can only appear once in the set, just like how you can only earn an achievement once in a game."
+      "explanation": "Sets are perfect for storing achievements because they automatically prevent duplicates. Each achievement can only appear once in the set, just like how you can only earn an achievement once in a game.",
+      "imageUrl": "/quizzes/python101-3-collections/q7.png"
     },
     {
       "id": "q8",
@@ -100,7 +104,8 @@
         "All Python collections (lists, tuples, dictionaries, and sets)"
       ],
       "correctAnswer": 1,
-      "explanation": "Both lists and tuples maintain the order of items as they were added. In modern Python, dictionaries also preserve insertion order, but sets are unordered collections."
+      "explanation": "Both lists and tuples maintain the order of items as they were added. In modern Python, dictionaries also preserve insertion order, but sets are unordered collections.",
+      "imageUrl": "/quizzes/python101-3-collections/q9.png"
     },
     {
       "id": "q10",

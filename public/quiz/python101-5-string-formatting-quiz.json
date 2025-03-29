@@ -14,7 +14,8 @@
         "A special character"
       ],
       "correctAnswer": 1,
-      "explanation": "The %s format specifier is used for inserting string (text) values into formatted strings. It's like a placeholder where your text will appear."
+      "explanation": "The %s format specifier is used for inserting string (text) values into formatted strings. It's like a placeholder where your text will appear.",
+      "imageUrl": "/quizzes/python101-5-string-formatting/q1.png"
     },
     {
       "id": "q2",
@@ -33,7 +34,8 @@
       "question": "Which of these format specifiers would you use to display a number with exactly 2 decimal places?",
       "options": ["%d", "%s", "%.2f", "%f"],
       "correctAnswer": 2,
-      "explanation": "The %.2f format specifier displays a floating-point number with exactly 2 decimal places. For example, '%.2f' % 12.3456 would output '12.35' (with rounding)."
+      "explanation": "The %.2f format specifier displays a floating-point number with exactly 2 decimal places. For example, '%.2f' % 12.3456 would output '12.35' (with rounding).",
+      "imageUrl": "/quizzes/python101-5-string-formatting/q3.png"
     },
     {
       "id": "q4",
@@ -57,7 +59,8 @@
         "%d%% % value"
       ],
       "correctAnswer": 3,
-      "explanation": "To display a percentage sign in string formatting, you need to double it as %%. For example, 'Score: %d%%' % 95 would output 'Score: 95%'"
+      "explanation": "To display a percentage sign in string formatting, you need to double it as %%. For example, 'Score: %d%%' % 95 would output 'Score: 95%'",
+      "imageUrl": "/quizzes/python101-5-string-formatting/q5.png"
     },
     {
       "id": "q6",
@@ -68,7 +71,7 @@
         "Accuracy: 98.7654%",
         "Accuracy: 98%"
       ],
-      "correctAnswer": 1,
+      "correctAnswer": 0,
       "explanation": "The %.1f format specifier rounds the number to 1 decimal place. So 98.7654 becomes 98.8 (rounded up), and the %% prints a literal % sign. The output is 'Accuracy: 98.8%'"
     },
     {
@@ -81,7 +84,8 @@
         "```python\nprint('Name: %s, Level: %d' % {name, level})```"
       ],
       "correctAnswer": 2,
-      "explanation": "When formatting multiple values, you must use a tuple (with parentheses). The correct syntax is: print('Name: %s, Level: %d' % (name, level))"
+      "explanation": "When formatting multiple values, you must use a tuple (with parentheses). The correct syntax is: print('Name: %s, Level: %d' % (name, level))",
+      "imageUrl": "/quizzes/python101-5-string-formatting/q7.png"
     },
     {
       "id": "q8",
@@ -105,7 +109,8 @@
         "Use multiple print statements"
       ],
       "correctAnswer": 2,
-      "explanation": "Triple quotes (\"\"\" \"\"\") are best for multi-line strings. You can include format specifiers inside them, just like in regular strings. This creates cleaner, more readable code for game status screens or other multi-line outputs."
+      "explanation": "Triple quotes (\"\"\" \"\"\") are best for multi-line strings. You can include format specifiers inside them, just like in regular strings. This creates cleaner, more readable code for game status screens or other multi-line outputs.",
+      "imageUrl": "/quizzes/python101-5-string-formatting/q9.png"
     },
     {
       "id": "q10",

@@ -30,11 +30,5 @@ export default function QuizPage({ params }: { params: { id: string } }) {
     return notFound()
   }
 
-  return (
-    <main className='container mx-auto py-8 px-4'>
-      <div className='max-w-4xl mx-auto'>
-        <QuizComponent quiz={quiz} />
-      </div>
-    </main>
-  )
+  return <QuizComponent quiz={quiz} />
 }

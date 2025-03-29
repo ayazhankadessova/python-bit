@@ -281,103 +281,115 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   }
 
   return (
-    <Card className='w-full max-w-3xl mx-auto'>
-      <CardHeader>
-        <CardTitle>{quiz.title}</CardTitle>
-        <CardDescription>
-          Question {currentQuestionIndex + 1} of {quiz.questions.length}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className='p-6 pt-0'>
-        <div className='mb-6'>
-          <h3 className='text-md font-normal mb-6'>
-            {renderQuestionText(currentQuestion.question)}
-          </h3>
-
-          {/* Display image if available */}
-          {currentQuestion.imageUrl && (
-            <div className='flex justify-center items-center mb-6'>
-              <Image
-                src={currentQuestion.imageUrl}
-                alt='Question image'
-                width={400}
-                height={300}
-                className='rounded-md'
-              />
-            </div>
-          )}
-
-          <RadioGroup
-            value={selectedAnswers[currentQuestionIndex].toString()}
-            onValueChange={(value) => handleAnswerSelection(parseInt(value))}
-            disabled={isAnswered}
-            className='space-y-1'
-          >
-            {currentQuestion.options.map((option, index) => (
-              <div
-                key={index}
-                className={`flex items-center space-x-2 p-4 border dark:border-zinc-700 border-zinc-200 rounded-md ${
-                  isAnswered && index === currentQuestion.correctAnswer
-                    ? 'bg-green-100 dark:bg-green-900/20 rounded-md'
-                    : isAnswered && index === selectedAnswer && !isCorrect
-                    ? 'bg-red-100 dark:bg-red-900/20 rounded-md'
-                    : ''
-                }`}
-              >
-                <RadioGroupItem
-                  value={index.toString()}
-                  id={`option-${index}`}
-                  disabled={isAnswered}
-                />
-                <Label
-                  htmlFor={`option-${index}`}
-                  className='cursor-pointer flex-1'
-                >
-                  {option}
-                </Label>
-                {isAnswered && index === currentQuestion.correctAnswer && (
-                  <CheckCircle
-                    className='text-green-500 m-0 flex-shrink-0'
-                    size={20}
-                  />
-                )}
-                {isAnswered && index === selectedAnswer && !isCorrect && (
-                  <AlertCircle
-                    className='text-red-500 m-0 flex-shrink-0'
-                    size={20}
-                  />
-                )}
-              </div>
-            ))}
-          </RadioGroup>
-
-          {isAnswered && (
-            <div className='mt-6 p-4 bg-muted rounded-lg'>
-              <p className='font-medium mb-2'>
-                {isCorrect ? (
-                  <div className='flex items-center'>
-                    <CheckCircle
-                      className='text-green-500 mt-1 flex-shrink-0'
-                      size={20}
-                    />
-                    <span className='ml-2'>Correct!</span>
-                  </div>
-                ) : (
-                  <div className='flex items-center'>
-                    <AlertCircle
-                      className='text-red-500 flex-shrink-0'
-                      size={20}
-                    />
-                    <span className='ml-2'>Let&apos;s Review This One!</span>
-                  </div>
-                )}
+    <div className='min-h-screen flex flex-col'>
+      {/* Main Content */}
+      <div className='flex-grow'>
+        <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8'>
+          <div className='prose prose-img:rounded-xl max-w-none mt-2 prose dark:prose-invert'>
+            <h1 className='mb-2 text-foreground dark:text-foreground'>
+              {quiz.title}
+            </h1>
+            <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>
+              Question {currentQuestionIndex + 1} of {quiz.questions.length}
+            </p>
+            <hr className='my-4' />
+            <div className='mb-6 mx-auto xl:px-24 lg:px-16 md:px-8 sm:px-0'>
+              <p className='text-lg font-normal mb-6'>
+                {renderQuestionText(currentQuestion.question)}
               </p>
-              <div>{renderQuestionText(currentQuestion.explanation)}</div>
+
+              {/* Display image if available */}
+              {currentQuestion.imageUrl && (
+                <div className='flex justify-center items-center mb-6 my-0'>
+                  <Image
+                    src={currentQuestion.imageUrl}
+                    alt='Question image'
+                    width={400}
+                    height={300}
+                    className='rounded-md my-0'
+                  />
+                </div>
+              )}
+
+              <RadioGroup
+                value={selectedAnswers[currentQuestionIndex].toString()}
+                onValueChange={(value) =>
+                  handleAnswerSelection(parseInt(value))
+                }
+                disabled={isAnswered}
+                className='space-y-1'
+              >
+                {currentQuestion.options.map((option, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center space-x-2 p-4 border dark:border-zinc-700 border-zinc-200 rounded-md ${
+                      isAnswered && index === currentQuestion.correctAnswer
+                        ? 'bg-green-100 dark:bg-green-900/20 rounded-md'
+                        : isAnswered && index === selectedAnswer && !isCorrect
+                        ? 'bg-red-100 dark:bg-red-900/20 rounded-md'
+                        : 'bg-card'
+                    }`}
+                  >
+                    <RadioGroupItem
+                      value={index.toString()}
+                      id={`option-${index}`}
+                      disabled={isAnswered}
+                    />
+                    <Label
+                      htmlFor={`option-${index}`}
+                      className='cursor-pointer flex-1'
+                    >
+                      {option}
+                    </Label>
+                    {isAnswered && index === currentQuestion.correctAnswer && (
+                      <CheckCircle
+                        className='text-green-500 m-0 flex-shrink-0'
+                        size={20}
+                      />
+                    )}
+                    {isAnswered && index === selectedAnswer && !isCorrect && (
+                      <AlertCircle
+                        className='text-red-500 m-0 flex-shrink-0'
+                        size={20}
+                      />
+                    )}
+                  </div>
+                ))}
+              </RadioGroup>
+
+              {isAnswered && (
+                <div className='mt-6 p-4 bg-muted rounded-lg'>
+                  <p className='font-medium mb-2'>
+                    {isCorrect ? (
+                      <div className='flex items-center'>
+                        <CheckCircle
+                          className='text-green-500 mt-1 flex-shrink-0'
+                          size={20}
+                        />
+                        <span className='ml-2'>Correct!</span>
+                      </div>
+                    ) : (
+                      <div className='flex items-center'>
+                        <AlertCircle
+                          className='text-red-500 flex-shrink-0'
+                          size={20}
+                        />
+                        <span className='ml-2'>
+                          Let&apos;s Review This One!
+                        </span>
+                      </div>
+                    )}
+                  </p>
+                  <div>{renderQuestionText(currentQuestion.explanation)}</div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
-      </CardContent>
-      <CardFooter className='flex justify-between p-6 pt-0'>
+      </div>
+
+      {/* Footer */}
+      <footer className='sticky bottom-0 bg-background flex items-center justify-between px-6 py-3 border-t border-muted flex-shrink-0'>
         <Button
           variant='outline'
           onClick={handlePreviousQuestion}
@@ -398,7 +410,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
             onClick={handleSubmitAnswer}
             disabled={selectedAnswers[currentQuestionIndex] === -1}
           >
-            Submit Answer
+            Submit
           </Button>
         ) : isLastQuestion ? (
           <Button
@@ -420,7 +432,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
             <ArrowRight className='ml-2 h-4 w-4' />
           </Button>
         )}
-      </CardFooter>
-    </Card>
+      </footer>
+    </div>
   )
 }
