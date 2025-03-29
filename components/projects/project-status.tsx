@@ -13,7 +13,7 @@ interface ProjectStatusProps {
 export function ProjectStatus({ projectId, detailed }: ProjectStatusProps) {
   const { user } = useAuth()
   const { progress } = useProjectProgress(projectId, user, {
-    revalidateOnFocus: false,
+    revalidateOnFocus: true,
     revalidateOnReconnect: true,
     dedupingInterval: 600000,
   })

@@ -14,7 +14,7 @@ export function TutorialQuizCTA({
 }: TutorialQuizCTAProps) {
   return (
     <div
-      className={`my-8 p-6 border border-purple-200 rounded-lg bg-card shadow-sm ${className}`}
+      className={`p-12 border border-purple-200 rounded-lg bg-card shadow-sm ${className}`}
     >
       <p className='mt-0 mb-4 flex items-center font-normal text-md text-muted-foreground '>
         <ThumbsUp className='mr-2 h-5 w-5 text-green-600 mb-2' />

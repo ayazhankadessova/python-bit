@@ -23,7 +23,7 @@ export default function TutorialPageContent({
   return (
     <>
       <ScrollProgress className='top-[80px] z-50' />
-      <div className='px-6'>
+      <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8'>
         <div className='flex items-start justify-between mb-4'>
           <BackButton href='/tutorials' />
           <SharePost fullLink={fullLinkGenerated} />
@@ -43,16 +43,19 @@ export default function TutorialPageContent({
               {tutorial.description}
             </p>
           )}
-          <hr className='my-4' />
-          <MDXContent code={tutorial.body} />
+          <hr className='my-4 mb-16' />
+          <div className='mx-auto xl:px-24 lg:px-16 md:px-8 sm:px-0'>
+            <MDXContent code={tutorial.body} />
+          </div>
         </article>
 
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.0 }}
+          className='mx-auto xl:px-24 lg:px-16 md:px-8 sm:px-0 my-16'
         >
-          <TutorialQuizCTA quizSlug={quizSlug} className='w-full' />
+          <TutorialQuizCTA quizSlug={quizSlug} className='w-full ' />
         </motion.div>
       </div>
     </>
