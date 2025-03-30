@@ -1,87 +1,7 @@
 'use client'
 
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
-import 'react-circular-progressbar/dist/styles.css'
-
-// if (showResults) {
-//   const passingScore = 70 // Define the passing score
-//   const incorrectAnswers = score.totalQuestions - score.correctAnswers
-
-//   return (
-//     <div className='w-full mx-auto -mt-8'>
-//       {/* Header Section */}
-      // <div className='justify-center items-center flex flex-col bg-purple-200 py-8'>
-      //   <h1 className='text-xl mb-2 text-foreground dark:text-foreground font-bold'>
-      //     Quiz Summary
-      //   </h1>
-      //   <h1 className='text-4xl mb-4 text-foreground dark:text-foreground font-bold'>
-      //     {quiz.title}
-      //   </h1>
-
-      //   {/* Circular Progress Bar */}
-      //   <div className='w-32 h-32 mb-4'>
-      //     <CircularProgressbar
-      //       value={score.percentage}
-      //       text={`${score.percentage}%`}
-      //       styles={buildStyles({
-      //         textSize: '16px',
-      //         pathColor:
-      //           score.percentage >= passingScore ? '#4caf50' : '#f44336',
-      //         textColor: '#000',
-      //         trailColor: '#d6d6d6',
-      //       })}
-      //     />
-      //   </div>
-
-      //   <p className='text-lg font-medium text-muted-foreground'>
-      //     {score.percentage >= passingScore
-      //       ? 'Congratulations! You passed!'
-      //       : `Get ${passingScore}% to pass`}
-      //   </p>
-      // </div>
-
-      // {/* Score Details */}
-      // <div className='text-center p-4'>
-      //   <h3 className='text-2xl font-bold mb-2'>
-      //     Your Score: {score.percentage}%
-      //   </h3>
-      //   <p className='text-lg mb-2'>
-      //     <span className='text-green-600 font-bold'>
-      //       {score.correctAnswers}
-      //     </span>{' '}
-      //     correct
-      //   </p>
-      //   <p className='text-lg'>
-      //     <span className='text-red-600 font-bold'>{incorrectAnswers}</span>{' '}
-      //     incorrect
-      //   </p>
-      // </div>
-
-      // {/* Buttons */}
-      // <div className='flex justify-center gap-4 mt-6'>
-      //   <Button
-      //     variant='outline'
-      //     onClick={() => {
-      //       // Add logic to practice concepts
-      //     }}
-      //   >
-      //     Practice Concepts
-      //   </Button>
-      //   <Button
-      //     onClick={() => {
-      //       setAnsweredQuestions(Array(quiz.questions.length).fill(false))
-      //       setShowResults(false)
-      //       setCurrentQuestionIndex(0)
-      //       setSelectedAnswers(Array(quiz.questions.length).fill(-1))
-      //     }}
-      //   >
-      //     Retake Quiz
-      //   </Button>
-      // </div>
-//     </div>
-//   )
-// }
-
+// import 'react-circular-progressbar/dist/styles.css'
 import { useState, useEffect } from 'react'
 import { Quiz } from '@/types/quiz/quiz'
 import { Button } from '@/components/ui/button'
@@ -258,6 +178,9 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
 
   const allQuestionsAnswered = answeredQuestions.every((item) => item === true)
   const score = calculateScore()
+    const isDarkTheme = theme === 'dark';
+
+  
 
   // Don't render until we have theme information
   if (!mounted) {
@@ -269,7 +192,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     const incorrectAnswers = score.totalQuestions - score.correctAnswers
     return (
       <div className='w-full mx-auto -mt-8'>
-        <div className='justify-center items-center flex flex-col bg-gradient-to-r from-purple-200 via-purple-100 to-purple-200 py-8 px-4 rounded-lg shadow-md'>
+        <div className='justify-center items-center flex flex-col bg-gradient-to-r from-purple-200 via-purple-100 to-purple-200 dark:from-purple-900 dark:via-purple-950 dark:to-purple-900 py-8 px-4 rounded-lg shadow-md'>
           <h1 className='text-2xl mb-2 text-foreground dark:text-foreground font-bold'>
             Quiz Summary
           </h1>
@@ -284,17 +207,18 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
               <CircularProgressbar
                 value={score.percentage}
                 text={`${score.percentage}%`}
+                counterClockwise={true}
                 styles={buildStyles({
                   textSize: '18px',
                   pathColor: '#2DD4BF',
-                  textColor: '#000',
-                  trailColor: '#d6d6d6',
+                  textColor: isDarkTheme ? '#fff' : '#000',
+                  trailColor: isDarkTheme ? '#9CA3AF' : '#D1D5DB',
                 })}
               />
             </div>
 
             {/* Score Details */}
-            <div className='text-center md:text-left flex-1'>
+            <div className='text-center md:text-left'>
               <p className='text-lg font-medium text-foreground mb-5'>
                 {score.percentage >= passingScore
                   ? 'Congratulations! You passed!'
