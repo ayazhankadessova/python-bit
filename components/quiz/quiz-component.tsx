@@ -1,16 +1,91 @@
 'use client'
 
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css'
+
+// if (showResults) {
+//   const passingScore = 70 // Define the passing score
+//   const incorrectAnswers = score.totalQuestions - score.correctAnswers
+
+//   return (
+//     <div className='w-full mx-auto -mt-8'>
+//       {/* Header Section */}
+      // <div className='justify-center items-center flex flex-col bg-purple-200 py-8'>
+      //   <h1 className='text-xl mb-2 text-foreground dark:text-foreground font-bold'>
+      //     Quiz Summary
+      //   </h1>
+      //   <h1 className='text-4xl mb-4 text-foreground dark:text-foreground font-bold'>
+      //     {quiz.title}
+      //   </h1>
+
+      //   {/* Circular Progress Bar */}
+      //   <div className='w-32 h-32 mb-4'>
+      //     <CircularProgressbar
+      //       value={score.percentage}
+      //       text={`${score.percentage}%`}
+      //       styles={buildStyles({
+      //         textSize: '16px',
+      //         pathColor:
+      //           score.percentage >= passingScore ? '#4caf50' : '#f44336',
+      //         textColor: '#000',
+      //         trailColor: '#d6d6d6',
+      //       })}
+      //     />
+      //   </div>
+
+      //   <p className='text-lg font-medium text-muted-foreground'>
+      //     {score.percentage >= passingScore
+      //       ? 'Congratulations! You passed!'
+      //       : `Get ${passingScore}% to pass`}
+      //   </p>
+      // </div>
+
+      // {/* Score Details */}
+      // <div className='text-center p-4'>
+      //   <h3 className='text-2xl font-bold mb-2'>
+      //     Your Score: {score.percentage}%
+      //   </h3>
+      //   <p className='text-lg mb-2'>
+      //     <span className='text-green-600 font-bold'>
+      //       {score.correctAnswers}
+      //     </span>{' '}
+      //     correct
+      //   </p>
+      //   <p className='text-lg'>
+      //     <span className='text-red-600 font-bold'>{incorrectAnswers}</span>{' '}
+      //     incorrect
+      //   </p>
+      // </div>
+
+      // {/* Buttons */}
+      // <div className='flex justify-center gap-4 mt-6'>
+      //   <Button
+      //     variant='outline'
+      //     onClick={() => {
+      //       // Add logic to practice concepts
+      //     }}
+      //   >
+      //     Practice Concepts
+      //   </Button>
+      //   <Button
+      //     onClick={() => {
+      //       setAnsweredQuestions(Array(quiz.questions.length).fill(false))
+      //       setShowResults(false)
+      //       setCurrentQuestionIndex(0)
+      //       setSelectedAnswers(Array(quiz.questions.length).fill(-1))
+      //     }}
+      //   >
+      //     Retake Quiz
+      //   </Button>
+      // </div>
+//     </div>
+//   )
+// }
+
 import { useState, useEffect } from 'react'
 import { Quiz } from '@/types/quiz/quiz'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { CardContent, CardFooter } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { CheckCircle, AlertCircle, ArrowRight, ArrowLeft } from 'lucide-react'
@@ -190,30 +265,97 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   }
 
   if (showResults) {
+    const passingScore = 70 // Define the passing score
+    const incorrectAnswers = score.totalQuestions - score.correctAnswers
     return (
-      <Card className='w-full max-w-3xl mx-auto'>
-        <CardHeader>
-          <CardTitle>Quiz Results</CardTitle>
-          <CardDescription>{quiz.title}</CardDescription>
-        </CardHeader>
-        <CardContent className='space-y-4'>
-          <div className='text-center p-4'>
-            <h3 className='text-2xl font-bold'>
-              Your Score: {score.percentage}%
-            </h3>
-            <p className='text-lg'>
-              You got {score.correctAnswers} out of {score.totalQuestions}{' '}
-              questions correct!
-            </p>
-          </div>
+      <div className='w-full mx-auto -mt-8'>
+        <div className='justify-center items-center flex flex-col bg-gradient-to-r from-purple-200 via-purple-100 to-purple-200 py-8 px-4 rounded-lg shadow-md'>
+          <h1 className='text-2xl mb-2 text-foreground dark:text-foreground font-bold'>
+            Quiz Summary
+          </h1>
+          <h1 className='text-5xl mb-6 text-foreground dark:text-foreground font-bold'>
+            {quiz.title}
+          </h1>
 
+          {/* Circular Progress Bar and Details */}
+          <div className='flex flex-col md:flex-row items-center justify-center md:space-x-6 w-full max-w-xl'>
+            {/* Circular Progress Bar */}
+            <div className='w-40 h-40 flex-shrink-0 mb-6 md:mb-0'>
+              <CircularProgressbar
+                value={score.percentage}
+                text={`${score.percentage}%`}
+                styles={buildStyles({
+                  textSize: '18px',
+                  pathColor: '#2DD4BF',
+                  textColor: '#000',
+                  trailColor: '#d6d6d6',
+                })}
+              />
+            </div>
+
+            {/* Score Details */}
+            <div className='text-center md:text-left flex-1'>
+              <p className='text-lg font-medium text-foreground mb-5'>
+                {score.percentage >= passingScore
+                  ? 'Congratulations! You passed!'
+                  : `Get ${passingScore}% to pass`}
+              </p>
+
+              <div className='flex justify-center md:justify-start space-x-6 mb-6'>
+                <div className='flex items-center'>
+                  <span className='text-2xl text-green-600 font-bold'>
+                    {score.correctAnswers}
+                  </span>
+                  <span className='text-2xl ml-2'>correct</span>
+                </div>
+
+                <div className='flex items-center'>
+                  <span className='text-2xl text-red-600 font-bold'>
+                    {incorrectAnswers}
+                  </span>
+                  <span className='text-2xl ml-2'>incorrect</span>
+                </div>
+              </div>
+
+              <div className='flex flex-col sm:flex-row gap-3 mt-4'>
+                <Button
+                  variant='outline'
+                  className='w-full sm:w-auto text-teal-600 font-semibold'
+                  onClick={() => {
+                    // Add logic to practice concepts
+                  }}
+                >
+                  Practice Concepts
+                </Button>
+                <Button
+                  className='w-full sm:w-auto'
+                  onClick={() => {
+                    setAnsweredQuestions(
+                      Array(quiz.questions.length).fill(false)
+                    )
+                    setShowResults(false)
+                    setCurrentQuestionIndex(0)
+                    setSelectedAnswers(Array(quiz.questions.length).fill(-1))
+                  }}
+                >
+                  Retake Quiz
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <CardContent className='space-y-4'>
           <div className='space-y-6 mt-6'>
             {quiz.questions.map((question, index) => {
               const isCorrect =
                 selectedAnswers[index] === question.correctAnswer
 
               return (
-                <div key={question.id} className='border rounded-lg p-4'>
+                <div
+                  key={question.id}
+                  className='border rounded-lg p-4 bg-card'
+                >
                   <div className='flex items-start gap-2'>
                     {isCorrect ? (
                       <CheckCircle className='text-green-500 mt-1 flex-shrink-0' />
@@ -276,7 +418,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
             Restart Quiz
           </Button>
         </CardFooter>
-      </Card>
+      </div>
     )
   }
 

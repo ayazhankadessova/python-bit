@@ -664,4 +664,7 @@ quiz 5, q6: options should be code blocks
 ## layout fixes
 
 
--     <div className='container max-w-6xl mx-auto px-8 md:px-14 py-16'>
+<!-- -     <div className='container max-w-6xl mx-auto px-8 md:px-14 py-16'> -->
+
+So, i want my pages to take up whole width , unless i specify smth diff,
+now need to think on padding

@@ -60,6 +60,7 @@
     "next-themes": "^0.3.0",
     "prismjs": "^1.30.0",
     "react": "^18",
+    "react-circular-progressbar": "^2.2.0",
     "react-dom": "^18",
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.53.2",
