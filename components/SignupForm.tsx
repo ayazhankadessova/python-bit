@@ -62,7 +62,6 @@ const Signup = () => {
     },
   })
 
-  // Update available schools when district changes
   useEffect(() => {
     if (selectedDistrict) {
       const district = schoolsConfig.districts.find(
@@ -70,13 +69,11 @@ const Signup = () => {
       )
       if (district) {
         setAvailableSchools(district.schools)
-        // Reset school selection when district changes
         form.setValue('school', '')
       }
     }
   }, [selectedDistrict, form])
 
-  // Close form if we already have user credentials
   useEffect(() => {
     if (userCred) {
       router.push('/dashboard')

@@ -32,7 +32,7 @@ collection: 'assignments' {
   }
 }
 
-// Weekly progress stays similar
+// Weekly progress 
 collection: 'weeklyProgress' {
   docId: `${classroomId}-${weekNumber}` {
     classroomId: string,

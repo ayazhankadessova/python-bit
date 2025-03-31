@@ -25,9 +25,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    // Only set ready when loading is complete and we have user info or definitely no user
     if (!loading) {
-      // Add a small delay to ensure Firebase has fully initialized
       const timer = setTimeout(() => {
         setIsReady(true)
       }, 1000) // 1 second delay
@@ -36,7 +34,6 @@ export function AdminGuard({ children }: AdminGuardProps) {
     }
   }, [loading, user])
 
-  // Show loading until we're completely ready
   if (!isReady) {
     return (
       <div className='flex h-screen items-center justify-center'>
@@ -48,12 +45,10 @@ export function AdminGuard({ children }: AdminGuardProps) {
     )
   }
 
-  // Only after we're ready, check if user is admin
   if (user && ADMIN_EMAILS.includes(user.email)) {
     return <>{children}</>
   }
 
-  // Show alert for non-admin users
   return (
     <AlertDialog defaultOpen>
       <AlertDialogContent>
