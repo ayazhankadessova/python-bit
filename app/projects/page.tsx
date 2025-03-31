@@ -20,8 +20,16 @@ const ProjectThemes = () => {
   const router = useRouter()
 
   return (
-    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 pt-4 mb-16'>
-      <h1 className='text-4xl font-bold mb-16'>Projects</h1>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 pt-8 mb-16'>
+      <div className='mb-16'>
+        <h1 className='text-4xl font-bold mb-2'>Projects</h1>
+        <p className='text-muted-foreground max-w-2xl'>
+          Explore a variety of Python projects designed to help you apply your
+          knowledge and build practical skills. Each project is tailored to
+          different themes and difficulty levels, allowing you to learn by doing
+          and create something amazing.
+        </p>
+      </div>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {themes.map((theme, index) => (
           <Card

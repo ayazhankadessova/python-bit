@@ -44,7 +44,7 @@ export default async function ProjectPage({ params }: PostPageProps) {
   }
 
   return (
-    <div className='flex flex-col h-screen xl:px-12 lg:px-8 md:px-4 sm:px-4 pt-4 mb-16'>
+    <div className='flex flex-col h-screen xl:px-12 lg:px-8 md:px-4 sm:px-4 pt-8 mb-16'>
       {/* Navigation bar */}
 
       <div className='flex justify-between mb-4 ml-1'>
