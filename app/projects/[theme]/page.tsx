@@ -61,13 +61,13 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   )
 
   return (
-    <div className='container mx-auto px-8 py-8'>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 pt-8 mb-16'>
       <div className='flex justify-between mb-4 ml-1'>
-        <BackButton href="/projects"/>
+        <BackButton href='/projects' />
         <SharePost fullLink={fullLinkGenerated} />
       </div>
 
-      <h1 className='font-bold text-4xl mb-6 capitalize'>
+      <h1 className='font-bold text-4xl mb-16 capitalize'>
         {params.theme.replace('-', ' ')} Projects
       </h1>
 
@@ -98,10 +98,7 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
         {displayProjects.length > 0 ? (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {displayProjects.map((project) => (
-              <ProjectItem
-                key={project.slugAsParams}
-                project={project}
-              />
+              <ProjectItem key={project.slugAsParams} project={project} />
             ))}
           </div>
         ) : (

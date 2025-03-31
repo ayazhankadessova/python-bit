@@ -1,4 +1,3 @@
-// app/api/progress/tutorial/route.ts
 import { NextResponse } from 'next/server'
 import { doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
@@ -14,13 +13,11 @@ const DEFAULT_TUTORIAL_PROGRESS: TutorialProgress = {
 
 export async function GET(request: Request) {
   try {
-    // Get URL parameters using URLSearchParams
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
     const tutorialId = searchParams.get('tutorialId')
     const count = searchParams.get('count')
 
-    // Validate required parameters
     if (!userId || !tutorialId || !count) {
       return NextResponse.json(
         { message: 'Missing required parameters' },
@@ -28,16 +25,13 @@ export async function GET(request: Request) {
       )
     }
 
-    // Get tutorial progress from Firestore
     const tutorialRef = doc(fireStore, 'users', userId, 'tutorials', tutorialId)
     const docSnap = await getDoc(tutorialRef)
 
-    // If no document exists, return default progress
     if (!docSnap.exists()) {
       return NextResponse.json(DEFAULT_TUTORIAL_PROGRESS)
     }
 
-    // Calculate progress
     const data = docSnap.data() as TutorialData
     const exercises = data.exercises || {}
 
@@ -65,7 +59,6 @@ export async function GET(request: Request) {
   }
 }
 
-// Optional: Add other HTTP methods if needed
 export async function POST() {
   return NextResponse.json({ message: 'Method not allowed' }, { status: 405 })
 }

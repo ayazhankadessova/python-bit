@@ -57,7 +57,7 @@ export function StudentClassroomsView({ user }: StudentClassroomsViewProps) {
   }
 
   return (
-    <div className='container mx-auto p-6'>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 pt-8 mb-16 '>
       <ClassroomHeader title='My Enrolled Classrooms' />
 
       <ClassroomSearch

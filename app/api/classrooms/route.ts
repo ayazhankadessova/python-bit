@@ -1,4 +1,3 @@
-// app/api/classrooms/route.ts
 import { NextResponse } from 'next/server'
 import { fireStore } from '@/firebase/firebase'
 import { doc, getDoc } from 'firebase/firestore'
@@ -12,7 +11,6 @@ interface ClassroomsResponse {
 
 async function _fetchClassroomData(userId: string) {
   try {
-    // Get user document
     const userDoc = await getDoc(doc(fireStore, 'users', userId))
 
     if (!userDoc.exists()) {
@@ -67,8 +65,8 @@ async function _fetchClassroomData(userId: string) {
   }
 }
 
-export const dynamic = 'force-dynamic' // Mark this route as dynamic
-export const revalidate = 0 // Disable static page generation
+export const dynamic = 'force-dynamic' 
+export const revalidate = 0
 
 export async function GET(request: Request) {
   try {

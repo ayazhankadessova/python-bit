@@ -21,7 +21,7 @@ export const FeatureItem = ({
   router,
 }: FeatureItemProps) => (
   <div className='flex gap-6 items-start'>
-    <div className='flex-shrink-0 p-3 rounded-lg shadow-md shadow-purple-200'>
+    <div className='flex-shrink-0 p-3 rounded-lg shadow-md shadow-purple-200 bg-teal-500/30'>
       {icon}
     </div>
     <div className='space-y-4'>

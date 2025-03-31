@@ -37,6 +37,8 @@ import { motion } from 'framer-motion'
 import { FeatureItem } from '@/components/feature-item'
 import { HighlightedText } from '@/components/ui/highlighted-text'
 import { StatsCard } from '@/components/stats-card'
+import { Section } from '@/components/ui/section'
+
 
 export default function HomePage() {
   const { user, loading, signOut } = useAuth()
@@ -55,9 +57,10 @@ export default function HomePage() {
   }
 
   return (
-    <div className='min-h-screen px-8'>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8'>
       {/* Hero Section */}
-      <section className='container mx-auto px-4 pt-12 pb-6 md:pt-18 md:pb-4'>
+
+      <section className='mt-8 mb-24'>
         <div className='flex flex-col items-center text-center max-w-3xl mx-auto space-y-6'>
           <h1 className='text-balance text-5xl font-semibold leading-none tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl'>
             Python
@@ -85,7 +88,7 @@ export default function HomePage() {
       </section>
 
       {/* Latest Tutorials Section */}
-      <section className='container mx-auto px-4 py-14 md:py-18'>
+      <Section>
         <div className='flex justify-between items-center mb-8'>
           <div>
             <h2 className='text-3xl font-bold'>Latest Tutorials</h2>
@@ -146,10 +149,10 @@ export default function HomePage() {
             ))}
           </div>
         </motion.div>
-      </section>
+      </Section>
 
       {/* Why Python Bit Section */}
-      <section className='container mx-auto px-4 py-16 md:py-20'>
+      <Section className='mb-16'>
         <div className='flex flex-col items-center gap-12 max-w-4xl mx-auto'>
           {/* Problem Section */}
           <motion.div
@@ -221,7 +224,7 @@ export default function HomePage() {
 
             <Card className='p-6 border border-purple-500/20'>
               <p className='text-muted-foreground text-lg leading-relaxed'>
-                We are revolutionizing Python learning through 
+                We are revolutionizing Python learning through
                 <HighlightedText>three powerful pillars</HighlightedText>:
                 <HighlightedText>engaging tutorials</HighlightedText> that make
                 concepts click,
@@ -230,9 +233,9 @@ export default function HomePage() {
                 <HighlightedText>creative projects</HighlightedText> that bring
                 code to life. Students master Python through hands-on
                 experiences that feel like adventures, not lessons. By combining
-                these three core elements with immediate guidance anywhere,
-                we are building confident programmers who can turn their ideas
-                into reality.
+                these three core elements with immediate guidance anywhere, we
+                are building confident programmers who can turn their ideas into
+                reality.
               </p>
 
               <div className='grid grid-cols-3 gap-4 mt-6'>
@@ -243,9 +246,10 @@ export default function HomePage() {
             </Card>
           </motion.div>
         </div>
-      </section>
+      </Section>
+
       {/* Integrated Features Section */}
-      <section className='container mx-auto px-4 py-16 md:py-20'>
+      <Section className='mb-16'>
         <h2 className='text-3xl font-bold text-center mb-6'>
           Learning Together
         </h2>
@@ -351,10 +355,10 @@ export default function HomePage() {
             />
           </div>
         </motion.div>
-      </section>
+      </Section>
 
       {/* Project Themes Section */}
-      <section className='container mx-auto px-4 py-16 md:py-20'>
+      <Section className='mb-16'>
         {/* <div className='max-w-6xl mx-auto'> */}
         <div className='flex justify-between items-center mb-8'>
           <div>
@@ -432,10 +436,10 @@ export default function HomePage() {
             {/* </div> */}
           </div>
         </motion.div>
-      </section>
+      </Section>
 
       {/* Call to Action */}
-      <section className='container mx-auto px-4 py-16 md:py-20 text-center'>
+      <Section className='mb-16'>
         {user ? (
           <div className='space-y-4 max-w-md mx-auto'>
             <Button
@@ -473,7 +477,7 @@ export default function HomePage() {
             </div>
           </div>
         )}
-      </section>
+      </Section>
     </div>
   )
 }

@@ -1,16 +1,9 @@
 'use client'
 
+import { CircularProgress } from '@/components/ui/circular-progress-bar'
 import { useState, useEffect } from 'react'
 import { Quiz } from '@/types/quiz/quiz'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { CheckCircle, AlertCircle, ArrowRight, ArrowLeft } from 'lucide-react'
@@ -18,9 +11,7 @@ import Image from 'next/image'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-python'
 import { useTheme } from 'next-themes'
-
-// Import both light and dark themes
-// No static imports of theme CSS - we'll apply them dynamically
+import Link from 'next/link'
 
 interface QuizComponentProps {
   quiz: Quiz
@@ -183,6 +174,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
 
   const allQuestionsAnswered = answeredQuestions.every((item) => item === true)
   const score = calculateScore()
+  const isDarkTheme = theme === 'dark'
 
   // Don't render until we have theme information
   if (!mounted) {
@@ -190,194 +182,282 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   }
 
   if (showResults) {
+    const passingScore = 70 // Define the passing score
+    const incorrectAnswers = score.totalQuestions - score.correctAnswers
     return (
-      <Card className='w-full max-w-3xl mx-auto'>
-        <CardHeader>
-          <CardTitle>Quiz Results</CardTitle>
-          <CardDescription>{quiz.title}</CardDescription>
-        </CardHeader>
-        <CardContent className='space-y-4'>
-          <div className='text-center p-4'>
-            <h3 className='text-2xl font-bold'>
-              Your Score: {score.percentage}%
-            </h3>
-            <p className='text-lg'>
-              You got {score.correctAnswers} out of {score.totalQuestions}{' '}
-              questions correct!
-            </p>
-          </div>
+      <div className='w-full mx-auto -mt-8'>
+        <div className='justify-center items-center flex flex-col bg-gradient-to-r from-purple-200 via-purple-100 to-purple-200 dark:from-purple-900 dark:via-purple-950 dark:to-purple-900 py-16 px-4 rounded-lg shadow-md'>
+          <h1 className='text-2xl mb-2 text-foreground dark:text-foreground font-bold'>
+            Quiz Summary
+          </h1>
+          <h1 className='text-5xl mb-6 text-foreground dark:text-foreground font-bold'>
+            {quiz.title}
+          </h1>
 
-          <div className='space-y-6 mt-6'>
+          {/* Circular Progress Bar and Details */}
+          <div className='flex flex-col md:flex-row items-center justify-center md:space-x-8 w-full max-w-xl'>
+            {/* Circular Progress Bar */}
+            <div className='mb-6 md:mb-0'>
+              <CircularProgress
+                percentage={score.percentage}
+                size={200}
+                strokeWidth={12}
+                primaryColor={
+                  isDarkTheme ? 'stroke-teal-400' : 'stroke-teal-500'
+                }
+                secondaryColor={
+                  isDarkTheme ? 'stroke-gray-700' : 'stroke-gray-50'
+                }
+                textSize='text-4xl'
+                textClassName={isDarkTheme ? 'text-white' : 'text-black'}
+              />
+            </div>
+
+            {/* Score Details */}
+            <div className='text-center md:text-left'>
+              <p className='text-lg font-medium text-foreground mb-5'>
+                {score.percentage >= passingScore
+                  ? 'Congratulations! You passed!'
+                  : `Get ${passingScore}% to pass`}
+              </p>
+
+              <div className='flex justify-center md:justify-start space-x-6 mb-6'>
+                <div className='flex items-center space-x-2'>
+                  <CheckCircle
+                    className='text-green-500 m-0 flex-shrink-0'
+                    size={30}
+                  />
+                  <span className='text-2xl font-semibold'>
+                    {score.correctAnswers}
+                  </span>
+                  <span className='text-2xl font-semibold'>correct</span>
+                </div>
+
+                <div className='flex items-center space-x-2'>
+                  <AlertCircle
+                    className='text-red-500 m-0 flex-shrink-0'
+                    size={30}
+                  />
+                  <span className='text-2xl font-semibold'>
+                    {incorrectAnswers}
+                  </span>
+                  <span className='text-2xl font-semibold'>incorrect</span>
+                </div>
+              </div>
+
+              <div className='flex flex-col sm:flex-row gap-3 mt-4'>
+                <Button variant='outline' className='font-semibold text-md p-5'>
+                  <Link href={`/tutorials/${quiz.tutorialId}`}>View Tutorial</Link>
+                </Button>
+                <Button
+                  className='text-md font-semibold border border-2 border-purple-500 dark:border-purple-700 p-5'
+                  onClick={() => {
+                    setAnsweredQuestions(
+                      Array(quiz.questions.length).fill(false)
+                    )
+                    setShowResults(false)
+                    setCurrentQuestionIndex(0)
+                    setSelectedAnswers(Array(quiz.questions.length).fill(-1))
+                  }}
+                >
+                  Retake Quiz
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className='xl:px-48 lg:px-32 md:px-16 sm:px-8'>
+          <div className='mt-12'>
             {quiz.questions.map((question, index) => {
               const isCorrect =
                 selectedAnswers[index] === question.correctAnswer
 
               return (
-                <div key={question.id} className='border rounded-lg p-4'>
-                  <div className='flex items-start gap-2'>
-                    {isCorrect ? (
-                      <CheckCircle className='text-green-500 mt-1 flex-shrink-0' />
-                    ) : (
-                      <AlertCircle className='text-red-500 mt-1 flex-shrink-0' />
-                    )}
-                    <div>
-                      <h4 className='font-medium'>Question {index + 1}: </h4>
-                      <div className='mt-1 mb-3'>
-                        {renderQuestionText(question.question)}
-                      </div>
-
-                      {/* Display image if available */}
-                      {question.imageUrl && (
-                        <div className='my-3'>
-                          <Image
-                            src={question.imageUrl}
-                            alt={`Question ${index + 1} image`}
-                            width={400}
-                            height={300}
-                            className='rounded-md'
+                <div key={question.id} className='mb-12'>
+                  {/* Top section with icon and question number */}
+                  <div className='text-center mb-6'>
+                    <div className='flex items-center justify-center'>
+                      <div className='border-t border-gray-300 dark:border-gray-600 flex-grow'></div>
+                      <div className='mx-4 flex items-center'>
+                        {isCorrect ? (
+                          <CheckCircle
+                            className='text-green-500 flex-shrink-0 mx-2'
+                            size={24}
                           />
-                        </div>
-                      )}
-                      <div className='mt-2'>
-                        <p className='font-medium'>
-                          Your answer:{' '}
-                          {question.options[selectedAnswers[index]]}
-                        </p>
-                        {!isCorrect && (
-                          <p className='text-green-700 dark:text-green-400'>
-                            Correct answer:{' '}
-                            {question.options[question.correctAnswer]}
-                          </p>
+                        ) : (
+                          <AlertCircle
+                            className='text-red-500 flex-shrink-0 mx-2'
+                            size={24}
+                          />
                         )}
+                        <span className='font-medium text-md'>
+                          Question {index + 1}
+                        </span>
                       </div>
-                      {question.explanation && (
-                        <div className='mt-2 text-muted-foreground'>
-                          <strong className='block mb-1'>Explanation:</strong>
-                          {renderQuestionText(question.explanation)}
-                        </div>
-                      )}
+                      <div className='border-t border-gray-300 dark:border-gray-600 flex-grow'></div>
                     </div>
                   </div>
+
+                  {/* Question text */}
+                  <div className='mb-4'>
+                    <div className='text-xl font-semibold'>
+                      {renderQuestionText(question.question)}
+                    </div>
+                  </div>
+
+                  {/* Display image if available */}
+                  {question.imageUrl && (
+                    <div className='flex justify-center mb-4'>
+                      <Image
+                        src={question.imageUrl}
+                        alt={`Question ${index + 1} image`}
+                        width={400}
+                        height={300}
+                        className='rounded-md'
+                      />
+                    </div>
+                  )}
+
+                  {/* Answer Card */}
+                  <div className='bg-card border rounded-lg p-4 mb-3'>
+                    <p className='font-medium'>
+                      Your answer: {question.options[selectedAnswers[index]]}
+                    </p>
+                    {!isCorrect && (
+                      <p className='text-green-700 dark:text-green-400 mt-2'>
+                        Correct answer:{' '}
+                        {question.options[question.correctAnswer]}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Explanation Card - only shown if there is an explanation */}
+                  {question.explanation && (
+                    <div className='bg-muted border rounded-lg p-4'>
+                      <strong className='block mb-1'>Explanation:</strong>
+                      {renderQuestionText(question.explanation)}
+                    </div>
+                  )}
                 </div>
               )
             })}
           </div>
-        </CardContent>
-        <CardFooter>
-          <Button
-            onClick={() => {
-              setAnsweredQuestions(Array(quiz.questions.length).fill(false))
-              setShowResults(false)
-              setCurrentQuestionIndex(0)
-              setSelectedAnswers(Array(quiz.questions.length).fill(-1))
-            }}
-            className='w-full'
-          >
-            Restart Quiz
-          </Button>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card className='w-full max-w-3xl mx-auto'>
-      <CardHeader>
-        <CardTitle>{quiz.title}</CardTitle>
-        <CardDescription>
-          Question {currentQuestionIndex + 1} of {quiz.questions.length}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className='p-6 pt-0'>
-        <div className='mb-6'>
-          <h3 className='text-md font-normal mb-6'>
-            {renderQuestionText(currentQuestion.question)}
-          </h3>
-
-          {/* Display image if available */}
-          {currentQuestion.imageUrl && (
-            <div className='flex justify-center items-center mb-6'>
-              <Image
-                src={currentQuestion.imageUrl}
-                alt='Question image'
-                width={400}
-                height={300}
-                className='rounded-md'
-              />
-            </div>
-          )}
-
-          <RadioGroup
-            value={selectedAnswers[currentQuestionIndex].toString()}
-            onValueChange={(value) => handleAnswerSelection(parseInt(value))}
-            disabled={isAnswered}
-            className='space-y-1'
-          >
-            {currentQuestion.options.map((option, index) => (
-              <div
-                key={index}
-                className={`flex items-center space-x-2 p-4 border dark:border-zinc-700 border-zinc-200 rounded-md ${
-                  isAnswered && index === currentQuestion.correctAnswer
-                    ? 'bg-green-100 dark:bg-green-900/20 rounded-md'
-                    : isAnswered && index === selectedAnswer && !isCorrect
-                    ? 'bg-red-100 dark:bg-red-900/20 rounded-md'
-                    : ''
-                }`}
-              >
-                <RadioGroupItem
-                  value={index.toString()}
-                  id={`option-${index}`}
-                  disabled={isAnswered}
-                />
-                <Label
-                  htmlFor={`option-${index}`}
-                  className='cursor-pointer flex-1'
-                >
-                  {option}
-                </Label>
-                {isAnswered && index === currentQuestion.correctAnswer && (
-                  <CheckCircle
-                    className='text-green-500 m-0 flex-shrink-0'
-                    size={20}
-                  />
-                )}
-                {isAnswered && index === selectedAnswer && !isCorrect && (
-                  <AlertCircle
-                    className='text-red-500 m-0 flex-shrink-0'
-                    size={20}
-                  />
-                )}
-              </div>
-            ))}
-          </RadioGroup>
-
-          {isAnswered && (
-            <div className='mt-6 p-4 bg-muted rounded-lg'>
-              <p className='font-medium mb-2'>
-                {isCorrect ? (
-                  <div className='flex items-center'>
-                    <CheckCircle
-                      className='text-green-500 mt-1 flex-shrink-0'
-                      size={20}
-                    />
-                    <span className='ml-2'>Correct!</span>
-                  </div>
-                ) : (
-                  <div className='flex items-center'>
-                    <AlertCircle
-                      className='text-red-500 flex-shrink-0'
-                      size={20}
-                    />
-                    <span className='ml-2'>Let&apos;s Review This One!</span>
-                  </div>
-                )}
+    <div className='min-h-screen flex flex-col'>
+      {/* Main Content */}
+      <div className='flex-grow'>
+        <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8'>
+          <div className='prose prose-img:rounded-xl max-w-none mt-2 prose dark:prose-invert'>
+            <h1 className='mb-2 text-foreground dark:text-foreground'>
+              {quiz.title}
+            </h1>
+            <p className='text-xl mt-0 text-muted-foreground dark:text-muted-foreground'>
+              Question {currentQuestionIndex + 1} of {quiz.questions.length}
+            </p>
+            <hr className='my-4' />
+            <div className='mb-6 mx-auto xl:px-24 lg:px-16 md:px-8 sm:px-0'>
+              <p className='text-lg font-normal mb-6'>
+                {renderQuestionText(currentQuestion.question)}
               </p>
-              <div>{renderQuestionText(currentQuestion.explanation)}</div>
+
+              {/* Display image if available */}
+              {currentQuestion.imageUrl && (
+                <div className='flex justify-center items-center mb-6 my-0'>
+                  <Image
+                    src={currentQuestion.imageUrl}
+                    alt='Question image'
+                    width={400}
+                    height={300}
+                    className='rounded-md my-0'
+                  />
+                </div>
+              )}
+
+              <RadioGroup
+                value={selectedAnswers[currentQuestionIndex].toString()}
+                onValueChange={(value) =>
+                  handleAnswerSelection(parseInt(value))
+                }
+                disabled={isAnswered}
+                className='space-y-1'
+              >
+                {currentQuestion.options.map((option, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center space-x-2 p-4 border dark:border-zinc-700 border-zinc-200 rounded-md ${
+                      isAnswered && index === currentQuestion.correctAnswer
+                        ? 'bg-green-100 dark:bg-green-900/20 rounded-md'
+                        : isAnswered && index === selectedAnswer && !isCorrect
+                        ? 'bg-red-100 dark:bg-red-900/20 rounded-md'
+                        : 'bg-card'
+                    }`}
+                  >
+                    <RadioGroupItem
+                      value={index.toString()}
+                      id={`option-${index}`}
+                      disabled={isAnswered}
+                    />
+                    <Label
+                      htmlFor={`option-${index}`}
+                      className='cursor-pointer flex-1'
+                    >
+                      {option}
+                    </Label>
+                    {isAnswered && index === currentQuestion.correctAnswer && (
+                      <CheckCircle
+                        className='text-green-500 m-0 flex-shrink-0'
+                        size={20}
+                      />
+                    )}
+                    {isAnswered && index === selectedAnswer && !isCorrect && (
+                      <AlertCircle
+                        className='text-red-500 m-0 flex-shrink-0'
+                        size={20}
+                      />
+                    )}
+                  </div>
+                ))}
+              </RadioGroup>
+
+              {isAnswered && (
+                <div className='mt-6 p-4 bg-muted rounded-lg'>
+                  <p className='font-medium mb-2'>
+                    {isCorrect ? (
+                      <div className='flex items-center'>
+                        <CheckCircle
+                          className='text-green-500 mt-1 flex-shrink-0'
+                          size={20}
+                        />
+                        <span className='ml-2'>Correct!</span>
+                      </div>
+                    ) : (
+                      <div className='flex items-center'>
+                        <AlertCircle
+                          className='text-red-500 flex-shrink-0'
+                          size={20}
+                        />
+                        <span className='ml-2'>
+                          Let&apos;s Review This One!
+                        </span>
+                      </div>
+                    )}
+                  </p>
+                  <div>{renderQuestionText(currentQuestion.explanation)}</div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
-      </CardContent>
-      <CardFooter className='flex justify-between p-6 pt-0'>
+      </div>
+
+      {/* Footer */}
+      <footer className='sticky bottom-0 bg-background flex items-center justify-between px-6 py-3 border-t border-muted flex-shrink-0'>
         <Button
           variant='outline'
           onClick={handlePreviousQuestion}
@@ -398,7 +478,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
             onClick={handleSubmitAnswer}
             disabled={selectedAnswers[currentQuestionIndex] === -1}
           >
-            Submit Answer
+            Submit
           </Button>
         ) : isLastQuestion ? (
           <Button
@@ -420,7 +500,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
             <ArrowRight className='ml-2 h-4 w-4' />
           </Button>
         )}
-      </CardFooter>
-    </Card>
+      </footer>
+    </div>
   )
 }

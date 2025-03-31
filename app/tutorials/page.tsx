@@ -68,20 +68,28 @@ const TutorialPage: React.FC<TutorialPageProps> = ({
   }
 
   return (
-    <div className='container mx-auto px-8 py-8'>
-      {/* Search Bar Section */}
-      <div className='mb-6'>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 pt-8 mb-16'>
+      {/* Header Section */}
+      <div className='flex justify-between items-center mb-16'>
+        <div>
+          <h1 className='text-4xl font-bold mb-2'>Tutorials</h1>
+          <p className='text-muted-foreground max-w-2xl'>
+            Learn Python concepts through step-by-step tutorials designed to
+            teach you the fundamentals and advanced topics. Each tutorial
+            includes interactive exercises where you can run code, solve
+            problems, and practice what you&apos; learned.
+          </p>{' '}
+        </div>
+      </div>
+      {/* Posts List */}
+      <div className='flex justify-between mb-8 items-center sm:gap-6 md:gap-12 lg:gap-16'>
+        {/* Search Bar Section */}
         <Input
           type='text'
           placeholder='Search'
           value={searchText}
           onChange={handleSearchTextChange}
         />
-      </div>
-
-      {/* Header Section */}
-      <div className='flex justify-between items-center mb-8'>
-        <h1 className='font-black text-3xl lg:text-4xl'>Tutorials</h1>
         <Select onValueChange={handleSortMethodChange} value={sortMethod}>
           <SelectTrigger className='w-[180px]'>
             <SelectValue placeholder='Sort By' />
@@ -95,7 +103,6 @@ const TutorialPage: React.FC<TutorialPageProps> = ({
           </SelectContent>
         </Select>
       </div>
-      {/* Posts List */}
       {displayTutorials?.length > 0 ? (
         <ul className='flex flex-col space-y-4'>
           {displayTutorials.map((tutorial) => (

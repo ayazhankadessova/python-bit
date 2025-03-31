@@ -34,7 +34,9 @@ export async function generateStaticParams(): Promise<
 
 export default async function ProjectPage({ params }: PostPageProps) {
   const post = await getPostFromParams(params)
-  const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme.trim().replace("", '-')}/${params?.slug?.join('/')}`
+  const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme
+    .trim()
+    .replace('', '-')}/${params?.slug?.join('/')}`
   const exercise = getExerciseById(post?.slugAsParams)
 
   if (!post || !post.published) {
@@ -42,24 +44,21 @@ export default async function ProjectPage({ params }: PostPageProps) {
   }
 
   return (
-    <div className='flex flex-col h-screen'>
+    <div className='flex flex-col h-screen xl:px-12 lg:px-8 md:px-4 sm:px-4 pt-8 mb-16'>
       {/* Navigation bar */}
-      <div className='flex-none px-4 py-4 border-b'>
-        <div className='flex items-start justify-between'>
-          <BackButton
-            href={`/projects/${post?.theme
-              .trim()
-              .replace(' ', '-')}/`}
-          />{' '}
-          <SharePost fullLink={fullLinkGenerated} />
-        </div>
+
+      <div className='flex justify-between mb-4 ml-1'>
+        <BackButton
+          href={`/projects/${post?.theme.trim().replace(' ', '-')}/`}
+        />{' '}
+        <SharePost fullLink={fullLinkGenerated} />
       </div>
 
       {/* Split screen container */}
       <div className='flex flex-1 min-h-0'>
         {' '}
         {/* Left side - Tutorial content */}
-        <div className='w-1/2 overflow-y-auto border-r p-6'>
+        <div className='w-1/2 overflow-y-auto border-r pr-6'>
           <div className='max-w-3xl mx-auto'>
             <article className='prose prose-img:rounded-xl prose dark:prose-invert'>
               <h1 className='mb-2 text-foreground dark:text-foreground'>

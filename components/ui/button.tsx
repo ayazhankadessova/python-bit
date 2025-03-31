@@ -12,7 +12,7 @@ const buttonVariants = cva(
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:-translate-y-0.5',
         outline:
-          'border border-input shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200',
+          'border border-2 border-teal-400 shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200',
         secondary:
           'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 hover:-translate-y-0.5 active:translate-y-0',
         whiteGray:
@@ -109,7 +109,7 @@ const buttonVariants = cva(
           'relative bg-gradient-to-r from-purple-600 via-purple-500 to-purple-400 text-white shadow-lg hover:from-purple-700 hover:via-purple-600 hover:to-purple-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0',
       },
       size: {
-        default: 'h-9 px-4 py-2',
+        default: 'h-9 p-4',
         sm: 'h-8 rounded-md px-3 text-xs',
         lg: 'h-10  px-8',
         icon: 'h-9 w-9',

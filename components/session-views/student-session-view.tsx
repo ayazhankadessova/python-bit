@@ -290,7 +290,7 @@ export function StudentSessionView({
   }
 
   return (
-    <div className='h-screen flex flex-col'>
+    <div className='h-screen flex flex-col xl:px-12 lg:px-8 md:px-4 sm:px-4 pt-8 mb-16'>
       {/* Top Navigation Bar */}
       <nav className='border-b px-4 py-2 shrink-0'>
         <div className='flex items-center justify-between'>

@@ -105,7 +105,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
 
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 xl:px-24 lg:px-16 md:px-8 sm:px-8 pt-8 mb-16'>
       {error && (
         <Alert variant='destructive'>
           <AlertTitle>Error</AlertTitle>
@@ -173,7 +173,10 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
               <div className='space-y-4'>
                 <p className='text-muted-foreground'>No Active Session</p>
                 {isTeacher && (
-                  <Button onClick={createSession} disabled={isLoadingActions.createSession}>
+                  <Button
+                    onClick={createSession}
+                    disabled={isLoadingActions.createSession}
+                  >
                     {isLoadingActions.createSession ? (
                       <Loader2 className='h-4 w-4 animate-spin mr-2' />
                     ) : null}

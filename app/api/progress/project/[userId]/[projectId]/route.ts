@@ -1,4 +1,3 @@
-// app/api/progress/project/[userId]/[projectId]/route.ts
 import { NextResponse } from 'next/server'
 import { doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'

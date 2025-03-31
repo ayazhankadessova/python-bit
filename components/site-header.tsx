@@ -37,7 +37,7 @@ export function SiteHeader() {
   return (
     <header className={headerClass}>
       {/* Desktop Navigation */}
-      <div className='container mx-auto flex h-20 items-center justify-between px-6'>
+      <div className='flex w-full h-20 items-center justify-between xl:px-24 lg:px-16 md:px-8 sm:px-8'>
         {/* Your existing header content */}
         <div className='hidden min-[850px]:flex items-center gap-4'>
           <MainNav />
