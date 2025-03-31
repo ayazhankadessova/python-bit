@@ -77,7 +77,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({
             Learn Python concepts through step-by-step tutorials designed to
             teach you the fundamentals and advanced topics. Each tutorial
             includes interactive exercises where you can run code, solve
-            problems, and practice what you've learned.
+            problems, and practice what you&apos; learned.
           </p>{' '}
         </div>
       </div>
