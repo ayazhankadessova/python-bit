@@ -74,9 +74,10 @@ const TutorialPage: React.FC<TutorialPageProps> = ({
         <div>
           <h1 className='text-4xl font-bold mb-2'>Tutorials</h1>
           <p className='text-muted-foreground max-w-2xl'>
-            Test your Python knowledge with our interactive quizzes. Each quiz
-            is designed to reinforce concepts from our tutorials and help you
-            master Python programming.
+            Learn Python concepts through step-by-step tutorials designed to
+            teach you the fundamentals and advanced topics. Each tutorial
+            includes interactive exercises where you can run code, solve
+            problems, and practice what you've learned.
           </p>{' '}
         </div>
       </div>
