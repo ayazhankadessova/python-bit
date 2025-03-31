@@ -1,3 +1,5 @@
+// doesnt work...
+
 import { NextResponse } from 'next/server'
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
