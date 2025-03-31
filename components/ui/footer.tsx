@@ -1,10 +1,12 @@
 import { siteConfig } from '@/config/site'
-import { Icons } from './icons'
+import headerNavLinks from '@/config/headerNavLinks'
+import { contactInfo } from '@/data/contact'
+import { Mail, Send, Github } from 'lucide-react'
 import Link from 'next/link'
+import { AllSocials } from '@/components/all-socials'
 import { usePathname } from 'next/navigation'
 
 export function BlogFooter() {
-
   const pathname = usePathname()
 
   if (pathname.startsWith('/quizzes/')) {
@@ -12,49 +14,90 @@ export function BlogFooter() {
   }
 
   return (
-    <footer className='flex flex-col gap-4 items-center justify-center pb-8 container'>
-      <div className='mb-6 mt-14 flex flex-col items-center'>
-        <div className='mb-3 flex gap-8'>
-          <a target='_blank' rel='noreferrer' href={siteConfig.socials.discord}>
-            <span className='sr-only'>Discord</span>
-            <Icons.Discord />
-          </a>
-          <a
-            target='_blank'
-            rel='noreferrer'
-            href={siteConfig.socials.linkedin}
-          >
-            <span className='sr-only'>Linkedin</span>
-            <Icons.Linkedin />
-          </a>
-          <a target='_blank' rel='noreferrer' href={siteConfig.socials.youtube}>
-            <span className='sr-only'>YouTube</span>
-            <Icons.Youtube />
-          </a>
-          <a target='_blank' rel='noreferrer' href={siteConfig.socials.twitter}>
-            <span className='sr-only'>Twitter</span>
-            <Icons.Twitter />
-          </a>
-          <a target='_blank' rel='noreferrer' href={siteConfig.socials.discord}>
-            <span className='sr-only'>Medium</span>
-            <Icons.Medium />
-          </a>
-        </div>
-        <p className='mt-2 text-sm font-light'>
-          © 2025 PythonBit, all rights reserved
-        </p>
-        <div className='mt-2 flex gap-x-4 gap-y-2 text-xs text-muted-foreground items-center justify-center underline flex-wrap lg:gap-x-6'>
-          <Link href='/terms-of-use' className='mr-2'>
-            <p className='underline text-sm text-gray-500'>Terms of Use</p>
-          </Link>
-          <Link href='/subscription-agreement' className='mr-2'>
-            <p className='underline text-sm text-gray-500'>
-              Subscription Agreement
+    <footer className='border-t border-primary/20'>
+      <div className='container flex mx-auto px-2 py-6'>
+        <div className='grid grid-cols-1 md:grid-cols-12 gap-8'>
+          {/* About Section - Full width on mobile, half on md, 7 cols on lg */}
+          <div className='md:col-span-12 lg:col-span-7 lg:pr-10'>
+            <Link href='/' className='text-lg font-semibold mb-4 block'>
+              {siteConfig.name}
+            </Link>
+            <p className='text-sm text-muted-foreground mb-4'>
+              PythonBit is an interactive educational platform designed to teach
+              Python programming through engaging
+              tutorials, hands-on projects, and real-time classroom experiences.
+              Our mission is to bridge the gap between block-based and
+              text-based programming while making coding accessible, fun, and
+              relevant for young learners.
             </p>
-          </Link>
-          <Link href='/privacy-policy'>
-            <p className='underline text-sm text-gray-500'>Privacy Policy</p>
-          </Link>
+            <AllSocials />
+          </div>
+
+          {/* Navigation - Full width on mobile, half on md with Contact, 1 col on lg */}
+          <div className='md:col-span-6 lg:col-span-1'>
+            <div>
+              <div>
+                <h3 className='font-medium mb-4'>Navigation</h3>
+                <ul className='space-y-2 text-sm'>
+                  {Object.values(headerNavLinks).map((dialog) => (
+                    <li key={dialog.title}>
+                      <Link
+                        href={dialog.href}
+                        className='text-muted-foreground hover:text-foreground transition'
+                      >
+                        {dialog.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact & Contribute - Full width on mobile, half on md, 4 cols on lg */}
+          <div className='md:col-span-6 lg:col-span-4 lg:pl-10'>
+            <div className='w-full'>
+              <h3 className='font-medium mb-5'>Get in Touch</h3>
+              <ul className='space-y-2 text-sm'>
+                <li>
+                  <Link
+                    href={`mailto:${contactInfo.email}`}
+                    className='text-muted-foreground hover:text-foreground transition flex items-center gap-2'
+                  >
+                    <Mail className='h-4 w-4' />
+                    {contactInfo.email}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={`https://t.me/${contactInfo.telegram.substring(1)}`}
+                    className='text-muted-foreground hover:text-foreground transition flex items-center gap-2'
+                  >
+                    <Send className='h-4 w-4' />
+                    {contactInfo.telegram}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='https://github.com/ayazhankadessova/ayazhankad'
+                    className='text-muted-foreground hover:text-foreground transition flex items-center gap-2'
+                  >
+                    <Github className='h-4 w-4' />
+                    Contribute
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className='container max-w-6xl py-4 px-4 flex justify-center border-t border-primary/20'>
+        <div className='flex flex-col sm:flex-row items-center gap-2 text-sm text-muted-foreground'>
+          <p>© 2025 {siteConfig.name}</p>
+          <span className='hidden sm:inline'>•</span>
+          <p>Made with ♥ by ayazhankad</p>
         </div>
       </div>
     </footer>

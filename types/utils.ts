@@ -25,3 +25,9 @@ export type Example = {
   explanation?: string
   img?: string
 }
+
+export type ContactInfo = {
+  email: string
+  telegram: string
+  description: string
+}

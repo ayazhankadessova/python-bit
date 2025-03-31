@@ -449,7 +449,7 @@ export default function HomePage() {
             >
               Go to Dashboard
             </Button>
-            <Button variant='softBlue' onClick={signOut} className='w-full'>
+            <Button variant='outline' onClick={signOut} className='w-full'>
               Sign Out
             </Button>
           </div>
@@ -469,7 +469,6 @@ export default function HomePage() {
               </Button>
               <Button
                 size='lg'
-                variant='softBlue'
                 onClick={() => onOpen('login')}
               >
                 Sign In
