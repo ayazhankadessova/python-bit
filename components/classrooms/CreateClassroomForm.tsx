@@ -60,13 +60,11 @@ const generateClassCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString()
 }
 
-// Function to ensure the generated code is unique
 const getUniqueClassCode = async () => {
   let code = generateClassCode()
   let isUnique = false
 
   while (!isUnique) {
-    // Check if code exists in Firestore
     const codeQuery = query(
       collection(fireStore, 'classrooms'),
       where('classCode', '==', code)
@@ -143,7 +141,6 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
 
       const classCode = await getUniqueClassCode()
 
-      // Create classroom document
       const classroomRef = doc(collection(fireStore, 'classrooms'))
       batch.set(classroomRef, {
         id: classroomRef.id,
@@ -151,7 +148,7 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
         name: data.name,
         teacherId,
         curriculumId: data.curriculumId,
-        students: data.students, // Using studentIds instead of students for clarity
+        students: data.students, 
         lastTaughtWeek: 1,
         createdAt: Date.now(),
         updatedAt: Date.now(),
@@ -179,9 +176,7 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
       })
 
       form.reset()
-
-      // Optional: Refresh the page or redirect
-      // window.location.reload()
+      
     } catch (error) {
       console.error('Error creating classroom:', error)
       toast({

@@ -63,16 +63,13 @@ export async function handleTaskCompletion({
   onUpdateCompletedProblems: (taskId: string) => void
 }) {
   try {
-    // Update user's solved problems in Firestore
     const userRef = doc(fireStore, 'users', userId)
     await updateDoc(userRef, {
       solvedProblems: arrayUnion(taskId),
     })
 
-    // Update weekly progress
     await updateWeeklyProgress(classroomId, selectedWeek, taskId, userId)
 
-    // Notify teacher through socket
     socket?.emit('task-completed', {
       taskId,
       studentId: userId,
@@ -80,7 +77,6 @@ export async function handleTaskCompletion({
       classroomId,
     })
 
-    // Update local state
     onUpdateCompletedProblems(taskId)
 
     return true
@@ -99,10 +95,8 @@ export async function handleProjectCompletion(
   if (!user) return
 
   try {
-    // Reference to the specific project document
     const projectRef = doc(fireStore, 'users', user.uid, 'projects', project_id)
 
-    // Reference to the attempts subcollection - create a new doc with auto ID
     const attemptRef = doc(
       collection(
         fireStore,
@@ -114,14 +108,12 @@ export async function handleProjectCompletion(
       )
     )
 
-    // Create a new attempt record
     await setDoc(attemptRef, {
       code: code,
       timestamp: Date.now(),
       success: success,
     })
 
-    // Update the project document
     await setDoc(
       projectRef,
       {

@@ -44,7 +44,6 @@ const QuizManager = () => {
         return
       }
 
-      // Validate questions
       const isValid = quiz.questions.every(
         (q) =>
           q.question &&

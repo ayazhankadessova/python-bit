@@ -11,21 +11,11 @@ export interface CodeSubmission {
 }
 
 export interface MonitoringState {
-  // Whether the browser tab is currently active/visible
   isTabActive: boolean
-
-  // Whether the browser is in fullscreen mode
   isFullscreen: boolean
-
-  // Timestamp of the last time the student interacted with the tab
   lastActiveTime: number
-
-  // The total width of the user's screen
   screenWidth: number
-
-  // The current width of the browser window
   browserWidth: number
-
   updatedAt: number
 }
 

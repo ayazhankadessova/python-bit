@@ -1,4 +1,3 @@
-// app/classroom/create/page.tsx
 'use client'
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -61,7 +60,7 @@ export default function CreateClassroomPage() {
   const router = useRouter()
 
   interface CurriculumWithId extends Curriculum {
-  id: string;  // Adding id for Firestore document reference
+  id: string; 
 }
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -73,7 +72,6 @@ export default function CreateClassroomPage() {
     },
   })
 
-  // Protect the route
   useEffect(() => {
     if (user && user.role !== 'teacher') {
       router.push('/dashboard')
@@ -85,7 +83,6 @@ export default function CreateClassroomPage() {
     }
   }, [user, router, toast])
 
-  // Update the fetchData function in y our useEffect
 useEffect(() => {
   const fetchData = async () => {
     if (!user?.school) return;
@@ -109,7 +106,6 @@ useEffect(() => {
       
       setCurricula(fetchedCurricula);
 
-      // Fetch students code remains the same
       const studentsQuery = query(
         collection(fireStore, 'users'),
         where('role', '==', 'student'),
@@ -150,7 +146,6 @@ useEffect(() => {
     })
   }
 
-  // Only showing the modified onSubmit function since the rest remains the same
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     if (!user) return
 
@@ -161,7 +156,6 @@ useEffect(() => {
       const classroomId = nanoid()
       const classCode = nanoid(6).toUpperCase()
 
-      // Create classroom document
       const classroomRef = doc(fireStore, 'classrooms', classroomId)
       batch.set(classroomRef, {
         id: classroomId,
@@ -177,8 +171,6 @@ useEffect(() => {
         school: user.school,
       })
 
-      // Initialize sessions subcollection with a metadata document
-      // This ensures the collection exists and contains useful information
       const sessionsMetadataRef = doc(
         fireStore,
         `classrooms/${classroomId}/sessions`,
@@ -189,17 +181,14 @@ useEffect(() => {
         totalSessions: 0,
         lastSessionAt: null,
         isInitialized: true,
-        // Add any other metadata fields you might need
       })
 
-      // Update teacher's classrooms
       const teacherRef = doc(fireStore, 'users', user.uid)
       batch.update(teacherRef, {
         classrooms: arrayUnion(classroomId),
         updatedAt: Date.now(),
       })
 
-      // Update students' enrollments
       data.students.forEach((studentId) => {
         const studentRef = doc(fireStore, 'users', studentId)
         batch.update(studentRef, {

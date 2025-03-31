@@ -1,4 +1,3 @@
-// app/admin/layout.tsx
 import { AdminGuard } from '@/components/guards/admin-guard'
 
 export default function AdminLayout({

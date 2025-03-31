@@ -1,4 +1,3 @@
-// components/ProjectItem.tsx
 import { useRouter } from 'next/navigation'
 import {
   Card,

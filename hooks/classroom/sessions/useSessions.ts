@@ -1,4 +1,3 @@
-// app/hooks/useSessions.ts
 import { useState, useEffect } from 'react'
 import { sessionsService } from '@/lib/firebase/sessions'
 import type { LiveSession, SessionWithDuration } from '@/types/classrooms/live-session'

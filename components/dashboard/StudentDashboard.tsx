@@ -1,4 +1,3 @@
-// components.StudentDashboard.tsx
 'use client'
 import { useRouter } from 'next/navigation'
 import { BookOpen, Trophy, Users} from 'lucide-react'

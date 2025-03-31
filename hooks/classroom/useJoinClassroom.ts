@@ -36,7 +36,6 @@ export function useJoinClassroom(userId: string, onSuccess: () => void) {
         throw new Error('You are already enrolled in this classroom')
       }
 
-      // Update classroom's students array
       await updateDoc(doc(fireStore, 'classrooms', classroom.id), {
         students: arrayUnion(userId),
       })

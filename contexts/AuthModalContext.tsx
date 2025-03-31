@@ -1,4 +1,3 @@
-// contexts/AuthModalContext.tsx
 import { createContext, useContext, useState } from 'react'
 
 type ModalType = 'login' | 'register' | 'forgotPassword'

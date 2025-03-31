@@ -25,10 +25,8 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
     0
   )
 
-  // Early return if loading
   if (isLoading) return <LoadingSpinner />
 
-  // Early return if no user
   if (!user) {
     router.push('/')
     return null

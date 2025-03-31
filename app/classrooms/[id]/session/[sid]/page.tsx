@@ -15,17 +15,25 @@ interface PageProps {
 
 const SessionPage: React.FC<PageProps> = ({ params }) => {
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
 
   // Get IDs from URL parameters
   const classroomId = params.id
   const sessionId = params.sid
 
   // Show loading state while fetching data
-  if (!user) {
+  if (loading) {
     return (
       <div className='flex items-center justify-center min-h-screen'>
         <Loader2 className='h-8 w-8 animate-spin' />
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        Please Login to View This Page.
       </div>
     )
   }

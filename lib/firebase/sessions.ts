@@ -1,4 +1,3 @@
-// app/lib/firebase/sessions.ts
 import {
   collection,
   query,
@@ -17,7 +16,6 @@ import type { LiveSession } from '@/types/classrooms/live-session'
 import { User } from '@/types/firebase'
 
 export const sessionsService = {
-  // Get refs and queries
   getSessionsRef: (classroomId: string) =>
     collection(fireStore, `classrooms/${classroomId}/sessions`),
 
@@ -36,7 +34,6 @@ export const sessionsService = {
     return query(ref, where('endedAt', '!=', null), orderBy('endedAt', 'desc'))
   },
 
-  // Active & History helper
   subscribeToActiveSession: (
     classroomId: string,
     onData: (session: LiveSession | null) => void,

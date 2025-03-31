@@ -22,7 +22,6 @@ async function getPostFromParams(params: PostPageProps['params']) {
   return post
 }
 
-// if slug is same as slugAsParams of one of the pages
 export async function generateStaticParams(): Promise<
   { slug: string[]; revalidate?: number }[]
 > {
@@ -45,7 +44,6 @@ export default async function ProjectPage({ params }: PostPageProps) {
 
   return (
     <div className='flex flex-col h-screen xl:px-12 lg:px-8 md:px-4 sm:px-4 pt-8 mb-16'>
-      {/* Navigation bar */}
 
       <div className='flex justify-between mb-4 ml-1'>
         <BackButton

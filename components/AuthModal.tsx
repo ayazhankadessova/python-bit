@@ -10,7 +10,6 @@ import { Dialog, DialogContent } from '@/components/ui/dialog'
 const AuthModal = () => {
   const { isOpen, type, onClose } = useAuthModal()
 
-  // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -22,7 +21,6 @@ const AuthModal = () => {
     }
   }, [isOpen])
 
-  // Close modal on escape key press
   useEffect(() => {
     const closeOnEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()

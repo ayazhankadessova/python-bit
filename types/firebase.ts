@@ -1,4 +1,3 @@
-// Application Types - All fields are required in processed data
 export interface User {
   uid: string
   email: string

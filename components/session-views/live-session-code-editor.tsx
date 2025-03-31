@@ -123,7 +123,6 @@ export function PythonEditor({
   const isDarkTheme = theme === 'dark' || theme === 'vscode'
 
   useEffect(() => {
-    // Only update code if initialCode changes and is different from current code
     if (initialCode && !isExecuting) {
       setCode(initialCode)
     }

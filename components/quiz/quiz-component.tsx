@@ -29,21 +29,17 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   const { theme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  // Force re-render when theme changes to apply proper syntax highlighting
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Dynamically apply theme and syntax highlighting when component mounts or theme changes
   useEffect(() => {
     if (mounted) {
-      // Remove any previously loaded Prism themes
       const existingThemeLinks = document.querySelectorAll(
         'link[data-prism-theme]'
       )
       existingThemeLinks.forEach((link) => link.remove())
 
-      // Dynamically load the appropriate theme based on current mode
       const link = document.createElement('link')
       link.rel = 'stylesheet'
       link.setAttribute('data-prism-theme', 'true')
@@ -58,7 +54,6 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
 
       document.head.appendChild(link)
 
-      // Apply syntax highlighting
       setTimeout(() => {
         Prism.highlightAll()
       }, 0)
@@ -117,10 +112,8 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     }
   }
 
-  // Check if we're in dark mode
   const isDarkMode = resolvedTheme === 'dark'
 
-  // Function to render question text with code blocks
   const renderQuestionText = (text: string) => {
     if (!text || !text.includes('```python')) {
       return text
@@ -176,13 +169,12 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   const score = calculateScore()
   const isDarkTheme = theme === 'dark'
 
-  // Don't render until we have theme information
   if (!mounted) {
     return null
   }
 
   if (showResults) {
-    const passingScore = 70 // Define the passing score
+    const passingScore = 70 
     const incorrectAnswers = score.totalQuestions - score.correctAnswers
     return (
       <div className='w-full mx-auto -mt-8'>

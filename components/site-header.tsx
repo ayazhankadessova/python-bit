@@ -23,7 +23,6 @@ const activeStyles =
 
 const isPathActive = (currentPath: string, href: string) => {
   if (href === '/') return currentPath === href
-  // Split both paths and compare the first segment
   const currentSegment = currentPath.split('/')[1]
   const hrefSegment = href.split('/')[1]
   return currentSegment === hrefSegment
@@ -38,7 +37,6 @@ export function SiteHeader() {
     <header className={headerClass}>
       {/* Desktop Navigation */}
       <div className='flex w-full h-20 items-center justify-between xl:px-24 lg:px-16 md:px-8 sm:px-8'>
-        {/* Your existing header content */}
         <div className='hidden min-[850px]:flex items-center gap-4'>
           <MainNav />
           <NavigationMenu className='hidden min-[850px]:inline-flex'>

@@ -20,10 +20,8 @@ export function ProjectStatus({ projectId, detailed }: ProjectStatusProps) {
 
   if (!user || !progress) return null
 
-  // If no attempts, don't show anything
   if (progress.totalAttempts === 0) return null
 
-  // if detailed , return this 
   if (detailed) {
     return (
     <div className='flex items-center gap-3 text-sm'>

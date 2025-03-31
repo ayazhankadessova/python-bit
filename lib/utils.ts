@@ -7,13 +7,11 @@ export function cn(...inputs: ClassValue[]) {
 
 
 export function formatDate(epoch: number): string {
-  // Check if the epoch is in milliseconds (13 digits) or seconds (10 digits)
   const timestamp = epoch.toString().length === 13 ? epoch : epoch * 1000
 
   try {
     const date = new Date(timestamp)
 
-    // Validate if the date is valid
     if (isNaN(date.getTime())) {
       throw new Error('Invalid date')
     }
@@ -33,14 +31,10 @@ export function calculateDuration(
   startDate: number,
   endDate: number | null
 ): string {
-  // For ongoing sessions, use current time as end date
   const end = endDate || Date.now()
 
-  // Both startDate and endDate are already in milliseconds
-  // No need to multiply by 1000 or check length
   const diffInMs = end - startDate
 
-  // Convert to minutes, round to nearest minute
   const diffInMinutes = Math.round(diffInMs / (1000 * 60))
 
   // If less than 1 minute, show "Less than 1m"
@@ -68,7 +62,6 @@ export function calculateDuration(
 
 export const formatCode = (code: string) => {
   return code
-    .replace(/\\n/g, '\n') // Replace double escaped newlines
-    .replace(/"{2,}/g, '"') // Replace multiple quotes with single quotes
-  // Removed the .replace(/\\/g, '') that was causing the issue
+    .replace(/\\n/g, '\n') 
+    .replace(/"{2,}/g, '"') 
 }

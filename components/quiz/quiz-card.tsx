@@ -1,4 +1,3 @@
-// components/Quiz/QuizCard.tsx
 import {
   Card,
   CardContent,

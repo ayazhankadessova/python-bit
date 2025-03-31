@@ -1,4 +1,3 @@
-// app/dashboard/page.tsx
 'use client'
 import { TeacherDashboard } from '@/components//dashboard/TeacherDashboard'
 import { StudentDashboard } from '@/components/dashboard/StudentDashboard'

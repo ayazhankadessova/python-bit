@@ -52,7 +52,6 @@ export async function handleExerciseSubmission(
   const progressRef = doc(fireStore, 'users', user.uid, 'tutorials', tutorialId)
   const now = Date.now()
 
-  // Get current exercise data with explicit type checking
   const docSnap = await getDoc(progressRef)
   const currentData: TutorialData = {
     exercises: {},
@@ -60,21 +59,17 @@ export async function handleExerciseSubmission(
     ...(docSnap.exists() ? (docSnap.data() as TutorialData) : {}),
   }
 
-  // Ensure exercises object exists
   if (!currentData.exercises) {
     currentData.exercises = {}
   }
 
-  // Get current exercise or create default
   const currentExercise =
     currentData.exercises[exerciseNumber] ?? createDefaultExercise(now)
 
-  // Ensure attempts array exists
   const currentAttempts = currentExercise.attempts || []
 
-  // Prepare the exercise update
   const exerciseUpdate: Exercise = {
-    completed: success || currentExercise.completed || false, // Add fallback for completed
+    completed: success || currentExercise.completed || false, 
     lastUpdated: now,
     attempts: [
       ...currentAttempts,
@@ -86,7 +81,6 @@ export async function handleExerciseSubmission(
     ],
   }
 
-  // Create a safe update object
   const updateData = {
     exercises: {
       [exerciseNumber]: exerciseUpdate,
@@ -94,7 +88,6 @@ export async function handleExerciseSubmission(
     lastUpdated: now,
   }
 
-  // Update the document
   await setDoc(progressRef, updateData, { merge: true })
 
   return {
@@ -119,20 +112,16 @@ export async function handleExerciseRun(user: User, tutorialId: string) {
     )
     const now = Date.now()
 
-    // Get current data first to ensure document exists
     const docSnap = await getDoc(progressRef)
 
-    // Initialize with default structure
     const currentData: TutorialData = {
       exercises: {},
       lastUpdated: now,
       ...(docSnap.exists() ? (docSnap.data() as TutorialData) : {}),
     }
 
-    // Create update object with type safety
     const updateData = {
       lastUpdated: now,
-      // Preserve exercises if they exist
       ...(currentData.exercises
         ? { exercises: currentData.exercises }
         : { exercises: {} }),

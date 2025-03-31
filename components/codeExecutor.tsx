@@ -89,7 +89,6 @@ const PythonCodeEditor = ({
           data.success,
           code
         )
-        // In any component
         await invalidateTutorialProgress(user.uid, tutorial_id)
       }
 

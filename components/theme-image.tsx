@@ -1,4 +1,3 @@
-// components/ThemeImage.tsx
 import Image from 'next/image'
 import { useState } from 'react'
 

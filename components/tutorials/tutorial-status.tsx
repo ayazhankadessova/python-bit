@@ -30,10 +30,8 @@ export function TutorialStatus({
       dedupingInterval: 600000,
     })
 
-  // Only return null if user is not authenticated or data is still loading
   if (!user || isLoading) return null
 
-  // Detailed view with exercise count and last updated
   if (detailed) {
     return (
       <div className={cn('flex items-center gap-3 text-sm', className)}>
@@ -81,7 +79,6 @@ export function TutorialStatus({
     )
   }
 
-  // Simple icon-only view
   return (
     <>
       {progress === 100 ? (

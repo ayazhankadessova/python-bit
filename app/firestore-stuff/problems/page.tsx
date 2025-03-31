@@ -25,7 +25,6 @@ interface ProblemInputs {
   link?: string
 }
 
-// Separate interface for the problem document that goes to Firestore
 interface ProblemDocument extends Omit<ProblemInputs, 'order'> {
   order: number
   likes: number
@@ -77,7 +76,6 @@ const ProblemForm = () => {
         order: Number(inputs.order),
         videoId: inputs.videoId || '',
         link: inputs.link || '',
-        // Initialize new fields
         likes: 0,
         dislikes: 0,
       }

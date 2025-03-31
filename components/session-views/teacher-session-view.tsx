@@ -1,4 +1,3 @@
-// TeacherSessionView.tsx
 import React, { useState, useEffect } from 'react'
 import {
   doc,
@@ -73,21 +72,19 @@ export function TeacherSessionView({
      Record<string, SessionStudent>
    >({})
 
-  // Add this effect to manage the editor's initial code
   useEffect(() => {
     if (selectedStudent && studentCode) {
       setEditorInitialCode(studentCode)
     } else if (currentAssignment?.starterCode) {
       setEditorInitialCode(formatCode(currentAssignment.starterCode))
     } else {
-      setEditorInitialCode('') // Fallback empty string
+      setEditorInitialCode('')
     }
   }, [selectedStudent, studentCode, currentAssignment])
 
   useEffect(() => {
     const fetchClassroomAndCurriculum = async () => {
       try {
-        // Fetch classroom data first
         const classroomDoc = await getDoc(
           doc(fireStore, 'classrooms', classroomId)
         )
@@ -99,12 +96,10 @@ export function TeacherSessionView({
         const classroomData = classroomDoc.data() as ClassroomTC
         setClassroom(classroomData)
 
-        // Make sure curriculumId exists
         if (!classroomData.curriculumId) {
           throw new Error('No curriculum assigned to this classroom')
         }
 
-        // Fetch curriculum using the classroom's curriculumId
         const curriculumDoc = await getDoc(
           doc(fireStore, 'curricula', classroomData.curriculumId)
         )
@@ -116,21 +111,15 @@ export function TeacherSessionView({
         const curriculumData = curriculumDoc.data() as Curriculum
         setCurriculum(curriculumData)
 
-        // Set initial week based on lastTaughtWeek
         const initialWeek = curriculumData.weeks.find(
           (week) => week.weekNumber === classroomData.lastTaughtWeek
         )
 
-        // after u choose initial week, if it exists set if in `classrooms/${classroomId}/sessions/${sessionId}` too
-        // also set active task in `classrooms/${classroomId}/sessions/${sessionId}`
-
         if (initialWeek) {
           setCurrentWeek(initialWeek)
-          // Set initial assignment if available
           const initialAssignmentId = initialWeek.assignmentIds[0] || null
           setSelectedAssignmentId(initialAssignmentId)
 
-          // Update the session document with initial week and active task
           try {
             await updateDoc(
               doc(fireStore, `classrooms/${classroomId}/sessions/${sessionId}`),
@@ -148,14 +137,12 @@ export function TeacherSessionView({
             })
           }
         } else {
-          // If no matching week is found, default to the first week
           if (curriculumData.weeks.length > 0) {
             const firstWeek = curriculumData.weeks[0]
             setCurrentWeek(firstWeek)
             const firstAssignmentId = firstWeek.assignmentIds[0] || null
             setSelectedAssignmentId(firstAssignmentId)
 
-            // Update the session document with first week and active task
             try {
               await updateDoc(
                 doc(

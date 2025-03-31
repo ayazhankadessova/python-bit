@@ -1,4 +1,3 @@
-// Create new file: components/skeletons/session-skeletons.tsx
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 
 export const ActiveSessionSkeleton = () => (

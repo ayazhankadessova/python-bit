@@ -10,7 +10,6 @@ interface MonitoringIndicatorProps {
   state: MonitoringState
 }
 
-// Add the MonitoringIndicator component before your main StudentSessionView component
 export const MonitoringIndicator: React.FC<MonitoringIndicatorProps> = ({ state }) => {
   const isFullyFocused =
     state.isTabActive && state.browserWidth === state.screenWidth

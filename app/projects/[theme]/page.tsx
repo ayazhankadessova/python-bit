@@ -1,4 +1,3 @@
-// app/projects/[theme]/page.tsx
 'use client'
 
 import React, { useState } from 'react'
@@ -33,15 +32,12 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('createdAt')
 
-  // Filter projects by theme
   const themeProjectsOne = projects.filter(
     (project) => project.theme === params.theme
   )
 
-  // Filter by search
   const themeProjects = filterProjectsBySearchTerm(themeProjectsOne, searchText)
 
-  // Sort projects
   const sortedProjects =
     sortMethod === 'createdAt'
       ? [...themeProjects].sort(
@@ -49,7 +45,6 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
         )
       : [...themeProjects].sort((a, b) => a.title.localeCompare(b.title))
 
-  // Pagination
   const currentPage = Number(searchParams?.page) || 1
   const currentPerPage = Number(searchParams?.perPage) || 5
   const fullLinkGenerated = `${siteConfig.url}/projects/${params.theme}`

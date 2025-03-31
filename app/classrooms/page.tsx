@@ -1,4 +1,3 @@
-// ClassroomPage.tsx
 'use client'
 import { useAuth } from '@/contexts/AuthContext'
 import { TeacherClassroomsView } from '@/components/classrooms/TeacherClassroomsView'

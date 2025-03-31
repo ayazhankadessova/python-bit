@@ -28,22 +28,15 @@ export const CircularProgress = ({
   textClassName = '',
   counterClockwise = false,
 }: CircularProgressProps) => {
-  // Ensure percentage is between 0 and 100
   const clampedPercentage = Math.max(0, Math.min(100, percentage))
 
-  // Calculate the radius and center point
   const radius = (size - strokeWidth) / 2
   const center = size / 2
 
-  // Calculate the circumference of the circle
   const circumference = 2 * Math.PI * radius
 
-  // Calculate the stroke dash offset based on the percentage
   const strokeDashOffset =
     circumference - (clampedPercentage / 100) * circumference
-
-  // Create the SVG path for the arc
-
 
   return (
     <div

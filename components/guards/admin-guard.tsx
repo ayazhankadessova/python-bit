@@ -22,7 +22,6 @@ export function AdminGuard({ children }: AdminGuardProps) {
   const { user, loading } = useAuth()
   const router = useRouter()
 
-  // Add delay to ensure Firebase auth is fully initialized
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {

@@ -30,7 +30,6 @@ const AssignmentProgress = ({
   >({})
   const [loading, setLoading] = useState(true)
 
-  // Memoize progress calculations
   const { studentsCompleted, completionPercentage } = useMemo(() => {
     const completed = Object.values(progressData).filter(
       (data) => data.completed
@@ -142,7 +141,6 @@ const AssignmentProgress = ({
           const studentMonitoring = sessionStudents?.[student.uid]?.monitoring
 
           return (
-            // Update the Card layout to use justify-between properly
             <Card
               key={student.uid}
               className={`cursor-pointer hover:bg-accent transition-colors ${

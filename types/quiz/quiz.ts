@@ -4,7 +4,7 @@ export interface Question {
   options: string[]
   correctAnswer: number
   explanation: string
-  imageUrl?: string // Optional image URL for the question
+  imageUrl?: string 
 }
 
 export interface Quiz {

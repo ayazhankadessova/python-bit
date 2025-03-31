@@ -12,8 +12,6 @@ import { PythonEditor } from '@/components/session-views/live-session-code-edito
 import { useAuth } from '@/contexts/AuthContext'
 import { handleAssignmentCompletion } from '@/lib/live-classroom/utils'
 import { ActiveStudent } from '@/types/classrooms/live-session'
-// import { useStudentMonitoring } from '@/hooks/classroom/sessions/useStudentMonitoring'
-// import { MonitoringIndicator } from './monitoring-state'
 
 interface TeacherSessionViewProps {
   classroomId: string
@@ -45,12 +43,6 @@ export function StudentSessionView({
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
 
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
-
-  // const monitoringState = useStudentMonitoring(
-  //   classroomId,
-  //   sessionId,
-  //   user?.uid || ''
-  // )
 
   const handleUpdateCode = useCallback(async (): Promise<void> => {
     if (!currentSession || !user?.uid) return
@@ -188,7 +180,6 @@ export function StudentSessionView({
           }
           setCurrentSession(session)
 
-          // Update students directly from session data
           setStudents(sessionData.activeStudents)
         } else {
           setCurrentSession(null)
@@ -214,7 +205,6 @@ export function StudentSessionView({
         `classrooms/${classroomId}/sessions/${sessionId}`
       )
 
-      // Remove the student from activeStudents array using arrayRemove
       await updateDoc(sessionRef, {
         activeStudents: currentSession.activeStudents.filter(
           (student) => student.displayName !== user.displayName
@@ -267,16 +257,13 @@ export function StudentSessionView({
 
       const data = await response.json()
 
-      // Set output and error states
       setOutput(data.output)
       setError(data.error ? data.output : null)
 
-      // Set correctness for submissions
       if (isSubmission) {
         setIsCorrect(data.success)
       }
 
-      // Handle exercise submission
       if (user && id && isSubmission && code) {
         handleUpdateCode()
         await handleAssignmentCompletion(user, id, code, data.success)
@@ -366,11 +353,11 @@ export function StudentSessionView({
         <div className='flex-1'>
           <PythonEditor
             initialCode={editorInitialCode}
-            onCodeChange={setStudentCode} // Change this from setTeacherCode to setStudentCode
+            onCodeChange={setStudentCode} 
             onRunCode={() => handleRunCode(false)}
             onSubmitCode={() => handleRunCode(true)}
-            isTeacher={false} // Make sure this is false for students
-            onUpdateCode={handleUpdateCode} // Pass the update handler
+            isTeacher={false} 
+            onUpdateCode={handleUpdateCode} 
             output={output}
             error={error}
             isCorrect={isCorrect}

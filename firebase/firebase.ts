@@ -1,4 +1,3 @@
-// firebase/firebase.ts
 import { initializeApp, getApp, getApps } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
@@ -12,18 +11,14 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-// Initialize Firebase for SSR
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 
-// Get Auth and Firestore instances
 const auth = getAuth(app)
 const fireStore = getFirestore(app)
 
 export { auth, fireStore, app }
 
-// Export firebaseConfig for debugging
 export const getFirebaseConfig = () => {
-  // Check if all required config values are present
   const requiredFields = [
     'apiKey',
     'authDomain',

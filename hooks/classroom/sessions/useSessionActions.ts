@@ -1,4 +1,3 @@
-// hooks/useSessionActions.ts
 import { useState } from 'react'
 import { FirestoreError } from 'firebase/firestore'
 import { sessionsService } from '@/lib/firebase/sessions'

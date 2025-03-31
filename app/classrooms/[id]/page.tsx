@@ -1,4 +1,3 @@
-// export default ClassroomPage
 'use client'
 import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -11,25 +10,32 @@ interface PageProps {
 }
 
 const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
-  const { user } = useAuth() // Firebase Auth context
+  const { user, loading } = useAuth() // Firebase Auth context
 
   const classroomId = params.id
 
-  // Main session view
-  if (user) {
-    return (
-      <SessionManagement
-        classroomId={classroomId}
-        isTeacher={user.role === 'teacher'}
-      />
-    )
-  }
+   if (loading) {
+     return (
+       <div className='flex items-center justify-center min-h-screen'>
+         <Loader2 className='h-8 w-8 animate-spin' />
+       </div>
+     )
+   }
 
-  return (
-    <div className='flex items-center justify-center min-h-screen'>
-      <Loader2 className='h-8 w-8 animate-spin' />
-    </div>
-  )
+   if (!user) {
+     return (
+       <div className='flex items-center justify-center min-h-screen'>
+         Please Login to View This Page.
+       </div>
+     )
+   }
+
+   return (
+     <SessionManagement
+       classroomId={classroomId}
+       isTeacher={user.role === 'teacher'}
+     />
+   )
 }
 
 export default ClassroomLessonPage

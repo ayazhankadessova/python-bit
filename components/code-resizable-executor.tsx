@@ -73,17 +73,14 @@ const PythonResizableCodeEditor = ({
 
       const data = await response.json()
 
-      // Set output and error states
       setOutput(data.output)
       setError(data.error ? data.output : null)
 
-      // Set correctness for submissions
       if (isSubmission) {
         setIsCorrect(data.success)
         invalidateCache()
       }
 
-      // Handle project completion
       if (data.success && user && isSubmission) {
         await handleProjectCompletion(user, project_id, code!, true)
       }
