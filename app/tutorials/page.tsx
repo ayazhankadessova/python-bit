@@ -66,7 +66,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({
   }
 
   return (
-    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 pt-8 mb-16'>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 pt-8 mb-16'>
       {/* Header Section */}
       <div className='flex justify-between items-center mb-16'>
         <div>

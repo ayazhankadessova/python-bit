@@ -9,7 +9,6 @@ import { PROJECTS } from '@/config/projects'
  */
 export function getExerciseById(id?: string): Project | undefined {
   if (!id) return undefined
-  // First try direct lookup since we know the key structure
   const directLookup = Object.entries(PROJECTS as ProjectCollection).find(
     ([, project]) => project.id === id
   )

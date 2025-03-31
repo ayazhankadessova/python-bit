@@ -56,7 +56,7 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   )
 
   return (
-    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 pt-8 mb-16'>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 pt-8 mb-16'>
       <div className='flex justify-between mb-4 ml-1'>
         <BackButton href='/projects' />
         <SharePost fullLink={fullLinkGenerated} />

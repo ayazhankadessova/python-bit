@@ -46,7 +46,7 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
   }
 
   return (
-    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 pt-8 mb-16'>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 pt-8 mb-16'>
       <ClassroomHeader title='My Classrooms' />
       <ClassroomSearch
         searchTerm={searchTerm}

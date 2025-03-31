@@ -57,7 +57,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8'>
+    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8'>
       {/* Hero Section */}
 
       <section className='mt-8 mb-24'>

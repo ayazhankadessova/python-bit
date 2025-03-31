@@ -105,7 +105,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
 
 
   return (
-    <div className='space-y-6 xl:px-24 lg:px-16 md:px-8 sm:px-8 pt-8 mb-16'>
+    <div className='space-y-6 xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 pt-8 mb-16'>
       {error && (
         <Alert variant='destructive'>
           <AlertTitle>Error</AlertTitle>

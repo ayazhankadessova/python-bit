@@ -344,7 +344,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     <div className='min-h-screen flex flex-col'>
       {/* Main Content */}
       <div className='flex-grow'>
-        <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8'>
+        <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8'>
           <div className='prose prose-img:rounded-xl max-w-none mt-2 prose dark:prose-invert'>
             <h1 className='mb-2 text-foreground dark:text-foreground'>
               {quiz.title}
