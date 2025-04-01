@@ -17,6 +17,7 @@ const QuizManager = () => {
     description: '',
     tutorialId: '',
     questions: [],
+    imageUrl:''
   })
 
   const addQuestion = () => {
