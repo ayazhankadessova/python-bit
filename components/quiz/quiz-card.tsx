@@ -1,6 +1,5 @@
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -8,7 +7,7 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { BookOpen } from 'lucide-react'
+import { CircleHelp } from 'lucide-react'
 import Image from 'next/image'
 
 interface QuizCardProps {
@@ -26,10 +25,10 @@ export default function QuizCard({
   description,
   tutorialId,
   questionCount,
-  imageUrl
+  imageUrl,
 }: QuizCardProps) {
   return (
-    <Card className='w-full'>
+    <Card className='w-full flex flex-col h-full'>
       {/* Image Section */}
       <div className='relative w-full aspect-[16/9]'>
         <Image
@@ -40,25 +39,27 @@ export default function QuizCard({
           className='rounded-t-md'
         />
       </div>
-      <CardHeader>
-        <CardTitle className='flex items-center gap-2'>
-          <BookOpen className='h-5 w-5' />
+      <CardHeader className='flex-grow'>
+        <CardTitle className='flex items-center gap-2 text-xl'>
           {title}
         </CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className='text-md'>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <p className='text-sm text-muted-foreground'>
-          {questionCount} questions
-        </p>
-      </CardContent>
-      <CardFooter className='flex justify-between'>
-        <Button variant='outline' asChild>
-          <Link href={`/tutorials/${tutorialId}`}>View Tutorial</Link>
-        </Button>
-        <Button asChild>
-          <Link href={`/quizzes/${id}`}>Start Quiz</Link>
-        </Button>
+      <CardFooter className='mt-auto flex flex-col gap-4 items-start'>
+        <div className='flex items-center gap-2'>
+          <CircleHelp className='h-4 w-4 text-purple-600' />
+          <p className='text-md text-muted-foreground'>
+            {questionCount} questions
+          </p>
+        </div>
+        <div className='flex justify-between items-center w-full'>
+          <Button variant='outline' asChild>
+            <Link href={`/tutorials/${tutorialId}`}>View Tutorial</Link>
+          </Button>
+          <Button asChild>
+            <Link href={`/quizzes/${id}`}>Start Quiz</Link>
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   )
