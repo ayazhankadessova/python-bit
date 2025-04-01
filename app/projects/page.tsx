@@ -21,7 +21,7 @@ const ProjectThemes = () => {
   return (
     <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 pt-8 mb-16'>
       <div className='mb-16'>
-        <h1 className='text-4xl font-bold mb-2'>Projects</h1>
+        <h1 className='text-4xl mb-2'>Projects</h1>
         <p className='text-muted-foreground max-w-2xl'>
           Explore a variety of Python projects designed to help you apply your
           knowledge and build practical skills. Each project is tailored to

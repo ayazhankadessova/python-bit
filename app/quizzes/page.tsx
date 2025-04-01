@@ -33,7 +33,7 @@ export default function QuizzesPage() {
   return (
     <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 pt-8 mb-16'>
       <div className='mb-16'>
-        <h1 className='text-4xl font-bold mb-2'>Quizzes</h1>
+        <h1 className='text-4xl mb-2'>Quizzes</h1>
         <p className='text-muted-foreground max-w-2xl'>
           Test your Python knowledge with our interactive quizzes. Each quiz is
           designed to reinforce concepts from our tutorials and help you master

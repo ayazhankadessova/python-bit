@@ -179,10 +179,10 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     return (
       <div className='w-full mx-auto -mt-8'>
         <div className='justify-center items-center flex flex-col bg-gradient-to-r from-purple-200 via-purple-100 to-purple-200 dark:from-purple-900 dark:via-purple-950 dark:to-purple-900 py-16 px-4 rounded-lg shadow-md'>
-          <h1 className='text-2xl mb-2 text-foreground dark:text-foreground font-bold'>
+          <h2 className='text-2xl mb-2 text-foreground dark:text-foreground font-bold'>
             Quiz Summary
-          </h1>
-          <h1 className='text-5xl mb-6 text-foreground dark:text-foreground font-bold'>
+          </h2>
+          <h1 className='text-5xl mb-6 text-foreground dark:text-foreground'>
             {quiz.title}
           </h1>
 

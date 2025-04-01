@@ -1,5 +1,5 @@
 'use client'
-import { Inter } from 'next/font/google'
+import { Inter, Luckiest_Guy, Maven_Pro, Open_Sans } from 'next/font/google' // Import fonts
 import './globals.css'
 import { cn } from '@/lib/utils'
 import { SiteHeader } from '@/components/site-header'
@@ -11,6 +11,21 @@ import { BlogFooter } from '@/components/ui/footer'
 import AuthModal from '@/components/AuthModal'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-mono' })
+const luckiestGuy = Luckiest_Guy({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-luckiest-guy',
+})
+const mavenPro = Maven_Pro({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  variable: '--font-maven-pro',
+})
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-open-sans',
+})
 
 export default function RootLayout({
   children,
@@ -20,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang='en' className='scroll-smooth'>
       <body
-        className={cn('min-h-screen font-mono antialiased', inter.variable)}
+        className={cn('min-h-screen antialiased', inter.variable, luckiestGuy.variable, mavenPro.variable, openSans.variable)}
       >
         <Providers>
           <AuthProvider>

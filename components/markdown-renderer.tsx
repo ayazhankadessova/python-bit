@@ -24,7 +24,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
     // Custom heading styles
     h1: ({ children }) => (
-      <h1 className='text-2xl font-bold mb-4'>{children}</h1>
+      <h1 className='text-2xl mb-4'>{children}</h1>
     ),
     h2: ({ children }) => (
       <h2 className='text-xl font-bold mb-3'>{children}</h2>

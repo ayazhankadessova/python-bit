@@ -70,7 +70,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({
       {/* Header Section */}
       <div className='flex justify-between items-center mb-16'>
         <div>
-          <h1 className='text-4xl font-bold mb-2'>Tutorials</h1>
+          <h1 className='text-4xl mb-2'>Tutorials</h1>
           <p className='text-muted-foreground max-w-2xl'>
             Learn Python concepts through step-by-step tutorials designed to
             teach you the fundamentals and advanced topics. Each tutorial

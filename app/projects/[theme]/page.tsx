@@ -62,7 +62,7 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
         <SharePost fullLink={fullLinkGenerated} />
       </div>
 
-      <h1 className='font-bold text-4xl mb-16 capitalize'>
+      <h1 className='text-4xl mb-16 capitalize'>
         {params.theme.replace('-', ' ')} Projects
       </h1>
 
