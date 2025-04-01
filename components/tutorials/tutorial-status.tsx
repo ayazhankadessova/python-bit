@@ -41,7 +41,7 @@ export function TutorialStatus({
               <CheckCircle
                 className={cn('h-5 w-5 text-green-500', iconClassName)}
               />
-              <span className={cn('text-green-500 font-medium', textClassName)}>
+              <span className={cn('text-green-500 font-normal', textClassName)}>
                 Completed
               </span>
             </>
@@ -49,7 +49,7 @@ export function TutorialStatus({
             <>
               <Clock className={cn('h-5 w-5 text-yellow-500', iconClassName)} />
               <span
-                className={cn('text-yellow-500 font-medium', textClassName)}
+                className={cn('text-yellow-500 font-normal', textClassName)}
               >
                 In Progress
               </span>
@@ -59,7 +59,7 @@ export function TutorialStatus({
               <BookOpen
                 className={cn('h-5 w-5 text-purple-500', iconClassName)}
               />
-              <span className={cn('text-purple-500 font-medium', textClassName)}>
+              <span className={cn('text-purple-500 font-normal', textClassName)}>
                 No Submissions
               </span>
             </>

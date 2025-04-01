@@ -29,12 +29,12 @@ export function ProjectStatus({ projectId, detailed }: ProjectStatusProps) {
         {progress.completed ? (
           <>
             <CheckCircle className='h-5 w-5 text-green-500' />
-            <span className='text-green-500 font-medium'>Completed</span>
+            <span className='text-green-500 font-normal'>Completed</span>
           </>
         ) : (
           <>
             <Clock className='h-5 w-5 text-yellow-500' />
-            <span className='text-yellow-500 font-medium'>In Progress</span>
+            <span className='text-yellow-500 font-normal'>In Progress</span>
           </>
         )}
       </div>

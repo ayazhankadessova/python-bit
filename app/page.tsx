@@ -454,7 +454,7 @@ export default function HomePage() {
             </Button>
           </div>
         ) : (
-          <div className='max-w-xl mx-auto'>
+          <div className='flex flex-col items-center justify-center text-center max-w-xl mx-auto'>
             <h2 className='text-3xl font-bold mb-6'>
               Ready to start learning?
             </h2>
@@ -467,10 +467,7 @@ export default function HomePage() {
                 🎉 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
                 <AnimatedGradientText text='Get Started Free' />
               </Button>
-              <Button
-                size='lg'
-                onClick={() => onOpen('login')}
-              >
+              <Button size='lg' onClick={() => onOpen('login')}>
                 Sign In
               </Button>
             </div>

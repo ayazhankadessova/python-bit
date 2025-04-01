@@ -151,7 +151,7 @@ const QuizManager = () => {
                 <Card key={question.id} className='p-4'>
                   <div className='space-y-4'>
                     <div className='flex justify-between items-center'>
-                      <h3 className='font-medium'>
+                      <h3 className='font-normal'>
                         Question {questionIndex + 1}
                       </h3>
                       <Button

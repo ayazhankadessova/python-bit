@@ -189,7 +189,7 @@ finally:
             key={index}
             className='p-4 rounded-lg border border-gray-200 dark:border-gray-700'
           >
-            <h3 className='font-medium mb-2'>{testCase.fileName}</h3>
+            <h3 className='font-normal mb-2'>{testCase.fileName}</h3>
             {testCase.fileName === 'nonexistent.txt' ? (
               <div className='text-sm text-red-500 italic'>
                 File does not exist

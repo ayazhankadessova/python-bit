@@ -77,7 +77,7 @@ const MobileNav = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div className='flex flex-col'>
-                  <span className='font-medium'>
+                  <span className='font-normal'>
                     {user.displayName || 'User'}
                   </span>
                   <span className='text-sm text-muted-foreground'>

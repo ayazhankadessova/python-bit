@@ -70,7 +70,7 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
         <StatCard icon={Trophy} title='Real-time Problem Solving'>
           <div className='space-y-4'>
             <div>
-              <p className='text-sm font-medium'>Active Sessions</p>
+              <p className='text-sm font-normal'>Active Sessions</p>
               <p className='text-2xl font-bold text-green-600'>
                 {activeClassrooms.length}/{classrooms.length}
               </p>
@@ -88,11 +88,11 @@ export function TeacherDashboard({ onSignOut }: TeacherDashboardProps) {
         <StatCard icon={Users} title='Teaching Stats'>
           <div className='space-y-4'>
             <div>
-              <p className='text-sm font-medium'>School</p>
+              <p className='text-sm font-normal'>School</p>
               <p className='text-2xl font-bold'>{user.school || 'Not Set'}</p>
             </div>
             <div>
-              <p className='text-sm font-medium'>Total Students</p>
+              <p className='text-sm font-normal'>Total Students</p>
               <p className='text-2xl font-bold'>{totalStudents}</p>
               <p className='text-sm text-gray-500'>
                 Average:{' '}

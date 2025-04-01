@@ -171,7 +171,7 @@ const CurriculumManager = () => {
                     <Card key={index} className='p-4'>
                       <div className='space-y-4'>
                         <div className='flex justify-between items-center'>
-                          <h3 className='font-medium'>
+                          <h3 className='font-normal'>
                             Week {week.weekNumber}
                           </h3>
                           <Button
@@ -454,7 +454,7 @@ const CurriculumManager = () => {
                     <Card key={example.id} className='p-4'>
                       <div className='space-y-4'>
                         <div className='flex justify-between items-center'>
-                          <h3 className='font-medium'>Example {index + 1}</h3>
+                          <h3 className='font-normal'>Example {index + 1}</h3>
                           <Button
                             variant='ghost'
                             size='sm'

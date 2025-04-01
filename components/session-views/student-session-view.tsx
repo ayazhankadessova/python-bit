@@ -289,7 +289,7 @@ export function StudentSessionView({
             )}
 
             {currentAssignment && (
-              <div className='text-sm font-medium'>
+              <div className='text-sm font-normal'>
                 Current Task: {currentAssignment.title}
               </div>
             )}

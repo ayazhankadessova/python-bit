@@ -72,7 +72,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
               </p>
             )}
             <div className='bg-muted p-4 rounded-lg'>
-              <p className='text-sm font-medium'>Need access?</p>
+              <p className='text-sm font-normal'>Need access?</p>
               <p className='text-sm text-muted-foreground'>
                 Contact your system administrator if you believe you should have
                 access to this area.

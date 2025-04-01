@@ -20,7 +20,7 @@ export default function QuizzesPage() {
   if (error) {
     return (
       <div>
-        <h2 className='text-xl font-medium text-red-500'>
+        <h2 className='text-xl font-normal text-red-500'>
           Failed to load quizzes
         </h2>
         <p className='text-muted-foreground mt-2'>
@@ -43,7 +43,7 @@ export default function QuizzesPage() {
 
       {quizzes.length === 0 ? (
         <div className='text-center py-12'>
-          <h2 className='text-xl font-medium'>No quizzes available</h2>
+          <h2 className='text-xl font-normal'>No quizzes available</h2>
           <p className='text-muted-foreground mt-2'>
             Check back later for new quizzes to test your knowledge!
           </p>

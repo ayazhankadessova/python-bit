@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-normal transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -20,10 +20,10 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         softBlue:
-          'bg-gradient-to-r from-purple-100 via-purple-200 to-purple-100 text-primary font-medium shadow-sm border border-purple-200/50 hover:shadow-md hover:from-purple-200 hover:via-purple-300 hover:to-purple-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-purple-900/70 dark:via-purple-800/70 dark:to-purple-900/70 dark:border-purple-700/20 dark:hover:from-purple-800/70 dark:hover:via-purple-700/70 dark:hover:to-purple-800/70',
+          'bg-gradient-to-r from-purple-100 via-purple-200 to-purple-100 text-primary font-normal shadow-sm border border-purple-200/50 hover:shadow-md hover:from-purple-200 hover:via-purple-300 hover:to-purple-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-purple-900/70 dark:via-purple-800/70 dark:to-purple-900/70 dark:border-purple-700/20 dark:hover:from-purple-800/70 dark:hover:via-purple-700/70 dark:hover:to-purple-800/70',
         softTeal: `
           bg-gradient-to-r from-teal-300 via-teal-400 to-teal-300 
-          text-primary font-medium 
+          text-primary font-normal 
           shadow-sm border border-teal-300/50 
           hover:shadow-md hover:from-teal-400 hover:via-teal-500 hover:to-teal-400 
           hover:-translate-y-0.5 active:translate-y-0
@@ -33,7 +33,7 @@ const buttonVariants = cva(
         `,
         softTealSecondary: `
         bg-teal-100
-        text-teal-700 font-medium 
+        text-teal-700 font-normal 
         shadow-sm border border-teal-200/30 
         hover:shadow-md hover:bg-teal-100/90
         hover:-translate-y-0.5 active:translate-y-0
@@ -43,7 +43,7 @@ const buttonVariants = cva(
       `,
         warmYellow: `
           bg-gradient-to-r from-amber-100 via-yellow-200 to-amber-100 
-          text-amber-900 font-medium 
+          text-amber-900 font-normal 
           shadow-sm border border-amber-200/50 
           hover:shadow-md hover:from-amber-200 hover:via-yellow-300 hover:to-amber-200 
           hover:-translate-y-0.5 active:translate-y-0
@@ -53,7 +53,7 @@ const buttonVariants = cva(
         `,
         oceanBlue: `
           bg-gradient-to-r from-cyan-100 via-cyan-200 to-cyan-100 
-          text-blue-900 font-medium 
+          text-blue-900 font-normal 
           shadow-sm border border-purple-200/50 
           hover:shadow-md hover:from-cyan-200 hover:via-cyan-300 hover:to-cyan-200 
           hover:-translate-y-0.5 active:translate-y-0
@@ -63,7 +63,7 @@ const buttonVariants = cva(
         `,
         slate: `
           bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 
-          text-slate-700 font-medium 
+          text-slate-700 font-normal 
           shadow-sm border border-slate-200/50 
           hover:shadow-md hover:from-slate-200 hover:via-slate-300 hover:to-slate-200 
           dark:from-slate-800/80 dark:via-slate-700/80 dark:to-slate-800/80 
@@ -79,7 +79,7 @@ const buttonVariants = cva(
           px-4 
           py-1.5 
           text-sm 
-          font-medium 
+          font-normal 
           shadow-[inset_0_-8px_10px_#8fdfff1f]
           backdrop-blur-sm 
           transition-shadow 

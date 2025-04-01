@@ -53,14 +53,14 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
         <StatCard icon={Trophy} title='My Progress'>
           <div className='space-y-4'>
             <div>
-              <p className='text-sm font-medium'>Problems Solved</p>
+              <p className='text-sm font-normal'>Problems Solved</p>
               <p className='text-2xl font-bold text-green-600'>
                 {user.solvedProblems?.length || 0}
               </p>
               <p className='text-sm text-gray-500'>across all classes</p>
             </div>
             <div>
-              <p className='text-sm font-medium'>Active Classes</p>
+              <p className='text-sm font-normal'>Active Classes</p>
               <p className='text-2xl font-bold text-purple-600'>
                 {classrooms.length}
               </p>
@@ -71,11 +71,11 @@ export function StudentDashboard({ onSignOut }: StudentDashboardProps) {
         <StatCard icon={Users} title='School Info'>
           <div className='space-y-4'>
             <div>
-              <p className='text-sm font-medium'>School</p>
+              <p className='text-sm font-normal'>School</p>
               <p className='text-2xl font-bold'>{user.school || 'Not set'}</p>
             </div>
             <div>
-              <p className='text-sm font-medium'>Email</p>
+              <p className='text-sm font-normal'>Email</p>
               <p className='text-lg truncate'>{user.email || 'Not set'}</p>
             </div>
           </div>

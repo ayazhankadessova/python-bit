@@ -36,7 +36,7 @@ export function BlogFooter() {
           <div className='md:col-span-6 lg:col-span-1'>
             <div>
               <div>
-                <h3 className='font-medium mb-4'>Navigation</h3>
+                <h3 className='font-normal mb-4'>Navigation</h3>
                 <ul className='space-y-2 text-sm'>
                   {Object.values(headerNavLinks).map((dialog) => (
                     <li key={dialog.title}>
@@ -56,7 +56,7 @@ export function BlogFooter() {
           {/* Contact & Contribute - Full width on mobile, half on md, 4 cols on lg */}
           <div className='md:col-span-6 lg:col-span-4 lg:pl-10'>
             <div className='w-full'>
-              <h3 className='font-medium mb-5'>Get in Touch</h3>
+              <h3 className='font-normal mb-5'>Get in Touch</h3>
               <ul className='space-y-2 text-sm'>
                 <li>
                   <Link

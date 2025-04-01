@@ -68,7 +68,7 @@ export function ResponsiveSearch() {
       >
         <Search className='h-4 w-4 xl:mr-2' />
         <span className='hidden xl:inline-flex'>Search content...</span>
-        <kbd className='pointer-events-none absolute right-1.5 top-2 hidden h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-xs font-medium opacity-100 xl:flex'>
+        <kbd className='pointer-events-none absolute right-1.5 top-2 hidden h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-xs font-normal opacity-100 xl:flex'>
           <span className='text-xs'>⌘</span>K
         </kbd>
       </Button>
@@ -109,7 +109,7 @@ export function ResponsiveSearch() {
                 ))}
                 <CommandItem
                   onSelect={() => handleSelect('/projects')}
-                  className='font-medium text-sm text-muted-foreground hover:text-foreground'
+                  className='font-normal text-sm text-muted-foreground hover:text-foreground'
                 >
                   View all projects →
                 </CommandItem>
@@ -138,7 +138,7 @@ export function ResponsiveSearch() {
                 ))}
                 <CommandItem
                   onSelect={() => handleSelect('/tutorials')}
-                  className='font-medium text-sm text-muted-foreground hover:text-foreground'
+                  className='font-normal text-sm text-muted-foreground hover:text-foreground'
                 >
                   View all tutorials →
                 </CommandItem>

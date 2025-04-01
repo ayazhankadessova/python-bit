@@ -125,7 +125,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
             {activeSession ? (
               <div className='space-y-4'>
                 <div>
-                  <h4 className='text-green-600 font-medium'>
+                  <h4 className='text-green-600 font-normal'>
                     Session in progress
                   </h4>
                   <p className='text-sm text-muted-foreground'>
@@ -247,7 +247,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
                   >
                     <div className='flex justify-between items-start'>
                       <div>
-                        <h4 className='font-medium'>
+                        <h4 className='font-normal'>
                           Week {session.weekNumber} -{' '}
                           {formatDate(session.startedAt)}
                         </h4>
@@ -263,7 +263,7 @@ export const SessionManagement: React.FC<SessionManagementProps> = ({
                           </p>
                         )}
                       </div>
-                      <span className='text-sm font-medium text-muted-foreground'>
+                      <span className='text-sm font-normal text-muted-foreground'>
                         {session.duration}
                       </span>
                       {isTeacher &&

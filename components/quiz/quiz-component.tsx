@@ -207,7 +207,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
 
             {/* Score Details */}
             <div className='text-center md:text-left'>
-              <p className='text-lg font-medium text-foreground mb-5'>
+              <p className='text-lg font-normal text-foreground mb-5'>
                 {score.percentage >= passingScore
                   ? 'Congratulations! You passed!'
                   : `Get ${passingScore}% to pass`}
@@ -283,7 +283,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
                             size={24}
                           />
                         )}
-                        <span className='font-medium text-md'>
+                        <span className='font-normal text-md'>
                           Question {index + 1}
                         </span>
                       </div>
@@ -313,7 +313,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
 
                   {/* Answer Card */}
                   <div className='bg-card border rounded-lg p-4 mb-3'>
-                    <p className='font-medium'>
+                    <p className='font-normal'>
                       Your answer: {question.options[selectedAnswers[index]]}
                     </p>
                     {!isCorrect && (
@@ -419,7 +419,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
 
               {isAnswered && (
                 <div className='mt-6 p-4 bg-muted rounded-lg'>
-                  <p className='font-medium mb-2'>
+                  <p className='font-normal mb-2'>
                     {isCorrect ? (
                       <div className='flex items-center'>
                         <CheckCircle

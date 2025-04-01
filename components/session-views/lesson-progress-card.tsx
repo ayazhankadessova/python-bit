@@ -158,7 +158,7 @@ const AssignmentProgress = ({
                       <XCircle className='w-4 h-4 text-gray-400' />
                     )}
                     <div>
-                      <CardTitle className='text-sm font-medium'>
+                      <CardTitle className='text-sm font-normal'>
                         {student.displayName}
                       </CardTitle>
                       <p className='text-xs text-muted-foreground'>
