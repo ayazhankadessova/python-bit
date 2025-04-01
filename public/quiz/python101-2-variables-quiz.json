@@ -3,6 +3,7 @@
   "title": "Variables and Data Types",
   "description": "Test your knowledge of Python variables and data types!",
   "tutorialId": "python101-2-variables-types",
+  "imageUrl": "/quizzes/python101-2-variables/cover.jpg",
   "questions": [
     {
       "id": "q1",
@@ -97,17 +98,17 @@
       "explanation": "Variable names cannot start with a number. They must start with a letter or underscore, though they can contain numbers after that.",
       "imageUrl": "/quizzes/python101-2-variables/q9.png"
     },
-   {
-     "id": "q10",
-     "question": "What's wrong with this variable declaration? ```python\nis cool = True```",
-     "options": [
-       "The variable name contains a space",
-       "Boolean values should be lowercase (true)",
-       "You can't use 'is' in a variable name",
-       "The equals sign needs a space before it"
-     ],
-     "correctAnswer": 0,
-     "explanation": "Variable names cannot contain spaces. You should use underscores instead, such as 'is_cool = True'."
-   }
+    {
+      "id": "q10",
+      "question": "What's wrong with this variable declaration? ```python\nis cool = True```",
+      "options": [
+        "The variable name contains a space",
+        "Boolean values should be lowercase (true)",
+        "You can't use 'is' in a variable name",
+        "The equals sign needs a space before it"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Variable names cannot contain spaces. You should use underscores instead, such as 'is_cool = True'."
+    }
   ]
 }

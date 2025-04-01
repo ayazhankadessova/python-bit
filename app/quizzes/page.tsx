@@ -58,6 +58,7 @@ export default function QuizzesPage() {
               description={quiz.description}
               tutorialId={quiz.tutorialId}
               questionCount={quiz.questions.length}
+              imageUrl={quiz.imageUrl}
             />
           ))}
         </div>

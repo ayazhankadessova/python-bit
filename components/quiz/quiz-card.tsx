@@ -17,6 +17,7 @@ interface QuizCardProps {
   description: string
   tutorialId: string
   questionCount: number
+  imageUrl: string
 }
 
 export default function QuizCard({
@@ -25,13 +26,14 @@ export default function QuizCard({
   description,
   tutorialId,
   questionCount,
+  imageUrl
 }: QuizCardProps) {
   return (
     <Card className='w-full'>
       {/* Image Section */}
       <div className='relative w-full aspect-[16/9]'>
         <Image
-          src='/quizzes/python101-1-what-is-python/cover.jpg'
+          src={imageUrl}
           alt={'quiz-cover'}
           layout='fill'
           objectFit='cover'

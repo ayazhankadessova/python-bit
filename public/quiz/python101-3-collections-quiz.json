@@ -3,6 +3,7 @@
   "title": "Collections",
   "description": "Test your knowledge of Python's amazing collection types: lists, tuples, dictionaries, and sets!",
   "tutorialId": "python101-3-collections",
+  "imageUrl": "/quizzes/python101-3-collections/cover.png",
   "questions": [
     {
       "id": "q1",

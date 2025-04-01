@@ -3,6 +3,7 @@
   "title": "Magical Operators Quiz",
   "description": "Test your mastery of Python's magical operators! See if you can solve these operator puzzles and level up your coding skills.",
   "tutorialId": "python101-4-operators",
+  "imageUrl": "/quizzes/python101-4-operators/cover.png",
   "questions": [
     {
       "id": "q1",

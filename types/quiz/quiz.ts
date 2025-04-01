@@ -12,5 +12,6 @@ export interface Quiz {
   title: string
   description: string
   tutorialId: string
+  imageUrl: string
   questions: Question[]
 }

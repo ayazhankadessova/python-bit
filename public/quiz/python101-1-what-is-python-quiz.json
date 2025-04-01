@@ -3,6 +3,7 @@
   "title": "Hello World",
   "description": "Test your knowledge of Python basics from the Hello World tutorial!",
   "tutorialId": "python101-1-what-is-python",
+  "imageUrl": "/quizzes/python101-1-what-is-python/cover.jpg",
   "questions": [
     {
       "id": "q1",

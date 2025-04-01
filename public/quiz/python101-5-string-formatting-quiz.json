@@ -3,6 +3,7 @@
   "title": "String Formatting",
   "description": "Test your knowledge of Python's string formatting techniques to create dynamic and awesome text outputs!",
   "tutorialId": "python101-5-string-formatting",
+  "imageUrl": "/quizzes/python101-5-string-formatting/cover.png",
   "questions": [
     {
       "id": "q1",
