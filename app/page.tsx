@@ -160,6 +160,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             className='space-y-6'
+            viewport={{ once: true }}
           >
             <div className='flex flex-col items-center text-center space-y-4'>
               <Badge className='bg-gradient-to-r from-purple-500 to-purple-500 p-1'>
@@ -195,6 +196,7 @@ export default function HomePage() {
               whileInView={{ filter: 'blur(0px)', opacity: 1 }}
               transition={{ duration: 1 }}
               className='max-w-lg mx-auto'
+              viewport={{ once: true }}
             >
               <Image
                 src='/home/student.png'
@@ -212,6 +214,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             className='space-y-6'
+            viewport={{ once: true }}
           >
             <div className='flex flex-col items-center text-center space-y-4'>
               <Badge className='bg-gradient-to-r from-purple-500 to-purple-500 p-1'>
@@ -262,6 +265,7 @@ export default function HomePage() {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           className='grid md:grid-cols-2 gap-12 mb-24 items-center'
+          viewport={{ once: true }}
         >
           {/* Student Features */}
           <div className='space-y-8 pr-8 md:pr-16'>
@@ -312,6 +316,7 @@ export default function HomePage() {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           className='grid md:grid-cols-2 gap-12 items-center'
+          viewport={{ once: true }}
         >
           {/* Teacher Image with gradient card */}
           <div className='flex justify-start'>
