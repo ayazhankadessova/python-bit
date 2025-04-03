@@ -37,7 +37,7 @@ export function SharePost({ fullLink }: SharePostProps) {
           <div className='flex flex-col space-y-2 text-left sm:text-left'>
             <h4 className='font-semibold'>Share this page</h4>
             <p className='text-sm text-muted-foreground'>
-              Use the link below or directly share to twitter
+              Use the link below to share with your friends or on social media.
             </p>
           </div>
           <div className='flex flex-nowrap mt-4 gap-2'>
