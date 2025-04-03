@@ -17,6 +17,9 @@ const components = {
   // li: ({ children }: { children: React.ReactNode }) => (
   //   <li className='text-lg mb-2'>{children}</li>
   // ),
+  // p: ({ children }: { children: React.ReactNode }) => (
+  //   <p className='text-xl text-foreground dark:text-foreground'>{children}</p>
+  // ),
 }
 
 interface MdxProps {

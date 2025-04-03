@@ -74,7 +74,7 @@
     font-family: var(--font-luckiest-guy);
   }
   body {
-    font-family: var(--font-maven-pro);
+    font-family: var(--font-open-sans);
     @apply bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] text-foreground;
   }
 }

@@ -19,7 +19,7 @@ import { ChevronDown } from 'lucide-react'
 import { ResponsiveSearch } from '@/components/ui/responsive-search'
 
 const activeStyles =
-  'bg-gradient-to-r from-purple-100 via-purple-200 to-purple-100 text-purple-900 dark:from-purple-800 dark:via-purple-700 dark:to-purple-800 dark:text-white shadow-sm border text-primary font-normal after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary dark:from-purple-900/70 dark:via-purple-800/70 dark:to-purple-900/70 dark:text-white dark:border-purple-700/20 dark:hover:from-purple-800/70 dark:hover:via-purple-700/70 dark:hover:to-purple-800/70'
+  'bg-gradient-to-r from-purple-100 via-purple-200 to-purple-100 text-purple-900 dark:from-purple-800 dark:via-purple-700 dark:to-purple-800 dark:text-white shadow-sm border text-primary font-semibold after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary dark:from-purple-900/70 dark:via-purple-800/70 dark:to-purple-900/70 dark:text-white dark:border-purple-700/20 dark:hover:from-purple-800/70 dark:hover:via-purple-700/70 dark:hover:to-purple-800/70'
 
 const isPathActive = (currentPath: string, href: string) => {
   if (href === '/') return currentPath === href
@@ -47,7 +47,7 @@ export function SiteHeader() {
                     <>
                       <NavigationMenuTrigger
                         className={cn(
-                          'transition-all duration-200 lg:text-lg relative rounded-md',
+                          'transition-all duration-200 lg:text-lg relative rounded-md font-medium',
                           (isPathActive(pathname, dialog.href) ||
                             dialog.dropdown?.some((item) =>
                               isPathActive(pathname, item.href)
@@ -79,7 +79,7 @@ export function SiteHeader() {
                     <Link href={dialog.href}>
                       <NavigationMenuTrigger
                         className={cn(
-                          'transition-all duration-200 lg:text-lg relative rounded-md hover:bg-accent/50',
+                          'transition-all duration-200 lg:text-lg relative rounded-md hover:bg-accent/50 font-medium',
                           isPathActive(pathname, dialog.href) && activeStyles
                         )}
                       >
@@ -133,7 +133,7 @@ const ListItem = React.forwardRef<
           )}
           {...props}
         >
-          <div className='text-base font-normal leading-none'>{title}</div>
+          <div className='text-base font-medium leading-none'>{title}</div>
           <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>
             {children}
           </p>
