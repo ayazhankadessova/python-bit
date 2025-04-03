@@ -21,7 +21,7 @@ export function TutorialQuizCTA({
         Great job finishing the tutorial!
       </p>
 
-      <h1 className='text-2xl font-semibold mb-0'>
+      <h1 className='text-2xl font-medium mb-0'>
         Ready to test your knowledge?
       </h1>
 
