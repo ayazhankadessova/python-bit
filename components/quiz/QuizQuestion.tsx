@@ -27,7 +27,6 @@ export default function QuizQuestion({
         {renderQuestionText(question.question)}
       </p>
 
-      {/* Display image if available */}
       {question.imageUrl && (
         <div className='flex justify-center items-center mb-6 my-0'>
           <Image

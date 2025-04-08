@@ -36,7 +36,7 @@ export default function QuizResults({
 
   return (
     <div className='w-full mx-auto -mt-8'>
-      <div className='justify-center items-center flex flex-col bg-gradient-to-r from-purple-200 via-purple-100 to-purple-200 dark:from-purple-900 dark:via-purple-950 dark:to-purple-900 py-16 px-4 rounded-lg shadow-md'>
+      <div className='justify-center items-center flex flex-col bg-gradient-to-r from-purple-200 via-purple-100 to-purple-200 dark:from-purple-900 dark:via-purple-950 dark:to-purple-900 py-8 md:py-12 lg:py-16 px-4 rounded-lg shadow-md'>
         <h2 className='text-2xl mb-2 text-foreground dark:text-foreground font-bold'>
           Quiz Summary
         </h2>
@@ -44,9 +44,7 @@ export default function QuizResults({
           {quiz.title}
         </h1>
 
-        {/* Circular Progress Bar and Details */}
         <div className='flex flex-col md:flex-row items-center justify-center md:space-x-8 w-full max-w-xl'>
-          {/* Circular Progress Bar */}
           <div className='mb-6 md:mb-0'>
             <CircularProgress
               percentage={score.percentage}
@@ -61,7 +59,6 @@ export default function QuizResults({
             />
           </div>
 
-          {/* Score Details */}
           <div className='text-center md:text-left'>
             <p className='text-lg font-normal text-foreground mb-5'>
               {score.percentage >= passingScore
@@ -119,7 +116,8 @@ export default function QuizResults({
       </div>
 
       <div className='xl:px-48 lg:px-32 md:px-16 sm:px-8'>
-        <div className='mt-16'>
+        <div className='mt-12'>
+          <p className='text-xl mb-4 font-semibold'>Review Your Answers</p>
           {quiz.questions.map((question, index) => {
             const isCorrect = selectedAnswers[index] === question.correctAnswer
 
@@ -149,14 +147,12 @@ export default function QuizResults({
                   </div>
                 </div>
 
-                {/* Question text */}
                 <div className='mb-4'>
                   <div className='text-xl font-semibold'>
                     {renderQuestionText(question.question)}
                   </div>
                 </div>
 
-                {/* Display image if available */}
                 {question.imageUrl && (
                   <div className='flex justify-center mb-4'>
                     <Image
@@ -169,7 +165,6 @@ export default function QuizResults({
                   </div>
                 )}
 
-                {/* Answer Card */}
                 <div className='bg-card border rounded-lg p-4 mb-3'>
                   <p className='font-normal'>
                     Your answer:{' '}
@@ -196,6 +191,12 @@ export default function QuizResults({
           })}
         </div>
       </div>
+
+      <footer className='sticky bottom-0 bg-background flex items-center px-6 py-3 border-t border-muted flex-shrink-0 justify-end'>
+        <Button asChild>
+          <Link href={`/tutorials`}>Keep Learning</Link>
+        </Button>
+      </footer>
     </div>
   )
 }

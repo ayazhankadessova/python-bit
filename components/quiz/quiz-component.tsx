@@ -27,7 +27,10 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
 
   const { theme } = useTheme()
   const { user } = useAuth()
-  const { progress, invalidateCache } = useQuizProgress(quiz.id, user)
+  const { progress, invalidateCache, isLoading } = useQuizProgress(
+    quiz.id,
+    user
+  )
 
   useEffect(() => {
     if (progress && progress.attempts > 0) {
@@ -43,8 +46,8 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     setMounted(true)
   }, [])
 
-  if (!mounted) {
-    return null
+  if (!mounted || isLoading) {
+    return null 
   }
 
   const handleRetakeQuiz = () => {

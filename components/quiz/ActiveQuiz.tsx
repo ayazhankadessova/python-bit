@@ -5,7 +5,7 @@ import { Quiz } from '@/types/quiz/quiz'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-python'
 import { useTheme } from 'next-themes'
-import { User } from '@/types/firebase' // assuming you have a User type
+import { User } from '@/types/firebase' 
 import { recordQuizAttempt } from './helper'
 import QuizQuestion from './QuizQuestion'
 import QuizFooter from './QuizFooter'
@@ -116,7 +116,6 @@ export default function ActiveQuiz({
     setIsSubmitting(true)
     const score = calculateScore()
 
-    // Record the quiz attempt to Firestore via API
     const success = await recordQuizAttempt(
       user,
       quiz.id,
@@ -129,7 +128,6 @@ export default function ActiveQuiz({
     )
 
     if (success) {
-      // Refresh the quiz progress data
       invalidateCache()
     }
 
@@ -155,7 +153,6 @@ export default function ActiveQuiz({
 
   return (
     <div className='min-h-screen flex flex-col'>
-      {/* Main Content */}
       <div className='flex-grow'>
         <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8'>
           <div className='prose prose-img:rounded-xl max-w-none mt-2 prose dark:prose-invert'>
@@ -178,7 +175,6 @@ export default function ActiveQuiz({
         </div>
       </div>
 
-      {/* Footer */}
       <QuizFooter
         currentQuestionIndex={currentQuestionIndex}
         totalQuestions={quiz.questions.length}

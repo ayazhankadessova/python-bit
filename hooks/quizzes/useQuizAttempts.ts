@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import { User } from '@/types/firebase'
-import { QuizAttempt } from '@/types/quiz'
+import { QuizAttempt } from '@/types/quiz/quiz'
 
 export interface UseQuizAttemptsOptions {
   revalidateOnFocus?: boolean
