@@ -35,6 +35,11 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   const { user } = useAuth()
 
   const { progress, invalidateCache } = useQuizProgress(quiz.id, user)
+  useEffect(() => {
+    if (progress && progress.attempts > 0) {
+      setShowResults(true)
+    }
+  }, [progress])
 
   useEffect(() => {
     setMounted(true)
@@ -244,6 +249,9 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
                 {score.percentage >= passingScore
                   ? 'Congratulations! You passed!'
                   : `Get ${passingScore}% to pass`}
+                {progress
+                  ? ` | Your Highest Score: ${progress?.highestScore}%`
+                  : 'no'}
               </p>
 
               <div className='flex justify-center md:justify-start space-x-6 mb-6'>
@@ -270,30 +278,15 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
                 </div>
               </div>
 
-              {user && progress && (
-                <div className='mt-4 py-2 px-4 bg-muted rounded-lg text-center md:text-left'>
-                  <p className='text-md font-medium'>
-                    {progress.passed
-                      ? "You've already passed this quiz"
-                      : 'First time passing this quiz!'}
-                  </p>
-                  <p className='text-sm'>
-                    Quiz attempt {progress.attempts + 1} | Last taken:{' '}
-                    {progress.lastTaken
-                      ? new Date(progress.lastTaken).toLocaleDateString()
-                      : 'First attempt'}
-                  </p>
-                </div>
-              )}
-
-              <div className='flex flex-col sm:flex-row gap-3 mt-4'>
-                <Button variant='outline' className='font-semibold text-md p-5'>
+              <div className='flex flex-col sm:flex-row gap-4 mt-4 items-baseline'>
+                <Button variant='outline' className='font-semibold text-md'>
                   <Link href={`/tutorials/${quiz.tutorialId}`}>
                     View Tutorial
                   </Link>
                 </Button>
                 <Button
-                  className='text-md font-semibold border border-2 border-purple-500 dark:border-purple-700 p-5'
+                  variant='outline'
+                  className='text-md font-semibold'
                   onClick={() => {
                     setAnsweredQuestions(
                       Array(quiz.questions.length).fill(false)
@@ -311,7 +304,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
         </div>
 
         <div className='xl:px-48 lg:px-32 md:px-16 sm:px-8'>
-          <div className='mt-12'>
+          <div className='mt-16'>
             {quiz.questions.map((question, index) => {
               const isCorrect =
                 selectedAnswers[index] === question.correctAnswer

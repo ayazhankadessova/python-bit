@@ -21,6 +21,11 @@ export interface QuizProgress {
   lastTaken: number | null
   attempts: number
   successfulAttempts: number
+  highestScore: number
+  score: number
+  correctAnswers: number
+  totalQuestions: number
+  selectedAnswers: number
 }
 
 export interface QuizAttempt {

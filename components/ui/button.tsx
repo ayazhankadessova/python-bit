@@ -109,7 +109,7 @@ const buttonVariants = cva(
           'relative bg-gradient-to-r from-purple-600 via-purple-500 to-purple-400 text-white shadow-lg hover:from-purple-700 hover:via-purple-600 hover:to-purple-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0',
       },
       size: {
-        default: 'h-9 p-4',
+        default: 'h-9 p-5',
         sm: 'h-8 rounded-md px-3 text-xs',
         lg: 'h-10  px-8',
         icon: 'h-9 w-9',

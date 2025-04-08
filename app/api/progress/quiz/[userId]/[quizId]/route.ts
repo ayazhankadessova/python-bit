@@ -35,6 +35,11 @@ export async function GET(
       lastTaken: data.lastTaken || null,
       attempts: data.attempts || 0,
       successfulAttempts: data.successfulAttempts || 0,
+      highestScore: data.highestScore || 0,
+      score: data.score || 0,
+      correctAnswers: data.correctAnswers || 0,
+      totalQuestions: data.totalQuestions || 0, 
+      selectedAnswers: data.selectedAnswers || [],
     })
   } catch (error) {
     console.error('Error getting quiz progress:', error)

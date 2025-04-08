@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import {
   doc,
   collection,
-//   addDoc,
+  //   addDoc,
   getDoc,
   setDoc,
   increment,
@@ -53,13 +53,20 @@ export async function POST(request: Request) {
 
     // Update or create quiz progress document
     if (quizDoc.exists()) {
+      const existingData = quizDoc.data()
+      const currentHighestScore = existingData.highestScore || 0
       await setDoc(
         quizRef,
         {
           lastTaken: timestamp,
           attempts: increment(1),
           passed: quizDoc.data().passed || isPassed, // Only set to true if not already passed
+          highestScore: Math.max(currentHighestScore, score),
           successfulAttempts: isPassed ? increment(1) : 0,
+          score: score,
+          correctAnswers: correctAnswers,
+          totalQuestions: totalQuestions,
+          selectedAnswers: selectedAnswers,
         },
         { merge: true }
       )
@@ -71,6 +78,11 @@ export async function POST(request: Request) {
         attempts: 1,
         passed: isPassed,
         successfulAttempts: isPassed ? 1 : 0,
+        highestScore: score,
+        score: score,
+        correctAnswers: correctAnswers,
+        totalQuestions: totalQuestions,
+        selectedAnswers: selectedAnswers,
       })
     }
 
