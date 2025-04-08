@@ -17,7 +17,7 @@ const buttonVariants = cva(
           'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 hover:-translate-y-0.5 active:translate-y-0',
         whiteGray:
           'bg-zinc-100 text-secondary-foreground shadow-sm hover:bg-zinc-100/90 dark:bg-zinc-700 dark:hover:bg-zinc-700/90 hover:-translate-y-0.5 active:translate-y-0',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        ghost: 'hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         softBlue:
           'bg-gradient-to-r from-purple-100 via-purple-200 to-purple-100 text-primary font-normal shadow-sm border border-purple-200/50 hover:shadow-md hover:from-purple-200 hover:via-purple-300 hover:to-purple-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-purple-900/70 dark:via-purple-800/70 dark:to-purple-900/70 dark:border-purple-700/20 dark:hover:from-purple-800/70 dark:hover:via-purple-700/70 dark:hover:to-purple-800/70',
