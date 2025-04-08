@@ -12,6 +12,9 @@ import Prism from 'prismjs'
 import 'prismjs/components/prism-python'
 import { useTheme } from 'next-themes'
 import Link from 'next/link'
+import { useAuth } from '@/contexts/AuthContext'
+import { useQuizProgress } from '@/hooks/quizzes/useQuizProgress'
+import { recordQuizAttempt } from './helper'
 
 interface QuizComponentProps {
   quiz: Quiz
@@ -28,6 +31,10 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   const [showResults, setShowResults] = useState(false)
   const { theme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { user } = useAuth()
+
+  const { progress, invalidateCache } = useQuizProgress(quiz.id, user)
 
   useEffect(() => {
     setMounted(true)
@@ -94,8 +101,34 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     }
   }
 
-  const handleSubmitQuiz = () => {
+  // const handleSubmitQuiz = () => {
+  //   setShowResults(true)
+  // }
+  const handleSubmitQuiz = async () => {
+    if (!user || isSubmitting) return
+
+    setIsSubmitting(true)
+    const score = calculateScore()
+
+    // Record the quiz attempt to Firestore via API
+    const success = await recordQuizAttempt(
+      user,
+      quiz.id,
+      quiz.title,
+      quiz.tutorialId,
+      score.percentage,
+      score.correctAnswers,
+      score.totalQuestions,
+      selectedAnswers
+    )
+
+    if (success) {
+      // Refresh the quiz progress data
+      invalidateCache()
+    }
+
     setShowResults(true)
+    setIsSubmitting(false)
   }
 
   const calculateScore = () => {
@@ -237,9 +270,27 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
                 </div>
               </div>
 
+              {user && progress && (
+                <div className='mt-4 py-2 px-4 bg-muted rounded-lg text-center md:text-left'>
+                  <p className='text-md font-medium'>
+                    {progress.passed
+                      ? "You've already passed this quiz"
+                      : 'First time passing this quiz!'}
+                  </p>
+                  <p className='text-sm'>
+                    Quiz attempt {progress.attempts + 1} | Last taken:{' '}
+                    {progress.lastTaken
+                      ? new Date(progress.lastTaken).toLocaleDateString()
+                      : 'First attempt'}
+                  </p>
+                </div>
+              )}
+
               <div className='flex flex-col sm:flex-row gap-3 mt-4'>
                 <Button variant='outline' className='font-semibold text-md p-5'>
-                  <Link href={`/tutorials/${quiz.tutorialId}`}>View Tutorial</Link>
+                  <Link href={`/tutorials/${quiz.tutorialId}`}>
+                    View Tutorial
+                  </Link>
                 </Button>
                 <Button
                   className='text-md font-semibold border border-2 border-purple-500 dark:border-purple-700 p-5'

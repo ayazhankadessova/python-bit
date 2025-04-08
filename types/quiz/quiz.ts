@@ -15,3 +15,20 @@ export interface Quiz {
   imageUrl: string
   questions: Question[]
 }
+
+export interface QuizProgress {
+  passed: boolean
+  lastTaken: number | null
+  attempts: number
+  successfulAttempts: number
+}
+
+export interface QuizAttempt {
+  id: string
+  timestamp: number
+  score: number
+  correctAnswers: number
+  totalQuestions: number
+  passed: boolean
+  selectedAnswers: number[]
+}
