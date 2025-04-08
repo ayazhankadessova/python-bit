@@ -40,3 +40,19 @@ export async function recordQuizAttempt(
     return false
   }
 }
+
+
+// Helper function to calculate score
+// export function calculateScore(quiz: Quiz, selectedAnswers: number[]) {
+//   let correctAnswers = 0
+//   quiz.questions.forEach((question, index) => {
+//     if (selectedAnswers[index] === question.correctAnswer) {
+//       correctAnswers++
+//     }
+//   })
+//   return {
+//     correctAnswers,
+//     totalQuestions: quiz.questions.length,
+//     percentage: Math.round((correctAnswers / quiz.questions.length) * 100),
+//   }
+// }

@@ -50,13 +50,13 @@ export default function QuizResults({
           <div className='mb-6 md:mb-0'>
             <CircularProgress
               percentage={score.percentage}
-              size={200}
+              size={180}
               strokeWidth={12}
               primaryColor={isDarkTheme ? 'stroke-teal-400' : 'stroke-teal-500'}
               secondaryColor={
                 isDarkTheme ? 'stroke-gray-700' : 'stroke-gray-50'
               }
-              textSize='text-4xl'
+              textSize='text-5xl'
               textClassName={isDarkTheme ? 'text-white' : 'text-black'}
             />
           </div>
@@ -99,13 +99,6 @@ export default function QuizResults({
                 <span className='text-2xl font-semibold'>incorrect</span>
               </div>
             </div>
-
-            {progress && progress.attempts > 0 && (
-              <p className='text-md font-normal mb-4'>
-                You&apos;ve taken this quiz {progress.attempts} time
-                {progress.attempts !== 1 ? 's' : ''}
-              </p>
-            )}
 
             <div className='flex flex-col sm:flex-row gap-4 mt-4 items-baseline'>
               <Button variant='outline' className='font-semibold text-md'>

@@ -21,7 +21,7 @@ export const CircularProgress = ({
   size = 160,
   strokeWidth = 8,
   showText = true,
-  textSize = 'text-lg',
+  textSize = 'text-2xl',
   primaryColor = 'stroke-teal-500',
   secondaryColor = 'stroke-gray-200 dark:stroke-gray-700',
   className = '',
@@ -83,7 +83,7 @@ export const CircularProgress = ({
 
       {showText && (
         <div className='absolute inset-0 flex items-center justify-center'>
-          <span className={cn('font-semibold', textSize, textClassName)}>
+          <span className={cn('font-bold', textSize, textClassName)}>
             {clampedPercentage}%
           </span>
         </div>
