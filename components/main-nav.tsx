@@ -6,7 +6,7 @@ export function MainNav() {
     <Link href='/' className='flex items-center space-x-2 rounded-lg'>
       <div className='relative w-[90px] md:w-[110px] pt-1'>
         <Image
-          src='/pythonbit-teal-yellow-v5.png'
+          src='/pythonbit-2.png'
           alt='PythonBit Logo'
           width={140}
           height={30}
