@@ -25,7 +25,7 @@ export interface QuizProgress {
   score: number
   correctAnswers: number
   totalQuestions: number
-  selectedAnswers: number
+  selectedAnswers: number[]
 }
 
 export interface QuizAttempt {
