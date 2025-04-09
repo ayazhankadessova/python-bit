@@ -71,7 +71,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
   return (
     <ReactMarkdown
-      className={`prose dark:prose-invert max-w-none ${className}`}
+      // className={`prose dark:prose-invert max-w-none ${className}`}
       remarkPlugins={[remarkGfm]}
       components={components}
     >
