@@ -5,9 +5,9 @@ import TutorialPageContent from '@/components/tutorials/tutorial-page-content'
 import '@/styles/mdx-style.css'
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string[]
-  }
+  }>
 }
 
 async function getPostFromParams(params: PostPageProps['params']) {
@@ -27,7 +27,8 @@ export async function generateStaticParams(): Promise<
   }))
 }
 
-export default async function PostPage({ params }: PostPageProps) {
+export default async function PostPage(props: PostPageProps) {
+  const params = await props.params;
   const tutorial = await getPostFromParams(params)
   const fullLinkGenerated = `${siteConfig.url}/tutorials/${params?.slug?.join(
     '/'

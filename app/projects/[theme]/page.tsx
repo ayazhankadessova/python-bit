@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, use } from 'react';
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -19,16 +19,18 @@ import { ProjectItem } from '@/components/projects/project-item'
 import { filterProjectsBySearchTerm } from '@/lib/projects/utils'
 
 interface ThemePageProps {
-  params: {
+  params: Promise<{
     theme: string
-  }
-  searchParams: {
+  }>
+  searchParams: Promise<{
     page?: string
     perPage?: string
-  }
+  }>
 }
 
-const ThemePage = ({ params, searchParams }: ThemePageProps) => {
+const ThemePage = (props: ThemePageProps) => {
+  const searchParams = use(props.searchParams);
+  const params = use(props.params);
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('createdAt')
 
@@ -48,7 +50,7 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   const currentPage = Number(searchParams?.page) || 1
   const currentPerPage = Number(searchParams?.perPage) || 5
   const fullLinkGenerated = `${siteConfig.url}/projects/${params.theme}`
-  
+
 
   const displayProjects = sortedProjects.slice(
     currentPerPage * (currentPage - 1),

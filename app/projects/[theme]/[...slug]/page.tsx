@@ -10,9 +10,9 @@ import { ProjectStatus } from '@/components/projects/project-status'
 import '@/styles/mdx-style.css'
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string[]
-  }
+  }>
 }
 
 async function getPostFromParams(params: PostPageProps['params']) {
@@ -31,7 +31,8 @@ export async function generateStaticParams(): Promise<
   }))
 }
 
-export default async function ProjectPage({ params }: PostPageProps) {
+export default async function ProjectPage(props: PostPageProps) {
+  const params = await props.params;
   const post = await getPostFromParams(params)
   const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme
     .trim()

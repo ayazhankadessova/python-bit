@@ -4,8 +4,9 @@ import { fireStore } from '@/firebase/firebase'
 
 export async function GET(
   request: Request,
-  { params }: { params: { userId: string; quizId: string } }
+  props: { params: Promise<{ userId: string; quizId: string }> }
 ) {
+  const params = await props.params;
   try {
     const { userId, quizId } = params
     const { searchParams } = new URL(request.url)

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, use } from 'react';
 import { tutorials } from '#site/content'
 import { TutorialItem } from '@/components/tutorials/tutorial-item'
 import {
@@ -22,15 +22,14 @@ import {
 import { useAuth } from '@/contexts/AuthContext'
 
 interface TutorialPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string
     perPage?: string
-  }
+  }>
 }
 
-const TutorialPage: React.FC<TutorialPageProps> = ({
-  searchParams,
-}: TutorialPageProps) => {
+const TutorialPage: React.FC<TutorialPageProps> = (props: TutorialPageProps) => {
+  const searchParams = use(props.searchParams);
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('Difficulty')
   const { user } = useAuth()
