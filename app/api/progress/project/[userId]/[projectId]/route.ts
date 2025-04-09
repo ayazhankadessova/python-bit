@@ -4,11 +4,10 @@ import { fireStore } from '@/firebase/firebase'
 
 export async function GET(
   request: Request,
-  props: { params: Promise<{ userId: string; projectId: string }> }
+  { params }: { params: Promise<{ userId: string; projectId: string }> }
 ) {
-  const params = await props.params;
   try {
-    const { userId, projectId } = params
+    const { userId, projectId } = await params
 
     if (!userId || !projectId) {
       return NextResponse.json(
