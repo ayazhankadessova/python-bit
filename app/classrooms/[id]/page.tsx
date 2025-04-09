@@ -1,17 +1,17 @@
 'use client';
-// import { use } from "react";
+import { use } from "react";
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { useAuth } from '@/contexts/AuthContext'
 import { SessionManagement } from '@/components/session-views/session-management'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 const ClassroomLessonPage: React.FC<PageProps> = props => {
-  const params = props.params;
+  const params = use(props.params);
   const { user, loading } = useAuth() // Firebase Auth context
 
   const classroomId = params.id
