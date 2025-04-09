@@ -10,7 +10,7 @@ interface MarkdownRendererProps {
 
 export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   content,
-  className = '',
+  // className = '',
 }) => {
   const components: Components = {
     // Custom image component using Next.js Image
