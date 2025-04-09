@@ -11,7 +11,7 @@ interface PostPageProps {
 }
 
 async function getPostFromParams(params: PostPageProps['params']) {
-  const slug = params?.slug?.join('/')
+  const slug = (await params)?.slug?.join('/')
   const tutorial = tutorials.find((tutorial) => tutorial.slugAsParams === slug)
 
   return tutorial
@@ -29,7 +29,7 @@ export async function generateStaticParams(): Promise<
 
 export default async function PostPage(props: PostPageProps) {
   const params = await props.params;
-  const tutorial = await getPostFromParams(params)
+  const tutorial = await getPostFromParams(props.params)
   const fullLinkGenerated = `${siteConfig.url}/tutorials/${params?.slug?.join(
     '/'
   )}`

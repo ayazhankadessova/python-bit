@@ -10,13 +10,14 @@ import { ProjectStatus } from '@/components/projects/project-status'
 import '@/styles/mdx-style.css'
 
 interface PostPageProps {
-  params: Promise<{
+  params: {
     slug: string[]
-  }>
+  }
 }
 
 async function getPostFromParams(params: PostPageProps['params']) {
-  const slug = params?.slug?.join('/')
+  const resolvedParams = await params
+  const slug = resolvedParams?.slug?.join('/')
   const post = projects.find((post) => post.slugAsParams === slug)
 
   return post
@@ -32,8 +33,9 @@ export async function generateStaticParams(): Promise<
 }
 
 export default async function ProjectPage(props: PostPageProps) {
-  const params = await props.params;
-  const post = await getPostFromParams(params)
+  const params = await props.params
+  const resolvedParams = await params
+  const post = await getPostFromParams(resolvedParams)
   const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme
     .trim()
     .replace('', '-')}/${params?.slug?.join('/')}`
@@ -45,7 +47,6 @@ export default async function ProjectPage(props: PostPageProps) {
 
   return (
     <div className='flex flex-col h-screen xl:px-12 lg:px-8 md:px-4 sm:px-4 pt-8 mb-16'>
-
       <div className='flex justify-between mb-4 ml-1'>
         <BackButton
           href={`/projects/${post?.theme.trim().replace(' ', '-')}/`}

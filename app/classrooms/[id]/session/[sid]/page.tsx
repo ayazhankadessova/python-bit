@@ -1,5 +1,5 @@
 'use client';
-import { use } from "react";
+// import { use } from "react";
 // import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
@@ -15,7 +15,7 @@ interface PageProps {
 }
 
 const SessionPage: React.FC<PageProps> = props => {
-  const params = use(props.params);
+  const params = props.params;
   const router = useRouter()
   const { user, loading } = useAuth()
 
