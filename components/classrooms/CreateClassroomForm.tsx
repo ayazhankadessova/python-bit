@@ -30,8 +30,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Loader2 } from 'lucide-react'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { useToast } from '@/hooks/use-toast'
+import { Loader2 } from 'lucide-react'
 
 interface Props {
   teacherId: string
@@ -200,13 +201,7 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
     })
   }
 
-  if (loading) {
-    return (
-      <div className='flex items-center justify-center min-h-[400px]'>
-        <Loader2 className='h-8 w-8 animate-spin' />
-      </div>
-    )
-  }
+  if (loading) return <LoadingSpinner />
 
   return (
     <Form {...form}>

@@ -1,5 +1,5 @@
 'use client'
-import { Loader2 } from 'lucide-react'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { useAuth } from '@/contexts/AuthContext'
 import { SessionManagement } from '@/components/session-views/session-management'
 
@@ -14,13 +14,7 @@ const ClassroomLessonPage: React.FC<PageProps> = ({ params }) => {
 
   const classroomId = params.id
 
-   if (loading) {
-     return (
-       <div className='flex items-center justify-center min-h-screen'>
-         <Loader2 className='h-8 w-8 animate-spin' />
-       </div>
-     )
-   }
+   if (loading) return <LoadingSpinner />
 
    if (!user) {
      return (
