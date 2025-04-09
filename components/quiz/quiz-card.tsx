@@ -52,7 +52,7 @@ export default function QuizCard({
             {questionCount} questions
           </p>
         </div>
-        <div className='flex justify-between items-baseline w-full'>
+        <div className='flex justify-between items-center w-full'>
           <Button variant='outline' asChild>
             <Link href={`/tutorials/${tutorialId}`}>View Tutorial</Link>
           </Button>

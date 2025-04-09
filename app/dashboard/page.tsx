@@ -2,13 +2,22 @@
 import { TeacherDashboard } from '@/components//dashboard/TeacherDashboard'
 import { StudentDashboard } from '@/components/dashboard/StudentDashboard'
 import { useAuth } from '@/contexts/AuthContext'
-import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { Loader2 } from 'lucide-react'
 import ProtectedRoute from '@/components/ProtectedRoute'
 
 export default function DashboardPage() {
   const { user, loading, signOut } = useAuth()
 
-  if (loading) return <LoadingSpinner />
+  if (loading) {
+    return (
+      <div className='min-h-screen flex items-center justify-center'>
+        <div className='text-center space-y-4'>
+          <Loader2 className='h-8 w-8 animate-spin mx-auto text-primary' />
+          <p className='text-lg text-muted-foreground'>Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <ProtectedRoute>
