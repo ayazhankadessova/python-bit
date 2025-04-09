@@ -309,127 +309,194 @@
     "exercises": {
       "1": {
         "exercise_number": 1,
-        "description": "Practice arithmetic operators with game character stats",
-        "expected_output": "Total Health: 150\nScore: 75\nEach player gets: 25.0 coins\nSuper attack damage: 8\nLeftover gems: 1",
-        "test_code": "def test_arithmetic():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'total_health' in locals(), \"Create total_health variable\"\n        assert total_health == 150, \"Health should be 150\"\n        assert 'score' in locals() and score == 75, \"Score should be 75\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "description": "Learn about arithmetic operators in Python",
+        "expected_output": "Total Health: 150\nHealth after taking damage: 120\nScore: 75\nEach player gets: 25.0 coins\nQuick split: 33 coins each\nSuper attack damage: 8\nLeftover gems: 1",
+        "test_code": "def test_arithmetic_operators():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    expected_lines = [\n        \"Total Health: 150\",\n        \"Health after taking damage: 120\",\n        \"Score: 75\",\n        \"Each player gets: 25.0 coins\",\n        \"Quick split: 33 coins each\",\n        \"Super attack damage: 8\",\n        \"Leftover gems: 1\"\n    ]\n    \n    actual_lines = actual_output.split('\\n')\n    \n    if len(actual_lines) != len(expected_lines):\n        return False, f\"Expected {len(expected_lines)} lines of output, but got {len(actual_lines)}\"\n    \n    for i, (actual, expected) in enumerate(zip(actual_lines, expected_lines)):\n        if actual != expected:\n            return False, f\"Line {i+1} should be '{expected}', but got '{actual}'\"\n    \n    return True",
         "hints": [
-          "Use + for addition (initial_health + bonus_health)",
-          "Use * for multiplication (score * 3)",
-          "Use / for division (treasure / 4)",
-          "Use ** for power (2 ** 3)",
-          "Use % for remainder (100 % 3)"
-        ],
-        "difficulty": "beginner"
-      },
-      "2": {
-        "exercise_number": 2,
-        "description": "Practice string operators by creating hero names and cheers",
-        "expected_output": "Your hero name: Super Coder\nThe crowd goes: Hip Hip Hooray! Hip Hip Hooray! Hip Hip Hooray!",
-        "test_code": "def test_string_ops():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'hero_name' in locals(), \"Create hero_name variable\"\n        assert hero_name == \"Super Coder\", \"Hero name should be 'Super Coder'\"\n        assert 'crowd_cheer' in locals(), \"Create crowd_cheer variable\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
-        "hints": [
-          "Use + to combine strings",
-          "Don't forget spaces between words",
-          "Use * to repeat strings"
-        ],
-        "difficulty": "beginner"
-      },
-      "3": {
-        "exercise_number": 3,
-        "description": "Practice list operators by combining inventories",
-        "expected_output": "You found: ['sword', 'shield', 'potion', 'map']\nPower-ups collected: ['⭐', '⭐', '⭐']",
-        "test_code": "def test_list_ops():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        assert 'full_inventory' in locals(), \"Create full_inventory variable\"\n        assert len(full_inventory) == 4, \"Inventory should have 4 items\"\n        assert 'power_ups' in locals(), \"Create power_ups variable\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
-        "hints": [
-          "Use + to combine lists",
-          "Use * to repeat lists",
-          "Check the order of items in the output"
-        ],
-        "difficulty": "beginner"
-      },
-      "4": {
-        "exercise_number": 4,
-        "description": "Practice comparison operators with game decisions",
-        "expected_output": "Password correct? True\nCan enter dungeon? True\nCan another player join? True",
-        "test_code": "def test_comparison_ops():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        assert 'is_correct' in locals(), \"Create is_correct variable\"\n        assert is_correct == True, \"Password check should be True\"\n        assert 'can_enter_dungeon' in locals(), \"Create can_enter_dungeon variable\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
-        "hints": [
-          "Use == for equality comparison",
-          "Use > for greater than",
-          "Use <= for less than or equal to"
-        ],
-        "difficulty": "beginner"
-      },
-      "5": {
-        "exercise_number": 5,
-        "description": "Practice logical operators with game conditions",
-        "expected_output": "Ready for battle? True\nCan attack? True\nStill playing? True",
-        "test_code": "def test_logical_ops():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        assert 'ready_for_battle' in locals(), \"Create ready_for_battle variable\"\n        assert ready_for_battle == True, \"Should be ready for battle\"\n        assert 'can_attack' in locals(), \"Create can_attack variable\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
-        "hints": [
-          "Use and to require both conditions",
-          "Use or when either condition is okay",
-          "Use not to flip True/False"
+          "Make sure you're using the correct arithmetic operators",
+          "Addition is +, subtraction is -, multiplication is *, division is /",
+          "Integer division is //, exponentiation is **, and modulo (remainder) is %"
         ],
         "difficulty": "beginner"
       },
       "6": {
         "exercise_number": 6,
-        "description": "Create a game score calculator using arithmetic operators",
-        "expected_output": "Total Health: 150\nScore: 75\nEach player gets: 25.0 coins\nSuper attack damage: 8\nLeftover gems: 1",
-        "test_code": "def test_game_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"Total Health: 150\\nScore: 75\\nEach player gets: 25.0 coins\\nSuper attack damage: 8\\nLeftover gems: 1\"\n        assert actual_output == expected, f\"Expected '{expected}', but got '{actual_output}'\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "description": "Fix the operators in the power-up calculator",
+        "expected_output": "Power from level: 30\nTotal power: 35\nPower squared: 1225\nLegendary status: False",
+        "test_code": "def test_power_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    expected_lines = [\n        \"Power from level: 30\",\n        \"Total power: 35\",\n        \"Power squared: 1225\",\n        \"Legendary status: False\"\n    ]\n    \n    actual_lines = actual_output.split('\\n')\n    \n    if len(actual_lines) != len(expected_lines):\n        return False, f\"Expected {len(expected_lines)} lines of output, but got {len(actual_lines)}\"\n    \n    for i, (actual, expected) in enumerate(zip(actual_lines, expected_lines)):\n        if actual != expected:\n            return False, f\"Line {i+1} should be '{expected}', but got '{actual}'\"\n    \n    # Check for correct variable values\n    namespace = {}\n    try:\n        exec(user_code, namespace)\n        if namespace['power_from_level'] != 30:\n            return False, \"power_from_level should be 30\"\n        if namespace['total_power'] != 35:\n            return False, \"total_power should be 35\"\n        if namespace['power_squared'] != 1225:\n            return False, \"power_squared should be 1225\"\n        if namespace['is_legendary'] != False:\n            return False, \"is_legendary should be False\"\n    except Exception as e:\n        return False, str(e)\n    \n    return True",
         "hints": [
-          "Fill in each blank with the correct operator",
-          "Remember order of operations",
-          "Check the expected output carefully"
+          "For power_from_level, use the multiplication operator (*)",
+          "For total_power, use the addition operator (+)",
+          "For power_squared, use the exponentiation operator (**)",
+          "For is_legendary, use the greater than operator (>)"
         ],
         "difficulty": "beginner"
       },
       "7": {
         "exercise_number": 7,
-        "description": "Create a complete score calculator with conditions",
-        "expected_output": "High Score!",
-        "test_code": "def test_final_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        expected = \"300\\nNew High Score: True\"\n        assert actual_output == expected, f\"Expected '{expected}', but got '{actual_output}'\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "description": "Complete the string operations to create a character bio",
+        "expected_output": "Character: Alex the Wizard\nPower: ⚡⚡⚡⚡⚡⚡⚡\nStatus: Master of Arcane",
+        "test_code": "def test_string_wizard():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    expected_lines = [\n        \"Character: Alex the Wizard\",\n        \"Power: ⚡⚡⚡⚡⚡⚡⚡\",\n        \"Status: Master of Arcane\"\n    ]\n    \n    actual_lines = actual_output.split('\\n')\n    \n    if len(actual_lines) != len(expected_lines):\n        return False, f\"Expected {len(expected_lines)} lines of output, but got {len(actual_lines)}\"\n    \n    for i, (actual, expected) in enumerate(zip(actual_lines, expected_lines)):\n        if actual != expected:\n            return False, f\"Line {i+1} should be '{expected}', but got '{actual}'\"\n    \n    # Check for correct variable values\n    namespace = {}\n    try:\n        exec(user_code, namespace)\n        if namespace['title'] != \"Alex the Wizard\":\n            return False, \"title should be 'Alex the Wizard'\"\n        if namespace['power_indicator'] != \"⚡⚡⚡⚡⚡⚡⚡\":\n            return False, \"power_indicator should be '⚡⚡⚡⚡⚡⚡⚡'\"\n        if namespace['status'] != \"Master of Arcane\":\n            return False, \"status should be 'Master of Arcane'\"\n    except Exception as e:\n        return False, str(e)\n    \n    return True",
         "hints": [
-          "Start with base_score",
-          "Add 100 if has_power_up is True",
-          "Double score if is_critical_hit is True",
-          "Compare final score with current_high_score"
+          "For title, use string concatenation with the + operator",
+          "For power_indicator, use the string repetition operator (*)",
+          "For status, use the 'in' operator to check if 'Wizard' is in character_class"
         ],
-        "difficulty": "beginner"
+        "difficulty": "intermediate"
       },
       "8": {
         "exercise_number": 8,
-        "description": "Create ultimate inventory by combining and duplicating lists",
-        "expected_output": "['sword', 'shield', 'potion', 'sword', 'shield', 'potion', 'sword', 'shield', 'potion']\nTrue",
-        "test_code": "def test_ultimate_inventory():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'combined_items' in locals(), \"Create combined_items variable\"\n        assert len(combined_items) == 9, \"Final inventory should have 9 items\"\n        assert combined_items.count('sword') == 3, \"Should have 3 swords\"\n        assert 'sword' in combined_items, \"Check for 'sword' in inventory\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "description": "Build a functional inventory system with list operators",
+        "expected_output": "Full inventory: ['health potion', 'map', 'sword', 'shield', 'gold']\nHas weapon: True\nReady for quest: True\nGold: 50",
+        "test_code": "def test_inventory_system():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    expected_lines = [\n        \"Full inventory: ['health potion', 'map', 'sword', 'shield', 'gold']\",\n        \"Has weapon: True\",\n        \"Ready for quest: True\",\n        \"Gold: 50\"\n    ]\n    \n    actual_lines = actual_output.split('\\n')\n    \n    if len(actual_lines) != len(expected_lines):\n        return False, f\"Expected {len(expected_lines)} lines of output, but got {len(actual_lines)}\"\n    \n    for i, (actual, expected) in enumerate(zip(actual_lines, expected_lines)):\n        if actual != expected:\n            return False, f\"Line {i+1} should be '{expected}', but got '{actual}'\"\n    \n    # Check for correct variable values\n    namespace = {}\n    try:\n        exec(user_code, namespace)\n        expected_inventory = ['health potion', 'map', 'sword', 'shield', 'gold']\n        if namespace['inventory'] != expected_inventory:\n            return False, f\"inventory should be {expected_inventory}\"\n        if namespace['has_weapon'] != True:\n            return False, \"has_weapon should be True\"\n        if namespace['ready_for_quest'] != True:\n            return False, \"ready_for_quest should be True\"\n        if namespace['gold_count'] != 50:\n            return False, \"gold_count should be 50\"\n    except Exception as e:\n        return False, str(e)\n    \n    return True",
         "hints": [
-          "First combine starter_items and found_items using +",
-          "Then multiply the combined list by 3 using *",
-          "Use 'in' operator to check if 'sword' is in the inventory"
+          "Use the + operator to combine the starting_items and found_items lists",
+          "Use the 'in' operator to check if 'sword' is in the inventory",
+          "Use 'in' operator twice with 'and' to check for both items",
+          "Use a conditional expression with 'in' to set gold_count"
         ],
-        "difficulty": "beginner"
+        "difficulty": "intermediate"
       },
       "9": {
         "exercise_number": 9,
-        "description": "Debug common operator mistakes in game code",
-        "expected_output": "150\nTrue\nTrue",
-        "test_code": "def test_debug_operators():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'player_health' in locals(), \"Fix player_health calculation\"\n        assert player_health == 150, \"player_health should be 150\"\n        assert is_high_score == True, \"is_high_score should be True\"\n        assert has_power == False, \"has_power should be False\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "description": "Find and fix the bugs in the code",
+        "expected_output": "Fixed player_health: 150\nFixed is_high_score: True\nFixed has_power: True",
+        "test_code": "def test_debug_mission():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    expected_lines = [\n        \"Fixed player_health: 150\",\n        \"Fixed is_high_score: True\",\n        \"Fixed has_power: True\"\n    ]\n    \n    actual_lines = [line for line in actual_output.split('\\n') if line.startswith(\"Fixed\")]\n    \n    if len(actual_lines) != len(expected_lines):\n        return False, f\"Expected {len(expected_lines)} 'Fixed' lines of output, but got {len(actual_lines)}\"\n    \n    for i, (actual, expected) in enumerate(zip(actual_lines, expected_lines)):\n        if actual != expected:\n            return False, f\"Line should be '{expected}', but got '{actual}'\"\n    \n    # Check that the code includes fixes for the bugs\n    if \"int(\" not in user_code and \"100 +\" not in user_code:\n        return False, \"Bug 1 not fixed: player_health should convert '100' to an integer\"\n    \n    if \"==\" not in user_code:\n        return False, \"Bug 2 not fixed: is_high_score should use == for comparison\"\n    \n    if \"(\" not in user_code and \")\" not in user_code:\n        return False, \"Bug 3 not fixed: has_power should use parentheses to fix operator precedence\"\n    \n    return True",
         "hints": [
-          "Bug 1: Convert string '100' to integer before adding",
-          "Bug 2: Use == for comparison, not = (assignment)",
-          "Bug 3: Use parentheses to clarify operator precedence"
+          "For Bug 1, you need to convert the string '100' to an integer before adding",
+          "For Bug 2, you're using assignment (=) instead of comparison (==)",
+          "For Bug 3, remember operator precedence - 'and' has higher precedence than 'or'"
         ],
         "difficulty": "intermediate"
       },
       "10": {
         "exercise_number": 10,
-        "description": "Create a complete game score calculator with bonus points and critical hits",
-        "expected_output": "New score: 150\nIs critical hit: True\nNew High Score: False",
-        "test_code": "def test_score_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    try:\n        exec(user_code)\n        sys.stdout = sys.__stdout__\n        actual_output = output.getvalue().strip()\n        assert 'final_score' in locals(), \"Calculate final_score\"\n        assert final_score == 300, \"Final score should be 300\"\n        assert 'is_new_high_score' in locals(), \"Check for new high score\"\n        assert is_new_high_score == True, \"Should be a new high score\"\n        return True\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)",
+        "description": "Create a score calculator with conditional bonuses",
+        "expected_output": "Final Score: 300\nNew high score: True",
+        "test_code": "def test_score_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    expected_lines = [\n        \"Final Score: 300\",\n        \"New high score: True\"\n    ]\n    \n    actual_lines = actual_output.split('\\n')\n    \n    if len(actual_lines) != len(expected_lines):\n        return False, f\"Expected {len(expected_lines)} lines of output, but got {len(actual_lines)}\"\n    \n    for i, (actual, expected) in enumerate(zip(actual_lines, expected_lines)):\n        if actual != expected:\n            return False, f\"Line {i+1} should be '{expected}', but got '{actual}'\"\n    \n    # Check for correct variable values\n    namespace = {}\n    try:\n        exec(user_code, namespace)\n        if namespace['final_score'] != 300:\n            return False, \"final_score should be 300\"\n        if namespace['is_new_record'] != True:\n            return False, \"is_new_record should be True\"\n    except Exception as e:\n        return False, str(e)\n    \n    return True",
         "hints": [
-          "Start with base_score (50)",
-          "Add 100 if has_power_up using if statement",
-          "Multiply by 2 if is_critical_hit",
-          "Compare with current_high_score using >"
+          "For the power-up bonus, use a conditional (if statement) to add 100 points",
+          "For the critical hit, use a conditional to multiply the score by 2",
+          "For high score check, use the > operator to compare final_score with current_high_score"
         ],
         "difficulty": "intermediate"
+      }
+    }
+  },
+  "python101-5-if-else": {
+    "tutorial_id": "python101-5-if-else",
+    "title": "Python Decisions with If-Else",
+    "description": "Master the art of making decisions in your code!",
+    "exercises": {
+      "1": {
+        "exercise_number": 1,
+        "description": "Understanding basic if statements and how they control program flow",
+        "expected_output": null,
+        "test_code": "def test_if_statements():\n    # This is just a demonstration exercise, no specific test\n    return True",
+        "hints": [
+          "The code inside an if block only runs when the condition is True",
+          "Make sure your indentation is consistent with 4 spaces",
+          "You can have multiple statements inside an if block"
+        ],
+        "difficulty": "beginner"
+      },
+      "2": {
+        "exercise_number": 2,
+        "description": "Fix syntax errors in if-else statements",
+        "expected_output": "Sorry, you don't have enough gold.\nYou need 5 more gold.\nIncorrect password. Please try again.",
+        "test_code": "def test_if_else_fix():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        # Try to execute the code - if there are syntax errors, this will fail\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, f\"Your code still has errors: {str(e)}\"\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    expected_output = \"Sorry, you don't have enough gold.\\nYou need 5 more gold.\\nIncorrect password. Please try again.\"\n    assert actual_output == expected_output, f\"Expected:\\n{expected_output}\\n\\nGot:\\n{actual_output}\"\n    return True",
+        "hints": [
+          "Check for missing colons after if/else statements",
+          "The comparison operator for equality is == not =",
+          "Make sure your indentation is consistent"
+        ],
+        "difficulty": "beginner"
+      },
+      "3": {
+        "exercise_number": 3,
+        "description": "Modify elif statements to add a new character class and fix ranking logic",
+        "expected_output": "You would make a great Bard!\nYour rank is: Master",
+        "test_code": "def test_elif_modify():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check if charisma is being checked first\n    if \"Bard\" not in actual_output:\n        return False, \"You need to add a character class for high charisma characters (Bard)\"\n    \n    # Check if the rank is correctly calculated as Master for score 750\n    if \"Master\" not in actual_output:\n        return False, \"For score 750, the rank should be 'Master'\"\n    \n    return True",
+        "hints": [
+          "Add a new if statement at the beginning to check charisma > 15",
+          "Change > to >= in the score conditions to include the boundary values",
+          "Remember that the order of conditions matters!"
+        ],
+        "difficulty": "intermediate"
+      },
+      "4": {
+        "exercise_number": 4,
+        "description": "Modify nested if statements to add a new condition",
+        "expected_output": "You have the special ability unlocked!\nYou have enough mana, but you need the special crystal.",
+        "test_code": "def test_nested_if_modify():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for reference to special crystal\n    if \"crystal\" not in actual_output.lower():\n        return False, \"Your code should check for and mention the special crystal requirement\"\n    \n    # Check that the ability is not activated (due to missing crystal)\n    if \"activated\" in actual_output.lower():\n        return False, \"The ability should not activate without the special crystal\"\n    \n    return True",
+        "hints": [
+          "Add another nested if statement to check has_special_crystal",
+          "Make sure to provide feedback if they have mana but not the crystal",
+          "The logic should check: unlocked → enough mana → has crystal"
+        ],
+        "difficulty": "intermediate"
+      },
+      "5": {
+        "exercise_number": 5,
+        "description": "Refactor code to use compound conditions instead of nested if statements",
+        "expected_output": "Access granted to the restricted area!\nYou need to find the special item first.",
+        "test_code": "def test_compound_conditions_refactor():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check that access is granted\n    if \"Access granted\" not in actual_output:\n        return False, \"The code should grant access since has_key_card is True\"\n    \n    # Check that only the special item message is shown\n    if \"Your level is too low\" in actual_output or \"tutorial\" in actual_output:\n        return False, \"Only missing requirements should be shown\"\n    \n    if \"special item\" not in actual_output:\n        return False, \"The code should tell the user they need to find the special item\"\n    \n    return True",
+        "hints": [
+          "Use 'or' to combine the four access conditions in a single if statement",
+          "For the quest requirements, use an if statement with 'and' to check all conditions first",
+          "Then use separate if statements to check each specific missing requirement"
+        ],
+        "difficulty": "intermediate"
+      },
+      "6": {
+        "exercise_number": 6,
+        "description": "Complete a weather advisory system with multiple condition checks",
+        "expected_output": "Current Weather: 85°F, Humidity: 75%, Wind: 15 mph\nRain: No\nAdvisory: Hot and humid conditions. Watch for heat exhaustion and stay hydrated.",
+        "test_code": "def test_weather_system():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for temperature and humidity advisories\n    if \"85°F\" not in actual_output:\n        return False, \"Expected temperature output not found\"\n    \n    # For hot and humid conditions\n    if \"humid\" not in actual_output.lower() or \"heat\" not in actual_output.lower():\n        return False, \"For hot (85°F) and humid (75%) conditions, warn about heat exhaustion\"\n    \n    return True",
+        "hints": [
+          "Use if/elif for temperature ranges (extreme heat, hot, moderate, cold)",
+          "Use nested if statements to check for humidity and rain within temperature ranges",
+          "Use a separate if statement for high wind regardless of temperature"
+        ],
+        "difficulty": "intermediate"
+      },
+      "7": {
+        "exercise_number": 7,
+        "description": "Create a grade calculator with specific feedback based on score",
+        "expected_output": "Score: 88\nGrade: B\nYou're only 2 points away from an A!",
+        "test_code": "def test_grade_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check that the grade is correct\n    if \"Grade: B\" not in actual_output:\n        return False, \"For score 88, the grade should be B\"\n    \n    # Check that the points needed message is included\n    if \"2 points\" not in actual_output:\n        return False, \"Should mention being 2 points away from an A\"\n    \n    return True",
+        "hints": [
+          "Use if/elif/else to determine the letter grade",
+          "Calculate points needed as the difference between their score and the next grade threshold",
+          "Add specific if statements to provide personalized feedback based on the situation"
+        ],
+        "difficulty": "intermediate"
+      },
+      "8": {
+        "exercise_number": 8,
+        "description": "Debug a text adventure game with multiple logical errors",
+        "expected_output": "CASTLE ADVENTURE DEBUG QUEST\nYou are a warrior.\n\nYou approach the castle gate.\nYou slash the gate open with your sword!\n\nA monster appears!\nYou defeat the monster with your sword!\n\nYou find the treasure room!\nYou use your sword to pry open the chest!\n\nCongratulations! You defeated the monster and got the treasure!",
+        "test_code": "def test_adventure_debug():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, f\"Your code still has errors: {str(e)}\"\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for key phrases that should appear\n    if \"slash the gate open with your sword\" not in actual_output:\n        return False, \"As a warrior with a sword, you should slash the gate open\"\n    \n    if \"defeat the monster with your sword\" not in actual_output:\n        return False, \"As a warrior with a sword, you should defeat the monster\"\n    \n    if \"Congratulations\" not in actual_output:\n        return False, \"The game should end with congratulations for completing the adventure\"\n    \n    return True",
+        "hints": [
+          "Fix syntax errors: 'else if' should be 'elif'",
+          "Fix comparison operators: = should be == for comparisons",
+          "Add missing colons (:) at the end of if/elif/else lines",
+          "Fix logical errors in condition combinations"
+        ],
+        "difficulty": "advanced"
+      },
+      "9": {
+        "exercise_number": 9,
+        "description": "Create a complex RPG character ability calculator",
+        "expected_output": "CHARACTER ABILITY CALCULATOR\nLevel 7 Character\nSTR: 16, INT: 14, DEX: 12, CHA: 15\nMana: 35\n\nAvailable abilities:\n- Power Attack\n- Cast Spell\n- Fireball\n- Healing\n- Persuade\n- Intimidate",
+        "test_code": "def test_rpg_ability_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Must-have abilities for the given character stats\n    must_have = [\"Power Attack\", \"Cast Spell\", \"Fireball\", \"Healing\", \"Persuade\", \"Intimidate\"]\n    should_not_have = [\"Dual Wield\", \"Shield Bash\", \"Precise Shot\", \"Arcane Mastery\", \"Sneak Attack\", \"Pick Lock\"]\n    \n    for ability in must_have:\n        if ability not in actual_output:\n            return False, f\"Missing ability: {ability} should be available with these stats\"\n    \n    for ability in should_not_have:\n        if ability in actual_output:\n            return False, f\"Incorrect ability: {ability} should NOT be available with these stats\"\n    \n    return True",
+        "hints": [
+          "Use if statements to check each ability's requirements",
+          "Append abilities to the available_abilities list when requirements are met",
+          "Use logical operators (and, or) to combine multiple conditions",
+          "Be careful with list operations - use 'in' to check if a spell is in known_spells"
+        ],
+        "difficulty": "advanced"
       }
     }
   },
