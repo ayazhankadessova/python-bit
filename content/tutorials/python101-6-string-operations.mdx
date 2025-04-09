@@ -13,19 +13,23 @@ firestoreId: python101-6-string-operations
 
 Hey coding champions! Remember how we formatted strings to create awesome game messages? Now it's time to learn some incredible string operation powers! These are like special moves that let you transform and analyze text in amazing ways! 🎮
 
-## Today's Quest! 🎯
-In this magical adventure, you'll learn how to:
-- Create and manipulate text like a coding wizard 🧙‍♂️
-- Find secret messages hidden in strings 🔍
-- Slice and dice text like a ninja 🥷
-- Transform text between uppercase and lowercase ⬆️⬇️
-- Split messages into pieces and put them back together 🧩
+## 🚀 Today's Agenda 🚀
 
-## String Creation: Your First Spell 📜
+* 1. [String Creation: Your First Spell](#StringCreation)
+* 2. [String Length: Measuring Your Power](#StringLength)
+* 3. [String Detective Work: Finding Hidden Treasures](#StringDetectiveWork)
+* 4. [String Slicing: Ninja Text Skills](#StringSlicing)
+* 5. [Text Transformation Magic](#TextTransformation)
+* 6. [Word Split Power: Divide and Conquer](#WordSplitPower)
+* 7. [Time to Practice](#TimeToPractice)
+* 8. [Debug Mission: Fix the Text Spells](#DebugMission)
+
+<div id='StringCreation'></div>
+## 1. String Creation: Your First Spell 📜
 
 Just like in RPG games where you can cast spells in different ways, you can create strings using different quotes:
 
-```python showLineNumbers
+```python
 # Two ways to cast the same spell!
 player_message = "Ready for adventure!"
 secret_code = 'The treasure is hidden!'
@@ -35,9 +39,12 @@ game_tip = "Dragon's weakness: ice magic"
 player_status = 'Level Status: "Champion"'
 ```
 
-## String Length: Measuring Your Power! 📏
+<div id='StringLength'></div>
+## 2. String Length: Measuring Your Power! 📏
 
-```python showLineNumbers
+In Python, the `len()` function helps you find out how many characters are in your string:
+
+```python
 # How long is your spell scroll?
 spell = "Abracadabra!"
 spell_length = len(spell)
@@ -50,9 +57,12 @@ print(f"Fire spell power: {len(fire_spell)}")
 print(f"Ice spell power: {len(ice_spell)}")
 ```
 
-## String Detective Work: Finding Hidden Treasures! 🗺️
+<div id='StringDetectiveWork'></div>
+## 3. String Detective Work: Finding Hidden Treasures! 🗺️
 
-```python showLineNumbers
+Python gives you special powers to find characters within strings:
+
+```python
 # Finding the first treasure (letter 'o')
 treasure_map = "Follow the golden path"
 first_treasure = treasure_map.index("o")
@@ -63,9 +73,12 @@ treasure_count = treasure_map.count("a")
 print(f"Found {treasure_count} treasures!")
 ```
 
-## String Slicing: Ninja Text Skills! ⚔️
+<div id='StringSlicing'></div>
+## 4. String Slicing: Ninja Text Skills! ⚔️
 
-```python showLineNumbers
+One of the most powerful string abilities is slicing - extracting parts of a string:
+
+```python
 # Let's slice up some game text!
 game_text = "Epic Dragon Battle!"
 
@@ -84,9 +97,12 @@ revealed = secret_code[::-1]  # Reverses the text!
 print(f"Decoded message: {revealed}")
 ```
 
-## Text Transformation Magic! 🔮
+<div id='TextTransformation'></div>
+## 5. Text Transformation Magic! 🔮
 
-```python showLineNumbers
+Python lets you transform your strings in powerful ways:
+
+```python
 # Transform your battle cry!
 battle_cry = "Victory is Coming!"
 
@@ -106,9 +122,12 @@ if spell.endswith("Lightning"):
     print("With lightning power! ⚡")
 ```
 
-## Word Split Power: Divide and Conquer! ⚔️
+<div id='WordSplitPower'></div>
+## 6. Word Split Power: Divide and Conquer! ⚔️
 
-```python showLineNumbers
+The `split()` method breaks strings into lists of smaller strings:
+
+```python
 # Split a quest description into steps
 quest = "Find the sword Defeat the dragon Save the kingdom"
 quest_steps = quest.split(" ")
@@ -117,94 +136,93 @@ for step_number, step in enumerate(quest_steps, 1):
     print(f"{step_number}. {step}")
 ```
 
-## 🎮 Mini-Game: The String Master Challenge!
+<div id='TimeToPractice'></div>
+## 7. Time to Practice! 🎮
 
-Let's create a cool game status parser:
+Now it's your turn to try out these string powers! Let's start with a simple exercise:
 
-```python showLineNumbers
-# Game status text
-status = "PLAYER:Hero|HEALTH:100|POSITION:Castle|INVENTORY:Sword,Shield"
+### Exercise 1: Reverse a Secret Message
 
-# Your mission:
-# 1. Split the status into parts (split by '|')
-# 2. For each part, split by ':' to get the label and value
-# 3. Display it in a cool way!
+<PythonCodeEditor 
+  initialCode={`# This message is backwards! Fix it using string slicing
+secret_message = "!gnidoc fo dlrow eht ot emocleW"
 
-# Example output should look like:
-"""
-📊 GAME STATUS 📊
-===============
-👤 PLAYER: Hero
-❤️ HEALTH: 100
-🗺️ POSITION: Castle
-🎒 INVENTORY: Sword, Shield
-===============
-"""
-```
+# Your code goes here
+fixed_message = 
 
-## 🌟 Super Challenges!
+# Print the fixed message
+print(fixed_message)`}
+  exercise_number={1}
+  expectedOutput={true}
+  tutorial_id="python101-6-string-operations"
+/>
 
-1. **The Password Checker:**
-```python showLineNumbers
-# Create a function that checks if a password:
-# - Is at least 8 characters long
-# - Contains both uppercase and lowercase letters
-# - Ends with a number
+### Exercise 2: Create a Username Generator
 
-password = "DragonSlayer123"
-# Your code here!
-```
+<PythonCodeEditor
+  initialCode={`# Create a username by taking the first 3 letters of first_name
+# and the last 4 letters of last_name, all in lowercase
 
-2. **The Secret Message Decoder:**
-```python showLineNumbers
-# Given this coded message:
-coded = "erutnevdA taerG ehT"
-# 1. Reverse it
-# 2. Make every other letter uppercase
-# 3. Replace spaces with "🗡️"
-```
+first_name = "Alexander"
+last_name = "Thompson"
 
-## 🎯 Debug Mission: Fix the Text Spells!
+# Your code goes here
+username = 
+
+# Print the new username
+print(f"Your generated username is: {username}")`}
+  expectedOutput={true}
+  exercise_number={2}
+  tutorial_id="python101-6-string-operations"
+/>
+
+### Exercise 3: Fix the Game Status Parser
+
+<PythonCodeEditor
+  initialCode={`# This code should split the game status into parts and display them
+# But something's not working! Fix the code:
+
+game_status = "PLAYER:Hero|HEALTH:100|POSITION:Castle"
+
+# Split the status into sections
+status_parts = game_status.split("|")
+
+# Loop through and display each part
+print("📊 GAME STATUS 📊")
+print("===============")
+for part in status_parts:
+    # This line has an error - fix it!
+    label, value = part.spilt(":")  
+    print(f"⭐ {label}: {value}")
+print("===============")`}
+  exercise_number={3}
+  tutorial_id="python101-6-string-operations"
+/>
+
+<div id='DebugMission'></div>
+## 8. Debug Mission: Fix the Text Spells! 🐞
 
 Can you spot what's wrong with these string operations?
 
-```python showLineNumbers
+```python
 # Bug 1: Why doesn't this find the letter?
 game_text = "Adventure"
-letter_index = game_text.index("Z")
+letter_index = game_text.index("Z")  # Error: 'Z' is not in "Adventure"
 
 # Bug 2: Why is the slice empty?
 spell_name = "Fireball"
-power_word = spell_name[6:2]
+power_word = spell_name[6:2]  # Error: End index is before start index
 
 # Bug 3: What's wrong with this split?
 inventory = "Sword,Shield,Potion"
-items = inventory.split("|")
+items = inventory.split("|")  # Error: Using wrong separator, should be ","
 ```
 
-Remember:
+## Remember:
 - Strings start counting from 0
-- Slicing is [start:end:step]
+- Slicing format is [start:end:step]
 - `.upper()` and `.lower()` create new strings
 - `.split()` breaks strings into lists
+- Use `.index()` carefully - it causes an error if the character isn't found!
 
-Need help mastering these string powers? Just ask! You're doing great! 🌟
-
-## Final Boss Challenge: Create a Game Text Processor!
-
-```python showLineNumbers
-# Create a text processor that:
-game_log = """
-GAME_START: 2024-01-01
-PLAYER_NAME: DragonSlayer
-ACHIEVEMENTS: defeated_dragon, found_treasure, saved_kingdom
-FINAL_SCORE: 1000
-"""
-
-# 1. Extract each piece of information
-# 2. Format it nicely
-# 3. Create a game summary
-# Your code here!
-```
-
-Ready to become a String Operations Master? Let's code! 🚀
+Keep practicing these string powers and you'll be a text wizard in no time! 🚀

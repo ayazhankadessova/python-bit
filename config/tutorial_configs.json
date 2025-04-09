@@ -383,120 +383,173 @@
       }
     }
   },
-  "python101-5-if-else": {
-    "tutorial_id": "python101-5-if-else",
-    "title": "Python Decisions with If-Else",
-    "description": "Master the art of making decisions in your code!",
+  "python101-5-string-formatting": {
+    "tutorial_id": "python101-5-string-formatting",
+    "title": "String Formatting",
+    "description": "Learn to create amazing text outputs in Python",
     "exercises": {
       "1": {
         "exercise_number": 1,
-        "description": "Understanding basic if statements and how they control program flow",
-        "expected_output": null,
-        "test_code": "def test_if_statements():\n    # This is just a demonstration exercise, no specific test\n    return True",
+        "description": "Compare string concatenation and formatting",
+        "expected_output": "Player Alex is at level 5\nPlayer Alex is at level 5",
+        "test_code": "def test_comparison():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check if output contains both formatted strings\n    if 'Player ' not in actual_output or ' is at level ' not in actual_output:\n        return False, f\"Output doesn't match expected format\"\n    \n    return True",
         "hints": [
-          "The code inside an if block only runs when the condition is True",
-          "Make sure your indentation is consistent with 4 spaces",
-          "You can have multiple statements inside an if block"
+          "Make sure both concatenation and formatting examples are included",
+          "Remember to convert the level to string in the concatenation example",
+          "For string formatting, use %s for string and %d for integer"
         ],
         "difficulty": "beginner"
       },
       "2": {
         "exercise_number": 2,
-        "description": "Fix syntax errors in if-else statements",
-        "expected_output": "Sorry, you don't have enough gold.\nYou need 5 more gold.\nIncorrect password. Please try again.",
-        "test_code": "def test_if_else_fix():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        # Try to execute the code - if there are syntax errors, this will fail\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, f\"Your code still has errors: {str(e)}\"\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    expected_output = \"Sorry, you don't have enough gold.\\nYou need 5 more gold.\\nIncorrect password. Please try again.\"\n    assert actual_output == expected_output, f\"Expected:\\n{expected_output}\\n\\nGot:\\n{actual_output}\"\n    return True",
+        "description": "Experiment with different format specifiers",
+        "expected_output": "Player: CyberNinja\nLevel: 42\nRaw score: 98.765400\nFormatted score: 98.77\nCompletion: 98.8%",
+        "test_code": "def test_format_specifiers():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for each type of formatting\n    if 'Player:' not in actual_output or 'Level:' not in actual_output:\n        return False, \"Missing basic string or integer formatting\"\n    \n    if 'Raw score:' not in actual_output or 'Formatted score:' not in actual_output:\n        return False, \"Missing float formatting examples\"\n    \n    if 'Completion:' not in actual_output or '%' not in actual_output:\n        return False, \"Missing percentage formatting\"\n    \n    return True",
         "hints": [
-          "Check for missing colons after if/else statements",
-          "The comparison operator for equality is == not =",
-          "Make sure your indentation is consistent"
+          "Use %s for strings, %d for integers, and %f for floats",
+          "For decimal precision, use %.Nf where N is the number of decimal places",
+          "To include a % character in the output, use %%"
         ],
         "difficulty": "beginner"
       },
       "3": {
         "exercise_number": 3,
-        "description": "Modify elif statements to add a new character class and fix ranking logic",
-        "expected_output": "You would make a great Bard!\nYour rank is: Master",
-        "test_code": "def test_elif_modify():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check if charisma is being checked first\n    if \"Bard\" not in actual_output:\n        return False, \"You need to add a character class for high charisma characters (Bard)\"\n    \n    # Check if the rank is correctly calculated as Master for score 750\n    if \"Master\" not in actual_output:\n        return False, \"For score 750, the rank should be 'Master'\"\n    \n    return True",
+        "description": "Multiple value formatting",
+        "expected_output": "Player Alex (Level 5) - HP: 80/100\n\n====================\nPLAYER STATS\n====================\nName: Alex\nLevel: 5\nHealth: 80/100 (80.0%)\nMana: 50/100 (50.0%)\n====================",
+        "test_code": "def test_multiple_values():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for multiline stats display\n    required_elements = ['PLAYER STATS', 'Name:', 'Level:', 'Health:', 'Mana:']\n    \n    for element in required_elements:\n        if element not in actual_output:\n            return False, f\"Missing '{element}' in the output\"\n    \n    if '%' not in actual_output:\n        return False, \"Missing percentage calculations\"\n    \n    return True",
         "hints": [
-          "Add a new if statement at the beginning to check charisma > 15",
-          "Change > to >= in the score conditions to include the boundary values",
-          "Remember that the order of conditions matters!"
+          "For multiple values, put them in parentheses in order",
+          "Calculate percentages using health/max_health * 100",
+          "Use a multiline string with triple quotes for the stats display"
         ],
         "difficulty": "intermediate"
       },
       "4": {
         "exercise_number": 4,
-        "description": "Modify nested if statements to add a new condition",
-        "expected_output": "You have the special ability unlocked!\nYou have enough mana, but you need the special crystal.",
-        "test_code": "def test_nested_if_modify():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for reference to special crystal\n    if \"crystal\" not in actual_output.lower():\n        return False, \"Your code should check for and mention the special crystal requirement\"\n    \n    # Check that the ability is not activated (due to missing crystal)\n    if \"activated\" in actual_output.lower():\n        return False, \"The ability should not activate without the special crystal\"\n    \n    return True",
+        "description": "Modern f-string formatting",
+        "expected_output": "Player Alex (Level 5)\nHP: 80/100 (80%)\nGold: 1234.56",
+        "test_code": "def test_f_strings():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for f-string formatting\n    if '{' not in actual_output or '}' not in actual_output:\n        return False, \"No f-string formatting found\"\n    \n    if 'Alex' not in actual_output or 'Level' not in actual_output:\n        return False, \"Missing basic f-string example\"\n    \n    if 'HP:' not in actual_output or '%' not in actual_output:\n        return False, \"Missing f-string with expression\"\n    \n    return True",
         "hints": [
-          "Add another nested if statement to check has_special_crystal",
-          "Make sure to provide feedback if they have mana but not the crystal",
-          "The logic should check: unlocked → enough mana → has crystal"
+          "F-strings use curly braces {} to embed variables",
+          "For formatting inside f-strings, use a colon after the variable name",
+          "Use :.0% for percentage format with no decimal places"
         ],
         "difficulty": "intermediate"
       },
       "5": {
         "exercise_number": 5,
-        "description": "Refactor code to use compound conditions instead of nested if statements",
-        "expected_output": "Access granted to the restricted area!\nYou need to find the special item first.",
-        "test_code": "def test_compound_conditions_refactor():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check that access is granted\n    if \"Access granted\" not in actual_output:\n        return False, \"The code should grant access since has_key_card is True\"\n    \n    # Check that only the special item message is shown\n    if \"Your level is too low\" in actual_output or \"tutorial\" in actual_output:\n        return False, \"Only missing requirements should be shown\"\n    \n    if \"special item\" not in actual_output:\n        return False, \"The code should tell the user they need to find the special item\"\n    \n    return True",
+        "description": "Create a game inventory display",
+        "expected_output": "==================================================\nITEM                 QUANTITY   VALUE (GOLD)   \n==================================================\nHealth Potion        5          25.50          \nMagic Scroll         2          115.00         \nIron Sword           1          250.75         \n--------------------------------------------------\nTOTAL VALUE:                    506.75         \n==================================================",
+        "test_code": "def test_inventory_display():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for inventory elements\n    required_items = ['Health Potion', 'Magic Scroll', 'Iron Sword']\n    \n    for item in required_items:\n        if item not in actual_output:\n            return False, f\"Missing item '{item}' in the inventory\"\n    \n    if 'TOTAL VALUE:' not in actual_output:\n        return False, \"Missing total value calculation\"\n    \n    return True",
         "hints": [
-          "Use 'or' to combine the four access conditions in a single if statement",
-          "For the quest requirements, use an if statement with 'and' to check all conditions first",
-          "Then use separate if statements to check each specific missing requirement"
+          "Use %-20s for left-aligned strings with 20 character width",
+          "Calculate the total value by multiplying quantity by value",
+          "Use string multiplication (e.g., '=' * 50) to create dividers"
         ],
         "difficulty": "intermediate"
       },
       "6": {
         "exercise_number": 6,
-        "description": "Complete a weather advisory system with multiple condition checks",
-        "expected_output": "Current Weather: 85°F, Humidity: 75%, Wind: 15 mph\nRain: No\nAdvisory: Hot and humid conditions. Watch for heat exhaustion and stay hydrated.",
-        "test_code": "def test_weather_system():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for temperature and humidity advisories\n    if \"85°F\" not in actual_output:\n        return False, \"Expected temperature output not found\"\n    \n    # For hot and humid conditions\n    if \"humid\" not in actual_output.lower() or \"heat\" not in actual_output.lower():\n        return False, \"For hot (85°F) and humid (75%) conditions, warn about heat exhaustion\"\n    \n    return True",
+        "description": "Create a player profile using string formatting",
+        "expected_output": "\n=================\nPLAYER PROFILE\n=================\nName: DragonSlayer\nLevel: 42\nHealth: 85/100\nMana: 65/100\n=================",
+        "test_code": "def test_player_profile():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for required elements\n    required_elements = ['PLAYER PROFILE', 'Name: DragonSlayer', 'Level: 42', 'Health: 85/100', 'Mana: 65/100']\n    \n    for element in required_elements:\n        if element not in actual_output:\n            return False, f\"Missing '{element}' in the output\"\n    \n    return True",
         "hints": [
-          "Use if/elif for temperature ranges (extreme heat, hot, moderate, cold)",
-          "Use nested if statements to check for humidity and rain within temperature ranges",
-          "Use a separate if statement for high wind regardless of temperature"
+          "Create a multiline string with the template",
+          "Use %s for the name, %d for level, health, and mana",
+          "Format all values in one operation with the % operator and a tuple"
         ],
         "difficulty": "intermediate"
       },
       "7": {
         "exercise_number": 7,
-        "description": "Create a grade calculator with specific feedback based on score",
-        "expected_output": "Score: 88\nGrade: B\nYou're only 2 points away from an A!",
-        "test_code": "def test_grade_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check that the grade is correct\n    if \"Grade: B\" not in actual_output:\n        return False, \"For score 88, the grade should be B\"\n    \n    # Check that the points needed message is included\n    if \"2 points\" not in actual_output:\n        return False, \"Should mention being 2 points away from an A\"\n    \n    return True",
+        "description": "Format a scoreboard entry with proper alignment",
+        "expected_output": "#1    | CyberNinja      | 9750 pts | 95.83% accuracy",
+        "test_code": "def test_scoreboard_entry():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Expected pattern with some flexibility for spaces\n    expected_output = \"#1    | CyberNinja      | 9750 pts | 95.83% accuracy\"\n    \n    if expected_output != actual_output:\n        return False, f\"Expected '{expected_output}', but got '{actual_output}'\"\n    \n    return True",
         "hints": [
-          "Use if/elif/else to determine the letter grade",
-          "Calculate points needed as the difference between their score and the next grade threshold",
-          "Add specific if statements to provide personalized feedback based on the situation"
+          "Use string formatting with width specifiers like %-15s",
+          "Format the accuracy with %.2f",
+          "Use | as separators between fields"
         ],
         "difficulty": "intermediate"
       },
       "8": {
         "exercise_number": 8,
-        "description": "Debug a text adventure game with multiple logical errors",
-        "expected_output": "CASTLE ADVENTURE DEBUG QUEST\nYou are a warrior.\n\nYou approach the castle gate.\nYou slash the gate open with your sword!\n\nA monster appears!\nYou defeat the monster with your sword!\n\nYou find the treasure room!\nYou use your sword to pry open the chest!\n\nCongratulations! You defeated the monster and got the treasure!",
-        "test_code": "def test_adventure_debug():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, f\"Your code still has errors: {str(e)}\"\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for key phrases that should appear\n    if \"slash the gate open with your sword\" not in actual_output:\n        return False, \"As a warrior with a sword, you should slash the gate open\"\n    \n    if \"defeat the monster with your sword\" not in actual_output:\n        return False, \"As a warrior with a sword, you should defeat the monster\"\n    \n    if \"Congratulations\" not in actual_output:\n        return False, \"The game should end with congratulations for completing the adventure\"\n    \n    return True",
+        "description": "Fix broken string formatting code",
+        "expected_output": "Player: StarGazer is at level 7\nXP Progress: 2500/3000\nCompletion: 83.33%",
+        "test_code": "def test_fix_formatting():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for the fixed lines\n    required_lines = [\n        \"Player: StarGazer is at level 7\",\n        \"XP Progress: 2500/3000\"\n    ]\n    \n    # Check for completion percentage (allowing for slight differences in formatting)\n    import re\n    completion_pattern = r\"Completion: 83\\.[0-9]{2}%\"\n    \n    for line in required_lines:\n        if line not in actual_output:\n            return False, f\"Missing or incorrect line: '{line}'\"\n    \n    if not re.search(completion_pattern, actual_output):\n        return False, \"Missing or incorrect completion percentage\"\n    \n    return True",
         "hints": [
-          "Fix syntax errors: 'else if' should be 'elif'",
-          "Fix comparison operators: = should be == for comparisons",
-          "Add missing colons (:) at the end of if/elif/else lines",
-          "Fix logical errors in condition combinations"
+          "Check that you're using the right format specifiers (%s for strings, %d for integers)",
+          "For multiple values, use parentheses around the values",
+          "To show a percentage, use %.2f%% (the double % escapes the % character)"
         ],
-        "difficulty": "advanced"
+        "difficulty": "intermediate"
       },
       "9": {
         "exercise_number": 9,
-        "description": "Create a complex RPG character ability calculator",
-        "expected_output": "CHARACTER ABILITY CALCULATOR\nLevel 7 Character\nSTR: 16, INT: 14, DEX: 12, CHA: 15\nMana: 35\n\nAvailable abilities:\n- Power Attack\n- Cast Spell\n- Fireball\n- Healing\n- Persuade\n- Intimidate",
-        "test_code": "def test_rpg_ability_calculator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Must-have abilities for the given character stats\n    must_have = [\"Power Attack\", \"Cast Spell\", \"Fireball\", \"Healing\", \"Persuade\", \"Intimidate\"]\n    should_not_have = [\"Dual Wield\", \"Shield Bash\", \"Precise Shot\", \"Arcane Mastery\", \"Sneak Attack\", \"Pick Lock\"]\n    \n    for ability in must_have:\n        if ability not in actual_output:\n            return False, f\"Missing ability: {ability} should be available with these stats\"\n    \n    for ability in should_not_have:\n        if ability in actual_output:\n            return False, f\"Incorrect ability: {ability} should NOT be available with these stats\"\n    \n    return True",
+        "description": "Create a game item card with formatting",
+        "expected_output": "\n╔══════════════════════════════╗\n║ ITEM CARD                    ║\n╠══════════════════════════════╣\n║ Name: Excalibur             ║\n║ Type: Legendary Sword       ║\n║ Damage: 120                 ║\n║ Durability: 95.5%           ║\n╠══════════════════════════════╣\n║ SPECIAL EFFECTS:             ║\n║ • Critical Hit +20%          ║\n║ • Fire Damage                ║\n║ • Unbreakable                ║\n╚══════════════════════════════╝",
+        "test_code": "def test_item_card():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for item details and special effects\n    item_details = ['Excalibur', 'Legendary Sword', '120', '95.5']    \n    effects = ['Critical Hit +20%', 'Fire Damage', 'Unbreakable']\n    \n    for detail in item_details:\n        if detail not in actual_output:\n            return False, f\"Missing item detail '{detail}' in the output\"\n    \n    for effect in effects:\n        if effect not in actual_output:\n            return False, f\"Missing special effect '{effect}' in the output\"\n    \n    return True",
         "hints": [
-          "Use if statements to check each ability's requirements",
-          "Append abilities to the available_abilities list when requirements are met",
-          "Use logical operators (and, or) to combine multiple conditions",
-          "Be careful with list operations - use 'in' to check if a spell is in known_spells"
+          "Create a multiline string for the card template",
+          "Use width specifiers for alignment (%-20s)",
+          "You can loop through special effects to display each one"
         ],
         "difficulty": "advanced"
+      },
+      "10": {
+        "exercise_number": 10,
+        "description": "Common pitfalls in string formatting",
+        "expected_output": "Health: 75%\nPlayer: Alex",
+        "test_code": "def test_pitfalls():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    \n    # Check for the working example with escaped %\n    if 'Health: 75%' not in actual_output:\n        return False, \"Missing or incorrect escaped percentage example\"\n    \n    # Check for the fixed f-string example\n    if 'Player: Alex' not in actual_output:\n        return False, \"Missing or incorrect f-string example\"\n    \n    return True",
+        "hints": [
+          "To display a % symbol, use %% in string formatting",
+          "Don't mix f-strings with % formatting",
+          "Match format specifiers with the correct data types"
+        ],
+        "difficulty": "intermediate"
+      }
+    }
+  },
+  "python101-6-string-operations": {
+    "tutorial_id": "python101-6-string-operations",
+    "title": "String Operations",
+    "description": "Level up your string manipulation skills in Python",
+    "exercises": {
+      "1": {
+        "exercise_number": 1,
+        "description": "Fix the backwards secret message using string slicing",
+        "expected_output": "Welcome to the world of coding!",
+        "test_code": "def test_reverse_string():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    # Run the code\n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    assert actual_output == \"Welcome to the world of coding!\", f\"Expected 'Welcome to the world of coding!', but got '{actual_output}'\"\n    return True",
+        "hints": [
+          "Try using reverse slicing with [::-1]",
+          "Remember that slicing uses the format [start:stop:step]",
+          "To reverse a string, use a negative step value"
+        ],
+        "difficulty": "beginner"
+      },
+      "2": {
+        "exercise_number": 2,
+        "description": "Create a username generator using string slicing and methods",
+        "expected_output": "Your generated username is: alepson",
+        "test_code": "def test_username_generator():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    assert actual_output == \"Your generated username is: alepson\", f\"Expected 'Your generated username is: alepson', but got '{actual_output}'\"\n    return True",
+        "hints": [
+          "Use slicing to get the first 3 letters: first_name[0:3]",
+          "For the last 4 letters, use negative indexing: last_name[-4:]",
+          "Don't forget to use .lower() to make everything lowercase"
+        ],
+        "difficulty": "intermediate"
+      },
+      "3": {
+        "exercise_number": 3,
+        "description": "Fix the game status parser by correcting a typo in the code",
+        "expected_output": "📊 GAME STATUS 📊\n===============\n⭐ PLAYER: Hero\n⭐ HEALTH: 100\n⭐ POSITION: Castle\n===============",
+        "test_code": "def test_game_status_parser():\n    import io\n    import sys\n    output = io.StringIO()\n    sys.stdout = output\n    \n    try:\n        exec(user_code)\n    except Exception as e:\n        sys.stdout = sys.__stdout__\n        return False, str(e)\n    \n    sys.stdout = sys.__stdout__\n    actual_output = output.getvalue().strip()\n    expected_output = \"📊 GAME STATUS 📊\\n===============\\n⭐ PLAYER: Hero\\n⭐ HEALTH: 100\\n⭐ POSITION: Castle\\n===============\"\n    assert actual_output == expected_output, f\"Output doesn't match expected format.\"\n    return True",
+        "hints": [
+          "Look carefully at the method name used for splitting the string",
+          "Python method names are case-sensitive and spelled correctly",
+          "The method should be 'split' not 'spilt'"
+        ],
+        "difficulty": "beginner"
       }
     }
   },
