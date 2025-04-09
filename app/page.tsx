@@ -13,7 +13,6 @@ import {
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import {
-  Loader2,
   PlayCircle,
   BookOpen,
   Users2,
@@ -38,6 +37,8 @@ import { FeatureItem } from '@/components/feature-item'
 import { HighlightedText } from '@/components/ui/highlighted-text'
 import { StatsCard } from '@/components/stats-card'
 import { Section } from '@/components/ui/section'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
+
 
 
 export default function HomePage() {
@@ -48,13 +49,7 @@ export default function HomePage() {
   const theme = useTheme()
   const shadowColor = theme.resolvedTheme === 'dark' ? 'white' : 'black'
 
-  if (loading) {
-    return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <Loader2 className='h-8 w-8 animate-spin' />
-      </div>
-    )
-  }
+  if (loading) return <LoadingSpinner />
 
   return (
     <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8'>

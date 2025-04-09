@@ -2,7 +2,7 @@
 import { useAuth } from '@/contexts/AuthContext'
 import { TeacherClassroomsView } from '@/components/classrooms/TeacherClassroomsView'
 import { StudentClassroomsView } from '@/components/classrooms/StudentClassroomsView'
-import { Loader2 } from 'lucide-react'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 
 const ClassroomPage = () => {
   const { user, loading } = useAuth()
@@ -10,13 +10,7 @@ const ClassroomPage = () => {
   // to do: go home
   // const router = useRouter()
 
-  if (loading) {
-    return (
-      <div className='flex items-center justify-center min-h-screen'>
-        <Loader2 className='h-8 w-8 animate-spin' />
-      </div>
-    )
-  }
+  if (loading) return <LoadingSpinner />
 
   return (
     <>
