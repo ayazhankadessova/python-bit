@@ -4,7 +4,7 @@ import { useQuiz } from '@/hooks/quiz/useQuizzes'
 import QuizComponent from '@/components/quiz/quiz-component'
 import { notFound } from 'next/navigation'
 import { useEffect } from 'react'
-import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { Loader2 } from 'lucide-react'
 
 export default function QuizPage({ params }: { params: { id: string } }) {
   const { quiz, isLoading, error } = useQuiz(params.id)
@@ -16,7 +16,14 @@ export default function QuizPage({ params }: { params: { id: string } }) {
   }, [error])
 
   if (isLoading) {
-    return <LoadingSpinner />
+    return (
+      <main className='container mx-auto py-8 px-4'>
+        <div className='max-w-4xl mx-auto text-center py-12'>
+          <Loader2 className='h-8 w-8 animate-spin' />
+          <p className='mt-4'>Loading quiz...</p>
+        </div>
+      </main>
+    )
   }
 
   if (!quiz) {

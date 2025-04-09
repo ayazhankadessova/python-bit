@@ -26,8 +26,8 @@ const MobileNav = () => {
     <Sheet open={open} onOpenChange={onToggleNav}>
       <ThemeToggle />
       <SheetTrigger asChild>
-        <Button variant='ghost' className='ml-2 pr-0 min-[950px]:hidden'>
-          <Menu className='h-6 w-6' />
+        <Button variant='ghost' className='w-10 px-0 min-[950px]:hidden'>
+          <Menu className='h-[1.1rem] w-[1.2rem]' />
         </Button>
       </SheetTrigger>
       <SheetContent

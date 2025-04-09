@@ -1,13 +1,21 @@
 'use client'
 import QuizCard from '@/components/quiz/quiz-card'
 import { useQuizzes } from '@/hooks/quiz/useQuizzes'
-import { LoadingSpinner } from '@/components/LoadingSpinner'
-
+import { Loader2 } from 'lucide-react'
 
 export default function QuizzesPage() {
   const { quizzes, isLoading, error } = useQuizzes()
 
-  if (isLoading) return <LoadingSpinner />
+  if (isLoading) {
+    return (
+      <main className='container py-8 px-4'>
+        <div className='max-w-5xl mx-auto text-center py-12'>
+          <Loader2 className='h-8 w-8 animate-spin' />
+          <p className='mt-4'>Loading quizzes...</p>
+        </div>
+      </main>
+    )
+  }
 
   if (error) {
     return (

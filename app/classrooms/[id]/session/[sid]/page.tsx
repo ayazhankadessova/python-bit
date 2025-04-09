@@ -1,7 +1,7 @@
 'use client'
 // import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { StudentSessionView } from '@/components/session-views/student-session-view'
 import { TeacherSessionView } from '@/components/session-views/teacher-session-view'
@@ -21,7 +21,14 @@ const SessionPage: React.FC<PageProps> = ({ params }) => {
   const classroomId = params.id
   const sessionId = params.sid
 
-  if (loading) return <LoadingSpinner />
+  // Show loading state while fetching data
+  if (loading) {
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        <Loader2 className='h-8 w-8 animate-spin' />
+      </div>
+    )
+  }
 
   if (!user) {
     return (
