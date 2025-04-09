@@ -194,7 +194,7 @@ export default function QuizResults({
 
       <footer className='sticky bottom-0 bg-background flex items-center px-6 py-3 border-t border-muted flex-shrink-0 justify-end'>
         <Button asChild>
-          <Link href={`/tutorials`}>Keep Learning</Link>
+          <Link href={`/quizzes`}>Back to Quizzes</Link>
         </Button>
       </footer>
     </div>

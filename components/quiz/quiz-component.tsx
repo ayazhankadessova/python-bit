@@ -8,6 +8,7 @@ import { useQuizProgress } from '@/hooks/quizzes/useQuizProgress'
 import QuizResults from './QuizResults'
 import ActiveQuiz from './ActiveQuiz'
 import { renderQuestionText } from './helpers'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 
 interface QuizComponentProps {
   quiz: Quiz
@@ -47,7 +48,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   }, [])
 
   if (!mounted || isLoading) {
-    return null 
+    return <LoadingSpinner/>
   }
 
   const handleRetakeQuiz = () => {
