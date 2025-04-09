@@ -8,11 +8,12 @@ import PythonResizableCodeEditor from '@/components/code-resizable-executor'
 import { getExerciseById } from '@/lib/projects/utils'
 import { ProjectStatus } from '@/components/projects/project-status'
 import '@/styles/mdx-style.css'
+import { use } from 'react'
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string[]
-  }
+  }>
 }
 
 async function getPostFromParams(params: PostPageProps['params']) {
@@ -33,9 +34,9 @@ export async function generateStaticParams(): Promise<
 }
 
 export default async function ProjectPage(props: PostPageProps) {
-  const params = await props.params
-  const resolvedParams = await params
-  const post = await getPostFromParams(resolvedParams)
+  const params = use(props.params)
+  // const resolvedParams = await params
+  const post = await getPostFromParams(props.params)
   const fullLinkGenerated = `${siteConfig.url}/projects/${post?.theme
     .trim()
     .replace('', '-')}/${params?.slug?.join('/')}`
