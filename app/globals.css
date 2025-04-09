@@ -6,6 +6,7 @@
   :root {
     /* White to teal-200 gradient */
     --background-start: 0 0% 100%; /* white */
+    --background-middle: 168 55% 98%; /* teal-200 */
     --background-end: 168 55% 90%; /* teal-200 */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -37,6 +38,7 @@
   .dark {
     /* Dark mode gradient - darker teal tones */
     --background-start: 0 0% 10%; /* dark start */
+    --background-middle: 168 55% 15%; /* darker teal */
     --background-end: 168 55% 24%; /* darker teal */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -75,7 +77,7 @@
   }
   body {
     font-family: var(--font-open-sans);
-    @apply bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))] text-foreground;
+    @apply bg-gradient-to-r from-[hsl(var(--background-end))] via-[hsl(var(--background-middle))] to-[hsl(var(--background-end))] text-foreground;
   }
 }
 
