@@ -190,7 +190,7 @@ const PythonResizableCodeEditor = ({
               >
                 <Button
                   onClick={() => executeCode(false)}
-                  className='bg-emerald-600 hover:bg-emerald-700 text-white'
+                  // className='bg-emerald-600 hover:bg-emerald-700 text-white'
                   disabled={isExecuting}
                 >
                   {isRunning ? (

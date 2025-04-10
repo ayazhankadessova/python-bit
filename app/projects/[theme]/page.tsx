@@ -59,12 +59,12 @@ const ThemePage = (props: ThemePageProps) => {
 
   return (
     <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 pt-8 mb-16'>
-      <div className='flex justify-between mb-4 ml-1'>
+      <div className='flex justify-between mb-8 ml-1'>
         <BackButton href='/projects' />
         <SharePost fullLink={fullLinkGenerated} />
       </div>
 
-      <h1 className='text-4xl mb-16 capitalize'>
+      <h1 className='text-4xl mb-12'>
         {params.theme.replace('-', ' ')} Projects
       </h1>
 

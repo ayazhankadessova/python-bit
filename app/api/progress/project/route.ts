@@ -10,7 +10,7 @@ export async function GET(
 
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
-    const projectId = searchParams.get('quizId')
+    const projectId = searchParams.get('projectId')
 
     if (!userId || !projectId) {
       return NextResponse.json(
