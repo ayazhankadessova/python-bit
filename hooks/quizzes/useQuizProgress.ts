@@ -26,7 +26,7 @@ export function useQuizProgress(
   const shouldFetch = Boolean(quizId && user)
 
   // Create the path-based URL
-  const url = shouldFetch ? `/api/progress/quiz/${user?.uid}/${quizId}` : null
+  const url = shouldFetch ? `/api/progress/quiz/${user?.uid}` : null
 
   const { data, error, mutate } = useSWR<QuizProgress>(
     url,
