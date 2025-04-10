@@ -85,7 +85,7 @@ export default function QuizQuestion({
 
       {isAnswered && (
         <div className='mt-6 p-4 bg-muted rounded-lg'>
-          <p className='font-normal mb-2'>
+          <div className='font-normal mb-2'>
             {isCorrect ? (
               <div className='flex items-center'>
                 <CheckCircle
@@ -100,7 +100,7 @@ export default function QuizQuestion({
                 <span className='ml-2'>Let&apos;s Review This One!</span>
               </div>
             )}
-          </p>
+          </div>
           <div>{renderQuestionText(question.explanation)}</div>
         </div>
       )}

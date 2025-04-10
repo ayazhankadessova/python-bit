@@ -5,7 +5,7 @@ import { Quiz } from '@/types/quiz/quiz'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-python'
 import { useTheme } from 'next-themes'
-import { User } from '@/types/firebase' 
+import { User } from '@/types/firebase'
 import { recordQuizAttempt } from './helper'
 import QuizQuestion from './QuizQuestion'
 import QuizFooter from './QuizFooter'
@@ -111,24 +111,26 @@ export default function ActiveQuiz({
   }
 
   const handleSubmitQuiz = async () => {
-    if (!user || isSubmitting) return
+    if (isSubmitting) return
 
     setIsSubmitting(true)
     const score = calculateScore()
 
-    const success = await recordQuizAttempt(
-      user,
-      quiz.id,
-      quiz.title,
-      quiz.tutorialId,
-      score.percentage,
-      score.correctAnswers,
-      score.totalQuestions,
-      selectedAnswers
-    )
+    if (user) {
+      const success = await recordQuizAttempt(
+        user,
+        quiz.id,
+        quiz.title,
+        quiz.tutorialId,
+        score.percentage,
+        score.correctAnswers,
+        score.totalQuestions,
+        selectedAnswers
+      )
 
-    if (success) {
-      invalidateCache()
+      if (success) {
+        invalidateCache()
+      }
     }
 
     setShowResults(true)
