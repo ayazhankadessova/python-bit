@@ -24,7 +24,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   const [showResults, setShowResults] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [mounted, setMounted] = useState(false)
+  // const [mounted, setMounted] = useState(false)
 
   const { theme } = useTheme()
   const { user } = useAuth()
@@ -43,11 +43,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     }
   }, [progress, quiz.questions.length])
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted || isLoading) {
+  if (isLoading) {
     return <LoadingSpinner/>
   }
 
