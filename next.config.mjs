@@ -14,6 +14,13 @@ const nextConfig = {
   rewrites: async () => {
     return [
       {
+        source: '/api/:path*',
+        destination:
+          process.env.NODE_ENV === 'development'
+            ? 'http://localhost:80/api/:path*'
+            : '/api/',
+      },
+      {
         source: '/api/py/:path*',
         destination:
           process.env.NODE_ENV === 'development'
