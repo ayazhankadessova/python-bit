@@ -4,11 +4,10 @@ import { fireStore } from '@/firebase/firebase'
 
 export async function GET(
   request: Request,
-  props: { params: Promise<{ userId: string; quizId: string }> }
+  { params }: { params: Promise<{ userId: string; quizId: string }> }
 ) {
-  const params = await props.params;
   try {
-    const { userId, quizId } = params
+    const { userId, quizId } = await params
 
     if (!userId || !quizId) {
       return NextResponse.json(
@@ -39,7 +38,7 @@ export async function GET(
       highestScore: data.highestScore || 0,
       score: data.score || 0,
       correctAnswers: data.correctAnswers || 0,
-      totalQuestions: data.totalQuestions || 0, 
+      totalQuestions: data.totalQuestions || 0,
       selectedAnswers: data.selectedAnswers || [],
     })
   } catch (error) {
