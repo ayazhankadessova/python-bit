@@ -3,11 +3,14 @@ import { doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 
 export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ userId: string; projectId: string }> }
+  request: Request
+//   { params }: { params: Promise<{ userId: string; projectId: string }> }
 ) {
   try {
-    const { userId, projectId } = await params
+
+    const { searchParams } = new URL(request.url)
+    const userId = searchParams.get('userId')
+    const projectId = searchParams.get('quizId')
 
     if (!userId || !projectId) {
       return NextResponse.json(

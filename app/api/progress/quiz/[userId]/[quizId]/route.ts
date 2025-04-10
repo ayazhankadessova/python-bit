@@ -5,13 +5,14 @@ import { doc, getDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 
 export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ userId: string; quizId: string }> }
+  request: Request
+  // { params }: { params: Promise<{ userId: string; quizId: string }> }
 ) {
   try {
-
-    console.log("userIDD")
-    const { userId, quizId } = await params
+    // Parse the query parameters from the request URL
+    const { searchParams } = new URL(request.url)
+    const userId = searchParams.get('userID')
+    const quizId = searchParams.get('quizID')
 
     if (!userId || !quizId) {
       return NextResponse.json(

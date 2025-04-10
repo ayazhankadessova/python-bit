@@ -22,7 +22,7 @@ export function useProjectProgress(
 
   // Create the path-based URL
   const url = shouldFetch
-    ? `/api/progress/project/${user?.uid}/${projectId}`
+    ? `/api/progress/quiz?userId=${user?.uid}&quizId=${projectId}`
     : null
 
   const { data, error, mutate } = useSWR<Progress>(
