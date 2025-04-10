@@ -26,33 +26,33 @@ const dialogsInfo: DialogsInfo = {
     href: '/classrooms',
     toggle: false,
   },
-  Products: {
-    title: 'Materials',
-    href: '/teaching-content',
-    dropdown: [
-      {
-        title: 'Full Programmes',
-        href: '/teaching-content/programmes',
-        description: 'Check out full 7-week or 14-week programmes.',
-      },
-      {
-        title: 'Learning Topics',
-        href: '/teaching-content/learning-topics',
-        description: 'Explore various topics.',
-      },
-      {
-        title: 'Quizes and tests',
-        href: '/teaching-content/quiz',
-        description: 'Find a way to test students knowledge.',
-      },
-      {
-        title: 'Teacher Forum',
-        href: '/teaching-content/teacher-forum',
-        description: 'Connect with fellow teachers.',
-      },
-    ],
-    toggle: true,
-  },
+  // Products: {
+  //   title: 'Materials',
+  //   href: '/teaching-content',
+  //   dropdown: [
+  //     {
+  //       title: 'Full Programmes',
+  //       href: '/teaching-content/programmes',
+  //       description: 'Check out full 7-week or 14-week programmes.',
+  //     },
+  //     {
+  //       title: 'Learning Topics',
+  //       href: '/teaching-content/learning-topics',
+  //       description: 'Explore various topics.',
+  //     },
+  //     {
+  //       title: 'Quizes and tests',
+  //       href: '/teaching-content/quiz',
+  //       description: 'Find a way to test students knowledge.',
+  //     },
+  //     {
+  //       title: 'Teacher Forum',
+  //       href: '/teaching-content/teacher-forum',
+  //       description: 'Connect with fellow teachers.',
+  //     },
+  //   ],
+  //   toggle: true,
+  // },
   Tutorials: {
     title: 'Tutorials',
     href: '/tutorials',
