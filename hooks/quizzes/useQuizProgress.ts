@@ -26,11 +26,21 @@ export function useQuizProgress(
   const shouldFetch = Boolean(quizId && user)
 
   // Create the path-based URL
-  const url = shouldFetch ? `/api/progress/quiz?userId=${user?.uid}&quizId=${quizId}` : null
+  const url = shouldFetch
+    ? `/api/progress/quiz?userId=${user?.uid}&quizId=${quizId}`
+    : null
 
   const { data, error, mutate } = useSWR<QuizProgress>(
     url,
     async (url: string) => {
+      if (!url) {
+        return {
+          progress: null,
+          isLoading: false,
+          error: null,
+          invalidateCache: () => {}, // No-op function
+        }
+      }
       const res = await fetch(url)
       if (!res.ok) {
         throw new Error('Failed to fetch quiz progress')

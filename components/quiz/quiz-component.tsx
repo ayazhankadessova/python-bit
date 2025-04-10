@@ -47,7 +47,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
     setMounted(true)
   }, [])
 
-  if (!mounted || isLoading) {
+  if (!mounted) {
     return <LoadingSpinner/>
   }
 
