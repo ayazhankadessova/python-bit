@@ -9,6 +9,8 @@ export async function GET(
   { params }: { params: Promise<{ userId: string; quizId: string }> }
 ) {
   try {
+
+    console.log("userIDD")
     const { userId, quizId } = await params
 
     if (!userId || !quizId) {
