@@ -1,0 +1,109 @@
+{
+  "id": "python101-6-string-operations-quiz",
+  "title": "String Operations",
+  "description": "Test your knowledge of Python's string manipulation techniques to transform and analyze text like a coding wizard!",
+  "tutorialId": "python101-6-string-operations",
+  "imageUrl": "/quizzes/python101-6-string-operations/cover.png",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What will the following code output?\n```python\ngame_text = \"Epic Dragon Battle!\"\nprint(game_text[5:11])```",
+      "options": ["Epic Dr", "Dragon", "ic Drag", "Dragon B"],
+      "correctAnswer": 1,
+      "explanation": "The slice game_text[5:11] takes characters from index 5 up to (but not including) index 11. In 'Epic Dragon Battle!', this corresponds to 'Dragon'.",
+      "imageUrl": "/quizzes/python101-6-string-operations/q1.png"
+    },
+    {
+      "id": "q2",
+      "question": "How do you find the length of a string in Python?",
+      "options": [
+        "string.size()",
+        "string.length",
+        "len(string)",
+        "size(string)"
+      ],
+      "correctAnswer": 2,
+      "explanation": "In Python, the built-in len() function is used to find the length of a string (and other sequence types). For example, len(\"Hello\") would return 5."
+    },
+    {
+      "id": "q3",
+      "question": "What will this code output?\n```python\nsecret_code = \"!detavitca rewop repuS\"\nprint(secret_code[::-1])```",
+      "options": [
+        "!detavitca rewop repuS",
+        "Super power activated!",
+        "SuPeR pOwEr AcTiVaTeD!",
+        "S!u!p!e!r! !p!o!w!e!r! !a!c!t!i!v!a!t!e!d!"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The slice [::-1] reverses a string. Since the original string \"!detavitca rewop repuS\" is written backwards, reversing it produces \"Super power activated!\"",
+      "imageUrl": "/quizzes/python101-6-string-operations/q3.png"
+    },
+    {
+      "id": "q4",
+      "question": "What method would you use to find the position of the first occurrence of a substring in a string?",
+      "options": ["find()", "search()", "index()", "position()"],
+      "correctAnswer": 2,
+      "explanation": "The index() method returns the position of the first occurrence of a substring within a string. For example, \"Hello\".index(\"e\") would return 1. Note that index() will raise an error if the substring is not found."
+    },
+    {
+      "id": "q5",
+      "question": "What will this code output?\n```python\nquest = \"Find the sword Defeat the dragon Save the kingdom\"\nquest_steps = quest.split(\" \")\nprint(quest_steps[1])```",
+      "options": ["Find", "the", "sword", "Find the"],
+      "correctAnswer": 1,
+      "explanation": "The split() method breaks a string into a list of substrings based on the specified separator. Using quest.split(\" \") creates the list ['Find', 'the', 'sword', 'Defeat', 'the', 'dragon', 'Save', 'the', 'kingdom']. The element at index 1 is 'the'.",
+      "imageUrl": "/quizzes/python101-6-string-operations/q5.png"
+    },
+    {
+      "id": "q6",
+      "question": "What happens when you use the upper() method on a string?",
+      "options": [
+        "It converts only the first character to uppercase",
+        "It converts all characters to uppercase",
+        "It converts only letters to uppercase, leaving other characters unchanged",
+        "It returns a new string in uppercase without modifying the original"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The upper() method returns a new string where all characters are converted to uppercase. The original string remains unchanged because strings in Python are immutable. For example, \"hello\".upper() returns \"HELLO\" but doesn't modify the original string."
+    },
+    {
+      "id": "q7",
+      "question": "What would this code output?\n```python\nbattle_cry = \"Victory is Coming!\"\nprint(battle_cry[-7:])```",
+      "options": ["Coming!", "Victory", "tory is", "is Coming"],
+      "correctAnswer": 0,
+      "explanation": "The slice [-7:] takes the last 7 characters of the string. In \"Victory is Coming!\", the last 7 characters are \"Coming!\"",
+      "imageUrl": "/quizzes/python101-6-string-operations/q7.png"
+    },
+    {
+      "id": "q8",
+      "question": "Which of the following correctly checks if a string ends with a specific substring?",
+      "options": [
+        "string.endswith(\"text\")",
+        "string.ends_with(\"text\")",
+        "string.end(\"text\")",
+        "string[-len(\"text\"):] == \"text\""
+      ],
+      "correctAnswer": 0,
+      "explanation": "The endswith() method checks if a string ends with the specified suffix and returns True or False. For example, \"Hello.txt\".endswith(\".txt\") would return True."
+    },
+    {
+      "id": "q9",
+      "question": "What would this code output?\n```python\nspell = \"Abracadabra!\"\nprint(spell.count(\"a\"))```",
+      "options": ["4", "5", "3", "2"],
+      "correctAnswer": 0,
+      "explanation": "The count() method counts how many times a substring appears in a string. In \"Abracadabra!\", the letter \"a\" appears 4 times (note that count() is case-sensitive, so it only counts lowercase \"a\").",
+      "imageUrl": "/quizzes/python101-6-string-operations/q9.png"
+    },
+    {
+      "id": "q10",
+      "question": "Which statement about string slicing in Python is correct?",
+      "options": [
+        "The start index is inclusive, but the end index is exclusive",
+        "Both start and end indices are inclusive",
+        "Both start and end indices are exclusive",
+        "The start index is exclusive, but the end index is inclusive"
+      ],
+      "correctAnswer": 0,
+      "explanation": "In Python string slicing [start:end], the start index is inclusive (the character at that position is included), but the end index is exclusive (the character at that position is not included). This is why \"Hello\"[0:2] returns \"He\" and not \"Hel\"."
+    }
+  ]
+}
