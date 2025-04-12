@@ -44,7 +44,7 @@ export default function TutorialPageContent({
             </p>
           )}
           <hr className='my-4 mb-16' />
-          <div className='text-xl mx-auto xl:px-24 lg: px-16 md:px-8 sm:px-0 max-w-[50em]'>
+          <div className='text-xl mx-auto xl:px-24 lg: px-16 md:px-8 sm:px-0 px-0 max-w-[50em]'>
             <MDXContent code={tutorial.body} />
           </div>
         </article>
