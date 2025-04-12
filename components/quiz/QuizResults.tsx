@@ -36,7 +36,7 @@ export default function QuizResults({
 
   return (
     <div className='w-full mx-auto -mt-8'>
-      <div className='justify-center items-center flex flex-col bg-gradient-to-r from-purple-200 via-purple-100 to-purple-200 dark:from-purple-900 dark:via-purple-950 dark:to-purple-900 py-8 md:py-12 lg:py-16 px-4 rounded-lg shadow-md'>
+      <div className='justify-center items-center flex flex-col bg-gradient-to-r from-purple-200 via-purple-100 to-purple-200 dark:from-purple-900 dark:via-purple-950 dark:to-purple-900 py-8 md:py-12 lg:py-16 md:px-8 sm:px-8 px-8 rounded-lg shadow-md'>
         <h2 className='text-2xl mb-2 text-foreground dark:text-foreground font-bold'>
           Quiz Summary
         </h2>
@@ -115,7 +115,7 @@ export default function QuizResults({
         </div>
       </div>
 
-      <div className='xl:px-48 lg:px-32 md:px-16 sm:px-8'>
+      <div className='xl:px-48 lg:px-32 md:px-16 sm:px-8 px-8'>
         <div className='mt-12'>
           <p className='text-xl mb-4 font-semibold'>Review Your Answers</p>
           {quiz.questions.map((question, index) => {
