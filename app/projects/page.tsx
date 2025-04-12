@@ -35,7 +35,7 @@ const ProjectThemes = () => {
             key={index}
             className='hover:shadow-lg transition-shadow overflow-hidden flex flex-col'
           >
-            <ThemeImage src={theme.image} />
+            <ThemeImage src={`/themes/${theme.image}`} alt={theme.title}/>
             <CardHeader>
               <div className='flex items-center justify-between'>
                 <div className='flex items-center gap-4'>

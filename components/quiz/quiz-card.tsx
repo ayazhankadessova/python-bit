@@ -8,7 +8,7 @@ import {
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { CircleHelp } from 'lucide-react'
-import Image from 'next/image'
+import { ThemeImage } from '@/components/theme-image'
 
 interface QuizCardProps {
   id: string
@@ -29,16 +29,7 @@ export default function QuizCard({
 }: QuizCardProps) {
   return (
     <Card className='w-full flex flex-col h-full'>
-      {/* Image Section */}
-      <div className='relative w-full aspect-[16/9]'>
-        <Image
-          src={imageUrl}
-          alt={'quiz-cover'}
-          layout='fill'
-          objectFit='cover'
-          className='rounded-t-md'
-        />
-      </div>
+      <ThemeImage src={imageUrl} alt={'quiz-cover'} />
       <CardHeader className='flex-grow'>
         <CardTitle className='flex items-center gap-2 text-xl'>
           {title}
