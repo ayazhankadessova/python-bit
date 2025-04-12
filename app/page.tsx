@@ -390,7 +390,7 @@ export default function HomePage() {
                 <div className='relative w-full h-48 overflow-hidden'>
                   <ThemeImage
                     src={theme.image}
-                    // alt={theme.title}
+                    alt={theme.title}
                     // fill
                     // className='object-cover rounded-t-lg'
                   />
