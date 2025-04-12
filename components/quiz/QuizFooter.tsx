@@ -52,14 +52,9 @@ export default function QuizFooter({
       ) : isLastQuestion ? (
         <Button
           onClick={onFinishQuiz}
-          variant='default'
-          className={
-            allQuestionsAnswered ? 'bg-green-600 hover:bg-green-700' : ''
-          }
+          variant='softTeal'
         >
           Finish Quiz
-          {!allQuestionsAnswered &&
-            ` (${answeredQuestionsCount}/${totalQuestions})`}
         </Button>
       ) : (
         <Button onClick={onNext}>

@@ -22,14 +22,14 @@ const buttonVariants = cva(
         softBlue:
           'bg-gradient-to-r from-purple-100 via-purple-200 to-purple-100 text-primary font-md shadow-sm border border-purple-200/50 hover:shadow-md hover:from-purple-200 hover:via-purple-300 hover:to-purple-200 hover:-translate-y-0.5 active:translate-y-0 dark:from-purple-900/70 dark:via-purple-800/70 dark:to-purple-900/70 dark:border-purple-700/20 dark:hover:from-purple-800/70 dark:hover:via-purple-700/70 dark:hover:to-purple-800/70',
         softTeal: `
-          bg-gradient-to-r from-teal-300 via-teal-400 to-teal-300 
+          bg-gradient-to-r from-teal-300 via-teal-200 to-teal-300 
           text-primary font-md 
-          shadow-sm border border-teal-300/50 
-          hover:shadow-md hover:from-teal-400 hover:via-teal-500 hover:to-teal-400 
+          shadow-md
+          hover:shadow-lg hover:from-teal-400 hover:via-teal-300 hover:to-teal-400 
           hover:-translate-y-0.5 active:translate-y-0
-          dark:from-teal-600 dark:via-teal-500 dark:to-teal-600
+          dark:from-teal-600 dark:via-teal-700 dark:to-teal-600
           dark:border-teal-600/80
-          dark:hover:from-teal-500 dark:hover:via-teal-400 dark:hover:to-teal-500
+          dark:hover:from-teal-500 dark:hover:via-teal-600 dark:hover:to-teal-500
         `,
         softTealSecondary: `
         bg-teal-100
@@ -106,7 +106,7 @@ const buttonVariants = cva(
           before:[mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]
         `,
         default:
-          'relative bg-gradient-to-r from-purple-600 via-purple-500 to-purple-400 text-white shadow-lg hover:from-purple-700 hover:via-purple-600 hover:to-purple-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0',
+          'relative bg-gradient-to-r from-purple-600 via-purple-500 to-purple-400 text-white shadow-md hover:from-purple-700 hover:via-purple-600 hover:to-purple-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0',
       },
       size: {
         default: 'h-9 px-4 py-2',
