@@ -28,8 +28,8 @@ export default function QuizzesPage() {
         <h1 className='text-4xl mb-2'>Quizzes</h1>
         <p className='text-muted-foreground max-w-2xl'>
           Test your Python knowledge with our interactive quizzes. Each quiz is
-          designed to reinforce concepts from our tutorials and help you master
-          Python programming.
+          thoughtfully designed to reinforce key concepts from our tutorials and
+          help you master Python programming skills effectively and confidently.
         </p>
       </div>
 
