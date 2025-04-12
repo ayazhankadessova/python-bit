@@ -1,0 +1,134 @@
+{
+  "id": "python101-8-loops-quiz",
+  "title": "Loops - Repetition Magic!",
+  "description": "Test your knowledge of Python's loop powers and see if you can master the art of repetition like a true coding wizard!",
+  "tutorialId": "python101-8-loops",
+  "imageUrl": "/quizzes/python101-8-loops/cover.png",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What will this code print?\n```python\ninventory = [\"Sword\", \"Shield\", \"Potion\", \"Map\"]\nfor item in inventory:\n    if item == \"Shield\":\n        print(f\"Defense ready!\")\n```",
+      "options": [
+        "Defense ready! Defense ready! Defense ready! Defense ready!",
+        "Defense ready!",
+        "Shield",
+        "Nothing"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The loop goes through each item in the inventory list. The if statement checks if the current item is \"Shield\". Since only one item matches this condition, \"Defense ready!\" is printed exactly once.",
+      "imageUrl": "/quizzes/python101-8-loops/q1.png"
+    },
+    {
+      "id": "q2",
+      "question": "Which of these correctly creates a loop that counts from 1 to 5?",
+      "options": [
+        "for x in range(1, 5)",
+        "for x in range(1, 6)",
+        "for x in range(0, 5)",
+        "for x in range(0, 6)"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The range() function creates a sequence from the first argument (inclusive) up to the second argument (exclusive). So range(1, 6) generates the sequence 1, 2, 3, 4, 5, which counts from 1 to 5."
+    },
+    {
+      "id": "q3",
+      "question": "What will this code print?\n```python\nfor treasure in range(0, 10, 2):\n    print(f\"Found treasure #{treasure}!\")\n```",
+      "options": [
+        "Found treasure #0!\nFound treasure #1!\nFound treasure #2!... up to #9",
+        "Found treasure #0!\nFound treasure #2!\nFound treasure #4!\nFound treasure #6!\nFound treasure #8!",
+        "Found treasure #2!\nFound treasure #4!\nFound treasure #6!\nFound treasure #8!",
+        "Found treasure #0!\nFound treasure #2!\nFound treasure #4!\nFound treasure #6!\nFound treasure #8!\nFound treasure #10!"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The range(0, 10, 2) creates a sequence with start value 0, ending before 10, stepping by 2. This generates the sequence 0, 2, 4, 6, 8. The loop prints 'Found treasure #' followed by each of these values.",
+      "imageUrl": "/quizzes/python101-8-loops/q3.png"
+    },
+    {
+      "id": "q4",
+      "question": "What is the main difference between a for loop and a while loop in Python?",
+      "options": [
+        "for loops are faster than while loops",
+        "for loops iterate over a sequence, while loops continue until a condition is False",
+        "while loops can only use numbers, for loops can use any type",
+        "for loops can use break statements, while loops cannot"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The key difference is that for loops are designed to iterate through a sequence (like a list, range, or string), while while loops continue executing as long as a specified condition remains True. The for loop knows in advance how many iterations to perform, but the while loop keeps going until its condition becomes False."
+    },
+    {
+      "id": "q5",
+      "question": "What happens when a break statement is executed inside a loop?",
+      "options": [
+        "The current iteration is skipped, and the loop continues with the next iteration",
+        "The loop immediately terminates, and execution continues after the loop",
+        "The program crashes with a break error",
+        "The computer restarts"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When a break statement executes within a loop, it immediately terminates the loop entirely, regardless of the loop's normal exit condition. Program execution then continues with the first statement after the loop body.",
+      "imageUrl": "/quizzes/python101-8-loops/q5.png"
+    },
+    {
+      "id": "q6",
+      "question": "What happens when a continue statement is executed inside a loop?",
+      "options": [
+        "The loop immediately terminates",
+        "The current iteration is skipped, and the loop continues with the next iteration",
+        "The loop repeats the current iteration",
+        "The program pauses execution"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When a continue statement executes within a loop, it skips the remaining code in the current iteration and jumps ahead to the next iteration of the loop. Unlike break, continue doesn't terminate the loop entirely - it just moves to the next iteration."
+    },
+    {
+      "id": "q7",
+      "question": "What's wrong with this while loop?\n```python\npower = 1\nwhile power < 10:\n    print(f\"Power level: {power}\")\n```",
+      "options": [
+        "The condition should be power <= 10",
+        "The power variable is not being incremented inside the loop",
+        "The print statement is incorrect",
+        "There's nothing wrong with the loop"
+      ],
+      "correctAnswer": 1,
+      "explanation": "This is an infinite loop because the power variable is never changed inside the loop. Since power stays at 1, the condition power < 10 will always be True, and the loop will never end. To fix it, we need to increment power inside the loop, for example by adding power += 1.",
+      "imageUrl": "/quizzes/python101-8-loops/q7.png"
+    },
+    {
+      "id": "q8",
+      "question": "What does the else clause in a for loop do?",
+      "options": [
+        "It executes if the loop condition becomes False",
+        "It executes if the loop completes normally (without a break)",
+        "It checks an alternative condition",
+        "It's an alternate loop body"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The else clause in a for loop executes after the loop completes all its iterations naturally (without encountering a break statement). If the loop is terminated early by a break, the else clause is skipped. This feature is useful for implementing search algorithms where you want to perform an action only if the search was unsuccessful."
+    },
+    {
+      "id": "q9",
+      "question": "What is the issue with this for loop?\n```python\ntreasures = [100, 200, 300]\nfor i in range(1, len(treasures)):\n    print(f\"Found treasure: {treasures[i]}\")\n```",
+      "options": [
+        "The loop will cause an index error",
+        "The loop will only print treasures at indices 1 and 2, skipping the first treasure",
+        "The loop is fine with no issues",
+        "The loop will print the treasures in reverse order"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The loop starts at index 1 instead of 0, which means it will skip the first treasure (at index 0). The range(1, len(treasures)) generates indices 1 and 2, so only the values 200 and 300 will be printed. To include all treasures, the loop should use range(0, len(treasures)) or simply range(len(treasures)).",
+      "imageUrl": "/quizzes/python101-8-loops/q9.png"
+    },
+    {
+      "id": "q10",
+      "question": "Which of the following is considered a common practice when using a while loop?",
+      "options": [
+        "Making sure the loop condition will eventually become False",
+        "Always including a break statement",
+        "Using only boolean conditions",
+        "Keeping the loop body as long as possible"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The most important practice when using a while loop is ensuring that the loop condition will eventually become False, or that the loop contains a break statement that will execute. This prevents infinite loops which would cause your program to hang. This often means updating a variable used in the condition or implementing a safety counter."
+    }
+  ]
+}

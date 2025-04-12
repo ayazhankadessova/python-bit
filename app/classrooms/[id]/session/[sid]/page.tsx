@@ -1,4 +1,5 @@
-'use client'
+'use client';
+import { use } from "react";
 // import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
@@ -7,13 +8,14 @@ import { StudentSessionView } from '@/components/session-views/student-session-v
 import { TeacherSessionView } from '@/components/session-views/teacher-session-view'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string // classroom id
     sid: string // session id
-  }
+  }>
 }
 
-const SessionPage: React.FC<PageProps> = ({ params }) => {
+const SessionPage: React.FC<PageProps> = props => {
+  const params = use(props.params);
   const router = useRouter()
   const { user, loading } = useAuth()
 

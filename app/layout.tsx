@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang='en' className='scroll-smooth'>
+    <html lang='en' className='scroll-smooth light' style= {{colorScheme: 'light'}}>
       <body
         className={cn('min-h-screen antialiased', inter.variable, luckiestGuy.variable, mavenPro.variable, openSans.variable)}
       >

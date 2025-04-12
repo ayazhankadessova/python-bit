@@ -24,31 +24,25 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   const [showResults, setShowResults] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [mounted, setMounted] = useState(false)
 
   const { theme } = useTheme()
   const { user } = useAuth()
   const { progress, invalidateCache, isLoading } = useQuizProgress(
     quiz.id,
-    user
+    user 
   )
 
   useEffect(() => {
-    if (progress && progress.attempts > 0) {
-      // If user has taken the quiz before, use their latest answers
+    if (user && progress && progress.attempts > 0) {
       setSelectedAnswers(
         progress.selectedAnswers || Array(quiz.questions.length).fill(-1)
       )
       setShowResults(true)
     }
-  }, [progress, quiz.questions.length])
+  }, [user, progress, quiz.questions.length])
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted || isLoading) {
-    return <LoadingSpinner/>
+  if (user && isLoading) {
+    return <LoadingSpinner />
   }
 
   const handleRetakeQuiz = () => {
@@ -59,14 +53,31 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
   }
 
   if (showResults) {
-    const scoreData = {
-      correctAnswers: progress?.correctAnswers || 0,
-      totalQuestions: progress?.totalQuestions || quiz.questions.length,
-      percentage: progress?.score || 0,
+    const calculateScore = () => {
+      let correctAnswers = 0
+      quiz.questions.forEach((question, index) => {
+        if (selectedAnswers[index] === question.correctAnswer) {
+          correctAnswers++
+        }
+      })
+      return {
+        correctAnswers,
+        totalQuestions: quiz.questions.length,
+        percentage: Math.round((correctAnswers / quiz.questions.length) * 100),
+      }
     }
 
+    const scoreData =
+      user && progress
+        ? {
+            correctAnswers: progress.correctAnswers || 0,
+            totalQuestions: progress.totalQuestions || quiz.questions.length,
+            percentage: progress.score || 0,
+          }
+        : calculateScore()
+
     const displayAnswers =
-      progress && progress.selectedAnswers
+      user && progress && progress.selectedAnswers
         ? progress.selectedAnswers
         : selectedAnswers
 
@@ -75,7 +86,7 @@ export default function QuizComponent({ quiz }: QuizComponentProps) {
         quiz={quiz}
         score={scoreData}
         selectedAnswers={displayAnswers}
-        progress={progress || null}
+        progress={user ? progress || null : null} 
         theme={theme}
         onRetakeQuiz={handleRetakeQuiz}
         renderQuestionText={renderQuestionText}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, type JSX } from 'react';
 import { doc, onSnapshot, getDoc, updateDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Button } from '@/components/ui/button'

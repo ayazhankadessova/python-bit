@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, use } from 'react';
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -19,16 +19,18 @@ import { ProjectItem } from '@/components/projects/project-item'
 import { filterProjectsBySearchTerm } from '@/lib/projects/utils'
 
 interface ThemePageProps {
-  params: {
+  params: Promise<{
     theme: string
-  }
-  searchParams: {
+  }>
+  searchParams: Promise<{
     page?: string
     perPage?: string
-  }
+  }>
 }
 
-const ThemePage = ({ params, searchParams }: ThemePageProps) => {
+const ThemePage = (props: ThemePageProps) => {
+  const searchParams = use(props.searchParams);
+  const params = use(props.params);
   const [searchText, setSearchText] = useState('')
   const [sortMethod, setSortMethod] = useState('createdAt')
 
@@ -48,7 +50,7 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
   const currentPage = Number(searchParams?.page) || 1
   const currentPerPage = Number(searchParams?.perPage) || 5
   const fullLinkGenerated = `${siteConfig.url}/projects/${params.theme}`
-  
+
 
   const displayProjects = sortedProjects.slice(
     currentPerPage * (currentPage - 1),
@@ -57,12 +59,12 @@ const ThemePage = ({ params, searchParams }: ThemePageProps) => {
 
   return (
     <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 pt-8 mb-16'>
-      <div className='flex justify-between mb-4 ml-1'>
+      <div className='flex justify-between mb-8 ml-1'>
         <BackButton href='/projects' />
         <SharePost fullLink={fullLinkGenerated} />
       </div>
 
-      <h1 className='text-4xl mb-16 capitalize'>
+      <h1 className='text-4xl mb-12'>
         {params.theme.replace('-', ' ')} Projects
       </h1>
 

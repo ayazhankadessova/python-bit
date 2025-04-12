@@ -23,9 +23,9 @@ export default function QuizQuestion({
 }: QuizQuestionProps) {
   return (
     <div className='mb-6 mx-auto xl:px-24 lg:px-16 md:px-8 sm:px-0'>
-      <p className='text-lg font-normal mb-6'>
+      <div className='text-lg font-normal mb-6'>
         {renderQuestionText(question.question)}
-      </p>
+      </div>
 
       {question.imageUrl && (
         <div className='flex justify-center items-center mb-6 my-0'>
@@ -85,7 +85,7 @@ export default function QuizQuestion({
 
       {isAnswered && (
         <div className='mt-6 p-4 bg-muted rounded-lg'>
-          <p className='font-normal mb-2'>
+          <div className='font-normal mb-2'>
             {isCorrect ? (
               <div className='flex items-center'>
                 <CheckCircle
@@ -100,7 +100,7 @@ export default function QuizQuestion({
                 <span className='ml-2'>Let&apos;s Review This One!</span>
               </div>
             )}
-          </p>
+          </div>
           <div>{renderQuestionText(question.explanation)}</div>
         </div>
       )}

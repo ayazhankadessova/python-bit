@@ -9,15 +9,31 @@ exercises: 5
 firestoreId: python101-4-operators
 ---
 
-# Level Up: Python's Magic Tools - Operators! 🪄
+## Level Up with Python's Magic Tools - Operators! 🪄
 
-## Today's Quest! 🎯
-In this exciting adventure, you'll learn how to:
-- Add, subtract, multiply, and divide numbers like a math wizard! ✨
-- Combine words and messages using string operators 📝
-- Manage your game inventory with list operators 🎒
-- Make decisions using comparison operators 🤔
-- Create powerful combinations with logical operators 🧠
+## 🚀 Today's Agenda 🚀
+
+* 1. [What Are Operators?](#WhatAreOperators)
+* 2. [Arithmetic Operators: Your Calculator Superpowers!](#ArithmeticOperators)
+* 3. [String Operators: Word Magic!](#StringOperators)
+* 4. [List Operators: Inventory Management!](#ListOperators)
+* 5. [Comparison Operators: The Decision Makers!](#ComparisonOperators)
+* 6. [Logical Operators: The Brain Power!](#LogicalOperators)
+* 7. [Operator Exercises and Challenges](#OperatorExercises)
+* 8. [Debug Missions: Spot the Bugs!](#DebugMissions)
+* 9. [Final Challenge: Score Calculator](#FinalChallenge)
+
+<div id='WhatAreOperators'></div>
+## 1. What Are Operators?
+
+Operators are special symbols in Python that perform operations on variables and values. Think of them as powerful tools in your coding toolbox that let you transform and manipulate data in different ways.
+
+In everyday life, we use operators all the time without even thinking about it:
+- When you add up your score in a game, you're using an addition operator
+- When you check if you have enough coins to buy an item, you're using a comparison operator
+- When you decide if you need both a sword AND a shield, you're using a logical operator
+
+Python has dozens of operators, but today we'll focus on the most useful ones that will give you coding superpowers right away!
 
 By the end of this lesson, you'll be able to:
 1. Calculate game scores and power-ups
@@ -26,11 +42,35 @@ By the end of this lesson, you'll be able to:
 4. Make smart game decisions
 5. Debug tricky code problems
 
-Are you ready to power up your coding skills? Let's jump in! 🚀
+Let's power up your coding skills! 🚀
 
-## Arithmetic Operators: Your Calculator Superpowers! 🔢
+<div id='ArithmeticOperators'></div>
+## 2. Arithmetic Operators: Your Calculator Superpowers! 🔢
 
-Just like your calculator (but way cooler), Python can do math with special symbols:
+Arithmetic operators are the symbols that help you perform mathematical operations in Python. They're like having a powerful calculator built right into your code!
+
+### The Key Arithmetic Operators:
+
+| Operator | Name | Description | Example |
+|----------|------|-------------|---------|
+| + | Addition | Adds two values | 5 + 3 = 8 |
+| - | Subtraction | Subtracts right from left | 5 - 3 = 2 |
+| * | Multiplication | Multiplies values | 5 * 3 = 15 |
+| / | Division | Divides left by right | 10 / 2 = 5.0 |
+| // | Integer Division | Divides and rounds down | 5 // 2 = 2 |
+| ** | Exponentiation | Raises to power | 2 ** 3 = 8 |
+| % | Modulus | Returns remainder | 5 % 2 = 1 |
+
+These operators follow the same order of operations as in mathematics: parentheses first, then exponentiation, then multiplication/division, and finally addition/subtraction.
+
+### Real-World Applications:
+
+- **Game Development**: Calculate damage, health, and scores
+- **Data Analysis**: Perform mathematical operations on data
+- **Finance**: Calculate interest, payments, and investments
+- **Physics Simulations**: Apply mathematical formulas
+
+Let's see these operators in action with some game-related examples:
 
 <PythonCodeEditor
   initialCode={`# Let's power up our game character!
@@ -41,6 +81,11 @@ bonus_health = 50
 total_health = initial_health + bonus_health
 print(f"Total Health: {total_health}") # 150 HP! 💪
 
+# Subtraction (-): Taking damage!
+damage_taken = 30
+health_after_hit = total_health - damage_taken
+print(f"Health after taking damage: {health_after_hit}")
+
 # Multiplication (*): Multi-kill bonus!
 score = 25 * 3
 print(f"Score: {score}") # Triple kill! 🎯
@@ -49,8 +94,12 @@ print(f"Score: {score}") # Triple kill! 🎯
 treasure = 100 / 4 # Sharing with 4 players
 print(f"Each player gets: {treasure} coins")
 
+# Integer Division (//): Quick split without fractions
+quick_share = 100 // 3  # Whole number division
+print(f"Quick split: {quick_share} coins each")
+
 # Power-up (**): Level multiplier!
-damage = 2 ** 3 # Power of 3!
+damage = 2 ** 3 # 2 raised to power of 3!
 print(f"Super attack damage: {damage}")
 
 # Remainder (%): Checking for leftover loot
@@ -60,9 +109,55 @@ print(f"Leftover gems: {leftover_gems}")`}
   tutorial_id="python101-4-operators"
 />
 
-## String Operators: Word Magic! ✨
+### Understanding Division: / vs //
 
-Remember our strings from last time? We can do magic with them too!
+In Python, there are two types of division:
+- Regular division (`/`) always returns a float (decimal number): `10 / 5` gives `2.0`
+- Integer division (`//`) discards the decimal part: `10 // 3` gives `3`
+
+Integer division is useful when you need a whole number result, like determining how many complete sets of items you can make with a specific number of resources.
+
+### The Modulo Operator: Finding Remainders
+
+The modulo operator (`%`) is incredibly useful when you need to know what's left after division. Some practical uses include:
+
+- Checking if a number is even or odd: `number % 2 == 0` means the number is even
+- Creating patterns that repeat: `step % 4` will cycle through 0, 1, 2, 3, 0, 1, 2, 3...
+- Determining if one number is divisible by another: `x % y == 0` means x is divisible by y
+
+<div id='StringOperators'></div>
+## 3. String Operators: Word Magic! ✨
+
+Strings in Python aren't just for storing text - they can be manipulated with operators too! This gives you the power to create, combine, and analyze text in powerful ways.
+
+### The Key String Operators:
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| + | Concatenation (joining strings) | "Hello " + "World" = "Hello World" |
+| * | Repetition (repeating strings) | "Hi! " * 3 = "Hi! Hi! Hi! " |
+| in | Membership test | "Python" in "I love Python" = True |
+| not in | Negative membership test | "Java" not in "I love Python" = True |
+
+### String Concatenation: Building Text
+
+Concatenation means joining strings together. It's like connecting puzzle pieces to form a complete picture. Every time you need to build a full name, create a sentence, or construct a message from parts, you'll use the `+` operator with strings.
+
+### String Repetition: Pattern Creation
+
+The `*` operator with strings creates repetition. This is perfect for:
+- Creating visual separators like "=-=-=-=-=-=-="
+- Building simple ASCII art
+- Repeating elements for emphasis
+
+### String Membership: Finding Text
+
+The `in` operator checks if a substring exists within another string. This is extremely useful for:
+- Validating user input
+- Searching for keywords in text
+- Checking if a character exists in a string
+
+Let's see these string operators in action:
 
 <PythonCodeEditor
   initialCode={`# Combining hero names (+ operator)
@@ -74,14 +169,68 @@ print(f"Your hero name: {hero_name}")
 # Making a crowd cheer (* operator)
 crowd_cheer = "Hip Hip Hooray! " * 3
 print(f"The crowd goes: {crowd_cheer}")
+
+# String membership testing (in operator)
+team_name = "Python Pioneers"
+print("Python" in team_name)  # True
+print("Java" in team_name)    # False
 `}
   exercise_number={2}
   tutorial_id="python101-4-operators"
 />
 
-## List Operators: Inventory Management! 🎒
+### String Operators in Real-World Applications:
 
-Remember our lists? Let's use them with operators!
+- **Text Processing**: Analyzing documents, articles, and messages
+- **Form Validation**: Checking if user input contains required words or characters
+- **Game Development**: Creating character names, dialogue, and storytelling elements
+- **Data Analysis**: Parsing and extracting information from text data
+
+Remember that strings can't be combined with numbers using the `+` operator unless you first convert the numbers to strings using `str()`. For example:
+
+```python
+age = 25
+message = "I am " + str(age) + " years old."
+```
+
+<div id='ListOperators'></div>
+## 4. List Operators: Inventory Management! 🎒
+
+Lists in Python are incredibly flexible, and you can manipulate them with operators to create, combine, and analyze collections of data. Think of these operators as tools for managing inventories, character attributes, or any collection of items.
+
+### The Key List Operators:
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| + | Concatenation (combining lists) | [1, 2] + [3, 4] = [1, 2, 3, 4] |
+| * | Repetition (repeating lists) | [0] * 3 = [0, 0, 0] |
+| in | Membership test | "apple" in ["banana", "apple"] = True |
+| not in | Negative membership test | "orange" not in ["banana", "apple"] = True |
+
+### List Concatenation: Combining Collections
+
+The `+` operator allows you to merge two or more lists into a single list. This is useful when you want to combine:
+- Items from multiple inventories
+- Results from different calculations
+- Characters from different teams
+
+Unlike with strings, you can only concatenate a list with another list, not with individual elements.
+
+### List Repetition: Creating Patterns
+
+The `*` operator with lists creates multiple copies of the list elements. This is particularly useful for:
+- Initializing lists with default values
+- Creating placeholder data
+- Building patterns for games or simulations
+
+### List Membership: Finding Elements
+
+The `in` operator checks if an element exists in a list. This is essential for:
+- Inventory checks: "Do I have a sword?"
+- Permission systems: "Is the user in the admin list?"
+- Data validation: "Is this value one of our accepted options?"
+
+Let's see these list operators in action:
 
 <PythonCodeEditor
   initialCode={`# Combining inventory from two treasure chests
@@ -92,15 +241,72 @@ print(f"You found: {full_inventory}")
 
 # Duplicating power-ups
 power_ups = ["⭐"] * 3
-print(f"Power-ups collected: {power_ups}")  # ⭐⭐⭐
+print(f"Power-ups collected: {power_ups}")  # ['⭐', '⭐', '⭐']
+
+# Checking if an item is in the inventory
+has_sword = "sword" in full_inventory
+print(f"Do you have a sword? {has_sword}")  # True
+
+# Finding the index of an item
+potion_position = full_inventory.index("potion")
+print(f"Potion is at position: {potion_position}")  # 2
 `}
   exercise_number={3}
   tutorial_id="python101-4-operators"
 />
 
-## Comparison Operators: The Decision Makers! 🤔
+### Advanced List Operations:
 
-These operators help your game make important decisions:
+Beyond simple operators, lists have powerful methods for finding and manipulating elements:
+
+- **index()**: Finds the position of an element (as shown in the example)
+- **count()**: Counts how many times an element appears
+- **append()**: Adds an element to the end of the list
+- **insert()**: Adds an element at a specific position
+- **remove()**: Removes a specific element
+- **pop()**: Removes an element at a specific position (or the last element if no position is given)
+
+These methods aren't operators, but they work hand-in-hand with operators to give you complete control over your lists.
+
+<div id='ComparisonOperators'></div>
+## 5. Comparison Operators: The Decision Makers! 🤔
+
+Comparison operators help your programs make decisions by comparing values. These operators always return a Boolean result: either `True` or `False`. They're the foundation of conditional logic in programming.
+
+### The Key Comparison Operators:
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| == | Equal to | 5 == 5 is True |
+| != | Not equal to | 5 != 3 is True |
+| > | Greater than | 5 > 3 is True |
+| \< | Less than | 3 < 5 is True |
+| >= | Greater than or equal to | 5 >= 5 is True |
+| \<= | Less than or equal to | 3 \<= 5 is True |
+
+### Equal vs. Assignment: == vs. =
+
+One of the most common mistakes in programming is confusing:
+- `==` (equality check): Tests if two values are equal
+- `=` (assignment): Assigns a value to a variable
+
+```python
+# Correct usage:
+x = 5  # Assignment: x now has the value 5
+if x == 5:  # Comparison: checks if x equals 5
+    print("x is 5")
+```
+
+### Comparison Applications:
+
+Comparison operators are everywhere in programming:
+
+- **Game Logic**: "Is the player's health below zero?" (`health <= 0`)
+- **User Authentication**: "Does the password match?" (`entered_password == stored_password`)
+- **Data Filtering**: "Are these items within our price range?" (`price >= min_price and price <= max_price`)
+- **Leaderboards**: "Is this a new high score?" (`score > high_score`)
+
+Let's explore comparison operators with game-related examples:
 
 <PythonCodeEditor
   initialCode={`# Equal to (==)
@@ -109,11 +315,25 @@ player_input = "PYTHON123"
 is_correct = secret_password == player_input
 print("Password correct?", is_correct)  # True!
 
+# Not equal to (!=)
+is_wrong = secret_password != player_input
+print("Password incorrect?", is_wrong)  # False!
+
 # Greater than (>)
 player_level = 5
 min_level = 3
 can_enter_dungeon = player_level > min_level
 print("Can enter dungeon?", can_enter_dungeon)  # True!
+
+# Less than (<)
+max_level = 10
+needs_training = player_level < max_level
+print("Needs more training?", needs_training)  # True!
+
+# Greater than or equal to (>=)
+boss_level = 5
+ready_for_boss = player_level >= boss_level
+print("Ready for boss fight?", ready_for_boss)  # True!
 
 # Less than or equal to (<=)
 max_players = 4
@@ -125,106 +345,258 @@ print("Can another player join?", can_join)  # True!
   tutorial_id="python101-4-operators"
 />
 
-## Logical Operators: The Brain Power! 🧠
+### Comparing Different Types:
 
-These help you combine multiple conditions:
+Python can compare different types in specific ways:
+- Numbers of different types (like int and float) can be compared: `5 == 5.0` is True
+- Strings are compared lexicographically (dictionary order): "apple" < "banana" is True
+- Lists are compared element by element: [1, 2] < [1, 3] is True
+
+However, comparing completely different types like strings and numbers may lead to unexpected results or errors in some versions of Python.
+
+### Chaining Comparisons:
+
+Python allows you to chain comparisons for more readable code:
+
+```python
+# Instead of this:
+if x > 0 and x < 10:
+    print("x is between 0 and 10")
+
+# You can write this:
+if 0 < x < 10:
+    print("x is between 0 and 10")
+```
+
+<div id='LogicalOperators'></div>
+## 6. Logical Operators: The Brain Power! 🧠
+
+Logical operators combine multiple conditions, allowing your programs to make complex decisions. They're like the advanced reasoning center of your code's brain.
+
+### The Key Logical Operators:
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| and | True if both conditions are True | True and True = True |
+| or | True if at least one condition is True | True or False = True |
+| not | Inverts the boolean value | not True = False |
+
+### Truth Tables:
+
+To fully understand logical operators, it helps to see all possible combinations:
+
+**AND Operator:**
+- True and True = True
+- True and False = False
+- False and True = False
+- False and False = False
+
+**OR Operator:**
+- True or True = True
+- True or False = True
+- False or True = True
+- False or False = False
+
+**NOT Operator:**
+- not True = False
+- not False = True
+
+### Operator Precedence:
+
+When combining operators, Python follows this order:
+1. Parentheses `()`
+2. `not`
+3. `and`
+4. `or`
+
+This means `not x and y` is evaluated as `(not x) and y`.
+
+### Real-World Applications:
+
+- **Access Control**: "Is the user logged in AND has admin permissions?"
+- **Search Filters**: "Show items that are weapons OR armor"
+- **Game Logic**: "Is the player NOT in danger zone AND has enough health?"
+- **Form Validation**: "Is the email valid OR is the phone number provided?"
+
+Let's see logical operators in action:
 
 <PythonCodeEditor
   initialCode={`# AND operator (both conditions must be True)
 has_sword = True
 has_shield = True
 ready_for_battle = has_sword and has_shield
-print("Ready for battle?", ready_for_battle)
+print("Ready for battle?", ready_for_battle)  # True
 
 # OR operator (at least one condition must be True)
 has_magic = True
 has_arrows = False
 can_attack = has_magic or has_arrows
-print("Can attack?", can_attack)
+print("Can attack?", can_attack)  # True
 
 # NOT operator (flips True to False and vice versa)
 is_game_over = False
 is_playing = not is_game_over
-print("Still playing?", is_playing)
+print("Still playing?", is_playing)  # True
+
+# Complex conditions
+has_key = False
+has_lockpick = True
+door_is_open = False
+can_enter_room = door_is_open or (has_key or has_lockpick)
+print("Can enter the room?", can_enter_room)  # True
 `}
   exercise_number={5}
   tutorial_id="python101-4-operators"
 />
 
-## 🎮 Mini-Game: The Operator Academy!
+### Short-Circuit Evaluation:
 
-Let's create a simple game using our new operator powers!
+Python uses "short-circuit" evaluation for logical operators:
+- In an `and` expression, if the first condition is False, Python doesn't check the second condition (because the result must be False)
+- In an `or` expression, if the first condition is True, Python doesn't check the second condition (because the result must be True)
+
+This is not only more efficient but can also be used strategically in your code:
+
+```python
+# This is safe even if x could be zero
+if x != 0 and 10 / x > 2:
+    print("Condition met")
+```
+
+### Combining Multiple Conditions:
+
+For complex decisions, use parentheses to group conditions and make your code clearer:
+
+```python
+is_admin = True
+is_logged_in = True
+has_permission = False
+
+# Without parentheses (might be confusing)
+can_access = is_admin and is_logged_in or has_permission
+
+# With parentheses (clearer intent)
+can_access = (is_admin and is_logged_in) or has_permission
+```
+
+<div id='OperatorExercises'></div>
+## 7. Operator Exercises and Challenges
+
+Now it's time to put your knowledge into practice! These exercises will help you master the different operators we've learned.
+
+### Exercise 1: Power-Up Calculator
+
+In this exercise, you'll fix the missing operators in code to calculate a character's power level. Pay attention to what each line should accomplish and choose the appropriate operator.
 
 <PythonCodeEditor
-  initialCode={`# Let's power up our game character!
-initial_health = 100
-bonus_health = 50
+  initialCode={`# Fix the operators to calculate the correct power level
+base_power = 10
+level_multiplier = 3
+special_bonus = 5
 
-# Addition (+): Add initial health and bonus health
+# Fix these calculations
+power_from_level = base_power ... level_multiplier  # Should multiply
+total_power = power_from_level ... special_bonus    # Should add
+power_squared = total_power ... 2                  # Should raise to power
 
-total_health = ...
-print(f"Total Health: {total_health}") # 150 HP! 💪
+# Check if character is "Legendary" status (power > 100)
+is_legendary = total_power ... 100                 # Use correct comparison
 
-# Multiplication (*): Multiply by 3
-score = 25 * ...
-print(f"Score: {score}") # Triple kill! 🎯
-
-# Division (/): Sharing loot with 4 friends
-treasure = 100 / ... 
-print(f"Each player gets: {treasure} coins")
-
-# Power-up (**): # Fill in the base 2 and exponent 3
-damage = _ ** _
-print(f"Super attack damage: {damage}")
-
-# Remainder (%): Checking for leftover loot, show remainder of 100 divided by 3
-leftover_gems = 100 _ ...
-print(f"Leftover gems: {leftover_gems}")`}
+print(f"Power from level: {power_from_level}")     # Should be 30
+print(f"Total power: {total_power}")               # Should be 35
+print(f"Power squared: {power_squared}")           # Should be 1225
+print(f"Legendary status: {is_legendary}")         # Should be False`}
   expectedOutput={true}
   exercise_number={6}
   tutorial_id="python101-4-operators"
 />
 
-## 🌟 Super Challenges!
+### Exercise 2: String Wizard
 
-1. **The Score Calculator:**
+Strings are powerful tools for creating messages, descriptions, and interfaces. In this exercise, you'll use string operators to create a character description.
 
-- Create a formula that:
-1. Multiplies kills by multiplier
-2. Adds the bonus
-3. Prints "High Score!" if the result is over 100. Else: "Try Again!"
+**What You'll Practice:**
+- String concatenation with `+`
+- String repetition with `*`
+- String comparison with `in`
 
 <PythonCodeEditor
-  initialCode={`# Calculate the final score!
-kills = 10
-multiplier = 3
-bonus = 50
+  initialCode={`# Complete the string operations to create a character bio
+character_name = "Alex"
+character_class = "Wizard"
+magic_level = 7
 
-# Your code here!`}
+# Create a title by combining the name and class with "the" in between
+# Example: "Alex the Wizard"
+title = ...
+
+# Create a power description by repeating "⚡" equal to the magic_level
+# Example: "⚡⚡⚡⚡⚡⚡⚡"
+power_indicator = ...
+
+# Create a status message that checks if the character is a "Wizard"
+# If true, add "Master of Arcane", otherwise add "Apprentice"
+status = "Master of Arcane" if ... else "Apprentice"
+
+print(f"Character: {title}")
+print(f"Power: {power_indicator}")
+print(f"Status: {status}")`}
   expectedOutput={true}
   exercise_number={7}
   tutorial_id="python101-4-operators"
 />
 
-2. **The Inventory Master:**
+### Exercise 3: Inventory System
 
-1. Combine the inventories
-2. Duplicate the result 2 times
-3. Check if "sword" is in the inventory using 'in'
+Lists are essential for managing collections of items. In this exercise, you'll build a simple inventory system using list operators.
+
+**What You'll Practice:**
+- List concatenation with `+`
+- List membership testing with `in`
+- Conditional expressions
 
 <PythonCodeEditor
-  initialCode={`# Create the ultimate inventory!
-starter_items = ["sword"]
-found_items = ["shield", "potion"]
-# Your code here!`}
+  initialCode={`# Fix and complete the inventory system
+starting_items = ["health potion", "map"]
+found_items = ["sword", "shield", "gold"]
+
+# Combine the two lists to create the full inventory
+inventory = ...
+
+# Check if "sword" is in the inventory
+has_weapon = ...
+
+# Check if both "health potion" and "shield" are in the inventory
+ready_for_quest = ... and ...
+
+# Count gold by checking if "gold" is in inventory
+# If gold is in inventory, set gold_count to 50, otherwise 0
+gold_count = 50 if ... else 0
+
+print(f"Full inventory: {inventory}")
+print(f"Has weapon: {has_weapon}")
+print(f"Ready for quest: {ready_for_quest}")
+print(f"Gold: {gold_count}")`}
   expectedOutput={true}
   exercise_number={8}
   tutorial_id="python101-4-operators"
 />
 
-## 🎯 Debug Mission: Spot the Bugs!
+<div id='DebugMissions'></div>
+## 8. Debug Missions: Spot the Bugs!
 
-Can you find what's wrong in this code?
+Debugging is a crucial skill for any programmer. In this section, you'll identify and fix common bugs related to operators. This will sharpen your problem-solving skills and deepen your understanding of how operators work.
+
+### Common Operator Bugs:
+
+1. **Type Errors**: Trying to use operators with incompatible types (e.g., adding a string and a number)
+2. **Assignment vs. Comparison**: Using `=` when you meant `==`
+3. **Operator Precedence Issues**: Not using parentheses when combining multiple operators
+4. **Logic Errors**: Creating conditions that don't behave as expected
+
+### Your Debug Mission:
+
+Find and fix the bugs in the following code. Read the comments carefully for clues about what's wrong.
 
 <PythonCodeEditor
   initialCode={`# Bug 1: Why doesn't this work?
@@ -240,46 +612,106 @@ has_sword = True
 has_shield = True
 has_power = has_sword or has_shield and False
 
-# Test
-print(player_health)
-print(is_high_score)
-print(has_power)`}
-  
-  exercise_number={9}
+# Fix the bugs above without changing the variable names
+# Write your fixed code below
+
+# Test your fixes
+print("Fixed player_health:", player_health)
+print("Fixed is_high_score:", is_high_score)
+print("Fixed has_power:", has_power)`}
   expectedOutput={true}
+  exercise_number={9}
   tutorial_id="python101-4-operators"
 />
 
-Remember:
-- `+` adds numbers or combines strings/lists
-- `*` multiplies numbers or repeats strings/lists
-- `==` checks if things are equal
-- `and`/`or` combine conditions
-- `>`, `<`, `>=`, `<=` compare values
+### Bug 1 Explanation:
 
-Need help with the challenges? Just ask! You're doing great! 🌟
+The first bug is a type error. You can't add a string (`"100"`) and a number (`50`) directly. You need to convert the string to a number first using `int()` or convert the number to a string using `str()`.
 
-## 🎯 Final Practice Mission
+### Bug 2 Explanation:
 
-Create a simple game score calculator:
+The second bug confuses assignment (`=`) with comparison (`==`). When you write `is_high_score = score = high_score`, you're actually assigning the value of `high_score` to both `score` and `is_high_score`, not checking if they're equal.
 
-1. Start with base_score
-2. Add 100 bonus points if player has power_up
-3. Double the score if it's a critical_hit
-4. Check if it's a new high score!
+### Bug 3 Explanation:
+
+The third bug involves operator precedence. In Python, `and` has higher precedence than `or`, so the expression `has_sword or has_shield and False` is evaluated as `has_sword or (has_shield and False)`, which might not be what you intended.
+
+<div id='FinalChallenge'></div>
+## 9. Final Challenge: Score Calculator
+
+For your final challenge, you'll create a score calculator that applies bonuses based on game conditions. This will test your understanding of variables, conditionals, and operators.
+
+### Challenge Requirements:
+
+1. Start with a base score
+2. Apply a bonus if the player has a power-up
+3. Double the score for critical hits
+4. Check if the final score beats the current high score
 
 <PythonCodeEditor
- initialCode={`# Here's what we want to do:
+ initialCode={`# Game Score Calculator Challenge
 base_score = 50
 has_power_up = True
 is_critical_hit = True
 current_high_score = 200
-# Your code here!`}
+
+# 1. Start with base_score
+final_score = base_score
+
+# 2. If has_power_up is True, add 100 bonus points
+# Your code here
+
+# 3. If is_critical_hit is True, double the score
+# Your code here
+
+# 4. Check if it's a new high score
+is_new_record = # Your code here
+
+# Print the results
+print(f"Final Score: {final_score}")
+print(f"New high score: {is_new_record}")
+
+# Expected output:
+# Final Score: 300
+# New high score: True`}
  expectedOutput={true}
  exercise_number={10}
  tutorial_id="python101-4-operators"
 />
 
-Remember: Every great coder started exactly where you are! Keep practicing your operator powers, and soon you'll be a Python master! 💪
+### Challenge Tips:
+
+- Use conditional statements (`if` statements) to check conditions
+- Apply arithmetic operators to modify the score
+- Use comparison operators to check if it's a new high score
+- Remember that the order of operations matters!
+
+## 🌟 Key Takeaways 🌟
+
+Congratulations on completing the Python Operators tutorial! Here's what you've learned:
+
+1. **Arithmetic Operators**: Perform mathematical calculations with +, -, *, /, //, **, and %
+2. **String Operators**: Manipulate text with concatenation (+) and repetition (*)
+3. **List Operators**: Combine and manipulate collections with + and *
+4. **Comparison Operators**: Make decisions with ==, !=, >, \<, >=, and \<=
+5. **Logical Operators**: Combine conditions with and, or, and not
+
+These operators are the building blocks of programming logic. They allow you to:
+- Transform data
+- Make decisions
+- Create dynamic content
+- Solve complex problems
+
+Remember that mastering operators is like adding new tools to your coding toolbox. The more you practice, the more naturally you'll know which operator to use in different situations.
+
+## 🚀 Next Steps 🚀
+
+Now that you understand operators, you're ready to:
+1. Create more complex programs
+2. Build interactive games
+3. Solve programming challenges
+4. Learn about control structures like loops and functions
+
+Keep practicing and exploring. Every great programmer started exactly where you are now!
 
 Need hints or have questions? Just ask! We're in this coding adventure together! 🚀

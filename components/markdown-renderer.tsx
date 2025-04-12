@@ -10,7 +10,7 @@ interface MarkdownRendererProps {
 
 export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   content,
-  className = '',
+  // className = '',
 }) => {
   const components: Components = {
     // Custom image component using Next.js Image
@@ -71,7 +71,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
   return (
     <ReactMarkdown
-      className={`prose dark:prose-invert max-w-none ${className}`}
+      // className={`prose dark:prose-invert max-w-none ${className}`}
       remarkPlugins={[remarkGfm]}
       components={components}
     >

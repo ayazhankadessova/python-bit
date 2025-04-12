@@ -1,7 +1,6 @@
-import { doc, getDoc, updateDoc, arrayUnion, setDoc, increment, collection } from 'firebase/firestore'
+import { doc, getDoc, updateDoc,setDoc, increment, collection } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { User } from '@/types/firebase'
-import { Socket } from 'socket.io-client'
 
 // Shared helper function to update weekly progress
 export async function updateWeeklyProgress(
@@ -40,48 +39,6 @@ export async function updateWeeklyProgress(
     }
   } catch (error) {
     console.error('Error updating weekly progress:', error)
-    throw error
-  }
-}
-
-// Function to handle task completion for any problem type
-export async function handleTaskCompletion({
-  taskId,
-  userId,
-  classroomId,
-  selectedWeek,
-  socket,
-  userName,
-  onUpdateCompletedProblems,
-}: {
-  taskId: string
-  userId: string
-  classroomId: string
-  selectedWeek: number
-  socket: Socket | null
-  userName?: string
-  onUpdateCompletedProblems: (taskId: string) => void
-}) {
-  try {
-    const userRef = doc(fireStore, 'users', userId)
-    await updateDoc(userRef, {
-      solvedProblems: arrayUnion(taskId),
-    })
-
-    await updateWeeklyProgress(classroomId, selectedWeek, taskId, userId)
-
-    socket?.emit('task-completed', {
-      taskId,
-      studentId: userId,
-      studentName: userName,
-      classroomId,
-    })
-
-    onUpdateCompletedProblems(taskId)
-
-    return true
-  } catch (error) {
-    console.error('Error handling task completion:', error)
     throw error
   }
 }

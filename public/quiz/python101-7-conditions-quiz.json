@@ -1,0 +1,129 @@
+{
+  "id": "python101-7-conditions-quiz",
+  "title": "Conditional Statements",
+  "description": "Test your knowledge of Python's decision-making powers and see if you can master conditional logic like a true coding champion!",
+  "tutorialId": "python101-7-conditions",
+  "imageUrl": "/quizzes/python101-7-conditions/cover.png",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "In Python, what will happen with this code?\n```python\nplayer_name = \"Zx\"\nif len(player_name) >= 3:\n    print(\"Welcome to the game!\")\nelse:\n    print(\"Name too short!\")```",
+      "options": [
+        "It will print: Welcome to the game!",
+        "It will print: Name too short!",
+        "It will cause an error because len() can't be used with strings",
+        "It won't print anything"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The string \"Zx\" has a length of 2 characters. Since 2 is not greater than or equal to 3, the condition len(player_name) >= 3 evaluates to False, causing the code to execute the else block and print \"Name too short!\".",
+      "imageUrl": "/quizzes/python101-7-conditions/q1.png"
+    },
+    {
+      "id": "q2",
+      "question": "Which of these comparison operators tests if two values are NOT equal?",
+      "options": ["==", "<>", "!=", "~="],
+      "correctAnswer": 2,
+      "explanation": "The != operator tests if two values are NOT equal to each other. For example, 5 != 3 evaluates to True because 5 is not equal to 3."
+    },
+    {
+      "id": "q3",
+      "question": "What will this code print?\n```python\nwizard_power = 75\nif wizard_power > 50:\n    print(\"Super powerful!\")\nif wizard_power < 100:\n    print(\"Still room to grow!\")```",
+      "options": [
+        "Super powerful!",
+        "Still room to grow!",
+        "Both messages",
+        "Neither message"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Since wizard_power is 75, it is both greater than 50 AND less than 100. Therefore, both conditions are True, and both print statements will execute, printing \"Super powerful!\" followed by \"Still room to grow!\".",
+      "imageUrl": "/quizzes/python101-7-conditions/q3.png"
+    },
+    {
+      "id": "q4",
+      "question": "In an if statement, what happens if the condition evaluates to False?",
+      "options": [
+        "The code inside the if block executes anyway",
+        "The code inside the if block is skipped",
+        "An error is raised",
+        "The program terminates"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When the condition in an if statement evaluates to False, the code inside the if block is skipped entirely. The program continues execution with the next line after the if block."
+    },
+    {
+      "id": "q5",
+      "question": "What is the purpose of the 'in' operator in this code?\n```python\ninventory = \"Sword,Shield,Potion,Map\".split(\",\")\nif \"Sword\" in inventory:\n    print(\"You're armed and ready!\")```",
+      "options": [
+        "It adds \"Sword\" to the inventory",
+        "It checks if \"Sword\" exists in the inventory list",
+        "It removes \"Sword\" from inventory",
+        "It counts how many times \"Sword\" appears"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The 'in' operator checks if an item exists within a collection. In this case, it checks if \"Sword\" is one of the items in the inventory list. Since it is, the condition evaluates to True.",
+      "imageUrl": "/quizzes/python101-7-conditions/q5.png"
+    },
+    {
+      "id": "q6",
+      "question": "What's the correct indentation to use for code inside an if statement?",
+      "options": [
+        "No indentation needed",
+        "4 spaces (or 1 tab)",
+        "2 spaces",
+        "Any number of spaces is fine"
+      ],
+      "correctAnswer": 1,
+      "explanation": "In Python, code inside control structures like if statements must be indented. The standard convention is to use 4 spaces (or a tab) for each level of indentation. This indentation is mandatory and determines which code belongs inside the if block."
+    },
+    {
+      "id": "q7",
+      "question": "What will this code print?\n```python\nplayer_class = \"archer\"\nif player_class == \"Archer\":\n    print(\"You attack from a distance!\")\nelif player_class == \"Mage\":\n    print(\"You cast powerful spells!\")\nelse:\n    print(\"Unknown class!\")```",
+      "options": [
+        "You attack from a distance!",
+        "You cast powerful spells!",
+        "Unknown class!",
+        "Nothing, there would be an error"
+      ],
+      "correctAnswer": 2,
+      "explanation": "String comparisons in Python are case-sensitive. Since \"archer\" (lowercase) is not equal to \"Archer\" (capitalized), and it's also not equal to \"Mage\", both conditions fail. Therefore, the code executes the else block and prints \"Unknown class!\".",
+      "imageUrl": "/quizzes/python101-7-conditions/q7.png"
+    },
+    {
+      "id": "q8",
+      "question": "What is the purpose of the 'and' operator in a condition?",
+      "options": [
+        "It joins two strings together",
+        "It requires only one condition to be True",
+        "It requires all conditions to be True",
+        "It negates a condition"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The 'and' operator is used to combine multiple conditions where ALL conditions must be True for the overall expression to be True. For example, in 'if x > 0 and y < 10:', both x > 0 AND y < 10 must be True for the code inside the if block to execute."
+    },
+    {
+      "id": "q9",
+      "question": "What's wrong with this condition? ```python\nweapon = \"Sword\"\nif weapon = \"Sword\":\n    print(\"Armed!\")```",
+      "options": [
+        "The string should be in lowercase",
+        "The assignment operator = is used instead of the equality operator ==",
+        "weapon variable is not defined properly",
+        "The if statement is missing a colon"
+      ],
+      "correctAnswer": 1,
+      "explanation": "This code has a syntax error. In the if statement, the assignment operator (=) is used instead of the equality comparison operator (==). The correct syntax should be: if weapon == \"Sword\":.",
+      "imageUrl": "/quizzes/python101-7-conditions/q9.png"
+    },
+    {
+      "id": "q10",
+      "question": "What's the result of this complex condition?\n```python\ndragon_health = 40\nplayer_level = 3\nhas_magic_sword = True\nif (player_level >= 5 and has_magic_sword) or dragon_health < 50:\n    print(\"You can defeat the dragon!\")```",
+      "options": [
+        "The condition is False, nothing will print",
+        "The condition is True, \"You can defeat the dragon!\" will print",
+        "There would be an error",
+        "The code will only print if player_level is 5 or higher"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Let's break down the condition: (player_level >= 5 and has_magic_sword) evaluates to (3 >= 5 and True), which is (False and True), which equals False. But dragon_health < 50 is 40 < 50, which is True. Since the parts are connected with OR, if either is True, the whole condition is True. Therefore, the message will print."
+    }
+  ]
+}

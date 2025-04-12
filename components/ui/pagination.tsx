@@ -42,7 +42,7 @@ type PaginationLinkProps = {
 const PaginationLink = ({
   className,
   isActive,
-  size = 'icon',
+  // size = 'icon',
   ...props
 }: PaginationLinkProps) => (
   <a
@@ -50,7 +50,7 @@ const PaginationLink = ({
     className={cn(
       buttonVariants({
         variant: 'outline',
-        size,
+        // size,
       }),
       className
     )}
@@ -66,7 +66,10 @@ const PaginationPrevious = ({
   <PaginationLink
     aria-label='Go to previous page'
     size='default'
-    className={cn('gap-1 pl-3', className)}
+    className={cn(
+      'border border-input border-input px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+      className
+    )}
     {...props}
   >
     <ChevronLeft className='h-4 w-3' />
@@ -81,7 +84,10 @@ const PaginationNext = ({
   <PaginationLink
     aria-label='Go to next page'
     size='default'
-    className={cn('gap-1 pr-3', className)}
+    className={cn(
+      'border border-input border-input px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+      className
+    )}
     {...props}
   >
     <ChevronRight className='h-4 w-3' />
