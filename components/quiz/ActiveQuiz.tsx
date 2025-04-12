@@ -150,9 +150,7 @@ export default function ActiveQuiz({
       percentage: Math.round((correctAnswers / quiz.questions.length) * 100),
     }
   }
-
-  const allQuestionsAnswered = answeredQuestions.every((item) => item === true)
-
+  
   return (
     <div className='min-h-screen flex flex-col'>
       <div className='flex-grow'>
