@@ -183,8 +183,6 @@ export default function ActiveQuiz({
         isAnswered={isAnswered}
         isLastQuestion={isLastQuestion}
         selectedAnswer={selectedAnswer}
-        allQuestionsAnswered={allQuestionsAnswered}
-        answeredQuestionsCount={answeredQuestions.filter((q) => q).length}
         onPrevious={handlePreviousQuestion}
         onNext={handleNextQuestion}
         onSubmitAnswer={handleSubmitAnswer}

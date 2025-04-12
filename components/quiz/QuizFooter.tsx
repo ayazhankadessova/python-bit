@@ -7,8 +7,6 @@ interface QuizFooterProps {
   isAnswered: boolean
   isLastQuestion: boolean
   selectedAnswer: number
-  allQuestionsAnswered: boolean
-  answeredQuestionsCount: number
   onPrevious: () => void
   onNext: () => void
   onSubmitAnswer: () => void
@@ -21,8 +19,6 @@ export default function QuizFooter({
   isAnswered,
   isLastQuestion,
   selectedAnswer,
-  allQuestionsAnswered,
-  answeredQuestionsCount,
   onPrevious,
   onNext,
   onSubmitAnswer,
