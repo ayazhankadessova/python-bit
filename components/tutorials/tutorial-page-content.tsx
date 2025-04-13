@@ -46,17 +46,16 @@ export default function TutorialPageContent({
           <hr className='my-4 mb-16' />
           <div className='text-xl mx-auto px-0 max-w-[50em]'>
             <MDXContent code={tutorial.body} />
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.0 }}
+              className='mx-auto px-0 max-w-[50em] my-16'
+            >
+              <TutorialQuizCTA quizSlug={quizSlug} className='w-full ' />
+            </motion.div>
           </div>
         </article>
-
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.0 }}
-          className='mx-auto xl:px-24 lg:px-16 md:px-8 sm:px-0 my-16'
-        >
-          <TutorialQuizCTA quizSlug={quizSlug} className='w-full ' />
-        </motion.div>
       </div>
     </>
   )
