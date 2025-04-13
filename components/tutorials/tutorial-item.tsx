@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Tag } from '../ui/tag'
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import { User } from '@/types/firebase'
 import { TutorialStatus } from '@/components/tutorials/tutorial-status'
@@ -30,27 +30,22 @@ interface TutorialItemProps {
 
 export function TutorialItem({ post }: TutorialItemProps) {
   const { slug, title, description, tags, exercises, firestoreId } = post
-  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   return (
     <Card className='flex flex-col h-full'>
       <div className='flex flex-col sm:flex-row gap-2 h-full'>
         <div className='w-full sm:w-auto overflow-hidden rounded-xl'>
-          <div className={`relative ${isLoading ? 'animate-pulse' : ''}`}>
+          <div className={`relative`}>
             <Image
               src={`/tutorials/${firestoreId}.webp`}
               alt={title}
-              width={500}
+              width={300}
               height={300}
-              onLoad={() => setIsLoading(false)}
               className={`
                 w-full
                 sm:w-72
                 xl:w-72
-                2xl:w-80
-                rounded-xl
-                transition-all duration-700 ease-in-out
-                ${isLoading ? 'opacity-0' : 'opacity-100'}
+                rounded-lg
                 object-cover
               `}
               priority={false}
