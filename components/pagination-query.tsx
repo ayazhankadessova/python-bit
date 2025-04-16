@@ -57,7 +57,7 @@ export function CustomPagination({
   return (
     <Pagination className={className}>
       <PaginationContent>
-        <p className='m-2 font-semibold'>Rows per page</p>
+        <p className='m-2 font-semibold'>Items per page</p>
         <Select onValueChange={handlePerPageChange}>
           <SelectTrigger className='w-[70px]'>
             <SelectValue placeholder={currentPerPage} />
