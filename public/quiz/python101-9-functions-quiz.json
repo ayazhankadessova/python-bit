@@ -1,0 +1,129 @@
+{
+  "id": "python101-9-functions-quiz",
+  "title": "Functions - Create Your Magic Spells!",
+  "description": "Test your knowledge of Python's function powers and see if you can master the art of creating reusable code spells like a true coding wizard!",
+  "tutorialId": "python101-9-functions",
+  "imageUrl": "/quizzes/python101-9-functions/cover.png",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What will this code print?\n```python\ndef magic_spell(potion):\n    print(f\"Casting {potion} spell!\")\n    \nmagic_spell(\"Healing\")\nmagic_spell(\"Fireball\")\n```",
+      "options": [
+        "Casting Healing spell! Casting Fireball spell!",
+        "Casting Healing spell!\nCasting Fireball spell!",
+        "Healing Fireball",
+        "Nothing"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The function magic_spell() takes a parameter named 'potion' and prints the message 'Casting {potion} spell!'. When we call this function twice with different arguments ('Healing' and 'Fireball'), it prints each message on a separate line.",
+      "imageUrl": "/quizzes/python101-9-functions/q1.png"
+    },
+    {
+      "id": "q2",
+      "question": "What is the difference between an argument and a parameter in Python functions?",
+      "options": [
+        "They are different names for the same thing",
+        "Parameters are defined in the function definition, arguments are the values passed when calling the function",
+        "Arguments are defined in the function definition, parameters are the values passed when calling the function",
+        "Parameters are used in built-in functions, arguments are used in custom functions"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Parameters are the variables listed in the function definition, while arguments are the actual values passed to the function when it is called. In `def greet_player(player_name):`, 'player_name' is a parameter. When calling `greet_player(\"Alex\")`, 'Alex' is an argument."
+    },
+    {
+      "id": "q3",
+      "question": "What will this function return?\n```python\ndef calculate_damage(weapon_power, player_level):\n    base_damage = weapon_power * 2\n    level_bonus = player_level * 1.5\n    return base_damage + level_bonus\n\nresult = calculate_damage(10, 5)\nprint(result)\n```",
+      "options": ["20", "7.5", "27.5", "None"],
+      "correctAnswer": 2,
+      "explanation": "The function calculates damage based on two formulas: base_damage = weapon_power * 2 (which is 10 * 2 = 20) and level_bonus = player_level * 1.5 (which is 5 * 1.5 = 7.5). It then returns the sum of these values: 20 + 7.5 = 27.5. When we print 'result', we get 27.5.",
+      "imageUrl": "/quizzes/python101-9-functions/q3.png"
+    },
+    {
+      "id": "q4",
+      "question": "What happens if a function doesn't have a return statement?",
+      "options": [
+        "The function returns an error",
+        "The function returns None by default",
+        "The function returns the last calculated value",
+        "The function returns True"
+      ],
+      "correctAnswer": 1,
+      "explanation": "If a function doesn't have a return statement (or has a return statement without a value), it automatically returns None. This is Python's way of representing 'nothing' or 'no value'. The function still executes all its code, but doesn't return any meaningful value."
+    },
+    {
+      "id": "q5",
+      "question": "What is wrong with this function?\n```python\ndef add_health(player, amount)\n    player['health'] += amount\n    print(f\"Health increased to {player['health']}!\")\n    return player['health']\n```",
+      "options": [
+        "The indentation is incorrect",
+        "The function name is invalid",
+        "There's a missing colon after the parameter list",
+        "The return statement is unnecessary"
+      ],
+      "correctAnswer": 2,
+      "explanation": "There's a syntax error in this function definition. After the parameter list (player, amount), there should be a colon ':' to mark the beginning of the function body. Without this colon, Python will raise a SyntaxError.",
+      "imageUrl": "/quizzes/python101-9-functions/q5.png"
+    },
+    {
+      "id": "q6",
+      "question": "What is variable scope in Python functions?",
+      "options": [
+        "The range of possible values a variable can take",
+        "The region of the program where a variable can be accessed",
+        "The size of memory allocated to a variable",
+        "The type of data a variable can hold"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Variable scope refers to the region of a program where a variable is visible and can be accessed. Variables defined inside a function have local scope and can only be used within that function. Variables defined outside functions have global scope and can be accessed throughout the program (with some restrictions)."
+    },
+    {
+      "id": "q7",
+      "question": "What will this code print?\n```python\ndef check_inventory(items, target):\n    for item in items:\n        if item == target:\n            return True\n    return False\n\nbackpack = [\"Sword\", \"Shield\", \"Potion\"]\nresult = check_inventory(backpack, \"Magic Key\")\nprint(f\"Item found: {result}\")\n```",
+      "options": [
+        "Item found: True",
+        "Item found: False",
+        "Magic Key",
+        "The code will cause an error"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The check_inventory function searches through the 'items' list for a specific 'target' item. It returns True if the item is found, and False otherwise. Since 'Magic Key' is not in the backpack list, the function returns False. Therefore, 'Item found: False' is printed.",
+      "imageUrl": "/quizzes/python101-9-functions/q7.png"
+    },
+    {
+      "id": "q8",
+      "question": "What's the primary benefit of using functions in your code?",
+      "options": [
+        "Functions make your code run faster",
+        "Functions make your program use less memory",
+        "Functions let you reuse code without duplicating it",
+        "Functions are required for Python to work"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The primary benefit of functions is code reusability. By defining a function once and calling it multiple times in different places, you avoid duplicating the same code. This makes your program more maintainable, easier to read, and less prone to errors. If you need to change the functionality, you only need to modify the code in one place."
+    },
+    {
+      "id": "q9",
+      "question": "What will happen when this code runs?\n```python\ndef create_potion(ingredient1, ingredient2=\"Magic Herb\"):\n    return f\"Potion of {ingredient1} and {ingredient2}\"\n\npotion1 = create_potion(\"Dragon Scale\")\npotion2 = create_potion(\"Wizard Tear\", \"Unicorn Hair\")\nprint(potion1)\nprint(potion2)\n```",
+      "options": [
+        "Both potions will be the same",
+        "The code will cause an error because ingredient2 is missing in the first call",
+        "potion1: \"Potion of Dragon Scale and Magic Herb\"\npotion2: \"Potion of Wizard Tear and Unicorn Hair\"",
+        "potion1: \"Potion of Dragon Scale\"\npotion2: \"Potion of Wizard Tear and Unicorn Hair\""
+      ],
+      "correctAnswer": 2,
+      "explanation": "This function has a default parameter value for ingredient2. When create_potion() is called with only one argument, the default value 'Magic Herb' is used for ingredient2. When called with two arguments, the provided value overrides the default. So potion1 becomes \"Potion of Dragon Scale and Magic Herb\" and potion2 becomes \"Potion of Wizard Tear and Unicorn Hair\".",
+      "imageUrl": "/quizzes/python101-9-functions/q9.png"
+    },
+    {
+      "id": "q10",
+      "question": "Which of the following statements about Python functions is true?",
+      "options": [
+        "Functions must always have at least one parameter",
+        "Functions can only return one value at a time",
+        "Function names can include spaces if they're in quotes",
+        "Functions can call other functions or even themselves"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Functions in Python can call other functions, creating a chain or hierarchy of function calls. They can even call themselves, which is known as recursion. Functions don't need to have parameters (they can be defined with empty parentheses), can return multiple values using tuples, and their names follow the same rules as variable names (no spaces allowed)."
+    }
+  ]
+}

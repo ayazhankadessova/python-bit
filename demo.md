@@ -84,7 +84,19 @@ print("Class:", my_character["class"])
 print("Weapons:", my_character["inventory"])
 print("Total Achievements:", len(achievements))
 ```
+## Exercise 10
 
+```
+# Make this code correct!
+my_tuple = (1, 2, 3)
+# my_tuple[0] = 5 # Can we change tuple values? 🤔
+player_stats = {"health": 100, "health": 200} # Duplicate keys? 🤔
+my_set = {"red", "blue", "red", "green"} # Duplicate values? 🤔
+
+print("Tuple:", my_tuple)
+print("Player Stats:", player_stats)
+print("Length of my set:", len(my_set))
+```
 ### Aura points
 
 ```
