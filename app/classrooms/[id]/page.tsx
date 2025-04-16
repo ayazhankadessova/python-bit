@@ -1,8 +1,9 @@
-'use client';
-import { use } from "react";
+'use client'
+import { use } from 'react'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { useAuth } from '@/contexts/AuthContext'
 import { SessionManagement } from '@/components/session-views/session-management'
+import CustomLoginRequired from '@/components/auth/login-required'
 
 interface PageProps {
   params: Promise<{
@@ -10,8 +11,8 @@ interface PageProps {
   }>
 }
 
-const ClassroomLessonPage: React.FC<PageProps> = props => {
-  const params = use(props.params);
+const ClassroomLessonPage: React.FC<PageProps> = (props) => {
+  const params = use(props.params)
   const { user, loading } = useAuth() // Firebase Auth context
 
   const classroomId = params.id
@@ -19,11 +20,7 @@ const ClassroomLessonPage: React.FC<PageProps> = props => {
   if (loading) return <LoadingSpinner />
 
   if (!user) {
-    return (
-      <div className='flex items-center justify-center min-h-screen'>
-        Please Login to View This Page.
-      </div>
-    )
+    return <CustomLoginRequired />
   }
 
   return (

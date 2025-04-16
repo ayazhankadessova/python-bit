@@ -6,6 +6,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { useAuth } from '@/contexts/AuthContext'
 import { StudentSessionView } from '@/components/session-views/student-session-view'
 import { TeacherSessionView } from '@/components/session-views/teacher-session-view'
+import CustomLoginRequired from '@/components/auth/login-required'
 
 interface PageProps {
   params: Promise<{
@@ -27,9 +28,7 @@ const SessionPage: React.FC<PageProps> = props => {
 
   if (!user) {
     return (
-      <div className='flex items-center justify-center min-h-screen'>
-        Please Login to View This Page.
-      </div>
+      <CustomLoginRequired />
     )
   }
 

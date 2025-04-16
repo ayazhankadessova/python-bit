@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { TeacherClassroomsView } from '@/components/classrooms/TeacherClassroomsView'
 import { StudentClassroomsView } from '@/components/classrooms/StudentClassroomsView'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import CustomLoginRequired from '@/components/auth/login-required'
 
 const ClassroomPage = () => {
   const { user, loading } = useAuth()
@@ -13,13 +14,13 @@ const ClassroomPage = () => {
   if (loading) return <LoadingSpinner />
 
   return (
-    <>
-      {!user ? <div>Please Login to View This Page.</div> : user.role === 'teacher' ? (
+    <div>
+      {!user ? <CustomLoginRequired/> : user.role === 'teacher' ? (
         <TeacherClassroomsView user={user} />
       ) : (
         <StudentClassroomsView user={user} />
       )}
-    </>
+    </div>
   )
 }
 
