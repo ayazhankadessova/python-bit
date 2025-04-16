@@ -148,7 +148,7 @@ export default function QuizResults({
                 </div>
 
                 <div className='mb-4'>
-                  <div className='text-xl font-semibold'>
+                  <div className='text-xl font-normal'>
                     {renderQuestionText(question.question)}
                   </div>
                 </div>
