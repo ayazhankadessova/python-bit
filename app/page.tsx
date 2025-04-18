@@ -400,6 +400,7 @@ export default function HomePage() {
         </motion.div>
       </Section>
 
+      {/* Quizzes Section */}
       <Section className='mb-16'>
         <div className='flex justify-between items-center mb-8'>
           <div>
