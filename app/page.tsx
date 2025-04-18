@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -25,6 +25,9 @@ import { useAuthModal } from '@/contexts/AuthModalContext'
 import Image from 'next/image'
 import { tutorials } from '#site/content'
 import { sortTutorialsByTime } from '@/lib/tutorials/utils'
+import { useQuizzes } from '@/hooks/quiz/useQuizzes'
+import { sortQuizzesByDifficulty } from '@/lib/quizzes/utils'
+import QuizCard from '@/components/quiz/quiz-card'
 import { themes } from '@/config/themes'
 import { Badge } from '@/components/ui/badge'
 import { ThemeImage } from '@/components/theme-image'
@@ -39,8 +42,6 @@ import { StatsCard } from '@/components/stats-card'
 import { Section } from '@/components/ui/section'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 
-
-
 export default function HomePage() {
   const { user, loading, signOut } = useAuth()
   const router = useRouter()
@@ -48,6 +49,75 @@ export default function HomePage() {
   const sortedTutorials = sortTutorialsByTime(tutorials)
   const theme = useTheme()
   const shadowColor = theme.resolvedTheme === 'dark' ? 'white' : 'black'
+  const [animationsPlayed, setAnimationsPlayed] = useState(false)
+  const { quizzes } = useQuizzes()
+  const sortedQuizzes = sortQuizzesByDifficulty(quizzes)
+
+  // Set up effect to run once when component mounts
+  useEffect(() => {
+    // Check if animations have already played in this session
+    const hasPlayed = sessionStorage.getItem('animationsPlayed')
+    if (hasPlayed) {
+      setAnimationsPlayed(true)
+    } else {
+      // If not played yet, mark as played for this session
+      sessionStorage.setItem('animationsPlayed', 'true')
+      setAnimationsPlayed(false)
+    }
+  }, [])
+
+  // Determine animation props based on whether animations have played
+  const getAnimationProps = () => {
+    if (animationsPlayed) {
+      // No animation if already played
+      return {
+        initial: { opacity: 1, x: 0 },
+        whileInView: { opacity: 1, x: 0 },
+        transition: { duration: 0 },
+      }
+    }
+    // Default animation props for first-time viewing
+    return {
+      initial: { opacity: 0, x: -20 },
+      whileInView: { opacity: 1, x: 0 },
+      transition: { duration: 0.8 },
+      viewport: { once: true },
+    }
+  }
+
+  // Special animation for blurred image
+  const getBlurAnimationProps = () => {
+    if (animationsPlayed) {
+      return {
+        initial: { filter: 'blur(0px)', opacity: 1 },
+        whileInView: { filter: 'blur(0px)', opacity: 1 },
+        transition: { duration: 0 },
+      }
+    }
+    return {
+      initial: { filter: 'blur(10px)', opacity: 0 },
+      whileInView: { filter: 'blur(0px)', opacity: 1 },
+      transition: { duration: 1 },
+      viewport: { once: true },
+    }
+  }
+
+  // Right-to-left animation
+  const getRightAnimationProps = () => {
+    if (animationsPlayed) {
+      return {
+        initial: { opacity: 1, x: 0 },
+        whileInView: { opacity: 1, x: 0 },
+        transition: { duration: 0 },
+      }
+    }
+    return {
+      initial: { opacity: 0, x: 20 },
+      whileInView: { opacity: 1, x: 0 },
+      transition: { duration: 0.8 },
+      viewport: { once: true },
+    }
+  }
 
   if (loading) return <LoadingSpinner />
 
@@ -99,13 +169,7 @@ export default function HomePage() {
           </Button>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.2 }}
-          className='space-y-6'
-          viewport={{ once: true }}
-        >
+        <motion.div {...getAnimationProps()} className='space-y-6'>
           <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {sortedTutorials.slice(0, 3).map((tutorial) => (
               <Card
@@ -150,13 +214,7 @@ export default function HomePage() {
       <Section className='mb-16'>
         <div className='flex flex-col items-center gap-12 max-w-4xl mx-auto'>
           {/* Problem Section */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className='space-y-6'
-            viewport={{ once: true }}
-          >
+          <motion.div {...getAnimationProps()} className='space-y-6'>
             <div className='flex flex-col items-center text-center space-y-4'>
               <Badge className='bg-gradient-to-r from-purple-500 to-purple-500 p-1'>
                 The Challenge
@@ -187,11 +245,8 @@ export default function HomePage() {
             </Card>
 
             <motion.div
-              initial={{ filter: 'blur(10px)', opacity: 0 }}
-              whileInView={{ filter: 'blur(0px)', opacity: 1 }}
-              transition={{ duration: 1 }}
+              {...getBlurAnimationProps()}
               className='max-w-lg mx-auto'
-              viewport={{ once: true }}
             >
               <Image
                 src='/home/student.png'
@@ -204,13 +259,7 @@ export default function HomePage() {
           </motion.div>
 
           {/* Solution Section */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className='space-y-6'
-            viewport={{ once: true }}
-          >
+          <motion.div {...getRightAnimationProps()} className='space-y-6'>
             <div className='flex flex-col items-center text-center space-y-4'>
               <Badge className='bg-gradient-to-r from-purple-500 to-purple-500 p-1'>
                 The Solution
@@ -256,11 +305,8 @@ export default function HomePage() {
         </p>
 
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+          {...getAnimationProps()}
           className='grid md:grid-cols-2 gap-12 mb-24 items-center'
-          viewport={{ once: true }}
         >
           {/* Student Features */}
           <div className='space-y-8 pr-8 md:pr-16'>
@@ -307,11 +353,8 @@ export default function HomePage() {
 
         {/* Teacher Features Section */}
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+          {...getRightAnimationProps()}
           className='grid md:grid-cols-2 gap-12 items-center'
-          viewport={{ once: true }}
         >
           {/* Teacher Image with gradient card */}
           <div className='flex justify-start'>
@@ -357,9 +400,40 @@ export default function HomePage() {
         </motion.div>
       </Section>
 
+      <Section className='mb-16'>
+        <div className='flex justify-between items-center mb-8'>
+          <div>
+            <h2 className='text-3xl font-bold'>Quizzes</h2>
+            <p className='text-muted-foreground mt-2'>
+              Reinforce your learning with engaging quizzes.
+            </p>
+          </div>
+          <Button variant='animated' onClick={() => router.push('/quizzes')}>
+            😎 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
+            <AnimatedGradientText text='View All Quizzes' />
+            <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
+          </Button>
+        </div>
+
+        <motion.div {...getAnimationProps()} className='space-y-6'>
+          <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {sortedQuizzes.slice(0, 3).map((quiz, index) => (
+              <QuizCard
+                key={quiz.id}
+                id={quiz.id}
+                title={quiz.title}
+                description={quiz.description}
+                tutorialId={quiz.tutorialId}
+                questionCount={quiz.questions.length}
+                imageUrl={quiz.imageUrl}
+              />
+            ))}
+          </div>
+        </motion.div>
+      </Section>
+
       {/* Project Themes Section */}
       <Section className='mb-16'>
-        {/* <div className='max-w-6xl mx-auto'> */}
         <div className='flex justify-between items-center mb-8'>
           <div>
             <h2 className='text-3xl font-bold'>Project Themes</h2>
@@ -374,13 +448,7 @@ export default function HomePage() {
           </Button>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.2 }}
-          className='space-y-6'
-          viewport={{ once: true }}
-        >
+        <motion.div {...getAnimationProps()} className='space-y-6'>
           <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {themes.slice(0, 3).map((theme, index) => (
               <Card
@@ -391,8 +459,6 @@ export default function HomePage() {
                   <ThemeImage
                     src={`/themes/${theme.image}`}
                     alt={theme.title}
-                    // fill
-                    // className='object-cover rounded-t-lg'
                   />
                 </div>
                 <CardHeader>
@@ -433,7 +499,6 @@ export default function HomePage() {
                 </CardFooter>
               </Card>
             ))}
-            {/* </div> */}
           </div>
         </motion.div>
       </Section>
