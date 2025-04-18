@@ -46,7 +46,7 @@ export default function RootLayout({
               </div>
               <AuthModal />
               <Toaster />
-              <div className='relative flex flex-col px-4'>
+              <div className='relative flex flex-col'>
                 <BlogFooter />
               </div>
             </AuthModalProvider>

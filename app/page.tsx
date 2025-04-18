@@ -122,11 +122,13 @@ export default function HomePage() {
   if (loading) return <LoadingSpinner />
 
   return (
-    <div className='xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8'>
+    <div className='-mt-8'>
       {/* Hero Section */}
-
-      <section className='mt-16 mb-24'>
-        <div className='flex flex-col items-center text-center max-w-3xl mx-auto space-y-6'>
+      <section
+        className='pt-24 pb-24 xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 bg-gradient-to-r from-[hsl(var(--background-end))]
+      to-[hsl(var(--background-middle))]'
+      >
+        <div className='flex flex-col items-center text-center mx-auto space-y-6'>
           <h1 className='text-balance text-5xl leading-none tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl'>
             Python
             <LineShadowText className='italic' shadowColor={shadowColor}>
@@ -151,9 +153,8 @@ export default function HomePage() {
           )}
         </div>
       </section>
-
       {/* Latest Tutorials Section */}
-      <Section>
+      <Section className='bg-background'>
         <div className='flex justify-between items-center mb-8'>
           <div>
             <h2 className='text-3xl font-bold'>Latest Tutorials</h2>
@@ -209,9 +210,8 @@ export default function HomePage() {
           </div>
         </motion.div>
       </Section>
-
       {/* Why Python Bit Section */}
-      <Section className='mb-16'>
+      <Section className='bg-[hsl(var(--background-end))] border-t-2 border-[hsl(var(--border-top-secondary))]'>
         <div className='flex flex-col items-center gap-12 max-w-4xl mx-auto'>
           {/* Problem Section */}
           <motion.div {...getAnimationProps()} className='space-y-6'>
@@ -294,9 +294,8 @@ export default function HomePage() {
           </motion.div>
         </div>
       </Section>
-
       {/* Integrated Features Section */}
-      <Section className='mb-16'>
+      <Section className='bg-background'>
         <h2 className='text-3xl font-bold text-center mb-6'>
           Learning Together
         </h2>
@@ -306,7 +305,7 @@ export default function HomePage() {
 
         <motion.div
           {...getAnimationProps()}
-          className='grid md:grid-cols-2 gap-12 mb-24 items-center'
+          className='grid md:grid-cols-2 gap-12 items-center'
         >
           {/* Student Features */}
           <div className='space-y-8 pr-8 md:pr-16'>
@@ -399,9 +398,8 @@ export default function HomePage() {
           </div>
         </motion.div>
       </Section>
-
       {/* Quizzes Section */}
-      <Section className='mb-16'>
+      <Section className='bg-gradient-to-r bg-[hsl(var(--background-middle))] border-t-2 border-[hsl(var(--border-top))]'>
         <div className='flex justify-between items-center mb-8'>
           <div>
             <h2 className='text-3xl font-bold'>Quizzes</h2>
@@ -432,9 +430,8 @@ export default function HomePage() {
           </div>
         </motion.div>
       </Section>
-
       {/* Project Themes Section */}
-      <Section className='mb-16'>
+      <Section className='bg-background'>
         <div className='flex justify-between items-center mb-8'>
           <div>
             <h2 className='text-3xl font-bold'>Project Themes</h2>
@@ -503,9 +500,11 @@ export default function HomePage() {
           </div>
         </motion.div>
       </Section>
-
       {/* Call to Action */}
-      <Section className='mb-16'>
+      <Section
+        className='bg-gradient-to-r from-[hsl(var(--background-end))]
+      to-[hsl(var(--background-middle))]'
+      >
         {user ? (
           <div className='space-y-4 max-w-md mx-auto'>
             <Button

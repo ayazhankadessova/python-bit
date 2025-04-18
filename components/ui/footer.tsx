@@ -14,8 +14,8 @@ export function BlogFooter() {
   }
 
   return (
-    <footer className='border-t border-primary/20'>
-      <div className='container flex mx-auto px-2 py-6'>
+    <footer className='w-full xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 bg-background'>
+      <div className='container flex px-0 pt-8 pb-12'>
         <div className='grid grid-cols-1 md:grid-cols-12 gap-8'>
           {/* About Section - Full width on mobile, half on md, 7 cols on lg */}
           <div className='md:col-span-12 lg:col-span-7 lg:pr-10'>
@@ -90,24 +90,25 @@ export function BlogFooter() {
           </div>
         </div>
       </div>
-
+      <div
+        className='absolute left-0 right-0 h-px bg-[hsl(var(--background-end))] w-screen'
+        style={{ left: '50%', transform: 'translateX(-50%)' }}
+      ></div>
       {/* Bottom Bar */}
-      <div className='container max-w-6xl py-4 px-4 flex justify-center border-t border-primary/20'>
-        <div className='flex flex-col sm:flex-row items-center gap-2 text-sm text-muted-foreground'>
-          <p>© 2025 {siteConfig.name}</p>
-          <span className='hidden sm:inline'>•</span>
-          <p>
-            Made with ♥ by{' '}
-            <a
-              href='https://ayazhankad.vercel.app'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-green-950/50 hover:text-rose-400 transition-colors underline underline-offset-2 underline-thickness-1 decoration-green-950/50'
-            >
-              ayazhankad
-            </a>
-          </p>
-        </div>
+      <div className='container flex px-0 py-8 justify-start flex flex-col sm:flex-row items-center gap-2 text-sm text-muted-foreground'>
+        <p>© 2025 {siteConfig.name}</p>
+        <span className='hidden sm:inline'>•</span>
+        <p>
+          Made with ♥ by{' '}
+          <a
+            href='https://ayazhankad.vercel.app'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-green-950/50 hover:text-rose-400 transition-colors underline underline-offset-2 underline-thickness-1 decoration-green-950/50'
+          >
+            ayazhankad
+          </a>
+        </p>
       </div>
     </footer>
   )

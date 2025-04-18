@@ -6,8 +6,11 @@
   :root {
     /* White to teal-200 gradient */
     --background-start: 0 0% 100%; /* white */
-    --background-middle: 168 55% 98%; /* teal-200 */
-    --background-end: 168 55% 90%; /* teal-200 */
+    --background-middle: 151 85% 92%; /* teal-200 */
+    --border-top: 151 60% 85%; /* teal-200 */
+    --background-end: 260 80% 92%; /* teal-200 */
+    --border-top-secondary: 260 60% 85%; /* teal-200 */
+    --additional-background: 24 90% 92%; /* white */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -39,7 +42,10 @@
     /* Dark mode gradient - darker teal tones */
     --background-start: 0 0% 10%; /* dark start */
     --background-middle: 168 55% 15%; /* darker teal */
+    --border-top: 168 55% 30%;
     --background-end: 168 55% 24%; /* darker teal */
+    --border-top-secondary: 168 20% 40%; 
+    --additional-background: 24 34% 68% /* beige */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
@@ -77,17 +83,8 @@
   }
   body {
     font-family: var(--font-open-sans);
-    @apply bg-gradient-to-r from-[hsl(var(--background-end))] via-[hsl(var(--background-middle))] to-[hsl(var(--background-end))] text-foreground;
-  }
-}
+    @apply text-foreground;
 
-/* Define custom gradient utility class */
-@layer utilities {
-  .bg-gradient-custom {
-    @apply bg-gradient-to-r from-background-start via-background-end to-background-start;
-  }
-
-  .bg-gradient-soft {
-    @apply bg-gradient-to-r from-background-start/50 via-background-end to-background-start/50;
+    @apply bg-gradient-to-r from-[hsl(var(--background-end))] to-[hsl(var(--background-middle))] text-foreground;
   }
 }
