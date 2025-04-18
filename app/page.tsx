@@ -416,7 +416,7 @@ export default function HomePage() {
 
         <motion.div {...getAnimationProps()} className='space-y-6'>
           <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {sortedQuizzes.slice(0, 3).map((quiz, index) => (
+            {sortedQuizzes.slice(0, 3).map((quiz) => (
               <QuizCard
                 key={quiz.id}
                 id={quiz.id}
