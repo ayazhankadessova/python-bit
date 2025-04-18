@@ -53,14 +53,11 @@ export default function HomePage() {
   const { quizzes } = useQuizzes()
   const sortedQuizzes = sortQuizzesByDifficulty(quizzes)
 
-  // Set up effect to run once when component mounts
   useEffect(() => {
-    // Check if animations have already played in this session
     const hasPlayed = sessionStorage.getItem('animationsPlayed')
     if (hasPlayed) {
       setAnimationsPlayed(true)
     } else {
-      // If not played yet, mark as played for this session
       sessionStorage.setItem('animationsPlayed', 'true')
       setAnimationsPlayed(false)
     }
