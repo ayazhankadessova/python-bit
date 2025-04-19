@@ -30,7 +30,7 @@ const config = {
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
   			background: {
-  				DEFAULT: 'hsl(var(--background-start))',
+  				DEFAULT: 'hsl(var(--background))',
   				start: 'hsl(var(--background-start))',
   				end: 'hsl(var(--background-end))',
 				middle: 'hsl(var(--background-middle))',

@@ -5,8 +5,9 @@
 @layer base {
   :root {
     /* White to teal-200 gradient */
-    --background-start: 0 0% 100%; /* white */
-    --background-middle: 151 85% 92%; 
+    --background: 0 0% 100%; /* white */
+    --background-start: 151 95% 98%; 
+    --background-middle: 151 80% 94%; 
     --border-top: 151 55% 80%; /* teal-200 */
     --background-end: 260 80% 92%; /* teal-200 */
     --background-end-lighter: 260 84% 95%; /* teal-200 */
@@ -41,8 +42,10 @@
 
   .dark {
     /* Dark mode gradient - darker teal tones */
+    --background: 0 0% 10%; /* dark start */
     --background-start: 0 0% 10%; /* dark start */
     --background-middle: 151 55% 15%; 
+    --background-middle-lighter: 151 55% 15%; 
     --border-top: 168 55% 30%;
     --background-end: 260 55% 24%;
     --background-end-lighter: 260 50% 28%;
@@ -87,6 +90,6 @@
     font-family: var(--font-open-sans);
     @apply text-foreground;
 
-    @apply bg-gradient-to-r from-[hsl(var(--background-middle))] to-[hsl(var(--background-end))] text-foreground;
+    @apply bg-gradient-to-r from-[hsl(var(--background-middle))] via-[hsl(var(--background-start))] to-[hsl(var(--background-middle))] text-foreground;
   }
 }
