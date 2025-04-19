@@ -41,6 +41,8 @@ import { HighlightedText } from '@/components/ui/highlighted-text'
 import { StatsCard } from '@/components/stats-card'
 import { Section } from '@/components/ui/section'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { cn } from '@/lib/utils'
+import { DotPattern } from '@/components/magicui/dot-pattern'
 
 export default function HomePage() {
   const { user, loading, signOut } = useAuth()
@@ -122,17 +124,27 @@ export default function HomePage() {
     <div className='-mt-8'>
       {/* Hero Section */}
       <section
-        className='pt-24 pb-24 xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 bg-gradient-to-r from-[hsl(var(--background-end))]
-      to-[hsl(var(--background-middle))]'
+        className='pt-24 pb-24 xl:px-24 lg:px-16 md:px-8 sm:px-8 px-8 bg-gradient-to-r from-background-middle
+      to-background-end overflow-hidden relative'
       >
-        <div className='flex flex-col items-center text-center mx-auto space-y-6'>
+        <DotPattern
+          width={15}
+          height={15}
+          cx={1}
+          cy={1}
+          cr={1}
+          className={cn(
+            '[mask-image:linear-gradient(to_bottom_right,white,transparent,white)]'
+          )}
+        />
+        <div className='flex flex-col items-center text-center mx-auto space-y-6 relative z-10'>
           <h1 className='text-balance text-5xl leading-none tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl'>
             Python
             <LineShadowText className='italic' shadowColor={shadowColor}>
               Bit
             </LineShadowText>
           </h1>
-          <p className='text-xl md:text-2xl text-muted-foreground'>
+          <p className='text-xl md:text-2xl'>
             Learn Python through guided tutorials and real-time classrooms
           </p>
           {!user && (
@@ -208,8 +220,18 @@ export default function HomePage() {
         </motion.div>
       </Section>
       {/* Why Python Bit Section */}
-      <Section className='bg-[hsl(var(--background-end))] border-t-2 border-[hsl(var(--border-top-secondary))]'>
-        <div className='flex flex-col items-center gap-12 max-w-4xl mx-auto'>
+      <Section className='bg-background-middle border-t-2 border-[hsl(var(--border-top))] relative'>
+        <DotPattern
+          width={20}
+          height={20}
+          cx={1}
+          cy={1}
+          cr={1}
+          className={cn(
+            '[mask-image:linear-gradient(to_top_right,white,transparent,white)]'
+          )}
+        />
+        <div className='flex flex-col items-center gap-12 max-w-4xl mx-auto relative z-10'>
           {/* Problem Section */}
           <motion.div {...getAnimationProps()} className='space-y-6'>
             <div className='flex flex-col items-center text-center space-y-4'>
@@ -396,8 +418,18 @@ export default function HomePage() {
         </motion.div>
       </Section>
       {/* Quizzes Section */}
-      <Section className='bg-gradient-to-r bg-[hsl(var(--background-middle))] border-t-2 border-[hsl(var(--border-top))]'>
-        <div className='flex justify-between items-center mb-8'>
+      <Section className='bg-[hsl(var(--background-end-lighter))] border-t-2 border-[hsl(var(--border-top-secondary))] relative'>
+        <DotPattern
+          width={20}
+          height={20}
+          cx={1}
+          cy={1}
+          cr={1}
+          className={cn(
+            '[mask-image:linear-gradient(to_bottom_right,white,transparent,white)]'
+          )}
+        />
+        <div className='flex justify-between items-center mb-8 relative z-10'>
           <div>
             <h2 className='text-3xl font-bold'>Quizzes</h2>
             <p className='text-muted-foreground mt-2'>
@@ -411,7 +443,10 @@ export default function HomePage() {
           </Button>
         </div>
 
-        <motion.div {...getAnimationProps()} className='space-y-6'>
+        <motion.div
+          {...getAnimationProps()}
+          className='space-y-6 relative z-10'
+        >
           <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {sortedQuizzes.slice(0, 3).map((quiz) => (
               <QuizCard
@@ -500,10 +535,20 @@ export default function HomePage() {
       {/* Call to Action */}
       <Section
         className='bg-gradient-to-r from-[hsl(var(--background-end))]
-      to-[hsl(var(--background-middle))]'
+      to-[hsl(var(--background-middle))] relative'
       >
+        <DotPattern
+          width={15}
+          height={15}
+          cx={1}
+          cy={1}
+          cr={1}
+          className={cn(
+            '[mask-image:linear-gradient(to_top_right,white,transparent,white)]'
+          )}
+        />
         {user ? (
-          <div className='space-y-4 max-w-md mx-auto'>
+          <div className='space-y-4 max-w-md mx-auto relative z-10'>
             <Button
               size='lg'
               onClick={() => router.push('/dashboard')}

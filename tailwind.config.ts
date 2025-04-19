@@ -32,7 +32,8 @@ const config = {
   			background: {
   				DEFAULT: 'hsl(var(--background-start))',
   				start: 'hsl(var(--background-start))',
-  				end: 'hsl(var(--background-end))'
+  				end: 'hsl(var(--background-end))',
+				middle: 'hsl(var(--background-middle))',
   			},
   			foreground: 'hsl(var(--foreground))',
   			primary: {
