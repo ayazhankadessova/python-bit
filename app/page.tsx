@@ -31,7 +31,6 @@ import QuizCard from '@/components/quiz/quiz-card'
 import { themes } from '@/config/themes'
 import { Badge } from '@/components/ui/badge'
 import { ThemeImage } from '@/components/theme-image'
-import { ChevronRight } from 'lucide-react'
 import AnimatedGradientText from '@/components/ui/animated-gradient-text'
 import { LineShadowText } from '@/components/ui/line-shadow-text'
 import { useTheme } from 'next-themes'
@@ -137,26 +136,53 @@ export default function HomePage() {
             '[mask-image:linear-gradient(to_bottom_right,white,transparent,white)]'
           )}
         />
-        <div className='flex flex-col items-center text-center mx-auto space-y-6 relative z-10'>
+        <div className='flex flex-col items-center text-center mx-auto relative z-10'>
           <h1 className='text-balance text-5xl leading-none tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl'>
             Python
             <LineShadowText className='italic' shadowColor={shadowColor}>
               Bit
             </LineShadowText>
           </h1>
-          <p className='text-xl md:text-2xl'>
+          <h3 className='text-xl md:text-2xl'>
             Learn Python through guided tutorials and real-time classrooms
-          </p>
+          </h3>
           {!user && (
-            <div className='flex gap-4 mt-8'>
+            <div className='flex mt-8 items-center justify-center'>
               <Button
                 size='lg'
                 variant='animated'
                 onClick={() => onOpen('register')}
               >
-                🎉 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
-                <AnimatedGradientText>Get Started Free</AnimatedGradientText>
-                <ChevronRight className='text-purple-500 ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
+                <div className='flex items-center group'>
+                  <span className='mr-2'>🎉</span>
+                  <hr className='mx-2 h-6 w-px shrink-0 bg-purple-700' />
+                  <AnimatedGradientText>
+                    <div className='flex items-center group'>
+                      <span className='ml-2'>Get Started Free</span>
+                      <span className='transition-transform duration-300 ease-in-out group-hover:translate-x-1'>
+                        <svg width='0' height='0' className='absolute'>
+                          <defs>
+                            <linearGradient
+                              id='my-gradient'
+                              x1='0%'
+                              y1='0%'
+                              x2='100%'
+                              y2='0%'
+                            >
+                              <stop offset='0%' stopColor='#c6005c' />
+                              <stop offset='50%' stopColor='#d08700' />
+                              <stop offset='100%' stopColor='#8200db' />
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                        <ArrowRight
+                          style={{ stroke: 'url(#my-gradient)' }}
+                          className='h-7 w-7'
+                        ></ArrowRight>
+                      </span>
+                    </div>
+                  </AnimatedGradientText>
+                </div>
               </Button>
             </div>
           )}
@@ -173,9 +199,21 @@ export default function HomePage() {
           </div>
 
           <Button variant='animated' onClick={() => router.push('/tutorials')}>
-            🧑‍🎓 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
-            <AnimatedGradientText>View All Tutorials</AnimatedGradientText>
-            <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
+            <div className='flex items-center group px-2'>
+              <span className='mr-2'>👩‍💻</span>
+              <hr className='mx-2 h-4 w-px shrink-0 bg-purple-700' />
+              <AnimatedGradientText>
+                <div className='flex items-center group'>
+                  <span className='ml-2'>View All Tutorials</span>
+                  <span className='transition-transform duration-300 ease-in-out group-hover:translate-x-1'>
+                    <ArrowRight
+                      style={{ stroke: 'url(#my-gradient)' }}
+                      className='h-4 w-4'
+                    ></ArrowRight>
+                  </span>
+                </div>
+              </AnimatedGradientText>
+            </div>
           </Button>
         </div>
 
@@ -437,9 +475,21 @@ export default function HomePage() {
             </p>
           </div>
           <Button variant='animated' onClick={() => router.push('/quizzes')}>
-            😎 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
-            <AnimatedGradientText>View All Quizzes</AnimatedGradientText>
-            <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
+            <div className='flex items-center group px-2'>
+              <span className='mr-2'>🚦</span>
+              <hr className='mx-2 h-4 w-px shrink-0 bg-purple-700' />
+              <AnimatedGradientText>
+                <div className='flex items-center group'>
+                  <span className='ml-2'>View All Quizzes</span>
+                  <span className='transition-transform duration-300 ease-in-out group-hover:translate-x-1'>
+                    <ArrowRight
+                      style={{ stroke: 'url(#my-gradient)' }}
+                      className='h-4 w-4'
+                    ></ArrowRight>
+                  </span>
+                </div>
+              </AnimatedGradientText>
+            </div>
           </Button>
         </div>
 
@@ -472,9 +522,21 @@ export default function HomePage() {
             </p>
           </div>
           <Button variant='animated' onClick={() => router.push('/projects')}>
-            😎 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
-            <AnimatedGradientText>View All Projects</AnimatedGradientText>
-            <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
+            <div className='flex items-center group px-2'>
+              <span className='mr-2'>😎</span>
+              <hr className='mx-2 h-4 w-px shrink-0 bg-purple-700' />
+              <AnimatedGradientText>
+                <div className='flex items-center group'>
+                  <span className='ml-2'>View All Projects</span>
+                  <span className='transition-transform duration-300 ease-in-out group-hover:translate-x-1'>
+                    <ArrowRight
+                      style={{ stroke: 'url(#my-gradient)' }}
+                      className='h-4 w-4'
+                    ></ArrowRight>
+                  </span>
+                </div>
+              </AnimatedGradientText>
+            </div>
           </Button>
         </div>
 
@@ -571,8 +633,36 @@ export default function HomePage() {
                 variant='animated'
                 onClick={() => onOpen('register')}
               >
-                🎉 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
-                <AnimatedGradientText>Get Started Free</AnimatedGradientText>
+                <div className='flex items-center group'>
+                  <span className='mr-2'>🎉</span>
+                  <hr className='mx-2 h-6 w-px shrink-0 bg-purple-700' />
+                  <AnimatedGradientText>
+                    <div className='flex items-center group'>
+                      <span className='ml-2'>Get Started Free</span>
+                      <span className='transition-transform duration-300 ease-in-out group-hover:translate-x-1'>
+                        <svg width='0' height='0' className='absolute'>
+                          <defs>
+                            <linearGradient
+                              id='my-gradient'
+                              x1='0%'
+                              y1='0%'
+                              x2='100%'
+                              y2='0%'
+                            >
+                              <stop offset='0%' stopColor='#c6005c' />
+                              <stop offset='50%' stopColor='#d08700' />
+                              <stop offset='100%' stopColor='#8200db' />
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                        <ArrowRight
+                          style={{ stroke: 'url(#my-gradient)' }}
+                          className='h-7 w-7'
+                        ></ArrowRight>
+                      </span>
+                    </div>
+                  </AnimatedGradientText>
+                </div>
               </Button>
               <Button size='lg' onClick={() => onOpen('login')}>
                 Sign In

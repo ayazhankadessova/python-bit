@@ -100,6 +100,11 @@ const buttonVariants = cva(
           before:![mask-composite:subtract]
           before:[border-radius:inherit]
           before:[mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]
+          hover:-translate-y-0.5 active:translate-y-0
+          shadow-md
+          hover:shadow-lg
+          transition-all duration-300
+          active:translate-y-0
         `,
         default:
           'relative bg-gradient-to-r from-purple-600 via-purple-500 to-purple-400 text-white shadow-md hover:from-purple-700 hover:via-purple-600 hover:to-purple-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0',
@@ -107,7 +112,7 @@ const buttonVariants = cva(
       size: {
         default: 'h-9 px-4 py-2',
         sm: 'h-8 rounded-md px-3 text-xs',
-        lg: 'h-12  px-8 py-4 text-lg',
+        lg: 'h-16  px-8 py-4 text-2xl',
         icon: 'h-9 w-9',
       },
     },
