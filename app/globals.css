@@ -7,9 +7,9 @@
     /* White to teal-200 gradient */
     --background: 0 0% 100%; /* white */
     --background-start: 151 95% 98%; 
-    --background-middle: 151 80% 94%; 
+    --background-middle: 151 95% 90%; 
     --border-top: 151 55% 80%; /* teal-200 */
-    --background-end: 260 80% 92%; /* teal-200 */
+    --background-end: 260 95% 90%; /* teal-200 */
     --background-end-lighter: 260 84% 95%; /* teal-200 */
     --border-top-secondary: 260 60% 85%; /* teal-200 */
     --additional-background: 24 90% 92%; /* white */

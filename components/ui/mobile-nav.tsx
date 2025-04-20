@@ -30,10 +30,7 @@ const MobileNav = () => {
           <Menu className='h-6 w-6' />
         </Button>
       </SheetTrigger>
-      <SheetContent
-        side='right'
-        className='flex flex-col bg-gradient-to-r from-[hsl(var(--background-start))] to-[hsl(var(--background-end))]'
-      >
+      <SheetContent side='right' className='flex flex-col'>
         <div className='flex flex-col gap-4'>
           <MobileLink
             href='/'
