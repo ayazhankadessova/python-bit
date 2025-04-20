@@ -610,7 +610,7 @@ export default function HomePage() {
           )}
         />
         {user ? (
-          <div className='space-y-4 max-w-md mx-auto relative z-10'>
+          <div className='max-w-md mx-auto relative z-10'>
             <Button
               size='lg'
               onClick={() => router.push('/dashboard')}
@@ -618,16 +618,16 @@ export default function HomePage() {
             >
               Go to Dashboard
             </Button>
-            <Button variant='outline' onClick={signOut} className='w-full'>
-              Sign Out
-            </Button>
           </div>
         ) : (
           <div className='flex flex-col items-center justify-center text-center max-w-xl mx-auto'>
-            <h2 className='text-3xl font-bold mb-6'>
-              Ready to start learning?
+            <h2 className='text-4xl font-bold mb-2'>
+              Start For Free
             </h2>
-            <div className='flex gap-4 justify-center'>
+            <h3 className='text-lg mb-8'>
+              Join our platform and start your coding adventure today!
+            </h3>
+            <div className='flex gap-4 justify-center md:flex-col'>
               <Button
                 size='lg'
                 variant='animated'
@@ -663,9 +663,6 @@ export default function HomePage() {
                     </div>
                   </AnimatedGradientText>
                 </div>
-              </Button>
-              <Button size='lg' onClick={() => onOpen('login')}>
-                Sign In
               </Button>
             </div>
           </div>
