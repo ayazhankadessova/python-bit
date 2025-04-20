@@ -158,7 +158,7 @@ export default function HomePage() {
                   <hr className='mx-2 h-6 w-px shrink-0 bg-purple-700' />
                   <AnimatedGradientText>
                     <div className='flex items-center group'>
-                      <span className='ml-2'>Get Started Free</span>
+                      <span className='ml-2'>Start Free</span>
                       <span className='transition-transform duration-300 ease-in-out group-hover:translate-x-1'>
                         <svg width='0' height='0' className='absolute'>
                           <defs>
@@ -638,7 +638,7 @@ export default function HomePage() {
                   <hr className='mx-2 h-6 w-px shrink-0 bg-purple-700' />
                   <AnimatedGradientText>
                     <div className='flex items-center group'>
-                      <span className='ml-2'>Get Started Free</span>
+                      <span className='ml-2'>Start Free</span>
                       <span className='transition-transform duration-300 ease-in-out group-hover:translate-x-1'>
                         <svg width='0' height='0' className='absolute'>
                           <defs>
