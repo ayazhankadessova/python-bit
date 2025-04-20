@@ -153,7 +153,7 @@ export default function HomePage() {
                 variant='animated'
                 onClick={() => onOpen('register')}
               >
-                <div className='flex items-center group'>
+                <div className='flex items-center group px-2'>
                   <span className='mr-2'>🎉</span>
                   <hr className='mx-2 h-6 w-px shrink-0 bg-purple-700' />
                   <AnimatedGradientText>
