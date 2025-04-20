@@ -155,8 +155,8 @@ export default function HomePage() {
                 onClick={() => onOpen('register')}
               >
                 🎉 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
-                <AnimatedGradientText text='Get Started Free' />
-                <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
+                <AnimatedGradientText>Get Started Free</AnimatedGradientText>
+                <ChevronRight className='text-purple-500 ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
               </Button>
             </div>
           )}
@@ -174,7 +174,7 @@ export default function HomePage() {
 
           <Button variant='animated' onClick={() => router.push('/tutorials')}>
             🧑‍🎓 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
-            <AnimatedGradientText text='View All Tutorials' />
+            <AnimatedGradientText>View All Tutorials</AnimatedGradientText>
             <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
           </Button>
         </div>
@@ -438,7 +438,7 @@ export default function HomePage() {
           </div>
           <Button variant='animated' onClick={() => router.push('/quizzes')}>
             😎 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
-            <AnimatedGradientText text='View All Quizzes' />
+            <AnimatedGradientText>View All Quizzes</AnimatedGradientText>
             <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
           </Button>
         </div>
@@ -473,7 +473,7 @@ export default function HomePage() {
           </div>
           <Button variant='animated' onClick={() => router.push('/projects')}>
             😎 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
-            <AnimatedGradientText text='View All Projects' />
+            <AnimatedGradientText>View All Projects</AnimatedGradientText>
             <ChevronRight className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
           </Button>
         </div>
@@ -572,7 +572,7 @@ export default function HomePage() {
                 onClick={() => onOpen('register')}
               >
                 🎉 <hr className='mx-2 h-4 w-px shrink-0 bg-gray-300' />{' '}
-                <AnimatedGradientText text='Get Started Free' />
+                <AnimatedGradientText>Get Started Free</AnimatedGradientText>
               </Button>
               <Button size='lg' onClick={() => onOpen('login')}>
                 Sign In

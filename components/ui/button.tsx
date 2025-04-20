@@ -75,11 +75,8 @@ const buttonVariants = cva(
           relative
           overflow-hidden
           rounded-full
-          bg-white/60
-          px-4 
-          py-1.5 
-          text-sm 
-          font-md 
+          bg-background
+          items-center
           shadow-[inset_0_-8px_10px_#8fdfff1f]
           backdrop-blur-sm 
           transition-shadow 
@@ -87,7 +84,6 @@ const buttonVariants = cva(
           ease-out 
           [--bg-size:300%]
           hover:shadow-[inset_0_-5px_10px_#8fdfff3f]
-          dark:bg-black/60
           before:absolute
           before:inset-0
           before:block
@@ -111,7 +107,7 @@ const buttonVariants = cva(
       size: {
         default: 'h-9 px-4 py-2',
         sm: 'h-8 rounded-md px-3 text-xs',
-        lg: 'h-10  px-8',
+        lg: 'h-12  px-8 py-4 text-lg',
         icon: 'h-9 w-9',
       },
     },
