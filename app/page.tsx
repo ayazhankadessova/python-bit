@@ -44,7 +44,7 @@ import { cn } from '@/lib/utils'
 import { DotPattern } from '@/components/magicui/dot-pattern'
 
 export default function HomePage() {
-  const { user, loading, signOut } = useAuth()
+  const { user, loading } = useAuth()
   const router = useRouter()
   const { onOpen } = useAuthModal()
   const sortedTutorials = sortTutorialsByTime(tutorials)

@@ -179,7 +179,7 @@ export function TeacherSessionView({
     if (classroomId) {
       fetchClassroomAndCurriculum()
     }
-  }, [classroomId, toast])
+  }, [classroomId, sessionId, toast])
 
   // Fetch assignment when selected
   useEffect(() => {
