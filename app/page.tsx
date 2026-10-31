@@ -283,10 +283,8 @@ export default function HomePage() {
 
             <Card className='p-6 border border-purple-500/20'>
               <p className='text-muted-foreground text-lg leading-relaxed'>
-                <HighlightedText>Millions of students</HighlightedText> hit a
-                wall when moving from block-based to text programming, with{' '}
-                <HighlightedText>50% losing confidence</HighlightedText> in the
-                transition. While block coding makes programming accessible, the
+                <HighlightedText>Many students</HighlightedText> hit a wall when
+                moving from block-based to text programming. While block coding makes programming accessible, the
                 leap to
                 <HighlightedText> professional languages</HighlightedText> like
                 Python feels like stepping into darkness. Their creative
@@ -294,11 +292,6 @@ export default function HomePage() {
                 text syntax, often crushing their dreams of becoming real
                 developers.
               </p>
-
-              <div className='grid grid-cols-2 gap-4 mt-6'>
-                <StatsCard number='50%' text='Students Lose Confidence' />
-                <StatsCard number='35M+' text='Affected Students' />
-              </div>
             </Card>
 
             <motion.div
@@ -333,19 +326,18 @@ export default function HomePage() {
                 <HighlightedText>engaging tutorials</HighlightedText> that make
                 concepts click,
                 <HighlightedText>real-time classrooms</HighlightedText> with
-                instant AI and teacher feedback, and
+                live teacher feedback, and
                 <HighlightedText>creative projects</HighlightedText> that bring
                 code to life. Students master Python through hands-on
                 experiences that feel like adventures, not lessons. By combining
-                these three core elements with immediate guidance anywhere, we
-                are building confident programmers who can turn their ideas into
+                these three core elements, we are building confident programmers who can turn their ideas into
                 reality.
               </p>
 
               <div className='grid grid-cols-3 gap-4 mt-6'>
-                <StatsCard number='24/7' text='Instant Support' />
-                <StatsCard number='100+' text='Projects' />
-                <StatsCard number='50+' text='Tutorials' />
+                <StatsCard number='Live' text='Classroom Sessions' />
+                <StatsCard number='5' text='Projects' />
+                <StatsCard number='11' text='Tutorials' />
               </div>
             </Card>
           </motion.div>
