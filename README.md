@@ -101,27 +101,6 @@ This installs the Python requirements, then starts Next.js and FastAPI (on port 
 
 Firestore rules and indexes are not in this repo, so a new Firebase project needs its own. Curricula and assignments can be seeded from `/firestore-stuff/new-classroom`.
 
-## Current state and next steps
-
-**Execution isolation and resource limits.** Submitted code runs as an ordinary subprocess with the same user, filesystem, network access and environment variables as the API process. The only resource limit is the 5-second timeout, with no cap on CPU, memory or output. `/api/py/*` does not check who the caller is, and CORS allows all origins. Next step: run code in a sandbox with no network or secrets, and require authentication.
-
-**How marking decides success.** Assignments pass when stdout contains a fixed success marker. Student code and the check share one process and one output stream, so the result is not tamper-resistant. Only the first example is tested, although every configured assignment has more than one and the UI reports "All tests passed". Exercises compare output exactly or look for `True`, and projects look for a success string. The browser, not the server, writes the pass or fail result to Firestore. Assignment content also exists twice: browsers read Firestore and marking reads `config/assignment_configs.json`. Next step: run every example, return results through a separate channel from student output, and record results on the server.
-
-**Shared session document and concurrent updates.** One document holds every student's code, so each write reaches every listener in the session, including classmates' browsers, and the document is subject to Firestore's per-document size limit. Session writes do not use transactions:
-
-- Leaving a session rewrites `activeStudents` from the client's local copy, filtered by display name. A concurrent join or leave can be lost, and students sharing a name are removed together.
-- Student and teacher writes to the same student's code are last-write-wins.
-- Update Code replaces the student's whole entry, and joining a session resets it with empty code.
-- Each snapshot copies the saved code into the student's local state. After any write to the document, Run and Submit can use the last saved code rather than what is on screen.
-
-Next step: give each student their own document, and keep unsaved editor state out of the listener.
-
-**In-memory rate limiter.** SlowAPI allows 10 requests per minute on `/execute` and 30 on the test endpoints. Counts are held in memory, so they are not shared between serverless instances and reset when an instance restarts. The key is the client address the server sees, so students on one school network could share a limit. Next step: use a shared store and limit per authenticated user.
-
-**Access control.** Teacher, student and admin checks are in client code, and neither API layer verifies Firebase ID tokens. Firestore rules are not in this repo. Next step: version the rules with the code.
-
-**Test coverage.** There are no automated tests, no test runner and no CI configuration. Next step: start with unit tests for marking and code execution, then concurrent session updates.
-
 ## Credits
 
 Python tutorial content adapted from:
