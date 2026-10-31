@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: 'PythonBit',
-  url: 'https://python-bit.vercel.app',
+  url: 'https://python-bit-sigma.vercel.app',
   description:
     'PythonBit teaches Python to young learners moving from block-based tools to text-based code.',
   socials: {
