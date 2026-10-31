@@ -47,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               !data.school
             ) {
               setUserData(null)
+              setLoading(false)
               return
             }
 
@@ -67,31 +68,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } else {
             setUserData(null)
           }
+          setLoading(false)
         },
         (error) => {
           console.error('Error fetching user data:', error)
           setUserData(null)
+          setLoading(false)
         }
       )
     } catch (error) {
       console.error('Error setting up user data subscription:', error)
       setUserData(null)
+      setLoading(false)
     }
   }, [])
 
   useEffect(() => {
     authUnsubscribe.current = onAuthStateChanged(auth, async (firebaseUser) => {
-      try {
-        if (firebaseUser) {
-          await subscribeToUserData(firebaseUser.uid)
-        } else {
-          setUserData(null)
-          if (userDocUnsubscribe.current) {
-            userDocUnsubscribe.current()
-            userDocUnsubscribe.current = null
-          }
+      if (firebaseUser) {
+        // Stay loading until the first user document arrives, so pages
+        // don't treat a signed-in user as logged out in the meantime.
+        setLoading(true)
+        await subscribeToUserData(firebaseUser.uid)
+      } else {
+        setUserData(null)
+        if (userDocUnsubscribe.current) {
+          userDocUnsubscribe.current()
+          userDocUnsubscribe.current = null
         }
-      } finally {
         setLoading(false)
       }
     })

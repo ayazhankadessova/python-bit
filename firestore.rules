@@ -1,0 +1,97 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isTeacherOf(classroomId) {
+      return signedIn() &&
+        get(/databases/$(database)/documents/classrooms/$(classroomId)).data.teacherId == request.auth.uid;
+    }
+
+    function changesOnly(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+
+    // Replace ADMIN_UID with the UID of the account that seeds content.
+    // Left as it is, nobody gets admin access.
+    match /{document=**} {
+      allow read, write: if signedIn() && request.auth.uid == 'ADMIN_UID';
+    }
+
+    match /users/{uid} {
+      // /api/classrooms reads this with no signed-in user.
+      allow get: if true;
+      // Classroom creation lists students at the teacher's school.
+      allow list: if signedIn() &&
+        resource.data.role == 'student' &&
+        resource.data.school == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.school;
+      allow create: if isOwner(uid);
+      // A teacher creating a classroom adds it to each student's list.
+      allow update: if isOwner(uid) ||
+        (signedIn() && changesOnly(['classrooms', 'updatedAt']));
+
+      // Teachers follow student completion in live sessions.
+      match /assignments/{document=**} {
+        allow read: if signedIn();
+        allow write: if isOwner(uid);
+      }
+
+      // /api/progress/* reads these with no signed-in user.
+      match /tutorials/{document=**} {
+        allow get: if true;
+        allow list, write: if isOwner(uid);
+      }
+
+      match /projects/{document=**} {
+        allow get: if true;
+        allow list, write: if isOwner(uid);
+      }
+
+      // /api/progress/quiz also writes these with no signed-in user.
+      match /quizzes/{document=**} {
+        allow get, create, update: if true;
+        allow list: if isOwner(uid);
+      }
+    }
+
+    match /classrooms/{classroomId} {
+      // /api/classrooms reads this with no signed-in user.
+      allow get: if true;
+      // Joining a classroom looks it up by class code.
+      allow list: if signedIn();
+      allow create: if signedIn() && request.resource.data.teacherId == request.auth.uid;
+      // A student joining a classroom adds themselves to students.
+      allow update: if signedIn() &&
+        (resource.data.teacherId == request.auth.uid || changesOnly(['students']));
+
+      match /sessions/{sessionId} {
+        allow read, create, update: if signedIn();
+        allow delete: if isTeacherOf(classroomId);
+      }
+    }
+
+    match /curricula/{id} {
+      allow read: if signedIn();
+    }
+
+    match /assignments/{id} {
+      allow read: if signedIn();
+    }
+
+    match /problems/{id} {
+      allow read: if signedIn();
+    }
+
+    // /api/quizzes reads these with no signed-in user.
+    match /quizzes/{id} {
+      allow read: if true;
+    }
+  }
+}

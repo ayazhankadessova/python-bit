@@ -312,12 +312,11 @@ export function TeacherSessionView({
     }
   }
 
-  const handleRunCode = async (isSubmission: boolean) => {
+  const handleRunCode = async (isSubmission: boolean, code: string) => {
     setError(null)
     setOutput('')
     setIsCorrect(null)
 
-    const code = selectedStudent ? studentCode : teacherCode
     const id = currentAssignment?.id
     try {
       const requestPayload = {
@@ -539,8 +538,8 @@ export function TeacherSessionView({
           <PythonEditor
             initialCode={editorInitialCode}
             onCodeChange={setTeacherCode}
-            onRunCode={() => handleRunCode(false)}
-            onSubmitCode={() => handleRunCode(true)}
+            onRunCode={(code) => handleRunCode(false, code)}
+            onSubmitCode={(code) => handleRunCode(true, code)}
             onSendCode={handleSendCode}
             isTeacher={true}
             selectedStudent={selectedStudent}

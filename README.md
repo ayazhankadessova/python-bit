@@ -7,7 +7,7 @@ Live site: https://python-bit-sigma.vercel.app
 ## Features
 
 - **Live sessions:** the teacher picks a week and assignment, views a student's code, sends code to one student or everyone, and sees which online students have completed the task. Students share code with an Update Code button and on Submit, not on each keystroke.
-- **Tutorials:** 11 MDX lessons with runnable code. Exercises for 7 of them are checked by the API.
+- **Tutorials:** 11 MDX lessons, 7 of them with runnable code. Exercises for 7 of them are checked by the API.
 - **Projects:** 5 themed projects. 2 have server-side checks configured.
 - **Quizzes:** stored in Firestore, with attempts recorded per user.
 - **Accounts and progress:** Firebase Authentication, a teacher or student role on the user document, and per-user progress for tutorials, projects, quizzes and assignments.
@@ -99,7 +99,14 @@ npm run dev
 
 This installs the Python requirements, then starts Next.js and FastAPI (on port 8000). Next.js forwards `/api/py/*` to FastAPI.
 
-Firestore rules and indexes are not in this repo, so a new Firebase project needs its own. Curricula and assignments can be seeded from `/firestore-stuff/new-classroom`.
+To run the API tests:
+
+```bash
+pip3 install -r requirements-dev.txt
+python3 -m pytest
+```
+
+Firestore rules are in [`firestore.rules`](firestore.rules) and are published by hand from the Firebase console. Indexes are not in this repo, so a new Firebase project needs its own. Curricula and assignments can be seeded from `/firestore-stuff/new-classroom`.
 
 ## Credits
 

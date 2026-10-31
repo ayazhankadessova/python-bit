@@ -37,7 +37,7 @@ interface PythonEditorProps {
   onSubmitCode?: (code: string) => Promise<void>
   isTeacher?: boolean
   onSendCode?: (code: string, student?: ActiveStudent) => Promise<void>
-  onUpdateCode?: () => Promise<void>
+  onUpdateCode?: (code: string) => Promise<void>
   selectedStudent?: ActiveStudent | null
   output: string
   error: string | null
@@ -71,7 +71,7 @@ export function PythonEditor({
     if (!onUpdateCode) return
     setIsUpdating(true)
     try {
-      await onUpdateCode()
+      await onUpdateCode(code)
     } finally {
       setIsUpdating(false)
     }
@@ -123,10 +123,10 @@ export function PythonEditor({
   const isDarkTheme = theme === 'dark' || theme === 'vscode'
 
   useEffect(() => {
-    if (initialCode && !isExecuting) {
+    if (initialCode) {
       setCode(initialCode)
     }
-  }, [initialCode, isExecuting])
+  }, [initialCode])
 
   return (
     <>
@@ -301,8 +301,8 @@ export function PythonEditor({
                     }`}
                   >
                     {isCorrect
-                      ? '✅ All tests passed!'
-                      : '❌ Some tests failed. Check the output above for details.'}
+                      ? '✅ Correct for the tested example!'
+                      : '❌ Not correct yet. Check the output above for details.'}
                   </div>
                 )}
               </div>

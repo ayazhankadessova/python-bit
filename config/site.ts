@@ -2,7 +2,7 @@ export const siteConfig = {
   name: 'PythonBit',
   url: 'https://python-bit.vercel.app',
   description:
-    'PythonBit shows the real coding skills of developers✨Talk is cheap. Show me the code.',
+    'PythonBit teaches Python to young learners moving from block-based tools to text-based code.',
   socials: {
     github: 'https://github.com/ayazhankadessova/python-bit',
     linkedin: 'https://www.linkedin.com/in/ayazhankad',
