@@ -4,12 +4,6 @@ PythonBit is my solo Final Year Project at Hong Kong Baptist University, supervi
 
 Live site: https://python-bit-sigma.vercel.app
 
-## Reviewers start here
-
-- **Live session:** [`student-session-view.tsx`](components/session-views/student-session-view.tsx) and [`teacher-session-view.tsx`](components/session-views/teacher-session-view.tsx). Both listen to the same Firestore session document with `onSnapshot`. Students push their code to it, and the teacher reads that code and sends code back to one student or to all.
-- **Code execution:** [`api/services/code_execution.py`](api/services/code_execution.py). Writes submitted code to a temporary file and runs it in a Python subprocess with a 5-second timeout, returning the output and an error flag.
-- **Marking:** [`api/services/assignment_service.py`](api/services/assignment_service.py). Appends a comparison against an assignment's first example to the student's code, runs the result, and looks for a success marker in the output.
-
 ## Features
 
 - **Live sessions:** the teacher picks a week and assignment, views a student's code, sends code to one student or everyone, and sees which online students have completed the task. Students share code with an Update Code button and on Submit, not on each keystroke.
@@ -69,6 +63,12 @@ assignments/{id}             title, problemStatement, starterCode, examples[]
 quizzes/{id}
 ```
 
+### Key code paths
+
+- **Live session:** [`student-session-view.tsx`](components/session-views/student-session-view.tsx) and [`teacher-session-view.tsx`](components/session-views/teacher-session-view.tsx). Both listen to the same Firestore session document with `onSnapshot`. Students push their code to it, and the teacher reads that code and sends code back to one student or to all.
+- **Code execution:** [`api/services/code_execution.py`](api/services/code_execution.py). Writes submitted code to a temporary file and runs it in a Python subprocess with a 5-second timeout, returning the output and an error flag.
+- **Marking:** [`api/services/assignment_service.py`](api/services/assignment_service.py). Appends a comparison against an assignment's first example to the student's code, runs the result, and looks for a success marker in the output.
+
 ## Getting started
 
 Requires Node.js with npm, and Python 3 with pip3.
@@ -101,27 +101,7 @@ This installs the Python requirements, then starts Next.js and FastAPI (on port 
 
 Firestore rules and indexes are not in this repo, so a new Firebase project needs its own. Curricula and assignments can be seeded from `/firestore-stuff/new-classroom`.
 
-## How it evolved
-
-From git history:
-
-- **Sep 2024, `3f98046`:** Socket.IO added for a basic connection, with a custom `server.js`. Reason: [Ayazhan to add reason]
-- **Nov 2024, `e1aadf5`:** MongoDB API routes and auth hooks removed for Firebase. Reason: [Ayazhan to add reason]
-- **Apr 2025, `bd3194d`:** Socket.IO dependencies removed from `package.json`, along with the remaining `mongodb` dependency, as part of a version upgrade. Reason: [Ayazhan to add reason]
-
-## Evaluation
-
-There was no controlled study, so these results do not measure learning outcomes.
-
-- Needs-finding survey: 30 questions, 17 respondents who were current or aspiring teachers
-- 2 interviews
-- 3 design iterations after usability testing
-- Informal feedback from 2 teachers using it with 11-year-olds
-- 10 registered accounts
-
-The project report records averages of 1.2 s for initial page load and 0.3 s for subsequent navigation. These figures were not re-measured for this README.
-
-## Known limitations and next steps
+## Current state and next steps
 
 **Execution isolation and resource limits.** Submitted code runs as an ordinary subprocess with the same user, filesystem, network access and environment variables as the API process. The only resource limit is the 5-second timeout, with no cap on CPU, memory or output. `/api/py/*` does not check who the caller is, and CORS allows all origins. Next step: run code in a sandbox with no network or secrets, and require authentication.
 
@@ -138,7 +118,7 @@ Next step: give each student their own document, and keep unsaved editor state o
 
 **In-memory rate limiter.** SlowAPI allows 10 requests per minute on `/execute` and 30 on the test endpoints. Counts are held in memory, so they are not shared between serverless instances and reset when an instance restarts. The key is the client address the server sees, so students on one school network could share a limit. Next step: use a shared store and limit per authenticated user.
 
-**Access control.** Teacher, student and admin checks are in client code, and neither API layer verifies Firebase ID tokens. Firestore rules are not in this repo, so access control cannot be reviewed from the code. Next step: version the rules with the code.
+**Access control.** Teacher, student and admin checks are in client code, and neither API layer verifies Firebase ID tokens. Firestore rules are not in this repo. Next step: version the rules with the code.
 
 **Test coverage.** There are no automated tests, no test runner and no CI configuration. Next step: start with unit tests for marking and code execution, then concurrent session updates.
 
