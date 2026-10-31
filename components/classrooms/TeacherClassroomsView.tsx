@@ -26,7 +26,7 @@ interface TeacherClassroomsViewProps {
 }
 
 export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
-  const { classrooms, isLoading, error } = useClassrooms(user.uid)
+  const { classrooms, isLoading, error, mutate } = useClassrooms(user.uid)
   const { startLesson, isStarting } = useStartLesson()
   const [searchTerm, setSearchTerm] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -68,6 +68,10 @@ export function TeacherClassroomsView({ user }: TeacherClassroomsViewProps) {
               <CreateClassroomForm
                 teacherId={user.uid}
                 teacherSchool={user.school}
+                onCreated={() => {
+                  mutate()
+                  setIsDialogOpen(false)
+                }}
               />
             </DialogContent>
           </Dialog>

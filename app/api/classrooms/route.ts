@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { fireStore } from '@/firebase/firebase'
 import { doc, getDoc } from 'firebase/firestore'
-import { unstable_cache } from 'next/cache'
 import { ClassroomTC } from '@/types/firebase'
 
 interface ClassroomsResponse {
@@ -79,15 +78,7 @@ export async function GET(request: Request) {
       )
     }
 
-    const cacheKey = `classrooms-${userId}`
-    const result = await unstable_cache(
-      async () => _fetchClassroomData(userId),
-      [cacheKey],
-      {
-        revalidate: 60, // Cache for 1 minute
-        tags: [`user-${userId}`],
-      }
-    )()
+    const result = await _fetchClassroomData(userId)
 
     return NextResponse.json<ClassroomsResponse>({
       classrooms: result.classrooms,
