@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, type JSX } from 'react';
+import React, { useState, useEffect, useCallback, useRef, type JSX } from 'react';
 import { doc, onSnapshot, getDoc, updateDoc } from 'firebase/firestore'
 import { fireStore } from '@/firebase/firebase'
 import { Button } from '@/components/ui/button'
@@ -28,6 +28,7 @@ export function StudentSessionView({
   const { user } = useAuth()
   const { toast } = useToast()
   const [studentCode, setStudentCode] = useState<string>('')
+  const studentCodeRef = useRef('')
   const [students, setStudents] = useState<ActiveStudent[]>([])
   const [output, setOutput] = useState<string>('')
   const [currentSession, setCurrentSession] = useState<LiveSession | null>(null)
@@ -44,7 +45,7 @@ export function StudentSessionView({
 
   const [editorInitialCode, setEditorInitialCode] = useState<string>('')
 
-  const handleUpdateCode = useCallback(async (): Promise<void> => {
+  const handleUpdateCode = useCallback(async (code: string): Promise<void> => {
     if (!currentSession || !user?.uid) return
     try {
       const sessionRef = doc(
@@ -56,7 +57,7 @@ export function StudentSessionView({
       // Update student's code and lastUpdated timestamp
       await updateDoc(sessionRef, {
         [`students.${user.uid}`]: {
-          code: studentCode,
+          code,
           lastUpdated: now,
           submissions: currentSession.students[user.uid]?.submissions || [],
           displayName:
@@ -79,7 +80,6 @@ export function StudentSessionView({
   }, [
     classroomId,
     sessionId,
-    studentCode,
     currentSession,
     user?.uid,
     user?.displayName,
@@ -128,6 +128,9 @@ export function StudentSessionView({
     return () => unsubscribe()
   }, [sessionId, classroomId, user?.displayName, user?.uid])
 
+  // Read inside the fetch below, so typing doesn't re-fetch the assignment
+  studentCodeRef.current = studentCode
+
   // Fetch assignment when selected
   useEffect(() => {
     const fetchAssignment = async () => {
@@ -143,7 +146,7 @@ export function StudentSessionView({
           setCurrentAssignment(assignmentData)
 
           // Only set initial code if student has no code
-          if (!studentCode) {
+          if (!studentCodeRef.current) {
             const formattedStarterCode = formatCode(assignmentData.starterCode)
             setEditorInitialCode(formattedStarterCode)
             setStudentCode(formattedStarterCode)
@@ -160,7 +163,7 @@ export function StudentSessionView({
     }
 
     fetchAssignment()
-  }, [selectedAssignmentId, studentCode, toast])
+  }, [selectedAssignmentId, toast])
 
   useEffect(() => {
     const sessionRef = doc(
@@ -231,12 +234,11 @@ export function StudentSessionView({
     }
   }
 
-  const handleRunCode = async (isSubmission: boolean) => {
+  const handleRunCode = async (isSubmission: boolean, code: string) => {
     setError(null)
     setOutput('')
     setIsCorrect(null)
 
-    const code = studentCode
     const id = currentAssignment?.id
     try {
       const requestPayload = {
@@ -265,7 +267,7 @@ export function StudentSessionView({
       }
 
       if (user && id && isSubmission && code) {
-        handleUpdateCode()
+        handleUpdateCode(code)
         await handleAssignmentCompletion(user, id, code, data.success)
       }
     } catch (err) {
@@ -354,8 +356,8 @@ export function StudentSessionView({
           <PythonEditor
             initialCode={editorInitialCode}
             onCodeChange={setStudentCode} 
-            onRunCode={() => handleRunCode(false)}
-            onSubmitCode={() => handleRunCode(true)}
+            onRunCode={(code) => handleRunCode(false, code)}
+            onSubmitCode={(code) => handleRunCode(true, code)}
             isTeacher={false} 
             onUpdateCode={handleUpdateCode} 
             output={output}
