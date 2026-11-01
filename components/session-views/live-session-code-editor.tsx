@@ -63,6 +63,7 @@ export function PythonEditor({
   const [theme, setTheme] = useState<'dark' | 'vscode'>('vscode')
   const [isExecuting, setIsExecuting] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
+  const [hasRun, setHasRun] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
@@ -90,6 +91,7 @@ export function PythonEditor({
     } finally {
       setIsRunning(false)
       setIsExecuting(false)
+      setHasRun(true)
     }
   }
 
@@ -117,6 +119,7 @@ export function PythonEditor({
   const handleReset = () => {
     setCode(initialCode)
     onCodeChange(initialCode)
+    setHasRun(false)
     setIsResetDialogOpen(false)
   }
 
@@ -288,7 +291,10 @@ export function PythonEditor({
                     } ${isDarkTheme ? 'text-zinc-200' : 'text-zinc-800'} 
                     whitespace-pre-wrap`}
                   >
-                    {output || 'No output yet...'}
+                    {output ||
+                      (hasRun && !isExecuting
+                        ? 'Ran with no output.'
+                        : 'No output yet...')}
                   </div>
                 )}
 

@@ -37,6 +37,7 @@ import { Loader2 } from 'lucide-react'
 interface Props {
   teacherId: string
   teacherSchool: string
+  onCreated: () => void
 }
 
 interface Curriculum {
@@ -82,7 +83,7 @@ const getUniqueClassCode = async () => {
   return code
 }
 
-export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
+export function CreateClassroomForm({ teacherId, teacherSchool, onCreated }: Props) {
   const [curricula, setCurricula] = useState<Curriculum[]>([])
   const [students, setStudents] = useState<Student[]>([])
   const [loading, setLoading] = useState(true)
@@ -177,7 +178,7 @@ export function CreateClassroomForm({ teacherId, teacherSchool }: Props) {
       })
 
       form.reset()
-      
+      onCreated()
     } catch (error) {
       console.error('Error creating classroom:', error)
       toast({
