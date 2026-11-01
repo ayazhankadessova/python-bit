@@ -47,7 +47,6 @@ export function TeacherSessionView({
 }: TeacherSessionViewProps): JSX.Element {
   const { toast } = useToast()
   const [studentCode, setStudentCode] = useState<string>('')
-  const [teacherCode, setTeacherCode] = useState<string>('')
   const [selectedStudent, setSelectedStudent] = useState<ActiveStudent | null>(
     null
   )
@@ -198,7 +197,6 @@ export function TeacherSessionView({
         if (assignmentDoc.exists()) {
           const assignmentData = assignmentDoc.data() as Assignment
           setCurrentAssignment(assignmentData)
-          setTeacherCode(formatCode(assignmentData.starterCode))
         } else {
           console.log('Assignment document does not exist')
         }
@@ -239,7 +237,6 @@ export function TeacherSessionView({
           // Update selected student's code if needed
           if (selectedStudent && sessionData.students[selectedStudent.uid]) {
             setStudentCode(sessionData.students[selectedStudent.uid].code)
-            setTeacherCode(sessionData.students[selectedStudent.uid].code)
           }
         } else {
           setCurrentSession(null)
@@ -263,10 +260,6 @@ export function TeacherSessionView({
     if (selectedStudent?.uid === student.uid) {
       console.log('Attempting to deselect student')
       setSelectedStudent(null)
-      if (currentAssignment) {
-        console.log('Setting teacher code to starter code')
-        setTeacherCode(formatCode(currentAssignment.starterCode))
-      }
       return
     }
 
@@ -279,7 +272,6 @@ export function TeacherSessionView({
       const data = sessionDoc.data() as LiveSession
       if (data.students[student.uid]) {
         setStudentCode(data.students[student.uid].code)
-        setTeacherCode(data.students[student.uid].code)
       }
     }
   }
@@ -353,7 +345,7 @@ export function TeacherSessionView({
     }
   }
 
-  const handleSendCode = async (): Promise<void> => {
+  const handleSendCode = async (code: string): Promise<void> => {
     if (!currentSession) return
 
     try {
@@ -365,7 +357,7 @@ export function TeacherSessionView({
 
       if (selectedStudent) {
         await updateDoc(sessionRef, {
-          [`students.${selectedStudent.uid}.code`]: teacherCode,
+          [`students.${selectedStudent.uid}.code`]: code,
           [`students.${selectedStudent.uid}.lastUpdated`]: serverTimestamp(),
         })
 
@@ -378,7 +370,7 @@ export function TeacherSessionView({
         const updates: UpdateData<LiveSession> = {}
 
         activeStudents.forEach((student) => {
-          updates[`students.${student.uid}.code`] = teacherCode
+          updates[`students.${student.uid}.code`] = code
           updates[`students.${student.uid}.lastUpdated`] =
             serverTimestamp()
         })
@@ -537,7 +529,6 @@ export function TeacherSessionView({
         <div className='flex-1'>
           <PythonEditor
             initialCode={editorInitialCode}
-            onCodeChange={setTeacherCode}
             onRunCode={(code) => handleRunCode(false, code)}
             onSubmitCode={(code) => handleRunCode(true, code)}
             onSendCode={handleSendCode}

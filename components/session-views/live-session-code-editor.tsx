@@ -32,7 +32,7 @@ import { ActiveStudent } from '@/types/classrooms/live-session'
 
 interface PythonEditorProps {
   initialCode: string
-  onCodeChange: (code: string) => void
+  onCodeChange?: (code: string) => void
   onRunCode: (code: string) => Promise<void>
   onSubmitCode?: (code: string) => Promise<void>
   isTeacher?: boolean
@@ -80,7 +80,7 @@ export function PythonEditor({
 
   const handleCodeChange = (value: string) => {
     setCode(value)
-    onCodeChange(value)
+    onCodeChange?.(value)
   }
 
   const handleRunCode = async () => {
@@ -118,7 +118,7 @@ export function PythonEditor({
 
   const handleReset = () => {
     setCode(initialCode)
-    onCodeChange(initialCode)
+    onCodeChange?.(initialCode)
     setHasRun(false)
     setIsResetDialogOpen(false)
   }
