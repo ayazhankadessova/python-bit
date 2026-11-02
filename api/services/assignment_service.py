@@ -1,7 +1,7 @@
 # app/api/config/assignment_loader.py
 import json
 import os
-from typing import Dict, List, Optional
+from typing import List, Optional
 from dataclasses import dataclass
 
 @dataclass
@@ -78,29 +78,12 @@ class AssignmentLoader:
         """Get an assignment by ID"""
         return self._assignments.get(assignment_id)
 
-    def get_all_assignments(self) -> Dict[str, Assignment]:
-        """Get all assignments"""
-        return self._assignments
-
-    def reload_assignments(self):
-        """Force reload of assignments from JSON"""
-        self._assignments = None
-        self._load_assignments()
-
 # Create a singleton instance
 assignment_loader = AssignmentLoader()
-
-# Helper functions
-def get_assignment(assignment_id: str) -> Optional[Assignment]:
-    return assignment_loader.get_assignment(assignment_id)
-
-def get_all_assignments() -> Dict[str, Assignment]:
-    return assignment_loader.get_all_assignments()
 
 
 # app/services/assignment_service.py
 from .code_execution import CodeExecutionService
-# from assignment_loader import get_assignment
 import logging
 
 # Set up logging
@@ -185,35 +168,3 @@ except Exception as e:
                 'success': False,
                 'output': str(e)
             }
-        
-    async def get_assignment_info(self, assignment_id: str) -> dict:
-        """Get assignment information without test code"""
-        logger.info(f"Getting info for assignment {assignment_id}")
-        try:
-            assignment = get_assignment(assignment_id)
-            if not assignment:
-                logger.error(f"Assignment {assignment_id} not found")
-                return None
-                
-            assignment_info = {
-                'id': assignment.id,
-                'title': assignment.title,
-                'problemStatement': assignment.problemStatement,
-                'starterCode': assignment.starterCode,
-                'starterFunctionName': assignment.starterFunctionName,
-                'examples': [
-                    {
-                        'id': ex.id,
-                        'inputText': ex.inputText,
-                        'outputText': ex.outputText,
-                        'explanation': ex.explanation
-                    }
-                    for ex in assignment.examples
-                ]
-            }
-            logger.info(f"Successfully retrieved assignment info for {assignment_id}")
-            return assignment_info
-            
-        except Exception as e:
-            logger.error(f"Error getting assignment info: {str(e)}", exc_info=True)
-            return None
