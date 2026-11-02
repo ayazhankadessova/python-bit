@@ -1,7 +1,7 @@
 # app/api/config/assignment_loader.py
 import json
 import os
-from typing import List, Optional
+from typing import Dict, List
 from dataclasses import dataclass
 
 @dataclass
@@ -22,64 +22,47 @@ class Assignment:
     outputType: str 
     
 
-class AssignmentLoader:
-    _instance = None
-    _assignments = None
+def _load_assignments() -> Dict[str, Assignment]:
+    """Load assignments from JSON file"""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(os.path.dirname(current_dir))
+    config_path = os.path.join(project_root, 'config', 'assignment_configs.json')
 
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(AssignmentLoader, cls).__new__(cls)
-        return cls._instance
+    try:
+        with open(config_path, 'r') as f:
+            data = json.load(f)
 
-    def __init__(self):
-        if self._assignments is None:
-            self._load_assignments()
+        assignments = {}
+        for assignment_id, assignment_data in data.items():
+            examples = [
+                Example(
+                    id=ex['id'],
+                    inputText=ex['inputText'],
+                    outputText=ex['outputText'],
+                    explanation=ex['explanation']
+                )
+                for ex in assignment_data['examples']
+            ]
 
-    def _load_assignments(self):
-        """Load assignments from JSON file"""
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        project_root = os.path.dirname(os.path.dirname(current_dir))
-        config_path = os.path.join(project_root, 'config', 'assignment_configs.json')
+            assignments[assignment_id] = Assignment(
+                id=assignment_data['id'],
+                title=assignment_data['title'],
+                problemStatement=assignment_data['problemStatement'],
+                starterCode=assignment_data['starterCode'],
+                starterFunctionName=assignment_data['starterFunctionName'],
+                examples=examples,
+                outputType=assignment_data['outputType']
+            )
 
-        try:
-            with open(config_path, 'r') as f:
-                data = json.load(f)
-                self._assignments = {}
-                
-                for assignment_id, assignment_data in data.items():
-                    # Convert examples to Example objects
-                    examples = [
-                        Example(
-                            id=ex['id'],
-                            inputText=ex['inputText'],
-                            outputText=ex['outputText'],
-                            explanation=ex['explanation']
-                        ) 
-                        for ex in assignment_data['examples']
-                    ]
+        print(f"Assignments loaded successfully: {len(assignments)} assignments found")
+        return assignments
+    except Exception as e:
+        print(f"Error loading assignment configs: {e}")
+        return {}
 
-                    self._assignments[assignment_id] = Assignment(
-                        id=assignment_data['id'],
-                        title=assignment_data['title'],
-                        problemStatement=assignment_data['problemStatement'],
-                        starterCode=assignment_data['starterCode'],
-                        starterFunctionName=assignment_data['starterFunctionName'],
-                        examples=examples,
-                        outputType=assignment_data['outputType']
-                    )
 
-        # print success message
-            print(f"Assignments loaded successfully: {len(self._assignments)} assignments found")
-        except Exception as e:
-            print(f"Error loading assignment configs: {e}")
-            self._assignments = {}
-
-    def get_assignment(self, assignment_id: str) -> Optional[Assignment]:
-        """Get an assignment by ID"""
-        return self._assignments.get(assignment_id)
-
-# Create a singleton instance
-assignment_loader = AssignmentLoader()
+# Python runs this once per process, on import.
+ASSIGNMENTS = _load_assignments()
 
 
 # app/services/assignment_service.py
@@ -98,7 +81,7 @@ class AssignmentService:
         """Test student code by running examples and comparing outputs"""
         try:
             logger.info(f"Testing assignment {assignment_id}")
-            assignment = assignment_loader.get_assignment(assignment_id)
+            assignment = ASSIGNMENTS.get(assignment_id)
             
             if not assignment:
                 return {
