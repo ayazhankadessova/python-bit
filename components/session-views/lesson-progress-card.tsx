@@ -43,19 +43,23 @@ const AssignmentProgress = ({
     }
   }, [progressData, activeStudents.length])
 
+  // Every session write creates a new activeStudents array. This string only
+  // changes when the students do, so other writes don't rebuild the listeners.
+  const studentUids = activeStudents.map((student) => student.uid).join(',')
+
   useEffect(() => {
     setProgressData({})
 
-    if (!assignmentId || activeStudents.length === 0) {
+    if (!assignmentId || !studentUids) {
       setLoading(false)
       return
     }
 
-    const unsubscribers = activeStudents.map((student) => {
+    const unsubscribers = studentUids.split(',').map((uid) => {
       const assignmentDocRef = doc(
         fireStore,
         'users',
-        student.uid,
+        uid,
         'assignments',
         assignmentId
       )
@@ -67,7 +71,7 @@ const AssignmentProgress = ({
             const data = doc.data()
             setProgressData((prev) => ({
               ...prev,
-              [student.uid]: {
+              [uid]: {
                 completed: data.completed || false,
                 totalAttempts: data.totalAttempts || 0,
                 successfulAttempts: data.successfulAttempts || 0,
@@ -77,7 +81,7 @@ const AssignmentProgress = ({
           } else {
             setProgressData((prev) => ({
               ...prev,
-              [student.uid]: {
+              [uid]: {
                 completed: false,
                 totalAttempts: 0,
                 successfulAttempts: 0,
@@ -97,7 +101,7 @@ const AssignmentProgress = ({
     return () => {
       unsubscribers.forEach((unsubscribe) => unsubscribe())
     }
-  }, [assignmentId, activeStudents])
+  }, [assignmentId, studentUids])
 
   if (!assignmentId) return null
 
