@@ -1,6 +1,9 @@
 import asyncio
 import os
+import sys
 import time
+
+import pytest
 
 from api.services.code_execution import CodeExecutionService
 
@@ -92,6 +95,65 @@ def test_raised_exception_returns_error():
     assert result['error'] is True
     assert result['success'] is False
     assert 'ValueError: broken' in result['output']
+
+
+def test_crash_keeps_output_printed_before_it():
+    result = run("print('before')\nraise ValueError('broken')")
+
+    assert result['error'] is True
+    assert result['output'].startswith('before\n')
+    assert 'ValueError: broken' in result['output']
+
+
+def test_timeout_keeps_output_printed_before_it():
+    result = run("import time\nprint('before')\nwhile True:\n    time.sleep(1)", timeout=1)
+
+    assert result['error'] is True
+    assert result['output'] == 'before\nExecution timed out'
+
+
+def test_large_output_is_capped():
+    result = run("print('x' * 5_000_000)")
+
+    assert result['error'] is False
+    assert len(result['output']) < 1_100_000
+    assert result['output'].endswith('[output truncated]')
+
+
+def test_endless_output_is_capped_on_timeout():
+    result = run("while True:\n    print('x' * 1000)", timeout=1)
+
+    assert result['error'] is True
+    assert len(result['output']) < 1_100_000
+    assert result['output'].endswith('Execution timed out')
+
+
+def test_invalid_utf8_output_does_not_fail_the_run():
+    result = run("import sys; sys.stdout.buffer.write(b'ok \\xff')")
+
+    assert result['error'] is False
+    assert result['output'].startswith('ok ')
+
+
+def test_cpu_limit_is_applied():
+    result = run("import resource; print(resource.getrlimit(resource.RLIMIT_CPU)[0])", timeout=5)
+
+    assert result['output'] == '6'
+
+
+@pytest.mark.skipif(sys.platform != 'linux', reason='memory limit only applies on Linux')
+def test_memory_limit_stops_large_allocations():
+    result = run("x = bytearray(1024 * 1024 * 1024)")
+
+    assert result['error'] is True
+    assert 'MemoryError' in result['output']
+
+
+@pytest.mark.skipif(sys.platform != 'linux', reason='process limit only applies on Linux')
+def test_process_limit_is_applied():
+    result = run("import resource; print(resource.getrlimit(resource.RLIMIT_NPROC)[0])")
+
+    assert result['output'] == '32'
 
 
 def test_utf8_marker_survives_without_locale_settings(monkeypatch):

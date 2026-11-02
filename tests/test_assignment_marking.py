@@ -62,6 +62,13 @@ def test_exception_in_student_code_is_a_clean_failure():
     assert 'broken' in result['output']
 
 
+def test_success_marker_printed_before_a_crash_does_not_pass():
+    result = mark("print('✅ Correct!')\nraise SystemExit(1)\n", STRING_ID)
+
+    assert '✅ Correct!' in result['output']
+    assert result['success'] is False
+
+
 def test_unknown_assignment_is_a_clean_failure():
     result = mark('print(1)', 'no-such-assignment')
 

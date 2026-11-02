@@ -170,7 +170,7 @@ except Exception as e:
             result = await self.code_execution.execute_python_code(test_code)
             
             # Check if execution was successful and output matches
-            success = '✅ Correct!' in result['output']
+            success = '✅ Correct!' in result['output'] and not result['error']
             
             return {
                 'error': result.get('error', False),
