@@ -1,6 +1,6 @@
 # PythonBit
 
-PythonBit is my solo Final Year Project at Hong Kong Baptist University, supervised by Dr Martin Choy. It is a web platform for teaching Python to young learners moving from block-based tools to text-based code, with self-paced content and live classroom sessions.
+PythonBit is a web platform for teaching Python to young learners moving from block-based tools to text-based code, with self-paced content and live classroom sessions.
 
 Live site: https://python-bit-sigma.vercel.app
 
